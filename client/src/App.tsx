@@ -2,17 +2,17 @@
  * hella.rich — App Router
  * Design: Cinematic Product Lab
  *
+ * All products hosted internally on Manus — no external hella.rich links.
+ *
  * Routes:
  *   /             → Landing (hub)
  *   /the-eye      → THE EYE flagship
  *   /low-battery  → LOW BATTERY
  *   /space-drone  → SPACE DRONE
  *   /aether       → ÆTHER
- *
- * External products (linked out):
- *   dead-air.hella.rich
- *   orb.hella.rich
- *   happyforecast-y2gqad9t.manus.space
+ *   /orb          → ORB
+ *   /dead-air     → DEAD AIR
+ *   /fourcast     → FOURCAST
  */
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -27,6 +27,9 @@ import TheEyePage from "./pages/TheEyePage";
 import LowBatteryPage from "./pages/LowBatteryPage";
 import SpaceDronePage from "./pages/SpaceDronePage";
 import AetherPage from "./pages/AetherPage";
+import OrbPage from "./pages/OrbPage";
+import DeadAirPage from "./pages/DeadAirPage";
+import FourcastPage from "./pages/FourcastPage";
 import NotFound from "./pages/NotFound";
 
 function Router() {
@@ -46,6 +49,9 @@ function Router() {
         <Route path="/low-battery" component={LowBatteryPage} />
         <Route path="/space-drone" component={SpaceDronePage} />
         <Route path="/aether" component={AetherPage} />
+        <Route path="/orb" component={OrbPage} />
+        <Route path="/dead-air" component={DeadAirPage} />
+        <Route path="/fourcast" component={FourcastPage} />
         <Route component={NotFound} />
       </Switch>
     </>

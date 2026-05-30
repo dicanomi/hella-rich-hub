@@ -2,6 +2,7 @@
  * hella.rich — Landing Page (Hub)
  * Design: Cinematic Product Lab — A24 × Braun × late-night test pattern
  * All images: existing Cloudfront assets from deployed repos
+ * All links: internal Manus routes only — no external hella.rich URLs
  * Featured: THE EYE — flagship product, first position, 1.4× taller
  */
 import { useEffect, useRef, useState } from 'react';
@@ -173,7 +174,7 @@ function AboutModal({ onClose }: { onClose: () => void }) {
           },
           {
             label: 'Why it exists',
-            body: 'Because most of the internet is trying to sell you something or explain itself. hella.rich does neither. It just sits there, strangely polite, waiting for your finger to find the button. The design philosophy is Braun meets Teenage Engineering meets a late-night infomercial for something that doesn\'t exist. Premium weirdness. Industrial restraint. Immediate interaction.',
+            body: "Because most of the internet is trying to sell you something or explain itself. hella.rich does neither. It just sits there, strangely polite, waiting for your finger to find the button. The design philosophy is Braun meets Teenage Engineering meets a late-night infomercial for something that doesn't exist. Premium weirdness. Industrial restraint. Immediate interaction.",
           },
         ].map(s => (
           <div key={s.label} style={{ marginBottom: '40px' }}>
@@ -186,15 +187,15 @@ function AboutModal({ onClose }: { onClose: () => void }) {
           <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 'clamp(8px,0.85vw,10px)', letterSpacing: '0.22em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginBottom: '16px' }}>The products</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {[
-              { title: 'THE EYE', tagline: 'A strange object that notices you.', href: '/the-eye' },
-              { title: 'LOW BATTERY', tagline: 'The sound you ignore until it becomes your personality.', href: '/low-battery' },
-              { title: 'SPACE DRONE', tagline: 'A drifting machine for doing absolutely nothing.', href: '/space-drone' },
-              { title: 'ÆTHER', tagline: 'Impossible to sound bad.', href: '/aether' },
-              { title: 'DEAD AIR', tagline: 'Late night radio scanner.', href: 'https://dead-air.hella.rich' },
-              { title: 'ORB', tagline: 'A living object.', href: 'https://orb.hella.rich' },
-              { title: 'FOURCAST', tagline: 'A weather app predicting the end of the world. Politely.', href: 'https://happyforecast-y2gqad9t.manus.space' },
+              { title: 'THE EYE',     tagline: 'A strange object that notices you.',                          href: '/the-eye' },
+              { title: 'LOW BATTERY', tagline: 'The sound you ignore until it becomes your personality.',     href: '/low-battery' },
+              { title: 'SPACE DRONE', tagline: 'A drifting machine for doing absolutely nothing.',            href: '/space-drone' },
+              { title: 'ÆTHER',       tagline: 'Impossible to sound bad.',                                    href: '/aether' },
+              { title: 'DEAD AIR',    tagline: 'Late night radio scanner.',                                   href: '/dead-air' },
+              { title: 'ORB',         tagline: 'A living object.',                                            href: '/orb' },
+              { title: 'FOURCAST',    tagline: 'A weather app predicting the end of the world. Politely.',    href: '/fourcast' },
             ].map(p => (
-              <a
+              <Link
                 key={p.title}
                 href={p.href}
                 style={{
@@ -203,12 +204,13 @@ function AboutModal({ onClose }: { onClose: () => void }) {
                   borderBottom: '1px solid rgba(255,255,255,0.06)',
                   transition: 'opacity 0.2s ease',
                 }}
-                onMouseEnter={e => (e.currentTarget.style.opacity = '0.7')}
-                onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+                onClick={onClose}
+                onMouseEnter={e => ((e.currentTarget as HTMLElement).style.opacity = '0.7')}
+                onMouseLeave={e => ((e.currentTarget as HTMLElement).style.opacity = '1')}
               >
                 <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 'clamp(9px,0.9vw,11px)', letterSpacing: '0.16em', color: 'rgba(255,255,255,0.75)', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>{p.title}</span>
                 <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 'clamp(12px,1.2vw,14px)', color: 'rgba(255,255,255,0.35)', fontWeight: 300 }}>{p.tagline}</span>
-              </a>
+              </Link>
             ))}
           </div>
         </div>
@@ -232,13 +234,12 @@ interface ProjectCardProps {
   image: string;
   index: number;
   live?: boolean;
-  externalUrl?: string;
   cta?: string;
   featured?: boolean;
   enterDelay?: number;
 }
 
-function ProjectCard({ slug, title, tagline, image, index, live = true, externalUrl, cta, featured = false, enterDelay = 0 }: ProjectCardProps) {
+function ProjectCard({ slug, title, tagline, image, index, live = true, cta, featured = false, enterDelay = 0 }: ProjectCardProps) {
   const [hovered, setHovered] = useState(false);
   const [visible, setVisible] = useState(false);
   const [pressed, setPressed] = useState(false);
@@ -248,7 +249,6 @@ function ProjectCard({ slug, title, tagline, image, index, live = true, external
     return () => clearTimeout(t);
   }, [enterDelay]);
 
-  // Per-product font
   const titleFont =
     slug === 'space-drone' ? "'Space Mono', 'Courier New', monospace" :
     slug === 'aether'      ? "'IBM Plex Mono', 'DM Mono', monospace" :
@@ -439,7 +439,7 @@ function ProjectCard({ slug, title, tagline, image, index, live = true, external
   );
 
   if (!live) return <div style={{ opacity: 0.35 }}>{content}</div>;
-  if (externalUrl) return <a href={externalUrl} style={{ display: 'block', textDecoration: 'none', color: 'inherit' }}>{content}</a>;
+  // All routes are internal — use Link for all
   return <Link href={`/${slug}`} style={{ display: 'block', textDecoration: 'none', color: 'inherit' }}>{content}</Link>;
 }
 
@@ -542,86 +542,20 @@ export default function Landing() {
           </p>
         </div>
 
-        {/* ── Cards ── */}
+        {/* ── Cards — all internal routes ── */}
         <main style={{
           padding: '0 clamp(24px,5vw,72px) clamp(64px,10vh,100px)',
           display: 'flex',
           flexDirection: 'column',
           gap: 'clamp(3px,0.4vw,6px)',
         }}>
-          {/* Featured: THE EYE */}
-          <ProjectCard
-            slug="the-eye"
-            title="THE EYE"
-            tagline="A strange object that notices you."
-            cta="Look"
-            image={CARD_THE_EYE}
-            index={1}
-            live={true}
-            featured={true}
-            enterDelay={80}
-          />
-          <ProjectCard
-            slug="low-battery"
-            title="LOW BATTERY"
-            tagline="The sound you ignore until it becomes your personality."
-            cta="Begin Ignoring"
-            image={CARD_LOW_BATTERY}
-            index={2}
-            live={true}
-            enterDelay={140}
-          />
-          <ProjectCard
-            slug="orb"
-            title="ORB"
-            tagline="A living object."
-            cta="Touch It"
-            image={CARD_ORB}
-            index={3}
-            live={true}
-            externalUrl="https://orb.hella.rich"
-            enterDelay={200}
-          />
-          <ProjectCard
-            slug="space-drone"
-            title="SPACE DRONE"
-            tagline="A drifting machine for doing absolutely nothing."
-            image={CARD_SPACE_DRONE}
-            index={4}
-            live={true}
-            enterDelay={260}
-          />
-          <ProjectCard
-            slug="aether"
-            title="ÆTHER"
-            tagline="Impossible to sound bad."
-            image={CARD_AETHER}
-            index={5}
-            live={true}
-            enterDelay={320}
-          />
-          <ProjectCard
-            slug="dead-air"
-            title="DEAD AIR"
-            tagline="Late night radio scanner."
-            cta="Tune In"
-            image={CARD_DEAD_AIR}
-            index={6}
-            live={true}
-            externalUrl="https://dead-air.hella.rich"
-            enterDelay={380}
-          />
-          <ProjectCard
-            slug="fourcast"
-            title="FOURCAST"
-            tagline="A weather app predicting the end of the world. Politely."
-            cta="Check My Day"
-            image={CARD_FOURCAST}
-            index={7}
-            live={true}
-            externalUrl="https://happyforecast-y2gqad9t.manus.space"
-            enterDelay={440}
-          />
+          <ProjectCard slug="the-eye"     title="THE EYE"     tagline="A strange object that notices you."                         cta="Look"            image={CARD_THE_EYE}     index={1} featured={true}  enterDelay={80}  />
+          <ProjectCard slug="low-battery" title="LOW BATTERY" tagline="The sound you ignore until it becomes your personality."    cta="Begin Ignoring"  image={CARD_LOW_BATTERY} index={2}               enterDelay={140} />
+          <ProjectCard slug="orb"         title="ORB"         tagline="A living object."                                           cta="Touch It"        image={CARD_ORB}         index={3}               enterDelay={200} />
+          <ProjectCard slug="space-drone" title="SPACE DRONE" tagline="A drifting machine for doing absolutely nothing."                                 image={CARD_SPACE_DRONE} index={4}               enterDelay={260} />
+          <ProjectCard slug="aether"      title="ÆTHER"       tagline="Impossible to sound bad."                                                         image={CARD_AETHER}      index={5}               enterDelay={320} />
+          <ProjectCard slug="dead-air"    title="DEAD AIR"    tagline="Late night radio scanner."                                  cta="Tune In"         image={CARD_DEAD_AIR}    index={6}               enterDelay={380} />
+          <ProjectCard slug="fourcast"    title="FOURCAST"    tagline="A weather app predicting the end of the world. Politely."   cta="Check My Day"    image={CARD_FOURCAST}    index={7}               enterDelay={440} />
         </main>
 
         {/* ── Footer ── */}
@@ -647,8 +581,8 @@ export default function Landing() {
                 padding: 0,
                 transition: 'color 0.2s ease',
               }}
-              onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.65)')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.35)')}
+              onMouseEnter={e => ((e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.65)')}
+              onMouseLeave={e => ((e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.35)')}
             >
               About
             </button>
@@ -665,8 +599,8 @@ export default function Landing() {
                 textDecoration: 'none',
                 transition: 'color 0.2s ease',
               }}
-              onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.65)')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.35)')}
+              onMouseEnter={e => ((e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.65)')}
+              onMouseLeave={e => ((e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.35)')}
             >
               GitHub
             </a>
