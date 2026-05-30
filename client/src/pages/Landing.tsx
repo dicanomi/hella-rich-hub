@@ -162,28 +162,28 @@ function AboutModal({ onClose }: { onClose: () => void }) {
         </button>
 
         <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 'clamp(9px,0.9vw,11px)', letterSpacing: '0.22em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginBottom: '32px' }}>hella.rich</div>
-        <h1 style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 'clamp(32px,5vw,64px)', fontWeight: 600, color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.025em', lineHeight: 1.05, margin: '0 0 16px' }}>
-          Hella Rich.<br />Mega Poor.
-        </h1>
-        <p style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 'clamp(14px,1.4vw,17px)', color: 'rgba(255,255,255,0.42)', fontWeight: 300, lineHeight: 1.6, margin: '0 0 48px', maxWidth: '520px' }}>
-          Professionally crafted digital nonsense.
-        </p>
 
-        {[
-          {
-            label: 'What this is',
-            body: 'hella.rich is a collection of experimental interactive web apps built around a single philosophy: the experience starts the moment you arrive. No onboarding. No tutorial. No settings panel. Just a dumb button and something weird that happens when you press it. Each product is a beautifully unnecessary object — not a website, not a SaaS tool. Something closer to a toy, an instrument, or a piece of interactive art that happens to run in a browser.',
-          },
-          {
-            label: 'Why it exists',
-            body: "Because most of the internet is trying to sell you something or explain itself. hella.rich does neither. It just sits there, strangely polite, waiting for your finger to find the button. The design philosophy is Braun meets Teenage Engineering meets a late-night infomercial for something that doesn't exist. Premium weirdness. Industrial restraint. Immediate interaction.",
-          },
-        ].map(s => (
-          <div key={s.label} style={{ marginBottom: '40px' }}>
-            <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 'clamp(8px,0.85vw,10px)', letterSpacing: '0.22em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginBottom: '12px' }}>{s.label}</div>
-            <p style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 'clamp(13px,1.3vw,16px)', color: 'rgba(255,255,255,0.62)', fontWeight: 300, lineHeight: 1.7, margin: 0 }}>{s.body}</p>
-          </div>
-        ))}
+        <p style={{
+          fontFamily: "'Space Grotesk', sans-serif",
+          fontSize: 'clamp(14px,1.5vw,18px)',
+          color: 'rgba(255,255,255,0.72)',
+          fontWeight: 300,
+          lineHeight: 1.8,
+          margin: '0 0 48px',
+          maxWidth: '480px',
+        }}>
+          Small internet things.<br />
+          <br />
+          Built with AI.<br />
+          Directed by a human.<br />
+          <br />
+          Experiments in interaction,<br />
+          sound,<br />
+          motion,<br />
+          and questionable decisions.<br />
+          <br />
+          Made by Dicanomi.
+        </p>
 
         <div style={{ marginBottom: '48px' }}>
           <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 'clamp(8px,0.85vw,10px)', letterSpacing: '0.22em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginBottom: '16px' }}>The products</div>
