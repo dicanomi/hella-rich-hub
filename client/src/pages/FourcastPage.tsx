@@ -10,6 +10,7 @@
  * Final stage 9 triggers ALIEN TRANSMISSION
  */
 
+import '../fourcast.css';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { HellaRichSEO } from '../components/HellaRichSEO';
 

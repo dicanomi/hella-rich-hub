@@ -1,0 +1,1062 @@
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   HAPPY AS FORECAST — Global Styles
+   Design: Pixel / e-ink weather card aesthetic
+   Colors: #1a1a1a (outer bg), #c8c4a0 (card bg), #1a1a1a (card text)
+   Font: "Press Start 2P" (pixel/bitmap feel)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #1a1a1a;
+  --card: #c8c4a0;
+  --card-dark: #b8b494;
+  --card-border: #8a8870;
+  --ink: #1a1a1a;
+  --ink-muted: #3a3a2a;
+  --ink-faint: #6a6858;
+  --yellow: #f5d800;
+  --yellow-hover: #e6ca00;
+  --red: #cc2200;
+  --font-pixel: 'Press Start 2P', monospace;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-pixel);
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+}
+
+/* ── App shell ── */
+.haf-app {
+  min-height: 100vh;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(56px, 9vh, 88px) clamp(16px, 4vw, 40px) clamp(24px, 4vh, 48px);
+}
+
+/* ── Header ── */
+.haf-header {
+  width: 100%;
+  max-width: 480px;
+  margin-bottom: clamp(16px, 3vh, 28px);
+}
+
+.haf-header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.haf-title {
+  font-size: clamp(22px, 5vw, 32px);
+  font-family: var(--font-pixel);
+  color: #ffffff;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+.haf-header-icons {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-top: 4px;
+}
+
+.haf-header-icon {
+  color: rgba(255,255,255,0.7);
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s;
+}
+
+.haf-header-icon:hover { color: #ffffff; }
+
+.haf-tagline {
+  font-size: clamp(7px, 1.2vw, 9px);
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 0.18em;
+  margin-top: 8px;
+  font-family: var(--font-pixel);
+}
+
+/* ── Weather Card ── */
+.haf-card {
+  width: 100%;
+  max-width: 480px;
+  background: var(--card);
+  border-radius: 10px;
+  border: 2px solid var(--card-border);
+  padding: clamp(14px, 2.5vw, 22px);
+  position: relative;
+  overflow: hidden;
+  transition: background 0.4s ease;
+}
+
+/* Stage-based card tints */
+.haf-card.stage-2 { background: #b8b494; }
+.haf-card.stage-3 { background: #a8a484; }
+.haf-card.stage-4 { background: #989474; }
+.haf-card.stage-5 { background: #888464; }
+.haf-card.stage-6 { background: #1a1a1a; border-color: #444; }
+.haf-card.stage-6 .haf-card-inner { color: #ffffff; }
+.haf-card.stage-6 .haf-divider { border-color: rgba(255,255,255,0.2); }
+.haf-card.stage-6 .haf-stat-divider { background: rgba(255,255,255,0.2); }
+.haf-card.stage-6 .haf-stat-label,
+.haf-card.stage-6 .haf-stat-value,
+.haf-card.stage-6 .haf-location,
+.haf-card.stage-6 .haf-time,
+.haf-card.stage-6 .haf-condition-sub,
+.haf-card.stage-6 .haf-footer-copy { color: rgba(255,255,255,0.75); }
+.haf-card.stage-6 .haf-temp { color: #ffffff; }
+.haf-card.stage-6 .haf-condition-label { color: rgba(255,255,255,0.9); }
+.haf-card.stage-6 .haf-main-message { color: #ffffff; }
+
+/* Glitch animation */
+.haf-card.glitching {
+  animation: cardGlitch 0.12s steps(1) infinite;
+}
+
+@keyframes cardGlitch {
+  0%   { transform: translate(0, 0); filter: none; }
+  20%  { transform: translate(-3px, 1px); filter: hue-rotate(90deg) saturate(2); }
+  40%  { transform: translate(3px, -1px); filter: hue-rotate(-90deg) saturate(2); }
+  60%  { transform: translate(-2px, 2px); filter: brightness(1.4); }
+  80%  { transform: translate(2px, -2px); filter: none; }
+  100% { transform: translate(0, 0); filter: none; }
+}
+
+/* Shake animation */
+.haf-card.shaking {
+  animation: cardShake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) infinite;
+}
+
+@keyframes cardShake {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  10%       { transform: translate(-2px, -1px) rotate(-0.3deg); }
+  30%       { transform: translate(2px, 1px) rotate(0.3deg); }
+  50%       { transform: translate(-1px, 2px) rotate(-0.2deg); }
+  70%       { transform: translate(1px, -2px) rotate(0.2deg); }
+  90%       { transform: translate(-2px, 1px) rotate(-0.1deg); }
+}
+
+.haf-card-inner { color: var(--ink); }
+
+/* ── Card Top Row ── */
+.haf-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: clamp(12px, 2vh, 18px);
+}
+
+.haf-location-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.haf-location {
+  font-size: clamp(6px, 1vw, 8px);
+  letter-spacing: 0.1em;
+  line-height: 1.6;
+  color: var(--ink-muted);
+}
+
+.haf-location strong {
+  display: block;
+  color: var(--ink);
+  font-size: clamp(7px, 1.1vw, 9px);
+}
+
+.haf-time {
+  font-size: clamp(7px, 1.1vw, 9px);
+  color: var(--ink-muted);
+  letter-spacing: 0.05em;
+}
+
+/* ── Weather Icon + Temp Row ── */
+.haf-weather-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: clamp(4px, 1vh, 8px);
+}
+
+.haf-weather-icon {
+  width: clamp(64px, 14vw, 96px);
+  height: clamp(64px, 14vw, 96px);
+  flex-shrink: 0;
+}
+
+.haf-weather-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.haf-temp-block {
+  text-align: right;
+}
+
+.haf-temp {
+  font-size: clamp(44px, 11vw, 72px);
+  font-family: var(--font-pixel);
+  color: var(--ink);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.haf-condition-label {
+  font-size: clamp(9px, 1.5vw, 12px);
+  color: var(--ink);
+  letter-spacing: 0.08em;
+  margin-top: 4px;
+  text-align: right;
+}
+
+.haf-condition-sub {
+  font-size: clamp(7px, 1.1vw, 9px);
+  color: var(--ink-muted);
+  letter-spacing: 0.06em;
+  margin-top: 4px;
+  text-align: right;
+}
+
+/* ── Divider ── */
+.haf-divider {
+  border: none;
+  border-top: 2px solid var(--ink);
+  margin: clamp(10px, 2vh, 16px) 0;
+  opacity: 0.25;
+}
+
+/* ── Main Message ── */
+.haf-main-message {
+  font-size: clamp(18px, 4.5vw, 28px);
+  font-family: var(--font-pixel);
+  color: var(--ink);
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+  margin-bottom: clamp(8px, 1.5vh, 14px);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.haf-main-message .haf-smiley {
+  display: inline-block;
+  font-style: normal;
+  animation: smileWobble 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes smileWobble {
+  0%, 100% { transform: rotate(0deg); }
+  25%       { transform: rotate(8deg); }
+  75%       { transform: rotate(-8deg); }
+}
+
+/* Stage 6: inverted message bar */
+.haf-main-message-bar {
+  background: var(--ink);
+  color: #ffffff;
+  padding: clamp(8px, 1.5vh, 12px) clamp(10px, 2vw, 16px);
+  margin: 0 calc(-1 * clamp(14px, 2.5vw, 22px));
+  margin-bottom: clamp(8px, 1.5vh, 14px);
+}
+
+.haf-main-message-bar .haf-main-message {
+  color: #ffffff;
+  margin-bottom: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+}
+
+/* ── Stats Row ── */
+.haf-stats {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin-bottom: clamp(10px, 2vh, 16px);
+}
+
+.haf-stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 clamp(6px, 1.2vw, 12px);
+  position: relative;
+}
+
+.haf-stat:first-child { padding-left: 0; }
+.haf-stat:last-child { padding-right: 0; }
+
+.haf-stat-divider {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--ink);
+  opacity: 0.2;
+}
+
+.haf-stat:last-child .haf-stat-divider { display: none; }
+
+.haf-stat-label {
+  font-size: clamp(5px, 0.85vw, 7px);
+  color: var(--ink-faint);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.haf-stat-value {
+  font-size: clamp(8px, 1.4vw, 11px);
+  color: var(--ink);
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+}
+
+/* ── Footer Copy ── */
+.haf-footer-copy {
+  font-size: clamp(7px, 1.1vw, 9px);
+  color: var(--ink-muted);
+  letter-spacing: 0.1em;
+  line-height: 1.7;
+  text-transform: uppercase;
+}
+
+/* ── Warning Banners ── */
+.haf-warnings {
+  margin: clamp(6px, 1.2vh, 10px) 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.haf-warning {
+  font-size: clamp(6px, 0.9vw, 8px);
+  letter-spacing: 0.12em;
+  padding: 5px 8px;
+  border: 1px solid currentColor;
+  animation: warningPulse 1s steps(1) infinite;
+}
+
+.haf-warning-red    { color: #cc2200; border-color: #cc2200; background: rgba(204,34,0,0.08); }
+.haf-warning-orange { color: #cc6600; border-color: #cc6600; background: rgba(204,102,0,0.08); }
+.haf-warning-blue   { color: #0044cc; border-color: #0044cc; background: rgba(0,68,204,0.08); }
+.haf-warning-green  { color: #006622; border-color: #006622; background: rgba(0,102,34,0.08); }
+
+.haf-card.stage-6 .haf-warning-red    { color: #ff4422; border-color: #ff4422; background: rgba(255,68,34,0.12); }
+.haf-card.stage-6 .haf-warning-orange { color: #ff8822; border-color: #ff8822; background: rgba(255,136,34,0.12); }
+.haf-card.stage-6 .haf-warning-blue   { color: #4488ff; border-color: #4488ff; background: rgba(68,136,255,0.12); }
+.haf-card.stage-6 .haf-warning-green  { color: #44ff88; border-color: #44ff88; background: rgba(68,255,136,0.12); }
+
+@keyframes warningPulse {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0.5; }
+}
+
+/* ── Stage Dots ── */
+.haf-stage-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: clamp(10px, 2vh, 16px);
+}
+
+.haf-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  transition: background 0.3s;
+}
+
+.haf-dot.active {
+  background: var(--yellow);
+}
+
+/* ── CTA Button ── */
+.haf-cta {
+  width: 100%;
+  max-width: 480px;
+  margin-top: clamp(12px, 2.5vh, 20px);
+}
+
+.haf-btn {
+  width: 100%;
+  background: var(--yellow);
+  color: var(--ink);
+  font-family: var(--font-pixel);
+  font-size: clamp(10px, 1.8vw, 14px);
+  letter-spacing: 0.1em;
+  padding: clamp(14px, 2.5vh, 20px) clamp(20px, 4vw, 32px);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: background 0.15s, transform 0.1s;
+  position: relative;
+  overflow: hidden;
+}
+
+.haf-btn:hover  { background: var(--yellow-hover); }
+.haf-btn:active { transform: scale(0.98); }
+
+.haf-btn-arrow {
+  font-size: 1.1em;
+  transition: transform 0.2s;
+}
+
+.haf-btn:hover .haf-btn-arrow { transform: translateX(4px); }
+
+/* Replay button */
+.haf-btn-replay {
+  background: var(--ink);
+  color: var(--yellow);
+  border: 2px solid var(--yellow);
+}
+
+.haf-btn-replay:hover { background: #2a2a2a; }
+
+/* Running indicator */
+.haf-running {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: clamp(14px, 2.5vh, 20px);
+  color: rgba(255,255,255,0.45);
+  font-size: clamp(7px, 1vw, 9px);
+  letter-spacing: 0.18em;
+}
+
+.haf-running-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--yellow);
+  animation: runningPulse 0.8s steps(1) infinite;
+}
+
+@keyframes runningPulse {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* ── Sound toggle ── */
+.haf-sound-btn {
+  display: block;
+  margin: clamp(8px, 1.5vh, 12px) auto 0;
+  background: none;
+  border: 1px solid rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.35);
+  font-family: var(--font-pixel);
+  font-size: clamp(6px, 0.85vw, 8px);
+  letter-spacing: 0.15em;
+  padding: 6px 12px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.haf-sound-btn:hover {
+  color: rgba(255,255,255,0.65);
+  border-color: rgba(255,255,255,0.35);
+}
+
+/* ── Lightning flash overlay ── */
+.haf-lightning {
+  position: fixed;
+  inset: 0;
+  background: rgba(255,255,255,0.85);
+  pointer-events: none;
+  z-index: 9998;
+  animation: lightningFlash 0.15s ease-out forwards;
+}
+
+@keyframes lightningFlash {
+  0%   { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ── Pixel weather icons ── */
+.pixel-icon {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* ── Ticker ── */
+.haf-ticker-outer {
+  width: 100%;
+  max-width: 480px;
+  overflow: hidden;
+  margin-top: clamp(8px, 1.5vh, 14px);
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 8px;
+}
+
+.haf-ticker-inner {
+  display: inline-block;
+  white-space: nowrap;
+  animation: tickerScroll 22s linear infinite;
+  font-size: clamp(6px, 0.85vw, 8px);
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.14em;
+}
+
+@keyframes tickerScroll {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(-100%); }
+}
+
+/* ── Animated rain/hail particles on card ── */
+.haf-card-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: inherit;
+  z-index: 1;
+}
+
+.haf-rain-drop {
+  position: absolute;
+  width: 1px;
+  background: rgba(26,26,26,0.35);
+  animation: rainFall linear infinite;
+}
+
+.haf-hail-drop {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background: rgba(26,26,26,0.5);
+  border-radius: 50%;
+  animation: hailFall linear infinite;
+}
+
+.haf-card.stage-6 .haf-rain-drop { background: rgba(255,255,255,0.25); }
+.haf-card.stage-6 .haf-hail-drop { background: rgba(255,255,255,0.4); }
+
+@keyframes rainFall {
+  from { transform: translateY(-10px); opacity: 0.8; }
+  to   { transform: translateY(110%); opacity: 0; }
+}
+
+@keyframes hailFall {
+  from { transform: translateY(-10px) translateX(0); opacity: 1; }
+  to   { transform: translateY(110%) translateX(8px); opacity: 0.3; }
+}
+
+/* ── Glitch text on temp during stage 2 ── */
+.haf-temp-glitch {
+  animation: tempGlitch 0.08s steps(1) infinite;
+}
+
+@keyframes tempGlitch {
+  0%   { clip-path: inset(0 0 0 0); transform: translate(0); }
+  20%  { clip-path: inset(20% 0 60% 0); transform: translate(-4px, 0); color: #ff2200; }
+  40%  { clip-path: inset(60% 0 10% 0); transform: translate(4px, 0); color: #0022ff; }
+  60%  { clip-path: inset(40% 0 30% 0); transform: translate(-2px, 0); }
+  80%  { clip-path: inset(0 0 0 0); transform: translate(0); }
+  100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+}
+
+/* ── Scanline texture on card ── */
+.haf-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0,0,0,0.03) 3px,
+    rgba(0,0,0,0.03) 4px
+  );
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* ── ALIEN TRANSMISSION SCREEN ── */
+.alien-screen {
+  position: fixed;
+  inset: 0;
+  background: #0a0a0a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(20px, 4vh, 36px);
+  z-index: 99999;
+  font-family: var(--font-pixel);
+}
+
+.alien-crt {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(255,255,255,0.025) 3px,
+    rgba(255,255,255,0.025) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.alien-head-wrap {
+  width: clamp(140px, 28vw, 220px);
+  height: clamp(175px, 35vw, 275px);
+  position: relative;
+  z-index: 2;
+  transition: transform 0.06s linear;
+}
+
+.alien-head-wrap svg {
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  filter: drop-shadow(0 0 12px rgba(180,180,180,0.15));
+}
+
+.alien-glitch .alien-head-wrap,
+.alien-glitch {
+  animation: alienGlitch 0.1s steps(1) 2;
+}
+
+@keyframes alienGlitch {
+  0%   { filter: none; transform: translate(0,0); }
+  25%  { filter: hue-rotate(180deg) saturate(0); transform: translate(-3px, 0); }
+  50%  { filter: none; transform: translate(3px, 0); }
+  75%  { filter: brightness(1.5) saturate(0); transform: translate(0, -2px); }
+  100% { filter: none; transform: translate(0,0); }
+}
+
+.alien-subtitle {
+  position: relative;
+  z-index: 2;
+  background: #000;
+  color: #fff;
+  font-family: var(--font-pixel);
+  font-size: clamp(10px, 2.2vw, 16px);
+  letter-spacing: 0.1em;
+  padding: clamp(10px, 2vh, 16px) clamp(16px, 4vw, 28px);
+  text-align: center;
+  max-width: clamp(280px, 70vw, 480px);
+  border: 1px solid rgba(255,255,255,0.15);
+  animation: subtitleIn 0.2s cubic-bezier(0.23,1,0.32,1) both;
+  line-height: 1.5;
+}
+
+@keyframes subtitleIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.alien-stare-indicator {
+  width: 4px;
+  height: 4px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50%;
+  animation: stareBlip 1.2s ease-in-out infinite;
+}
+
+@keyframes stareBlip {
+  0%, 100% { opacity: 0.2; }
+  50%       { opacity: 0.6; }
+}
+
+/* ── Alien ending messages ── */
+.alien-ending-msg {
+  position: absolute;
+  bottom: clamp(80px, 15vh, 140px);
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  font-family: 'DM Mono', 'Space Mono', monospace;
+  font-size: clamp(8px, 1.1vw, 11px);
+  letter-spacing: 0.22em;
+  color: rgba(255,255,255,0.45);
+  text-transform: uppercase;
+  line-height: 1.8;
+  white-space: nowrap;
+  animation: alienEndingFade 0.4s ease both;
+}
+.alien-ending-weather {
+  color: rgba(255,255,255,0.28);
+  font-size: clamp(7px, 0.95vw, 9px);
+}
+@keyframes alienEndingFade {
+  from { opacity: 0; transform: translateX(-50%) translateY(4px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.alien-tomorrow-btn {
+  position: relative;
+  z-index: 2;
+  background: none;
+  border: 1px solid rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.65);
+  font-family: var(--font-pixel);
+  font-size: clamp(7px, 1.2vw, 10px);
+  letter-spacing: 0.18em;
+  padding: clamp(8px, 1.5vh, 12px) clamp(16px, 3vw, 24px);
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+  animation: btnFadeIn 0.6s ease both;
+}
+
+.alien-tomorrow-btn:hover {
+  color: rgba(255,255,255,0.9);
+  border-color: rgba(255,255,255,0.6);
+}
+
+@keyframes btnFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Heat shimmer overlay ── */
+.haf-heat-shimmer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(255,120,0,0.04) 0%,
+    rgba(255,80,0,0.08) 40%,
+    rgba(200,40,0,0.12) 70%,
+    rgba(255,60,0,0.06) 100%
+  );
+  animation: heatShimmer 3s ease-in-out infinite alternate;
+}
+
+@keyframes heatShimmer {
+  from { opacity: 0.6; transform: scaleY(1); }
+  to   { opacity: 1; transform: scaleY(1.01); }
+}
+
+/* Heat mode — tint the app background */
+.haf-app.heat-mode {
+  background: radial-gradient(ellipse at 50% 0%, rgba(60,20,0,0.4) 0%, #1a1a1a 60%);
+}
+
+/* ── Heat card stages ── */
+.haf-card.stage-heat-1 { background: #c4b890; border-color: #cc8800; }
+.haf-card.stage-heat-1 .haf-temp { color: #cc6600; }
+.haf-card.stage-heat-1 .haf-condition-label { color: #aa5500; }
+
+.haf-card.stage-heat-2 { background: #b89060; border-color: #cc5500; }
+.haf-card.stage-heat-2 .haf-card-inner { color: rgba(40,20,0,0.9); }
+.haf-card.stage-heat-2 .haf-temp { color: #cc3300; }
+.haf-card.stage-heat-2 .haf-condition-label { color: #aa2200; }
+.haf-card.stage-heat-2 .haf-stat-label,
+.haf-card.stage-heat-2 .haf-stat-value,
+.haf-card.stage-heat-2 .haf-footer-copy,
+.haf-card.stage-heat-2 .haf-condition-sub { color: rgba(60,30,0,0.75); }
+.haf-card.stage-heat-2 .haf-divider { border-color: rgba(180,60,0,0.3); }
+.haf-card.stage-heat-2 .haf-stat-divider { background: rgba(180,60,0,0.25); }
+
+.haf-card.stage-heat-3 { background: #8a4820; border-color: #cc2200; }
+.haf-card.stage-heat-3 .haf-card-inner { color: rgba(255,200,150,0.9); }
+.haf-card.stage-heat-3 .haf-temp { color: #ff6622; }
+.haf-card.stage-heat-3 .haf-condition-label { color: rgba(255,180,100,0.9); }
+.haf-card.stage-heat-3 .haf-stat-label,
+.haf-card.stage-heat-3 .haf-stat-value,
+.haf-card.stage-heat-3 .haf-footer-copy,
+.haf-card.stage-heat-3 .haf-condition-sub { color: rgba(255,160,80,0.75); }
+.haf-card.stage-heat-3 .haf-divider { border-color: rgba(255,80,0,0.3); }
+.haf-card.stage-heat-3 .haf-stat-divider { background: rgba(255,80,0,0.25); }
+
+.haf-card.stage-heat-4 { background: #3a1000; border-color: #ff2200; }
+.haf-card.stage-heat-4 .haf-card-inner { color: rgba(255,140,80,0.95); }
+.haf-card.stage-heat-4 .haf-temp { color: #ff4422; }
+.haf-card.stage-heat-4 .haf-condition-label { color: rgba(255,120,60,0.95); }
+.haf-card.stage-heat-4 .haf-stat-label,
+.haf-card.stage-heat-4 .haf-stat-value,
+.haf-card.stage-heat-4 .haf-footer-copy,
+.haf-card.stage-heat-4 .haf-condition-sub { color: rgba(255,120,60,0.7); }
+.haf-card.stage-heat-4 .haf-divider { border-color: rgba(255,60,0,0.3); }
+.haf-card.stage-heat-4 .haf-stat-divider { background: rgba(255,60,0,0.2); }
+.haf-card.stage-heat-4 .haf-main-message { color: rgba(255,160,80,0.95); }
+
+/* ── Big cinematic message overlay ── */
+.haf-big-message-overlay {
+  position: fixed;
+  bottom: clamp(80px, 14vh, 120px);
+  left: 0;
+  right: 0;
+  z-index: 100;
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+  padding: 0 clamp(16px, 4vw, 40px);
+}
+
+.haf-big-message-text {
+  font-family: var(--font-pixel);
+  font-size: clamp(14px, 3.5vw, 28px);
+  letter-spacing: 0.08em;
+  line-height: 1.3;
+  text-align: center;
+  color: rgba(255,255,255,0.88);
+  text-transform: uppercase;
+  max-width: 480px;
+  animation: bigMsgIn 0.35s cubic-bezier(0.23,1,0.32,1) both;
+}
+
+.haf-big-message-apocalypse .haf-big-message-text {
+  color: var(--yellow);
+  text-shadow: 0 0 20px rgba(245,216,0,0.4);
+}
+
+.haf-big-message-existential .haf-big-message-text {
+  color: rgba(180,160,255,0.9);
+  text-shadow: 0 0 24px rgba(120,80,255,0.5);
+}
+
+@keyframes bigMsgIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Day counter ── */
+.haf-day-counter {
+  position: fixed;
+  top: clamp(12px, 2vh, 20px);
+  right: clamp(12px, 2vw, 20px);
+  font-family: var(--font-pixel);
+  font-size: clamp(6px, 0.85vw, 8px);
+  letter-spacing: 0.18em;
+  color: rgba(255,255,255,0.25);
+  z-index: 9998;
+  pointer-events: none;
+}
+
+/* ── Emotional memory notice ── */
+.haf-memory-notice {
+  width: 100%;
+  max-width: 480px;
+  font-family: var(--font-pixel);
+  font-size: clamp(6px, 0.9vw, 8px);
+  letter-spacing: 0.14em;
+  color: var(--yellow);
+  text-align: center;
+  margin-bottom: clamp(6px, 1vh, 10px);
+  padding: 6px 12px;
+  border: 1px solid rgba(245,216,0,0.3);
+  background: rgba(245,216,0,0.06);
+  animation: memoryFadeIn 0.5s ease both;
+}
+
+@keyframes memoryFadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── History dots ── */
+.haf-dot-history { opacity: 0.7; }
+.haf-dot-perfect  { background: #f5d800 !important; }
+.haf-dot-normal   { background: rgba(255,255,255,0.5) !important; }
+.haf-dot-uneasy   { background: #cc6600 !important; }
+.haf-dot-storm    { background: #cc2200 !important; }
+.haf-dot-apocalypse { background: #ff2200 !important; animation: endgameDotPulse 0.8s steps(1) infinite !important; }
+.haf-dot-existential { background: #8844ff !important; animation: voidDotPulse 1.2s ease-in-out infinite !important; }
+
+/* ── Stage 7 — National Panic ── */
+.haf-card.stage-7 { background: #2a1a0a; border-color: #cc4400; }
+.haf-card.stage-7 .haf-card-inner { color: rgba(255,200,150,0.9); }
+.haf-card.stage-7 .haf-divider { border-color: rgba(255,100,0,0.3); }
+.haf-card.stage-7 .haf-stat-divider { background: rgba(255,100,0,0.25); }
+.haf-card.stage-7 .haf-stat-label,
+.haf-card.stage-7 .haf-stat-value,
+.haf-card.stage-7 .haf-location,
+.haf-card.stage-7 .haf-time,
+.haf-card.stage-7 .haf-condition-sub,
+.haf-card.stage-7 .haf-footer-copy { color: rgba(255,180,100,0.75); }
+.haf-card.stage-7 .haf-temp { color: #ff6622; }
+.haf-card.stage-7 .haf-condition-label { color: rgba(255,150,80,0.9); }
+.haf-card.stage-7 .haf-main-message { color: rgba(255,200,150,0.95); }
+
+/* ── Stage 8 — Total Earth Failure ── */
+.haf-card.stage-8 { background: #0d0d0d; border-color: #ff2200; }
+.haf-card.stage-8 .haf-card-inner { color: rgba(255,100,80,0.9); }
+.haf-card.stage-8 .haf-divider { border-color: rgba(255,50,0,0.3); }
+.haf-card.stage-8 .haf-stat-divider { background: rgba(255,50,0,0.2); }
+.haf-card.stage-8 .haf-stat-label,
+.haf-card.stage-8 .haf-stat-value,
+.haf-card.stage-8 .haf-location,
+.haf-card.stage-8 .haf-time,
+.haf-card.stage-8 .haf-condition-sub,
+.haf-card.stage-8 .haf-footer-copy { color: rgba(255,120,80,0.7); }
+.haf-card.stage-8 .haf-temp { color: #ff4422; }
+.haf-card.stage-8 .haf-condition-label { color: rgba(255,100,60,0.9); }
+.haf-card.stage-8 .haf-main-message { color: rgba(255,120,80,0.95); }
+
+/* ── Stage 9 — Existential Weather Event ── */
+.haf-card.stage-9 { background: #050508; border-color: rgba(120,80,255,0.5); }
+.haf-card.stage-9 .haf-card-inner { color: rgba(180,160,255,0.9); }
+.haf-card.stage-9 .haf-divider { border-color: rgba(120,80,255,0.25); }
+.haf-card.stage-9 .haf-stat-divider { background: rgba(120,80,255,0.2); }
+.haf-card.stage-9 .haf-stat-label,
+.haf-card.stage-9 .haf-stat-value,
+.haf-card.stage-9 .haf-location,
+.haf-card.stage-9 .haf-time,
+.haf-card.stage-9 .haf-condition-sub,
+.haf-card.stage-9 .haf-footer-copy { color: rgba(160,140,255,0.7); }
+.haf-card.stage-9 .haf-temp { color: rgba(200,180,255,0.9); }
+.haf-card.stage-9 .haf-condition-label { color: rgba(180,160,255,0.9); }
+.haf-card.stage-9 .haf-main-message { color: rgba(200,180,255,0.95); }
+
+/* ── Power flicker ── */
+.haf-card.power-flicker {
+  animation: powerFlicker 0.1s steps(1) 3;
+}
+
+@keyframes powerFlicker {
+  0%, 100% { opacity: 1; filter: none; }
+  33%       { opacity: 0.15; filter: brightness(0.2); }
+  66%       { opacity: 0.8; filter: brightness(1.3); }
+}
+
+/* ── Fire glow on horizon ── */
+.haf-fire-glow {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30vh;
+  background: radial-gradient(ellipse at 50% 100%, rgba(255,80,0,0.25) 0%, rgba(200,40,0,0.1) 40%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  animation: fireFlicker 2s ease-in-out infinite alternate;
+}
+
+@keyframes fireFlicker {
+  from { opacity: 0.7; transform: scaleX(1); }
+  to   { opacity: 1; transform: scaleX(1.05); }
+}
+
+/* ── Sky crack (stage 9) ── */
+.haf-sky-crack {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40vh;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    linear-gradient(135deg, transparent 48%, rgba(120,80,255,0.4) 49%, rgba(120,80,255,0.4) 51%, transparent 52%) 30% 0 / 60px 200px no-repeat,
+    linear-gradient(150deg, transparent 48%, rgba(180,140,255,0.3) 49%, rgba(180,140,255,0.3) 51%, transparent 52%) 60% 0 / 40px 160px no-repeat,
+    linear-gradient(120deg, transparent 48%, rgba(100,60,220,0.25) 49%, rgba(100,60,220,0.25) 51%, transparent 52%) 45% 0 / 30px 120px no-repeat;
+  animation: crackPulse 3s ease-in-out infinite alternate;
+}
+
+@keyframes crackPulse {
+  from { opacity: 0.6; }
+  to   { opacity: 1; }
+}
+
+/* ── Screen crack overlay on app ── */
+.haf-app.screen-crack::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9990;
+  background:
+    linear-gradient(135deg, transparent 49.5%, rgba(180,140,255,0.15) 50%, transparent 50.5%) 20% 10% / 80px 300px no-repeat,
+    linear-gradient(160deg, transparent 49.5%, rgba(120,80,255,0.1) 50%, transparent 50.5%) 70% 5% / 60px 250px no-repeat;
+}
+
+/* ── Purple warning ── */
+.haf-warning-purple {
+  color: #8844ff;
+  border-color: #8844ff;
+  background: rgba(136,68,255,0.08);
+}
+
+.haf-card.stage-8 .haf-warning-purple,
+.haf-card.stage-9 .haf-warning-purple { color: #bb88ff; border-color: #bb88ff; background: rgba(187,136,255,0.12); }
+
+/* ── Fast-flash warning ── */
+.haf-warning-flash {
+  animation: warningFlash 0.5s steps(1) infinite;
+}
+
+@keyframes warningFlash {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* ── Endgame stage dots ── */
+.haf-dot.haf-dot-endgame.active {
+  background: #ff4422;
+  animation: endgameDotPulse 0.8s steps(1) infinite;
+}
+
+@keyframes endgameDotPulse {
+  0%, 49% { background: #ff4422; }
+  50%, 100% { background: rgba(255,68,34,0.3); }
+}
+
+.haf-dot.haf-dot-endgame:last-child.active {
+  background: #8844ff;
+  animation: voidDotPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes voidDotPulse {
+  0%, 100% { background: #8844ff; transform: scale(1); }
+  50%       { background: rgba(136,68,255,0.4); transform: scale(0.6); }
+}
+
+/* ── CHECK TOMORROW button ── */
+.haf-btn-tomorrow {
+  background: #8844ff;
+  color: #ffffff;
+  border: 2px solid #aa66ff;
+}
+
+.haf-btn-tomorrow:hover { background: #7733ee; }
+
+/* ── Rotating text fade ── */
+.haf-rotating {
+  transition: opacity 0.4s ease;
+}
+
+/* ── Responsive ── */
+@media (max-width: 520px) {
+  .haf-temp { font-size: clamp(36px, 14vw, 56px); }
+  .haf-main-message { font-size: clamp(16px, 6vw, 24px); }
+  .haf-title { font-size: clamp(18px, 6vw, 26px); }
+}
