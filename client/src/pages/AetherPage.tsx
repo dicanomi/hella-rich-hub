@@ -7,6 +7,7 @@
  */
 
 import "../aether.css";
+import { HellaRichSEO } from "../components/HellaRichSEO";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useState } from "react";
 import { MacroSlider } from "../components/aether/MacroSlider";
@@ -67,6 +68,12 @@ export default function AetherPage() {
   );
 
   return (
+    <>
+    <HellaRichSEO
+      title="Æther Ambient Synthesizer"
+      description="Impossible to sound bad. An ambient synthesizer with 8 moods and infinite worlds. Part of hella.rich."
+      keywords="Æther, hella.rich, ambient synthesizer, generative music, mood selector, web audio, creative technology"
+    />
     <div className="synth-root">
       {/* ── Full-screen visualizer canvas ─────────────────────────────── */}
       <div className="synth-canvas-layer">
@@ -321,5 +328,6 @@ export default function AetherPage() {
         />
       )}
     </div>
+    </>
   );
 }

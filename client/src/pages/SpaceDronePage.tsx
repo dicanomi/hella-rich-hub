@@ -5,6 +5,7 @@
  */
 
 import { DroneKnob } from "../components/DroneKnob";
+import { HellaRichSEO } from "../components/HellaRichSEO";
 import { DroneViz } from "../components/DroneViz";
 import { FullscreenButton } from "../components/FullscreenButton";
 import { PlanetRockModal } from "../components/PlanetRockModal";
@@ -163,6 +164,12 @@ export default function SpaceDrone() {
   }, []);
 
   return (
+    <>
+    <HellaRichSEO
+      title="Space Drone"
+      description="A drifting machine for doing absolutely nothing. Ambient space drone generator. Part of hella.rich."
+      keywords="Space Drone, hella.rich, ambient drone, space sounds, generative audio, drift, web experience"
+    />
     <div
       style={{
         minHeight: "100vh",
@@ -327,5 +334,6 @@ export default function SpaceDrone() {
         }
             `}</style>
     </div>
+    </>
   );
 }

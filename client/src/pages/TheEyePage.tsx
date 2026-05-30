@@ -20,6 +20,7 @@
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { TheEye } from '../components/TheEye';
+import { HellaRichSEO } from '../components/HellaRichSEO';
 import { usePerhapsAudio } from '../hooks/usePerhapsAudio';
 import { getFortune, getMemoryFortune, FORTUNES } from '../lib/fortunes';
 
@@ -302,6 +303,12 @@ export default function TheEyePage() {
   const showFort = ['revealing', 'showing', 'dissolving'].includes(phase);
 
   return (
+    <>
+    <HellaRichSEO
+      title="The Eye"
+      description="A strange digital object that notices you. Cursor tracking, realistic blinking, cinematic messages. Part of hella.rich."
+      keywords="The Eye, hella.rich, interactive art, cursor tracking, digital object, emotional UX, web experience, AI-native"
+    />
     <div style={{
       width: '100vw', height: '100vh',
       background: '#060608',
@@ -589,5 +596,6 @@ export default function TheEyePage() {
         </a>
       </div>
     </div>
+    </>
   );
 }

@@ -10,6 +10,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { HellaRichSEO } from '../components/HellaRichSEO';
 import { FlyCanvas } from '../components/FlyCanvas';
 import { StatsPanel } from '../components/StatsPanel';
 import { useAudioEngine } from '../hooks/useAudioEngine';
@@ -193,6 +194,12 @@ export default function Home() {
   }, []);
 
   return (
+    <>
+    <HellaRichSEO
+      title="Low Battery"
+      description="A smoke detector with a dying battery. A fly. A sanity meter. An apartment. Part of hella.rich."
+      keywords="Low Battery, hella.rich, smoke detector, interactive art, ambient sound, sanity meter, web experience"
+    />
     <div
       ref={containerRef}
       
@@ -446,5 +453,6 @@ export default function Home() {
       )}
 
     </div>
+    </>
   );
 }

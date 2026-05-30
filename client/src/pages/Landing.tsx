@@ -529,18 +529,7 @@ export default function Landing() {
           }}>
             <H1TypeWriter />
           </h1>
-          <p style={{
-            fontFamily: "'Space Grotesk', sans-serif",
-            fontSize: 'clamp(13px,1.4vw,16px)',
-            color: 'rgba(255,255,255,0.28)',
-            fontWeight: 300,
-            letterSpacing: '0.01em',
-            margin: 'clamp(12px,2vh,20px) 0 0',
-            maxWidth: '520px',
-            lineHeight: 1.5,
-          }}>
-            AI-native product experiments. Designed, directed, and shipped in days.
-          </p>
+
         </div>
 
         {/* ── Cards — all internal routes ── */}
@@ -550,9 +539,9 @@ export default function Landing() {
           flexDirection: 'column',
           gap: 'clamp(3px,0.4vw,6px)',
         }}>
-          <ProjectCard slug="the-eye"     title="THE EYE"     tagline="A strange object that notices you."                         cta="Look"            image={CARD_THE_EYE}     index={1} featured={true}  enterDelay={80}  />
-          <ProjectCard slug="low-battery" title="LOW BATTERY" tagline="The sound you ignore until it becomes your personality."    cta="Begin Ignoring"  image={CARD_LOW_BATTERY} index={2}               enterDelay={140} />
-          <ProjectCard slug="orb"         title="ORB"         tagline="A living object."                                           cta="Touch It"        image={CARD_ORB}         index={3}               enterDelay={200} />
+          <ProjectCard slug="orb"         title="ORB"         tagline="A living object."                                           cta="Touch It"        image={CARD_ORB}         index={1} featured={true}  enterDelay={80}  />
+          <ProjectCard slug="the-eye"     title="THE EYE"     tagline="A strange object that notices you."                         cta="Look"            image={CARD_THE_EYE}     index={2}               enterDelay={140} />
+          <ProjectCard slug="low-battery" title="LOW BATTERY" tagline="The sound you ignore until it becomes your personality."    cta="Begin Ignoring"  image={CARD_LOW_BATTERY} index={3}               enterDelay={200} />
           <ProjectCard slug="space-drone" title="SPACE DRONE" tagline="A drifting machine for doing absolutely nothing."                                 image={CARD_SPACE_DRONE} index={4}               enterDelay={260} />
           <ProjectCard slug="aether"      title="ÆTHER"       tagline="Impossible to sound bad."                                                         image={CARD_AETHER}      index={5}               enterDelay={320} />
           <ProjectCard slug="dead-air"    title="DEAD AIR"    tagline="Late night radio scanner."                                  cta="Tune In"         image={CARD_DEAD_AIR}    index={6}               enterDelay={380} />

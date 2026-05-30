@@ -413,7 +413,7 @@ export default function DeadAir() {
         {/* Intro overlay */}
         {!started && <IntroOverlay onStart={handleStart} />}
       </div>
-      <HellaRichSEO />
+      <HellaRichSEO title="Dead Air" description="Late night radio scanner. Tune in to analog transmissions from the void." keywords="Dead Air, hella.rich, radio scanner, ambient audio, analog transmission, late night, web experience" />
     </>
   );
 }

@@ -1110,7 +1110,7 @@ export default function Home() {
       </div>
 
       {/* Below-fold SEO / AEO content — invisible to the experience */}
-      <HellaRichSEO />
+      <HellaRichSEO title="Fourcast" description="A weather app predicting the end of the world. Politely. Check your day." keywords="Fourcast, hella.rich, weather app, anxiety forecast, interactive humor, end of the world, web experience" />
     </div>
   );
 }

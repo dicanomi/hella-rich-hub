@@ -541,7 +541,7 @@ export default function Home() {
         </div>
             )}
     </div>
-    <HellaRichSEO />
+    <HellaRichSEO title="ORB" description="A living object. Seven deadly sins as emotional states. Touch it." keywords="ORB, hella.rich, interactive art, ambient audio, seven deadly sins, living object, web experience" />
     </>
   );
 }
