@@ -30,11 +30,7 @@ export function HellaRichNav() {
   const [open, setOpen] = useState(false);
   const dropRef = useRef<HTMLDivElement>(null);
 
-  const isLanding = location === '/';
-  if (isLanding) return null;
-
-  const currentProject = PROJECTS.find(p => location.startsWith(p.slug));
-
+  // ALL hooks must be called before any early return (Rules of Hooks)
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
     const onOutside = (e: MouseEvent) => {
@@ -47,6 +43,12 @@ export function HellaRichNav() {
       document.removeEventListener('mousedown', onOutside);
     };
   }, []);
+
+  // Early return AFTER all hooks
+  const isLanding = location === '/';
+  if (isLanding) return null;
+
+  const currentProject = PROJECTS.find(p => location.startsWith(p.slug));
 
   return (
     <>
