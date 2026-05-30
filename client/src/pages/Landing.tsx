@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'wouter';
 import { ParticleField } from '../components/ParticleField';
 import { HeaderTicker } from '../components/HeaderTicker';
+import { ContactModal } from '../components/ContactModal';
 
 // ── Existing Cloudfront card images (from deployed repos) ──────────────────
 const CARD_THE_EYE    = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/4dGTww6dwDMqWYygdCjBiT/the-eye-card-m8kJtzMhgXq8bTQ7kEpxk6.webp';
@@ -448,6 +449,7 @@ function ProjectCard({ slug, title, tagline, image, index, live = true, cta, fea
 // ── Main Landing ───────────────────────────────────────────────────────────
 export default function Landing() {
   const [aboutOpen, setAboutOpen] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
 
   return (
     <>
@@ -471,6 +473,7 @@ export default function Landing() {
       `}</style>
 
       {aboutOpen && <AboutModal onClose={() => setAboutOpen(false)} />}
+      {contactOpen && <ContactModal onClose={() => setContactOpen(false)} />}
       <ParticleField />
 
       <div style={{
@@ -560,6 +563,23 @@ export default function Landing() {
           flexWrap: 'wrap',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+            <button
+              onClick={() => setContactOpen(true)}
+              style={{
+                background: 'none', border: 'none', cursor: 'pointer',
+                fontFamily: "'DM Mono', monospace",
+                fontSize: 'clamp(8px,0.85vw,10px)',
+                letterSpacing: '0.18em',
+                color: 'rgba(255,255,255,0.35)',
+                textTransform: 'uppercase',
+                padding: 0,
+                transition: 'color 0.2s ease',
+              }}
+              onMouseEnter={e => ((e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.65)')}
+              onMouseLeave={e => ((e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.35)')}
+            >
+              Contact
+            </button>
             <button
               onClick={() => setAboutOpen(true)}
               style={{
