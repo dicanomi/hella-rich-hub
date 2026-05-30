@@ -17,7 +17,7 @@ import { useAudioEngine } from '../hooks/useAudioEngine';
 import { useFlySystem } from '../hooks/useFlySystem';
 
 // Clean image — LED painted out, no baked dot
-const HERO_IMAGE = '/manus-storage/detector-clean_ad5cd21a.png';
+const HERO_IMAGE = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/c8PJjjHRHohroqXKsYYz7X/card-low-battery-b2i2kASdULLNdxF4XMjptc.webp';
 
 // LED position as % of the full image (1920x1072)
 // Placed at 4 o'clock on the smooth plastic ring:
