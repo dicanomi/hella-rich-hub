@@ -145,12 +145,12 @@ function AboutModal({ onClose }: { onClose: () => void }) {
         }}
         onClick={e => e.stopPropagation()}
       >
-        {/* Close */}
+        {/* Close — inside modal, top-right corner */}
         <button
           onClick={onClose}
           aria-label="Close"
           style={{
-            position: 'fixed', top: 'clamp(16px,2.5vh,28px)', right: 'clamp(16px,2.5vw,32px)',
+            position: 'absolute', top: 'clamp(16px,2.5vh,24px)', right: 'clamp(16px,2.5vw,28px)',
             width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center',
             background: 'none', border: 'none', cursor: 'pointer',
             color: 'rgba(255,255,255,0.45)', zIndex: 10,
