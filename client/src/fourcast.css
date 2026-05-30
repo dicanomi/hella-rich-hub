@@ -6,13 +6,11 @@
    Font: "Press Start 2P" (pixel/bitmap feel)
    ───────────────────────────────────────────────────────────────────────────── */
 
-*, *::before, *::after {
+.haf-app *, .haf-app *::before, .haf-app *::after {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
-:root {
+.haf-app {
   --bg: #1a1a1a;
   --card: #c8c4a0;
   --card-dark: #b8b494;
@@ -26,20 +24,16 @@
   --font-pixel: 'Press Start 2P', monospace;
 }
 
-html, body, #root {
-  width: 100%;
-  height: 100%;
-  background: var(--bg);
-  color: var(--ink);
-  font-family: var(--font-pixel);
-  -webkit-font-smoothing: none;
-  font-smooth: never;
-}
+/* html/body/root scoped to haf-app only — do not override hub globals */
 
 /* ── App shell ── */
 .haf-app {
   min-height: 100vh;
   background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-pixel);
+  -webkit-font-smoothing: none;
+  font-smooth: never;
   display: flex;
   flex-direction: column;
   align-items: center;
