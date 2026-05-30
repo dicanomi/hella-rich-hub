@@ -25,6 +25,7 @@ const H1_PHRASES = [
   'Check_Tomorrow',
   'Begin_Transmission',
   'Press_The_Button',
+  'My_Finger_Is_On_The_Button',
   'Check_My_Day',
   'Start_The_Beep',
   'Enter_The_Orb',
