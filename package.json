@@ -10,7 +10,7 @@
     "preview": "vite preview --host",
     "check": "tsc --noEmit",
     "format": "prettier --write .",
-    "build:cloudflare": "vite build --config vite.config.cloudflare.ts",
+    "build:cloudflare": "pnpm install && pnpm exec vite build --config vite.config.cloudflare.ts",
     "preview:cloudflare": "vite preview --config vite.config.cloudflare.ts"
   },
   "dependencies": {
