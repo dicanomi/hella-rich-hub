@@ -1,30 +1,21 @@
 /**
- * IntroSplash — hella.rich analog boot sequence
+ * IntroSplash — hella.rich terminal boot sequence
  *
- * Source: dicanomi/hella-rich (deployed repo) — restored + upgraded
- *
- * Design: a strange machine turning on. A digital object waking up.
- * - Vertical scanning line (termScanline) — the original deployed behavior
- * - CRT flicker (termFlicker)
- * - Phosphor green terminal type
- * - Analog grain overlay
- * - Signal distortion / waveform noise
- *
- * localStorage behavior:
- * - First visit: full sequence (~3s) — typewriter + scan + fragments
- * - Returning visits: short scan only (~1.2s) — just the signal sweep
- *
+ * Design: strange terminal overlay, green system type, animated code fragments
+ * Copy: "WE'VE BEEN WAITING FOR YOU"
+ * Duration: ~3s total
+ * Session logic: plays once per browser session only
  * Accessibility: respects prefers-reduced-motion
  */
+
 import { useEffect, useRef, useState } from 'react';
 
 const TEXT = "WE'VE BEEN WAITING FOR YOU";
-const LS_KEY = 'hellaIntroVisited';   // localStorage — persists across sessions
-const SESSION_KEY = 'hellaIntroSeen'; // sessionStorage — once per tab
+const SESSION_KEY = 'hellaIntroSeen';
 
 const CHAR_DELAY = 52;
-const HOLD_AFTER = 500;
-const FADE_DURATION = 280;
+const HOLD_AFTER = 600;
+const FADE_DURATION = 220;
 
 const CODE_FRAGMENTS = [
   'ACCESS REQUEST ACCEPTED',
@@ -47,106 +38,17 @@ const CODE_FRAGMENTS = [
   'BOOT SECTOR OK',
 ];
 
-function pickFragments(n: number): string[] {
-  return [...CODE_FRAGMENTS].sort(() => Math.random() - 0.5).slice(0, n);
-}
-
-function isFirstVisit(): boolean {
-  try { return !localStorage.getItem(LS_KEY); } catch { return false; }
-}
-
-function markVisited(): void {
-  try { localStorage.setItem(LS_KEY, '1'); } catch { /* noop */ }
-}
-
-export function shouldShowIntro(): boolean {
-  if (typeof window === 'undefined') return false;
-  if (window.location.pathname !== '/') return false;
-  return sessionStorage.getItem(SESSION_KEY) !== 'true';
-}
-
-export function markIntroSeen(): void {
-  sessionStorage.setItem(SESSION_KEY, 'true');
-}
-
 interface IntroSplashProps {
   onComplete: () => void;
 }
 
-// ── Short returning-visitor scan ────────────────────────────────────────────
-function ShortScan({ onComplete }: { onComplete: () => void }) {
-  const [exiting, setExiting] = useState(false);
-
-  useEffect(() => {
-    // Just show the scan sweep for ~1.2s then fade out
-    const t1 = setTimeout(() => setExiting(true), 900);
-    const t2 = setTimeout(onComplete, 900 + FADE_DURATION);
-    return () => { clearTimeout(t1); clearTimeout(t2); };
-  }, [onComplete]);
-
-  return (
-    <>
-      <style>{`
-        @keyframes shortScan {
-          0%   { transform: translateY(-4px); opacity: 0; }
-          8%   { opacity: 1; }
-          100% { transform: translateY(100vh); opacity: 0.6; }
-        }
-        @keyframes shortScanGlow {
-          0%   { transform: translateY(-4px); opacity: 0; }
-          8%   { opacity: 1; }
-          100% { transform: translateY(100vh); opacity: 0; }
-        }
-      `}</style>
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'fixed', inset: 0, zIndex: 9999,
-          background: '#030303',
-          opacity: exiting ? 0 : 1,
-          transition: `opacity ${FADE_DURATION}ms ease`,
-          pointerEvents: exiting ? 'none' : 'all',
-          overflow: 'hidden',
-        }}
-      >
-        {/* Primary scan line */}
-        <div style={{
-          position: 'absolute', top: 0, left: 0, right: 0, height: '1px',
-          background: 'rgba(0,255,70,0.55)',
-          boxShadow: '0 0 8px 2px rgba(0,255,70,0.3)',
-          animation: 'shortScan 0.9s cubic-bezier(0.25, 0, 0.55, 1) forwards',
-          pointerEvents: 'none',
-        }} />
-        {/* Glow trail */}
-        <div style={{
-          position: 'absolute', top: 0, left: 0, right: 0, height: '40px',
-          background: 'linear-gradient(to bottom, rgba(0,255,70,0.04) 0%, transparent 100%)',
-          animation: 'shortScanGlow 0.9s cubic-bezier(0.25, 0, 0.55, 1) forwards',
-          pointerEvents: 'none',
-        }} />
-        {/* hella.rich wordmark — briefly visible */}
-        <div style={{
-          position: 'absolute',
-          top: '50%', left: '50%',
-          transform: 'translate(-50%, -50%)',
-          fontFamily: "'DM Mono', monospace",
-          fontSize: 'clamp(10px, 1.1vw, 13px)',
-          letterSpacing: '0.3em',
-          color: 'rgba(0,255,70,0.18)',
-          textTransform: 'uppercase',
-          opacity: exiting ? 0 : 1,
-          transition: 'opacity 0.3s ease',
-        }}>
-          hella.rich
-        </div>
-      </div>
-    </>
-  );
+// Pick N random fragments from the list
+function pickFragments(n: number): string[] {
+  const shuffled = [...CODE_FRAGMENTS].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, n);
 }
 
-// ── Full first-visit sequence ────────────────────────────────────────────────
 export function IntroSplash({ onComplete }: IntroSplashProps) {
-  const firstVisit = useRef(isFirstVisit());
   const [displayed, setDisplayed] = useState('');
   const [showCursor, setShowCursor] = useState(true);
   const [exiting, setExiting] = useState(false);
@@ -155,54 +57,9 @@ export function IntroSplash({ onComplete }: IntroSplashProps) {
   const indexRef = useRef(0);
   const codeIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Mark visited on first render
-  useEffect(() => { markVisited(); }, []);
-
-  // Returning visitor — use short scan
-  if (!firstVisit.current) {
-    return <ShortScan onComplete={onComplete} />;
-  }
-
-  // First visit — full sequence rendered below
-  return <FullIntro
-    displayed={displayed}
-    setDisplayed={setDisplayed}
-    showCursor={showCursor}
-    setShowCursor={setShowCursor}
-    exiting={exiting}
-    setExiting={setExiting}
-    codeLines={codeLines}
-    setCodeLines={setCodeLines}
-    timerRef={timerRef}
-    indexRef={indexRef}
-    codeIntervalRef={codeIntervalRef}
-    onComplete={onComplete}
-  />;
-}
-
-// ── Full intro component (first visit only) ──────────────────────────────────
-interface FullIntroProps {
-  displayed: string;
-  setDisplayed: (v: string) => void;
-  showCursor: boolean;
-  setShowCursor: (v: boolean) => void;
-  exiting: boolean;
-  setExiting: (v: boolean) => void;
-  codeLines: string[];
-  setCodeLines: (fn: (prev: string[]) => string[]) => void;
-  timerRef: React.MutableRefObject<ReturnType<typeof setTimeout> | null>;
-  indexRef: React.MutableRefObject<number>;
-  codeIntervalRef: React.MutableRefObject<ReturnType<typeof setInterval> | null>;
-  onComplete: () => void;
-}
-
-function FullIntro({
-  displayed, setDisplayed, showCursor, setShowCursor,
-  exiting, setExiting, codeLines, setCodeLines,
-  timerRef, indexRef, codeIntervalRef, onComplete,
-}: FullIntroProps) {
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     if (reduced) {
       setDisplayed(TEXT);
       timerRef.current = setTimeout(() => {
@@ -212,13 +69,15 @@ function FullIntro({
       return;
     }
 
-    // Rotate code fragments
+    // Animate code fragments — randomly swap lines
     codeIntervalRef.current = setInterval(() => {
       setCodeLines(prev => {
         const next = [...prev];
         const idx = Math.floor(Math.random() * next.length);
         const pool = CODE_FRAGMENTS.filter(f => !next.includes(f));
-        if (pool.length > 0) next[idx] = pool[Math.floor(Math.random() * pool.length)];
+        if (pool.length > 0) {
+          next[idx] = pool[Math.floor(Math.random() * pool.length)];
+        }
         return next;
       });
     }, 280);
@@ -240,6 +99,7 @@ function FullIntro({
         }, 180);
       }
     };
+
     timerRef.current = setTimeout(type, 380);
 
     return () => {
@@ -273,25 +133,15 @@ function FullIntro({
           97%       { opacity: 0.9; }
           98%       { opacity: 1; }
         }
-        @keyframes signalDistort {
-          0%   { transform: scaleX(1) translateX(0); opacity: 0.6; }
-          15%  { transform: scaleX(1.003) translateX(1px); opacity: 0.8; }
-          30%  { transform: scaleX(0.998) translateX(-2px); opacity: 0.6; }
-          45%  { transform: scaleX(1.002) translateX(1px); opacity: 0.7; }
-          60%  { transform: scaleX(1) translateX(0); opacity: 0.5; }
-          75%  { transform: scaleX(0.999) translateX(-1px); opacity: 0.65; }
-          100% { transform: scaleX(1) translateX(0); opacity: 0.6; }
-        }
-        @keyframes waveformPulse {
-          0%, 100% { opacity: 0.08; }
-          50%       { opacity: 0.14; }
-        }
       `}</style>
+
       <div
         aria-hidden="true"
         style={{
-          position: 'fixed', inset: 0, zIndex: 9999,
-          background: '#030303',
+          position: 'fixed',
+          inset: 0,
+          zIndex: 9999,
+          background: '#050805',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'flex-start',
@@ -301,56 +151,27 @@ function FullIntro({
           transition: `opacity ${FADE_DURATION}ms ease`,
           animation: 'termFlicker 4s linear',
           overflow: 'hidden',
-          pointerEvents: exiting ? 'none' : 'all',
         }}
       >
-        {/* ── Primary vertical scan line ── */}
+        {/* Scanline sweep */}
         <div style={{
-          position: 'absolute', top: 0, left: 0, right: 0, height: '1px',
-          background: 'linear-gradient(to right, transparent 0%, rgba(0,255,70,0.5) 20%, rgba(0,255,70,0.8) 50%, rgba(0,255,70,0.5) 80%, transparent 100%)',
-          boxShadow: '0 0 12px 3px rgba(0,255,70,0.25)',
+          position: 'absolute',
+          top: 0, left: 0, right: 0,
+          height: '2px',
+          background: 'linear-gradient(to bottom, transparent, rgba(0,255,70,0.06), transparent)',
           animation: 'termScanline 2.8s linear infinite',
           pointerEvents: 'none',
         }} />
 
-        {/* ── Scan glow trail ── */}
+        {/* CRT grain overlay */}
         <div style={{
-          position: 'absolute', top: 0, left: 0, right: 0, height: '60px',
-          background: 'linear-gradient(to bottom, rgba(0,255,70,0.04) 0%, transparent 100%)',
-          animation: 'termScanline 2.8s linear infinite',
-          pointerEvents: 'none',
-        }} />
-
-        {/* ── Signal distortion lines (horizontal noise) ── */}
-        {[15, 38, 62, 81].map((pct, i) => (
-          <div key={i} style={{
-            position: 'absolute',
-            top: `${pct}%`,
-            left: 0, right: 0,
-            height: '1px',
-            background: `rgba(0,255,70,${0.03 + i * 0.01})`,
-            animation: `signalDistort ${1.8 + i * 0.4}s ease-in-out infinite`,
-            animationDelay: `${i * 0.3}s`,
-            pointerEvents: 'none',
-          }} />
-        ))}
-
-        {/* ── CRT grain overlay ── */}
-        <div style={{
-          position: 'absolute', inset: 0,
+          position: 'absolute',
+          inset: 0,
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E")`,
           pointerEvents: 'none',
         }} />
 
-        {/* ── Waveform background ── */}
-        <div style={{
-          position: 'absolute', inset: 0,
-          backgroundImage: `repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,255,70,0.008) 3px, rgba(0,255,70,0.008) 4px)`,
-          animation: 'waveformPulse 3s ease-in-out infinite',
-          pointerEvents: 'none',
-        }} />
-
-        {/* ── System label top-left ── */}
+        {/* System label top-left */}
         <div style={{
           position: 'absolute',
           top: 'clamp(16px, 3vh, 28px)',
@@ -364,31 +185,39 @@ function FullIntro({
           hella.rich / sys
         </div>
 
-        {/* ── Animated code fragments — right column ── */}
+        {/* Animated code fragments — left column */}
         <div style={{
           position: 'absolute',
-          top: '50%', right: 'clamp(20px, 5vw, 80px)',
+          top: '50%',
+          right: 'clamp(20px, 5vw, 80px)',
           transform: 'translateY(-50%)',
-          display: 'flex', flexDirection: 'column', gap: '6px',
-          alignItems: 'flex-end', pointerEvents: 'none',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '6px',
+          alignItems: 'flex-end',
+          pointerEvents: 'none',
         }}>
           {codeLines.map((line, i) => (
-            <div key={`${line}-${i}`} style={{
-              fontFamily: "'DM Mono', 'Space Mono', monospace",
-              fontSize: 'clamp(7px, 0.75vw, 9px)',
-              letterSpacing: '0.14em',
-              color: 'rgba(0,255,70,0.22)',
-              textTransform: 'uppercase',
-              animation: 'termLineFade 0.35s ease both',
-              whiteSpace: 'nowrap',
-            }}>
+            <div
+              key={`${line}-${i}`}
+              style={{
+                fontFamily: "'DM Mono', 'Space Mono', monospace",
+                fontSize: 'clamp(7px, 0.75vw, 9px)',
+                letterSpacing: '0.14em',
+                color: 'rgba(0,255,70,0.22)',
+                textTransform: 'uppercase',
+                animation: 'termLineFade 0.35s ease both',
+                whiteSpace: 'nowrap',
+              }}
+            >
               {line}
             </div>
           ))}
         </div>
 
-        {/* ── Main message ── */}
+        {/* Main message */}
         <div style={{ position: 'relative', zIndex: 2 }}>
+          {/* Prompt prefix */}
           <div style={{
             fontFamily: "'DM Mono', 'Space Mono', monospace",
             fontSize: 'clamp(9px, 0.9vw, 11px)',
@@ -399,6 +228,7 @@ function FullIntro({
           }}>
             {'>'} SYSTEM MESSAGE
           </div>
+
           <div style={{
             fontFamily: "'Space Grotesk', sans-serif",
             fontSize: 'clamp(24px, 4.5vw, 64px)',
@@ -426,7 +256,7 @@ function FullIntro({
           </div>
         </div>
 
-        {/* ── Bottom status bar ── */}
+        {/* Bottom status bar */}
         <div style={{
           position: 'absolute',
           bottom: 'clamp(16px, 3vh, 28px)',
@@ -446,4 +276,14 @@ function FullIntro({
       </div>
     </>
   );
+}
+
+export function shouldShowIntro(): boolean {
+  if (typeof window === 'undefined') return false;
+  if (window.location.pathname !== '/') return false;
+  return sessionStorage.getItem(SESSION_KEY) !== 'true';
+}
+
+export function markIntroSeen(): void {
+  sessionStorage.setItem(SESSION_KEY, 'true');
 }
