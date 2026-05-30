@@ -1,37 +1,64 @@
+/**
+ * hella.rich — App Router
+ * Design: Cinematic Product Lab
+ *
+ * Routes:
+ *   /             → Landing (hub)
+ *   /the-eye      → THE EYE flagship
+ *   /low-battery  → LOW BATTERY
+ *   /space-drone  → SPACE DRONE
+ *   /aether       → ÆTHER
+ *
+ * External products (linked out):
+ *   dead-air.hella.rich
+ *   orb.hella.rich
+ *   happyforecast-y2gqad9t.manus.space
+ */
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
+import { HellaRichNav } from "./components/HellaRichNav";
+import { IntroSplash, shouldShowIntro, markIntroSeen } from "./components/IntroSplash";
 import { ThemeProvider } from "./contexts/ThemeContext";
-import Home from "./pages/Home";
-
+import { useState } from "react";
+import Landing from "./pages/Landing";
+import TheEyePage from "./pages/TheEyePage";
+import LowBatteryPage from "./pages/LowBatteryPage";
+import SpaceDronePage from "./pages/SpaceDronePage";
+import AetherPage from "./pages/AetherPage";
+import NotFound from "./pages/NotFound";
 
 function Router() {
+  const [introActive, setIntroActive] = useState(() => shouldShowIntro());
+
+  const handleIntroComplete = () => {
+    markIntroSeen();
+    setIntroActive(false);
+  };
+
   return (
-    <Switch>
-      <Route path={"/"} component={Home} />
-      <Route path={"/404"} component={NotFound} />
-      {/* Final fallback route */}
-      <Route component={NotFound} />
-    </Switch>
+    <>
+      {introActive && <IntroSplash onComplete={handleIntroComplete} />}
+      <Switch>
+        <Route path="/" component={Landing} />
+        <Route path="/the-eye" component={TheEyePage} />
+        <Route path="/low-battery" component={LowBatteryPage} />
+        <Route path="/space-drone" component={SpaceDronePage} />
+        <Route path="/aether" component={AetherPage} />
+        <Route component={NotFound} />
+      </Switch>
+    </>
   );
 }
-
-// NOTE: About Theme
-// - First choose a default theme according to your design style (dark or light bg), than change color palette in index.css
-//   to keep consistent foreground/background color across components
-// - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
 
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider
-        defaultTheme="light"
-        // switchable
-      >
+      <ThemeProvider defaultTheme="dark">
         <TooltipProvider>
           <Toaster />
+          <HellaRichNav />
           <Router />
         </TooltipProvider>
       </ThemeProvider>

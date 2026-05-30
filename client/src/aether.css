@@ -1,0 +1,889 @@
+/**
+ * ÆTHER CSS — Scoped styles for /aether route
+ * Imported only by AetherPage.tsx
+ * All ÆTHER-specific CSS variables and component classes
+ */
+
+/**
+ * ÆTHER — Ambient Synthesizer
+ * Design System: Scandinavian Instrument Minimalism
+ * Inspired by: Braun, Teenage Engineering, Dieter Rams, Jony Ive restraint
+ *
+ * Color Philosophy:
+ * - Background: warm off-white (#F5F2ED) — aged Braun plastic, matte
+ * - Surface: pure white (#FFFFFF) — control panel face
+ * - Charcoal (#1C1C1A) — precision engraving, primary text
+ * - Terracotta (#C4614A) — single warm accent for active states
+ * - Warm grey (#B8B4AC) — secondary / muted
+ *
+ * Typography:
+ * - DM Sans: clean, slightly humanist — for UI text
+ * - IBM Plex Mono: technical precision, hardware label feel — for labels/values
+ */
+
+
+
+/* ─── Design Tokens ────────────────────────────────────────────────────────── */
+
+
+
+:root {
+  /* ÆTHER Brand Palette — Teenage Engineering × Braun × cinematic
+   * Source: uploaded brand color system
+   * Deep black #0D0F14 | Dark charcoal #1E2028 | Steel navy #2E3D4F
+   * Crimson #C9383A | Warm orange #E8622A | Golden amber #F2C14E
+   * Parchment cream #E8E6D0
+   */
+  --ae-bg: #0D0F14;                /* deep void black — primary background */
+  --ae-bg-2: #1E2028;              /* dark charcoal — elevated surface */
+  --ae-surface: #2E3D4F;           /* steel navy — panel face */
+  --ae-charcoal: #E8E6D0;          /* parchment cream — primary text on dark */
+  --ae-charcoal-light: rgba(232, 230, 208, 0.7); /* muted text */
+  --ae-terracotta: #E8622A;        /* brand warm orange — primary accent */
+  --ae-terracotta-light: #F2C14E;  /* brand golden amber — hover / highlight */
+  --ae-warm-grey: rgba(232, 230, 208, 0.35);  /* muted on dark */
+  --ae-warm-grey-light: rgba(232, 230, 208, 0.18); /* subtle on dark */
+  --ae-warm-grey-dark: rgba(232, 230, 208, 0.55);  /* secondary text */
+  --ae-crimson: #C9383A;           /* brand crimson — tension / danger */
+  --ae-navy: #2E3D4F;              /* brand steel navy */
+  --ae-amber: #F2C14E;             /* brand golden amber */
+  --ae-orange: #E8622A;            /* brand warm orange */
+  --ae-border: rgba(232, 230, 208, 0.08);
+  --ae-border-strong: rgba(232, 230, 208, 0.16);
+
+  /* Spacing scale — all clamp() responsive */
+  --ae-space-xs: clamp(4px, 0.5vw, 6px);
+  --ae-space-sm: clamp(8px, 1vw, 12px);
+  --ae-space-md: clamp(12px, 1.5vw, 20px);
+  --ae-space-lg: clamp(20px, 2.5vw, 32px);
+  --ae-space-xl: clamp(32px, 4vw, 56px);
+
+  /* Typography scale — all clamp() responsive */
+  --ae-font-xxs: clamp(8px, 0.85vw, 10px);
+  --ae-font-xs: clamp(9px, 1vw, 11px);
+  --ae-font-sm: clamp(10px, 1.1vw, 12px);
+  --ae-font-md: clamp(12px, 1.4vw, 15px);
+  --ae-font-lg: clamp(16px, 2vw, 22px);
+  --ae-font-xl: clamp(24px, 4vw, 48px);
+  --ae-font-hero: clamp(80px, 18vw, 200px);
+
+  /* Radius */
+  --ae-radius-sm: 2px;
+  --ae-radius-md: 4px;
+  --ae-radius-pill: 100px;
+
+  /* Shadows — dark palette */
+  --ae-shadow-sm: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+  --ae-shadow-md: 0 4px 12px rgba(0,0,0,0.4), 0 2px 6px rgba(0,0,0,0.25);
+  --ae-shadow-lg: 0 12px 32px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.3);
+  --ae-shadow-panel: 0 -1px 0 rgba(232,230,208,0.06), 0 -12px 40px rgba(0,0,0,0.4);
+
+  /* Transitions */
+  --ae-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ae-ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+
+  /* Shadcn compat — dark brand palette */
+  --radius: 4px;
+  --background: #0D0F14;
+  --foreground: #E8E6D0;
+  --card: #1E2028;
+  --card-foreground: #E8E6D0;
+  --popover: #1E2028;
+  --popover-foreground: #E8E6D0;
+  --primary: #E8622A;
+  --primary-foreground: #0D0F14;
+  --secondary: #2E3D4F;
+  --secondary-foreground: #E8E6D0;
+  --muted: #1E2028;
+  --muted-foreground: rgba(232,230,208,0.55);
+  --accent: #E8622A;
+  --accent-foreground: #0D0F14;
+  --destructive: #C9383A;
+  --destructive-foreground: #E8E6D0;
+  --border: rgba(232,230,208,0.08);
+  --input: rgba(232,230,208,0.08);
+  --ring: #E8622A;
+}
+
+/* ─── Base Reset ───────────────────────────────────────────────────────────── */
+
+
+
+/* ─── Synth Root Layout ────────────────────────────────────────────────────── */
+
+/* ÆTHER needs its own full-viewport height since it's embedded in hella-rich */
+.synth-root {
+  position: relative;
+  width: 100%;
+  height: 100dvh;  /* always full viewport regardless of parent */
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--ae-bg);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ─── Canvas Layer ─────────────────────────────────────────────────────────── */
+
+.synth-canvas-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.synth-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+/* ─── Mood Color Overlay ───────────────────────────────────────────────────── */
+
+.synth-mood-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  mix-blend-mode: screen; /* screen works better on dark backgrounds */
+}
+
+/* ─── Header ───────────────────────────────────────────────────────────────── */
+/*
+ * NAV-SAFE HEADER PATTERN
+ * The HellaRichNav is fixed at top: clamp(12px,2vh,20px), height ~36px.
+ * Total nav footprint: ~56px at most screen sizes.
+ * We push the header down by padding-top so branding never collides.
+ * Left side also gets extra padding to clear the nav buttons (~160px wide).
+ * This is the reusable pattern for all hella.rich apps.
+ */
+
+.synth-header {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* Top padding clears the HellaRichNav (nav top + nav height + gap) */
+  padding-top: clamp(56px, 8vh, 72px);
+  padding-bottom: clamp(10px, 1.5vw, 16px);
+  /* Left padding clears the nav buttons (~160px) + comfortable margin */
+  padding-left: clamp(180px, 22vw, 260px);
+  padding-right: var(--ae-space-lg);
+  border-bottom: 1px solid var(--ae-border);
+  background: rgba(13, 15, 20, 0.92);  /* deep black, near-opaque */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  flex-shrink: 0;
+}
+
+.synth-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--ae-space-sm);
+}
+
+.synth-brand-name {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: var(--ae-font-sm);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--ae-charcoal);
+  line-height: 1;
+}
+
+.synth-brand-divider {
+  color: var(--ae-warm-grey);
+  font-size: var(--ae-font-sm);
+}
+
+.synth-brand-sub {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: var(--ae-font-xxs);
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: var(--ae-warm-grey-dark);
+  line-height: 1;
+}
+
+.synth-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.synth-status-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--ae-orange);
+  flex-shrink: 0;
+}
+
+.synth-status-text {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: var(--ae-font-xxs);
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  color: var(--ae-warm-grey-dark);
+}
+
+.synth-header-right {
+  display: flex;
+  align-items: center;
+}
+
+.synth-brand-owner {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: var(--ae-font-xs);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: var(--ae-warm-grey-dark);
+}
+
+/* ─── Splash Screen ────────────────────────────────────────────────────────── */
+
+.synth-splash {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ae-bg);
+  overflow: hidden;
+}
+
+.synth-splash-bg-mark {
+  position: absolute;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: var(--ae-font-hero);
+  font-weight: 700;
+  color: var(--ae-charcoal);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  opacity: 0.04;
+  pointer-events: none;
+  user-select: none;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+}
+
+.synth-splash-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ae-space-xl);
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.synth-splash-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ae-space-sm);
+}
+
+.synth-splash-heading {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: clamp(36px, 7vw, 80px);
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--ae-charcoal);
+  line-height: 1;
+}
+
+.synth-splash-tagline {
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(13px, 1.6vw, 17px);
+  font-weight: 400;
+  color: var(--ae-warm-grey-dark);
+  letter-spacing: 0.01em;
+}
+
+.synth-splash-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ae-space-md);
+}
+
+.synth-play-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ae-space-sm);
+  width: clamp(130px, 18vw, 180px);
+  height: clamp(44px, 5.5vw, 54px);
+  background: var(--ae-orange);
+  color: #0D0F14;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: var(--ae-font-sm);
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  border-radius: var(--ae-radius-sm);
+  transition: background 0.15s var(--ae-ease-out),
+              box-shadow 0.15s var(--ae-ease-out);
+  box-shadow: var(--ae-shadow-md);
+}
+
+.synth-play-btn:hover:not(:disabled) {
+  background: var(--ae-amber);
+  box-shadow: var(--ae-shadow-lg);
+}
+
+.synth-play-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.synth-play-icon {
+  font-size: 10px;
+  line-height: 1;
+}
+
+.synth-play-loading {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.synth-loading-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--ae-bg);
+  animation: loadingPulse 1.2s ease-in-out infinite;
+}
+
+.synth-loading-dot:nth-child(2) { animation-delay: 0.2s; }
+.synth-loading-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes loadingPulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+.synth-splash-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--ae-space-sm);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.synth-splash-hint {
+  font-family: 'DM Sans', sans-serif;
+  font-size: var(--ae-font-xs);
+  color: var(--ae-warm-grey);
+  letter-spacing: 0.02em;
+}
+
+.synth-splash-sep {
+  color: var(--ae-warm-grey-light);
+  font-size: var(--ae-font-xs);
+}
+
+/* ─── Main Control Panel ───────────────────────────────────────────────────── */
+
+.synth-panel {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: #0D0F14;  /* solid deep black — no blur bleed */
+  border-top: 1px solid var(--ae-border);
+  box-shadow: none;
+  padding: var(--ae-space-lg) clamp(16px, 4vw, 48px) var(--ae-space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ae-space-md);
+}
+
+.synth-panel-divider {
+  height: 1px;
+  background: var(--ae-border);
+  margin: 0 -4px;
+}
+
+/* ─── Mood Selector ────────────────────────────────────────────────────────── */
+
+.mood-selector {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ae-space-sm);
+}
+
+.mood-label-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--ae-space-md);
+}
+
+.mood-section-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: var(--ae-font-xxs);
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  color: var(--ae-warm-grey-dark);
+  flex-shrink: 0;
+}
+
+.mood-description {
+  font-family: 'DM Sans', sans-serif;
+  font-size: var(--ae-font-xs);
+  color: var(--ae-warm-grey);
+  font-style: italic;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: opacity 0.3s;
+}
+
+.mood-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ae-space-xs);
+}
+
+.mood-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(4px, 0.6vw, 6px) clamp(10px, 1.2vw, 14px);
+  border: 1px solid var(--ae-border-strong);
+  border-radius: var(--ae-radius-pill);
+  background: transparent;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: var(--ae-font-xs);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--ae-charcoal-light);
+  transition: all 0.16s var(--ae-ease-out);
+  white-space: nowrap;
+  line-height: 1.2;
+}
+
+.mood-pill:hover {
+  border-color: var(--ae-orange);
+  color: var(--ae-orange);
+  background: rgba(232, 98, 42, 0.08);
+}
+
+.mood-pill--active {
+  background: var(--ae-orange);
+  border-color: var(--ae-orange);
+  color: #0D0F14;
+}
+
+.mood-pill--active:hover {
+  background: var(--ae-amber);
+  border-color: var(--ae-amber);
+  color: #0D0F14;
+}
+
+/* ─── Macro Sliders ────────────────────────────────────────────────────────── */
+
+.synth-sliders {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--ae-space-md) var(--ae-space-lg);
+}
+
+@media (min-width: 600px) {
+  .synth-sliders {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.macro-slider {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ae-space-xs);
+  position: relative;
+}
+
+.macro-label-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.macro-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: var(--ae-font-xxs);
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: var(--ae-warm-grey-dark);
+  line-height: 1;
+}
+
+.macro-value {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: var(--ae-font-xxs);
+  font-weight: 400;
+  color: var(--ae-warm-grey);
+  opacity: 0;
+  transition: opacity 0.15s;
+  line-height: 1;
+}
+
+.macro-value--visible {
+  opacity: 1;
+}
+
+.macro-track {
+  position: relative;
+  height: clamp(22px, 3vw, 30px);
+  background: rgba(232, 230, 208, 0.07);
+  border-radius: var(--ae-radius-sm);
+  cursor: ew-resize;
+  overflow: visible;
+  touch-action: none;
+  outline: none;
+  transition: background 0.15s;
+}
+
+.macro-track:focus-visible {
+  box-shadow: 0 0 0 2px var(--ae-orange);
+}
+
+.macro-track--active {
+  background: rgba(232, 230, 208, 0.10);
+}
+
+.macro-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background: var(--ae-orange);
+  border-radius: var(--ae-radius-sm);
+  transition: width 0.04s;
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+.macro-thumb {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: clamp(10px, 1.4vw, 13px);
+  height: clamp(20px, 2.8vw, 26px);
+  background: #1E2028;
+  border: 1.5px solid var(--ae-orange);
+  border-radius: 2px;
+  box-shadow: var(--ae-shadow-sm);
+  transition: transform 0.1s var(--ae-ease-out),
+              box-shadow 0.1s;
+  pointer-events: none;
+}
+
+.macro-thumb--active {
+  transform: translate(-50%, -50%) scaleY(1.08);
+  box-shadow: var(--ae-shadow-md);
+}
+
+.macro-ticks {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.macro-tick {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(28, 28, 26, 0.10);
+  transform: translateX(-50%);
+}
+
+.macro-description {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ae-charcoal);
+  color: var(--ae-bg);
+  font-family: 'DM Sans', sans-serif;
+  font-size: var(--ae-font-xxs);
+  padding: 5px 10px;
+  border-radius: var(--ae-radius-sm);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 100;
+  letter-spacing: 0.02em;
+  box-shadow: var(--ae-shadow-md);
+}
+
+/* ─── Action Bar ───────────────────────────────────────────────────────────── */
+
+.synth-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--ae-space-sm);
+  flex-wrap: wrap;
+}
+
+.synth-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ae-space-xs);
+  padding: 0 var(--ae-space-md);
+  height: clamp(30px, 3.8vw, 38px);
+  border: 1px solid var(--ae-border-strong);
+  border-radius: var(--ae-radius-sm);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: var(--ae-font-xs);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--ae-charcoal);
+  background: transparent;
+  transition: all 0.14s var(--ae-ease-out);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.synth-action-btn:hover {
+  border-color: var(--ae-orange);
+  background: rgba(232, 98, 42, 0.08);
+  color: var(--ae-orange);
+}
+
+.synth-action-btn--play {
+  background: var(--ae-orange);
+  border-color: var(--ae-orange);
+  color: #0D0F14;
+  min-width: clamp(72px, 9vw, 96px);
+}
+
+.synth-action-btn--play:hover {
+  background: var(--ae-amber);
+  border-color: var(--ae-amber);
+  color: #0D0F14;
+}
+
+.synth-action-btn--playing {
+  background: var(--ae-crimson) !important;
+  border-color: var(--ae-crimson) !important;
+  color: #E8E6D0 !important;
+}
+
+.synth-action-btn--playing:hover {
+  background: #D94545 !important;
+  border-color: #D94545 !important;
+}
+
+.synth-btn-icon {
+  font-size: 9px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+
+
+/* ─── Preset Selector ──────────────────────────────────────────────────────── */
+
+.synth-preset-wrapper {
+  position: relative;
+}
+
+.synth-action-btn--preset {
+  min-width: clamp(110px, 16vw, 170px);
+  justify-content: space-between;
+}
+
+.synth-current-preset {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  text-align: left;
+}
+
+.synth-btn-chevron {
+  font-size: 7px;
+  opacity: 0.5;
+  flex-shrink: 0;
+  margin-left: 4px;
+}
+
+.synth-preset-dropdown {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 0;
+  min-width: 200px;
+  background: #1E2028;  /* dark charcoal */
+  border: 1px solid var(--ae-border-strong);
+  border-radius: var(--ae-radius-md);
+  box-shadow: var(--ae-shadow-lg);
+  overflow: hidden;
+  z-index: 200;
+}
+
+.preset-selector {
+  padding: var(--ae-space-xs);
+}
+
+.preset-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: var(--ae-font-xxs);
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: var(--ae-warm-grey-dark);
+  padding: var(--ae-space-xs) var(--ae-space-sm);
+  margin-bottom: 2px;
+}
+
+.preset-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.preset-item {
+  display: flex;
+  align-items: center;
+  padding: clamp(7px, 1vw, 9px) var(--ae-space-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: var(--ae-font-sm);
+  font-weight: 400;
+  color: var(--ae-charcoal);
+  border-radius: var(--ae-radius-sm);
+  transition: background 0.1s;
+  text-align: left;
+  width: 100%;
+}
+
+.preset-item:hover {
+  background: rgba(232, 98, 42, 0.08);
+}
+
+.preset-item--active {
+  background: rgba(232, 98, 42, 0.12);
+  font-weight: 500;
+}
+
+.preset-item--active::before {
+  content: "▸";
+  margin-right: 6px;
+  color: var(--ae-terracotta);
+  font-size: 9px;
+  flex-shrink: 0;
+}
+
+/* ─── World Label ──────────────────────────────────────────────────────────── */
+
+.synth-world-label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.synth-world-label-text {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: var(--ae-font-xxs);
+  letter-spacing: 0.22em;
+  color: var(--ae-warm-grey-dark);
+  line-height: 1;
+}
+
+.synth-world-label-name {
+  font-family: 'DM Sans', sans-serif;
+  font-size: var(--ae-font-sm);
+  font-weight: 500;
+  color: var(--ae-charcoal);
+  line-height: 1;
+}
+
+/* ─── Overlay dismiss ──────────────────────────────────────────────────────── */
+
+.synth-overlay-dismiss {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+}
+
+/* ─── Responsive Adjustments ───────────────────────────────────────────────── */
+
+@media (max-width: 480px) {
+  .synth-header {
+    /* On mobile, nav is ~44px tall + 12px top offset = ~56px footprint.
+     * Nav buttons are ~160px wide on mobile.
+     * Stack branding below nav with enough clearance. */
+    padding-top: 56px;
+    padding-bottom: 8px;
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .synth-brand-sub,
+  .synth-brand-divider {
+    display: none;
+  }
+
+  .synth-panel {
+    padding: 12px 14px 10px;
+    gap: 10px;
+  }
+
+  .mood-grid {
+    gap: 4px;
+  }
+
+  .mood-pill {
+    font-size: 9px;
+    padding: 4px 8px;
+  }
+
+  .synth-actions {
+    gap: 5px;
+  }
+
+  .synth-action-btn {
+    font-size: 9px;
+    padding: 0 9px;
+    height: 30px;
+    letter-spacing: 0.1em;
+  }
+
+  .synth-action-btn--preset {
+    min-width: 100px;
+  }
+
+  .synth-world-label {
+    display: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .synth-panel {
+    padding: var(--ae-space-xl) clamp(48px, 10vw, 140px) var(--ae-space-lg);
+  }
+
+  .mood-grid {
+    gap: var(--ae-space-sm);
+  }
+
+  /* On large screens, nav buttons are still ~160px wide.
+   * Branding sits comfortably to the right of them. */
+  .synth-header {
+    padding-left: clamp(200px, 18vw, 280px);
+  }
+}
+
+/* ─── Reduced Motion ───────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
