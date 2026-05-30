@@ -149,6 +149,7 @@ function AboutModal({ onClose }: { onClose: () => void }) {
         <button
           onClick={onClose}
           aria-label="Close"
+          className="modal-close-btn"
           style={{
             position: 'absolute', top: 'clamp(16px,2.5vh,24px)', right: 'clamp(16px,2.5vw,28px)',
             width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -454,6 +455,18 @@ export default function Landing() {
   return (
     <>
       <style>{`
+        .modal-close-btn {
+          transition: color 0.2s ease, transform 0.2s cubic-bezier(0.23,1,0.32,1), background 0.2s ease;
+          border-radius: 50%;
+        }
+        .modal-close-btn:hover {
+          color: rgba(255,255,255,0.85) !important;
+          transform: rotate(90deg) scale(1.1);
+          background: rgba(255,255,255,0.06);
+        }
+        .modal-close-btn:active {
+          transform: rotate(90deg) scale(0.95);
+        }
         @keyframes h1CursorBlink {
           0%, 49% { opacity: 1; }
           50%, 100% { opacity: 0; }

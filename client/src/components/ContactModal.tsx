@@ -135,16 +135,18 @@ export function ContactModal({ onClose }: ContactModalProps) {
         <button
           onClick={onClose}
           aria-label="Close"
+          className="modal-close-btn"
           style={{
             position: 'absolute', top: '14px', right: '14px',
-            background: 'none', border: 'none', padding: '6px',
-            color: 'rgba(255,255,255,0.22)', cursor: 'pointer',
-            ...mono, fontSize: '16px', lineHeight: 1,
-            transition: 'color 0.15s ease',
+            background: 'none', border: 'none',
+            width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center',
+            color: 'rgba(255,255,255,0.35)', cursor: 'pointer',
           }}
-          onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.60)')}
-          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.22)')}
-        >×</button>
+        >
+          <svg width="16" height="16" viewBox="0 0 18 18" fill="none" strokeWidth="1.6" strokeLinecap="round" stroke="currentColor">
+            <line x1="3" y1="3" x2="15" y2="15"/><line x1="15" y1="3" x2="3" y2="15"/>
+          </svg>
+        </button>
 
         {/* Title */}
         <div style={{
