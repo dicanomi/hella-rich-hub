@@ -1,5 +1,26 @@
 /*
  * hella.rich — Global Design System
+ *
+ * Custom fonts: ArenaGraffiti + GraffitiCity (used for LOW BATTERY card title)
+ */
+
+@font-face {
+  font-family: 'GraffitiCity';
+  src: url('/manus-storage/GraffitiCity_520cc7d8.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ArenaGraffiti';
+  src: url('/manus-storage/aArenaGraffiti_e9ec87c1.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/*
  * Design: Cinematic Product Lab
  * Philosophy: A24 title card × Braun product catalog × late-night test pattern
  * Background: #0a0908 (warm near-black)

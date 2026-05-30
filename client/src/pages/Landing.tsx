@@ -256,7 +256,7 @@ function ProjectCard({ slug, title, tagline, image, index, live = true, cta, fea
     slug === 'orb'         ? "'Cormorant Garamond', 'Georgia', serif" :
     slug === 'fourcast'    ? "'Press Start 2P', monospace" :
     slug === 'the-eye'     ? "'Cormorant Garamond', 'Georgia', serif" :
-    slug === 'low-battery' ? "'Space Grotesk', sans-serif" :
+    slug === 'low-battery' ? "'ArenaGraffiti', 'GraffitiCity', 'Permanent Marker', cursive" :
     "'Space Grotesk', sans-serif";
 
   const titleSize =
@@ -266,6 +266,7 @@ function ProjectCard({ slug, title, tagline, image, index, live = true, cta, fea
     slug === 'orb'         ? 'clamp(28px, 5vw, 72px)' :
     slug === 'fourcast'    ? 'clamp(14px, 2.4vw, 32px)' :
     slug === 'the-eye'     ? 'clamp(24px, 4.5vw, 64px)' :
+    slug === 'low-battery'  ? 'clamp(28px, 4.5vw, 64px)' :
     'clamp(22px, 3.5vw, 48px)';
 
   const titleWeight =
