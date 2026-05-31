@@ -81,7 +81,7 @@ const SECTIONS: Array<{ lines: Array<{ type: string; text?: string }> }> = [
   },
   {
     lines: [
-      { type: 'copyright', text: `© ${new Date().getFullYear()} DICANOMI` },
+      { type: 'copyright', text: `© ${new Intl.DateTimeFormat("en-US", { timeZone: "America/Los_Angeles", year: "numeric" }).format(new Date())} DICANOMI` },
     ],
   },
   {

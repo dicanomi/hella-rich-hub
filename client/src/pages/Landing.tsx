@@ -245,7 +245,7 @@ function AboutModal({ onClose, onOpenCredits }: { onClose: () => void; onOpenCre
           HELLA.RICH // NODE_1956
         </div>
         <div style={{ marginTop: '24px', fontFamily: "'DM Mono', monospace", fontSize: 'clamp(8px,0.85vw,10px)', color: 'rgba(255,255,255,0.15)', letterSpacing: '0.1em' }}>
-          © {new Date().getFullYear()} hella.rich
+          © {new Intl.DateTimeFormat("en-US", { timeZone: "America/Los_Angeles", year: "numeric" }).format(new Date())} hella.rich
         </div>
       </div>
     </div>
@@ -677,7 +677,7 @@ export default function Landing() {
             color: 'rgba(255,255,255,0.15)',
             letterSpacing: '0.12em',
           }}>
-            © {new Date().getFullYear()} hella.rich
+            © {new Intl.DateTimeFormat("en-US", { timeZone: "America/Los_Angeles", year: "numeric" }).format(new Date())} hella.rich
           </div>
         </footer>
       </div>
