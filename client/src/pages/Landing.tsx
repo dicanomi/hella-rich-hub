@@ -24,19 +24,16 @@ const CARD_FOURCAST    = 'https://d2xsxph8kpxj0f.cloudfront.net/3105196632922903
 // ── H1 Typewriter ──────────────────────────────────────────────────────────
 
 /**
- * HellaRichH1 — system interruption animation
+ * HellaRichH1 — machine calculating the future
  *
- * Shows: Hella Rich. / Mega Poor.
- * After a pause, a terminal system message briefly appears between the lines:
- * DELETING MIDDLE CLASS... 100%
- * Then disappears. The machine accidentally told the truth.
+ * Sequence:
+ * 1. Hella Rich. / Mega Poor. (1.5s)
+ * 2. BUILDING FUTURE...       (0.9s)
+ * 3. CALCULATING OUTCOME...   (0.9s)
+ * 4. MIDDLE CLASS NOT FOUND   (0.8s)
+ * 5. Fade out, return to lockup
  */
 function HellaRichH1() {
-  // 0 = normal lockup
-  // 1 = system message visible
-  // 2 = system message fading out
-  // 3 = back to normal (done)
-  const [sysPhase, setSysPhase] = useState(0);
   const [sysText, setSysText] = useState('');
   const [sysVisible, setSysVisible] = useState(false);
 
@@ -44,31 +41,24 @@ function HellaRichH1() {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced) return;
 
-    // Show the system message 1.8s after mount
-    const t1 = setTimeout(() => {
-      setSysPhase(1);
-      setSysVisible(true);
-      setSysText('DELETING MIDDLE CLASS...');
-    }, 1800);
+    const steps: Array<[number, string | null, boolean]> = [
+      // [delay_ms, text, visible]
+      [1500,  'BUILDING FUTURE...',       true],
+      [2400,  'CALCULATING OUTCOME...',   true],
+      [3300,  'MIDDLE CLASS NOT FOUND',   true],
+      [4100,  null,                       false], // fade out
+      [4700,  null,                       false], // clean up
+    ];
 
-    // After 0.9s, flash to 100%
-    const t2 = setTimeout(() => {
-      setSysText('100%');
-    }, 2700);
+    const timers = steps.map(([delay, text, visible], i) =>
+      setTimeout(() => {
+        if (text !== null) setSysText(text);
+        setSysVisible(visible);
+        if (i === steps.length - 1) setSysText('');
+      }, delay)
+    );
 
-    // After another 0.4s, start fade out
-    const t3 = setTimeout(() => {
-      setSysPhase(2);
-      setSysVisible(false);
-    }, 3100);
-
-    // After fade, clean up
-    const t4 = setTimeout(() => {
-      setSysPhase(3);
-      setSysText('');
-    }, 3600);
-
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); };
+    return () => timers.forEach(clearTimeout);
   }, []);
 
   return (
@@ -79,36 +69,31 @@ function HellaRichH1() {
       minHeight: '2.15em',
       position: 'relative',
     }}>
-      {/* HELLA RICH */}
       <span style={{ display: 'block' }}>Hella Rich.</span>
 
-      {/* System interruption — between the lines */}
-      {sysText && (
-        <span
-          aria-hidden="true"
-          style={{
-            display: 'block',
-            fontFamily: "'DM Mono', monospace",
-            fontSize: 'clamp(9px, 0.9vw, 12px)',
-            letterSpacing: '0.18em',
-            color: 'rgba(255,255,255,0.38)',
-            fontWeight: 400,
-            lineHeight: 1.2,
-            margin: '0.12em 0',
-            opacity: sysVisible ? 1 : 0,
-            transition: sysVisible
-              ? 'opacity 0.08s ease'
-              : 'opacity 0.4s ease',
-            pointerEvents: 'none',
-            userSelect: 'none',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {sysText}
-        </span>
-      )}
+      {/* System sequence — between the lines */}
+      <span
+        aria-hidden="true"
+        style={{
+          display: 'block',
+          fontFamily: "'DM Mono', monospace",
+          fontSize: 'clamp(9px, 0.9vw, 12px)',
+          letterSpacing: '0.18em',
+          color: 'rgba(255,255,255,0.38)',
+          fontWeight: 400,
+          lineHeight: 1.2,
+          margin: '0.1em 0',
+          opacity: sysVisible ? 1 : 0,
+          transition: sysVisible ? 'opacity 0.1s ease' : 'opacity 0.5s ease',
+          pointerEvents: 'none',
+          userSelect: 'none',
+          whiteSpace: 'nowrap',
+          minHeight: '1.2em',
+        }}
+      >
+        {sysText}
+      </span>
 
-      {/* MEGA POOR */}
       <span style={{ display: 'block' }}>Mega Poor.</span>
     </span>
   );
@@ -123,7 +108,7 @@ function H1Hero() {
   // After the split animation completes (~3.5s), switch to typewriter
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const delay = reduced ? 0 : 3600;
+    const delay = reduced ? 0 : 5000; // 4.7s sequence + 0.3s buffer
     const t = setTimeout(() => setShowTypewriter(true), delay);
     return () => clearTimeout(t);
   }, []);
@@ -580,11 +565,41 @@ function ProjectCard({ slug, title, tagline, image, index, live = true, cta, fea
   return <Link href={`/${slug}`} style={{ display: 'block', textDecoration: 'none', color: 'inherit' }}>{content}</Link>;
 }
 
+// ── Cross-awareness messages ──────────────────────────────────────────────
+const CROSS_AWARENESS: Record<string, string[]> = {
+  'the-eye':     ['THE DRONE IS STILL RUNNING.', 'THE ORB NOTICED YOU.', 'SIGNAL DETECTED FROM SPACE.'],
+  'low-battery': ['THE EYE SAW YOU IGNORE THIS.', 'THE ORB IS WATCHING.', 'FOURCAST PREDICTED THIS.'],
+  'space-drone': ['SIGNAL DETECTED.', 'THE EYE IS TRACKING.', 'TRANSMISSION RECEIVED.'],
+  'aether':      ['THE DRONE HARMONICS ALIGNED.', 'DEAD AIR IS LISTENING.', 'SIGNAL LOCKED.'],
+  'dead-air':    ['THE EYE HEARD SOMETHING.', 'DRONE FREQUENCY DETECTED.', 'STATIC INCOMING.'],
+  'orb':         ['THE EYE IS WATCHING THE ORB.', 'SIGNAL FROM THE DRONE.', 'AETHER RESONATING.'],
+  'fourcast':    ['THE EYE PREDICTED THIS.', 'LOW BATTERY IGNORED THE WARNING.', 'OUTCOME CALCULATED.'],
+};
+
+const PRODUCT_SLUGS = ['orb', 'the-eye', 'low-battery', 'space-drone', 'aether', 'dead-air', 'fourcast'];
+
 // ── Main Landing ───────────────────────────────────────────────────────────
 export default function Landing() {
   const [aboutOpen, setAboutOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
   const [creditsOpen, setCreditsOpen] = useState(false);
+  const [awarenessMsg, setAwarenessMsg] = useState<{slug: string; text: string} | null>(null);
+
+  // Cross-awareness: rare random message on a card after 8s on page
+  useEffect(() => {
+    const slugs = Object.keys(CROSS_AWARENESS);
+    const trigger = () => {
+      if (Math.random() > 0.25) return; // 25% chance per interval
+      const slug = slugs[Math.floor(Math.random() * slugs.length)];
+      const msgs = CROSS_AWARENESS[slug];
+      const text = msgs[Math.floor(Math.random() * msgs.length)];
+      setAwarenessMsg({ slug, text });
+      setTimeout(() => setAwarenessMsg(null), 3200);
+    };
+    const initial = setTimeout(trigger, 8000);
+    const interval = setInterval(trigger, 22000);
+    return () => { clearTimeout(initial); clearInterval(interval); };
+  }, []);
 
   return (
     <>
@@ -600,6 +615,10 @@ export default function Landing() {
         }
         .modal-close-btn:active {
           transform: rotate(90deg) scale(0.95);
+        }
+        @keyframes awarenessIn {
+          from { opacity: 0; transform: translateY(4px); }
+          to   { opacity: 1; transform: translateY(0); }
         }
         @keyframes h1CursorBlink {
           0%, 49% { opacity: 1; }
@@ -698,6 +717,29 @@ export default function Landing() {
           <ProjectCard slug="aether"      title="ÆTHER"       tagline="Impossible to sound bad."                                                         image={CARD_AETHER}      index={5}               enterDelay={320} />
           <ProjectCard slug="dead-air"    title="DEAD AIR"    tagline="Late night radio scanner."                                  cta="Tune In"         image={CARD_DEAD_AIR}    index={6}               enterDelay={380} />
           <ProjectCard slug="fourcast"    title="FOURCAST"    tagline="A weather app predicting the end of the world. Politely."   cta="Check My Day"    image={CARD_FOURCAST}    index={7}               enterDelay={440} />
+
+          {/* Cross-awareness overlay — rare terminal message on a card */}
+          {awarenessMsg && (
+            <div
+              aria-hidden="true"
+              style={{
+                position: 'absolute',
+                pointerEvents: 'none',
+                zIndex: 20,
+                fontFamily: "'DM Mono', monospace",
+                fontSize: 'clamp(8px, 0.8vw, 10px)',
+                letterSpacing: '0.2em',
+                color: 'rgba(255,255,255,0.45)',
+                textTransform: 'uppercase',
+                background: 'rgba(0,0,0,0.55)',
+                padding: '6px 12px',
+                borderLeft: '1px solid rgba(255,255,255,0.12)',
+                animation: 'awarenessIn 0.2s ease forwards',
+              }}
+            >
+              {awarenessMsg.text}
+            </div>
+          )}
         </main>
 
         {/* ── Footer ── */}
@@ -780,6 +822,37 @@ export default function Landing() {
             >
               GitHub
             </a>
+            {/* Discovery button — random product */}
+            <button
+              onClick={() => {
+                const slug = PRODUCT_SLUGS[Math.floor(Math.random() * PRODUCT_SLUGS.length)];
+                window.location.href = `/${slug}`;
+              }}
+              title="Random product"
+              aria-label="Discover a random product"
+              style={{
+                background: 'none', border: '1px solid rgba(255,255,255,0.12)',
+                borderRadius: '50%', width: 24, height: 24,
+                cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: 'rgba(255,255,255,0.28)',
+                fontFamily: "'DM Mono', monospace",
+                fontSize: '11px',
+                transition: 'color 0.2s ease, border-color 0.2s ease',
+                padding: 0,
+                lineHeight: 1,
+              }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.75)';
+                (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.35)';
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.28)';
+                (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.12)';
+              }}
+            >
+              ?
+            </button>
           </div>
           <div style={{
             fontFamily: "'DM Mono', monospace",
