@@ -24,14 +24,16 @@ const CARD_FOURCAST    = 'https://d2xsxph8kpxj0f.cloudfront.net/3105196632922903
 // ── H1 Typewriter ──────────────────────────────────────────────────────────
 
 /**
- * HellaRichH1 — machine calculating the future
+ * HellaRichH1 — the ONLY homepage H1 component
  *
- * Sequence:
- * 1. Hella Rich. / Mega Poor. (1.5s)
- * 2. BUILDING FUTURE...       (0.9s)
- * 3. CALCULATING OUTCOME...   (0.9s)
- * 4. MIDDLE CLASS NOT FOUND   (0.8s)
- * 5. Fade out, return to lockup
+ * Looping sequence (repeats forever):
+ * 1. HELLA RICH. / MEGA POOR.   (2.5s hold)
+ * 2. BUILDING FUTURE...         (0.9s)
+ * 3. CALCULATING OUTCOME...     (0.9s)
+ * 4. MIDDLE CLASS NOT FOUND     (1.0s)
+ * 5. Fade out, return to step 1
+ *
+ * No handoff to old typewriter. No old phrases.
  */
 function HellaRichH1() {
   const [sysText, setSysText] = useState('');
@@ -41,24 +43,27 @@ function HellaRichH1() {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced) return;
 
-    const steps: Array<[number, string | null, boolean]> = [
-      // [delay_ms, text, visible]
-      [1500,  'BUILDING FUTURE...',       true],
-      [2400,  'CALCULATING OUTCOME...',   true],
-      [3300,  'MIDDLE CLASS NOT FOUND',   true],
-      [4100,  null,                       false], // fade out
-      [4700,  null,                       false], // clean up
+    // One full cycle: 2500 + 900 + 900 + 1000 + 600 fade = ~5900ms
+    const CYCLE = 5900;
+
+    const runCycle = (offset: number) => [
+      setTimeout(() => { setSysText('BUILDING FUTURE...');     setSysVisible(true);  }, offset + 2500),
+      setTimeout(() => { setSysText('CALCULATING OUTCOME...'); setSysVisible(true);  }, offset + 3400),
+      setTimeout(() => { setSysText('MIDDLE CLASS NOT FOUND'); setSysVisible(true);  }, offset + 4300),
+      setTimeout(() => {                                        setSysVisible(false); }, offset + 5300),
+      setTimeout(() => { setSysText('');                                              }, offset + 5900),
     ];
 
-    const timers = steps.map(([delay, text, visible], i) =>
-      setTimeout(() => {
-        if (text !== null) setSysText(text);
-        setSysVisible(visible);
-        if (i === steps.length - 1) setSysText('');
-      }, delay)
-    );
+    // Start first cycle immediately, then loop
+    let timers = runCycle(0);
+    const interval = setInterval(() => {
+      timers = runCycle(0);
+    }, CYCLE);
 
-    return () => timers.forEach(clearTimeout);
+    return () => {
+      timers.forEach(clearTimeout);
+      clearInterval(interval);
+    };
   }, []);
 
   return (
@@ -71,7 +76,7 @@ function HellaRichH1() {
     }}>
       <span style={{ display: 'block' }}>Hella Rich.</span>
 
-      {/* System sequence — between the lines */}
+      {/* System sequence — between the lines, loops */}
       <span
         aria-hidden="true"
         style={{
@@ -95,112 +100,6 @@ function HellaRichH1() {
       </span>
 
       <span style={{ display: 'block' }}>Mega Poor.</span>
-    </span>
-  );
-}
-
-/**
- * H1Hero — shows the split animation once, then hands off to the typewriter rotation
- */
-function H1Hero() {
-  const [showTypewriter, setShowTypewriter] = useState(false);
-
-  // After the split animation completes (~3.5s), switch to typewriter
-  useEffect(() => {
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const delay = reduced ? 0 : 5000; // 4.7s sequence + 0.3s buffer
-    const t = setTimeout(() => setShowTypewriter(true), delay);
-    return () => clearTimeout(t);
-  }, []);
-
-  if (showTypewriter) return <H1TypeWriter />;
-  return <HellaRichH1 />;
-}
-
-const H1_PHRASES = [
-  'Hella Rich.\nMega Poor.',
-  'Check_Tomorrow',
-  'Press_The_Button',
-  'My_Finger_Is_On_The_Button',
-  'Check_My_Day',
-  'Start_The_Beep',
-  'Enter_The_Orb',
-  'Drone_Forever',
-  'Ruin_My_Day',
-  'Everything_Is_Fine',
-  'Node_1956_Active',
-  'We_Expected_You',
-];
-const TYPE_MS = 52;
-const DEL_MS  = 28;
-const HOLD_MS = 1800;
-const PAUSE_MS = 220;
-type TW_Phase = 'typing' | 'holding' | 'deleting' | 'pausing';
-
-function H1TypeWriter() {
-  const reduced = useRef(
-    typeof window !== 'undefined'
-      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      : false
-  );
-  const [phraseIdx, setPhraseIdx] = useState(0);
-  const [displayed, setDisplayed] = useState(reduced.current ? H1_PHRASES[0] : '');
-  const [phase, setPhase] = useState<TW_Phase>(reduced.current ? 'holding' : 'typing');
-  const charIdx = useRef(0);
-  const full = H1_PHRASES[phraseIdx];
-
-  useEffect(() => {
-    if (reduced.current) return;
-    if (phase === 'typing') {
-      if (charIdx.current < full.length) {
-        const t = setTimeout(() => {
-          charIdx.current++;
-          setDisplayed(full.slice(0, charIdx.current));
-        }, TYPE_MS + (Math.random() * 14 - 7));
-        return () => clearTimeout(t);
-      } else {
-        const t = setTimeout(() => setPhase('holding'), 80);
-        return () => clearTimeout(t);
-      }
-    }
-    if (phase === 'holding') {
-      const t = setTimeout(() => setPhase('deleting'), HOLD_MS + Math.random() * 700);
-      return () => clearTimeout(t);
-    }
-    if (phase === 'deleting') {
-      if (charIdx.current > 0) {
-        const t = setTimeout(() => {
-          charIdx.current--;
-          setDisplayed(full.slice(0, charIdx.current));
-        }, DEL_MS + (Math.random() * 8 - 4));
-        return () => clearTimeout(t);
-      } else {
-        const t = setTimeout(() => setPhase('pausing'), PAUSE_MS);
-        return () => clearTimeout(t);
-      }
-    }
-    if (phase === 'pausing') {
-      const t = setTimeout(() => {
-        setPhraseIdx(i => (i + 1) % H1_PHRASES.length);
-        setPhase('typing');
-      }, PAUSE_MS);
-      return () => clearTimeout(t);
-    }
-  }, [phase, displayed, phraseIdx, full]);
-
-  const lines = displayed.split('\n');
-  const showCursor = phase === 'typing' || phase === 'holding' || phase === 'deleting';
-  return (
-    <span className="h1-wrap">
-      {lines.map((line, i) => (
-        <span key={i}>
-          {line}
-          {i === lines.length - 1 && showCursor && (
-            <span className="h1-cursor" aria-hidden="true">_</span>
-          )}
-          {i < lines.length - 1 && <br />}
-        </span>
-      ))}
     </span>
   );
 }
@@ -697,7 +596,7 @@ export default function Landing() {
             margin: 0,
             maxWidth: '900px',
           }}>
-            <H1Hero />
+            <HellaRichH1 />
           </h1>
 
         </div>
