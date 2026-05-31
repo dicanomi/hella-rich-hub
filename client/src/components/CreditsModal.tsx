@@ -1,11 +1,11 @@
 /**
  * CreditsModal — hella.rich cinematic end credits
  *
- * Design: film end credits — clear, uppercase, cinematic hierarchy
- * Active-section highlighting: IntersectionObserver on a real scrolling container.
- * Sections passing through the middle third of the viewport brighten slightly (scale 1.02, opacity boost).
- * Inactive sections dim to 0.35 opacity. Smooth CSS transitions.
- * Auto-closes when scroll reaches end. X icon fixed top-right.
+ * EXPERIENCE, not a modal. Film end credits.
+ * CSS @keyframes scroll (translateY 100vh → -100%) — starts immediately, no timing bugs.
+ * IntersectionObserver on viewport (root: null) for active-section highlighting.
+ * FIN at end — click closes. X icon fixed top-right.
+ * 25s total — cinematic but not slow.
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -13,85 +13,90 @@ interface CreditsModalProps {
   onClose: () => void;
 }
 
-// px/second scroll speed — 40 = slow/cinematic
-const SCROLL_SPEED = 40;
+// Total scroll duration in seconds — 25s = cinematic, readable
+const DURATION = 25;
 
-// Group lines into sections for highlighting
-// Each section is an array of lines
-const SECTIONS = [
-  [
-    { type: 'spacer-lg' },
-    { type: 'title',    text: 'HELLA.RICH' },
-    { type: 'subtitle', text: 'SMALL INTERNET THINGS' },
-    { type: 'spacer-lg' },
-  ],
-  [
-    { type: 'label',    text: 'CREATED BY' },
-    { type: 'name',     text: 'DICANOMI' },
-    { type: 'spacer-lg' },
-  ],
-  [
-    { type: 'label',    text: 'CREATIVE DIRECTION' },
-    { type: 'item',     text: 'CONCEPT DESIGN' },
-    { type: 'item',     text: 'INTERACTION DESIGN' },
-    { type: 'item',     text: 'VISUAL DESIGN' },
-    { type: 'item',     text: 'SOUND DESIGN' },
-    { type: 'item',     text: 'MOTION DESIGN' },
-    { type: 'spacer-lg' },
-  ],
-  [
-    { type: 'label',    text: 'BUILT WITH' },
-    { type: 'item',     text: 'ARTIFICIAL INTELLIGENCE' },
-    { type: 'item',     text: 'MANUS' },
-    { type: 'item',     text: 'CHATGPT' },
-    { type: 'item',     text: 'REACT' },
-    { type: 'spacer-lg' },
-  ],
-  [
-    { type: 'label',    text: 'PRODUCTS' },
-    { type: 'product',  text: 'THE EYE' },
-    { type: 'product',  text: 'LOW BATTERY' },
-    { type: 'product',  text: 'SPACE DRONE' },
-    { type: 'product',  text: 'ÆTHER' },
-    { type: 'product',  text: 'DEAD AIR' },
-    { type: 'product',  text: 'FOURCAST' },
-    { type: 'spacer-lg' },
-  ],
-  [
-    { type: 'label',    text: 'PROCESS' },
-    { type: 'item',     text: 'IDEA' },
-    { type: 'item',     text: 'PROMPT' },
-    { type: 'item',     text: 'PROTOTYPE' },
-    { type: 'item',     text: 'TEST' },
-    { type: 'item',     text: 'REFINE' },
-    { type: 'item',     text: 'PUBLISH' },
-    { type: 'spacer-lg' },
-  ],
-  [
-    { type: 'label',    text: 'EXPLORING' },
-    { type: 'item',     text: 'HUMAN CREATIVITY' },
-    { type: 'item',     text: 'AI COLLABORATION' },
-    { type: 'item',     text: 'RAPID PRODUCT CREATION' },
-    { type: 'spacer-lg' },
-  ],
-  [
-    { type: 'spacer-lg' },
-    { type: 'copyright', text: `© ${new Date().getFullYear()} DICANOMI` },
-    { type: 'spacer-lg' },
-    { type: 'spacer-lg' },
-  ],
+// Sections — each becomes an observed element for highlighting
+const SECTIONS: Array<{ lines: Array<{ type: string; text?: string }> }> = [
+  {
+    lines: [
+      { type: 'title',    text: 'HELLA.RICH' },
+      { type: 'subtitle', text: 'SMALL INTERNET THINGS' },
+    ],
+  },
+  {
+    lines: [
+      { type: 'label',    text: 'CREATED BY' },
+      { type: 'name',     text: 'DICANOMI' },
+    ],
+  },
+  {
+    lines: [
+      { type: 'label',    text: 'CREATIVE DIRECTION' },
+      { type: 'item',     text: 'CONCEPT DESIGN' },
+      { type: 'item',     text: 'INTERACTION DESIGN' },
+      { type: 'item',     text: 'VISUAL DESIGN' },
+      { type: 'item',     text: 'SOUND DESIGN' },
+      { type: 'item',     text: 'MOTION DESIGN' },
+    ],
+  },
+  {
+    lines: [
+      { type: 'label',    text: 'BUILT WITH' },
+      { type: 'item',     text: 'ARTIFICIAL INTELLIGENCE' },
+      { type: 'item',     text: 'MANUS' },
+      { type: 'item',     text: 'CHATGPT' },
+      { type: 'item',     text: 'REACT' },
+    ],
+  },
+  {
+    lines: [
+      { type: 'label',    text: 'PRODUCTS' },
+      { type: 'product',  text: 'THE EYE' },
+      { type: 'product',  text: 'LOW BATTERY' },
+      { type: 'product',  text: 'SPACE DRONE' },
+      { type: 'product',  text: 'ÆTHER' },
+      { type: 'product',  text: 'DEAD AIR' },
+      { type: 'product',  text: 'FOURCAST' },
+    ],
+  },
+  {
+    lines: [
+      { type: 'label',    text: 'PROCESS' },
+      { type: 'item',     text: 'IDEA' },
+      { type: 'item',     text: 'PROMPT' },
+      { type: 'item',     text: 'PROTOTYPE' },
+      { type: 'item',     text: 'TEST' },
+      { type: 'item',     text: 'REFINE' },
+      { type: 'item',     text: 'PUBLISH' },
+    ],
+  },
+  {
+    lines: [
+      { type: 'label',    text: 'EXPLORING' },
+      { type: 'item',     text: 'HUMAN CREATIVITY' },
+      { type: 'item',     text: 'AI COLLABORATION' },
+      { type: 'item',     text: 'RAPID PRODUCT CREATION' },
+    ],
+  },
+  {
+    lines: [
+      { type: 'copyright', text: `© ${new Date().getFullYear()} DICANOMI` },
+    ],
+  },
+  {
+    lines: [
+      { type: 'fin' },
+    ],
+  },
 ];
 
 export function CreditsModal({ onClose }: CreditsModalProps) {
   const [visible, setVisible] = useState(false);
   const [closing, setClosing] = useState(false);
-  const [activeSection, setActiveSection] = useState<number | null>(null);
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const posRef = useRef(0);
-  const rafRef = useRef<number>(0);
-  const userPausedRef = useRef(false);
-  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [activeIdx, setActiveIdx] = useState<number | null>(null);
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Fade in
   useEffect(() => {
@@ -106,87 +111,56 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
+  // Auto-close: DURATION + 1s pause after animation ends
+  useEffect(() => {
+    closeTimerRef.current = setTimeout(() => {
+      setClosing(true);
+      setTimeout(onClose, 500);
+    }, (DURATION + 1) * 1000);
+    return () => { if (closeTimerRef.current) clearTimeout(closeTimerRef.current); };
+  }, [onClose]);
+
   const handleClose = useCallback(() => {
     if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
-    cancelAnimationFrame(rafRef.current);
     setClosing(true);
     setTimeout(onClose, 400);
   }, [onClose]);
 
-  // rAF scroll loop — smooth, continuous
+  // IntersectionObserver — root: null = viewport
+  // rootMargin: middle third of viewport is the active zone
   useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-
-    const loop = () => {
-      if (!userPausedRef.current) {
-        posRef.current += SCROLL_SPEED / 60; // px per frame at 60fps
-        const maxScroll = el.scrollHeight - el.clientHeight;
-        if (posRef.current >= maxScroll) {
-          posRef.current = maxScroll;
-          // Auto-close: pause 0.5s then fade out
-          closeTimerRef.current = setTimeout(() => {
-            setClosing(true);
-            setTimeout(onClose, 500);
-          }, 500);
-          return; // stop loop
-        }
-        el.scrollTop = posRef.current;
-      }
-      rafRef.current = requestAnimationFrame(loop);
-    };
-    rafRef.current = requestAnimationFrame(loop);
-
-    // Hover pauses
-    const onEnter = () => { userPausedRef.current = true; };
-    const onLeave = () => { userPausedRef.current = false; };
-    el.addEventListener('mouseenter', onEnter);
-    el.addEventListener('mouseleave', onLeave);
-
-    return () => {
-      cancelAnimationFrame(rafRef.current);
-      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
-      el.removeEventListener('mouseenter', onEnter);
-      el.removeEventListener('mouseleave', onLeave);
-    };
-  }, [onClose]);
-
-  // IntersectionObserver — active section = intersects middle third of viewport
-  useEffect(() => {
-    const rootMargin = '-33% 0px -33% 0px'; // middle third
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach(entry => {
-          const idx = Number(entry.target.getAttribute('data-section'));
+          const idx = Number(entry.target.getAttribute('data-idx'));
           if (entry.isIntersecting) {
-            setActiveSection(idx);
-          } else {
-            setActiveSection(prev => prev === idx ? null : prev);
+            setActiveIdx(idx);
           }
         });
       },
-      { root: scrollRef.current, rootMargin, threshold: 0 }
+      {
+        root: null, // viewport
+        rootMargin: '-30% 0px -30% 0px',
+        threshold: 0,
+      }
     );
     sectionRefs.current.forEach(el => { if (el) observer.observe(el); });
     return () => observer.disconnect();
   }, []);
 
-  const renderLine = (item: { type: string; text?: string }, i: number) => {
-    const key = `line-${i}`;
-    switch (item.type) {
-      case 'spacer-lg':
-        return <div key={key} style={{ height: 'clamp(28px, 5vh, 48px)' }} />;
+  const renderLine = (line: { type: string; text?: string }, key: string) => {
+    switch (line.type) {
       case 'title':
         return (
           <div key={key} style={{
             fontFamily: "'DM Mono', monospace",
-            fontSize: 'clamp(12px, 1.3vw, 16px)',
+            fontSize: 'clamp(13px, 1.4vw, 18px)',
             letterSpacing: '0.42em',
             paddingLeft: '0.42em',
-            color: 'rgba(255,255,255,0.88)',
+            color: 'rgba(255,255,255,0.92)',
             textAlign: 'center',
             marginBottom: '10px',
-          }}>{item.text}</div>
+          }}>{line.text}</div>
         );
       case 'subtitle':
         return (
@@ -195,9 +169,9 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
             fontSize: 'clamp(8px, 0.8vw, 10px)',
             letterSpacing: '0.3em',
             paddingLeft: '0.3em',
-            color: 'rgba(255,255,255,0.22)',
+            color: 'rgba(255,255,255,0.28)',
             textAlign: 'center',
-          }}>{item.text}</div>
+          }}>{line.text}</div>
         );
       case 'label':
         return (
@@ -206,22 +180,21 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
             fontSize: 'clamp(7px, 0.72vw, 9px)',
             letterSpacing: '0.32em',
             paddingLeft: '0.32em',
-            color: 'rgba(255,255,255,0.18)',
+            color: 'rgba(255,255,255,0.22)',
             textAlign: 'center',
             marginBottom: 'clamp(14px, 2.5vh, 22px)',
-          }}>{item.text}</div>
+          }}>{line.text}</div>
         );
       case 'name':
         return (
           <div key={key} style={{
             fontFamily: "'DM Mono', monospace",
-            fontSize: 'clamp(16px, 2.2vw, 28px)',
+            fontSize: 'clamp(18px, 2.5vw, 32px)',
             letterSpacing: '0.28em',
             paddingLeft: '0.28em',
-            color: 'rgba(255,255,255,0.82)',
+            color: 'rgba(255,255,255,0.88)',
             textAlign: 'center',
-            marginBottom: 'clamp(6px, 1vh, 10px)',
-          }}>{item.text}</div>
+          }}>{line.text}</div>
         );
       case 'item':
         return (
@@ -230,11 +203,11 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
             fontSize: 'clamp(11px, 1.1vw, 14px)',
             fontWeight: 400,
             letterSpacing: '0.14em',
-            color: 'rgba(255,255,255,0.42)',
+            color: 'rgba(255,255,255,0.5)',
             textAlign: 'center',
-            marginBottom: 'clamp(8px, 1.2vh, 14px)',
+            marginBottom: 'clamp(6px, 1vh, 10px)',
             textTransform: 'uppercase',
-          }}>{item.text}</div>
+          }}>{line.text}</div>
         );
       case 'product':
         return (
@@ -243,10 +216,10 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
             fontSize: 'clamp(9px, 0.9vw, 11px)',
             letterSpacing: '0.24em',
             paddingLeft: '0.24em',
-            color: 'rgba(255,255,255,0.32)',
+            color: 'rgba(255,255,255,0.38)',
             textAlign: 'center',
             marginBottom: 'clamp(10px, 1.5vh, 16px)',
-          }}>{item.text}</div>
+          }}>{line.text}</div>
         );
       case 'copyright':
         return (
@@ -255,9 +228,36 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
             fontSize: 'clamp(7px, 0.7vw, 8px)',
             letterSpacing: '0.2em',
             paddingLeft: '0.2em',
-            color: 'rgba(255,255,255,0.12)',
+            color: 'rgba(255,255,255,0.14)',
             textAlign: 'center',
-          }}>{item.text}</div>
+          }}>{line.text}</div>
+        );
+      case 'fin':
+        return (
+          <button
+            key={key}
+            onClick={handleClose}
+            style={{
+              display: 'block',
+              width: '100%',
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              fontFamily: "'Cormorant Garamond', Georgia, serif",
+              fontSize: 'clamp(28px, 4vw, 52px)',
+              fontWeight: 300,
+              fontStyle: 'italic',
+              letterSpacing: '0.18em',
+              paddingLeft: '0.18em',
+              color: 'rgba(255,255,255,0.55)',
+              textAlign: 'center',
+              transition: 'color 0.3s ease',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.88)')}
+            onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.55)')}
+          >
+            FIN
+          </button>
         );
       default:
         return null;
@@ -276,6 +276,17 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
         cursor: 'pointer',
       }}
     >
+      <style>{`
+        @keyframes creditsRoll {
+          0%   { transform: translateY(100vh); }
+          100% { transform: translateY(-100%); }
+        }
+        .credits-roll {
+          animation: creditsRoll ${DURATION}s linear forwards;
+          will-change: transform;
+        }
+      `}</style>
+
       {/* Fade top */}
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0,
@@ -318,47 +329,45 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
         </svg>
       </button>
 
-      {/* Scrolling container */}
+      {/* Credits track — CSS keyframe, starts immediately */}
       <div
-        ref={scrollRef}
+        className="credits-roll"
         onClick={e => e.stopPropagation()}
         style={{
-          position: 'absolute', inset: 0,
-          overflowY: 'scroll',
-          overflowX: 'hidden',
-          scrollbarWidth: 'none',
+          position: 'absolute',
+          left: 0, right: 0,
           cursor: 'default',
-          WebkitOverflowScrolling: 'touch',
         }}
       >
-        <style>{`div::-webkit-scrollbar { display: none; }`}</style>
-
-        {/* Top spacer — pushes first section to start below viewport */}
-        <div style={{ height: '100vh' }} />
-
-        <div style={{ maxWidth: '520px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 48px)' }}>
+        <div style={{
+          maxWidth: '520px',
+          margin: '0 auto',
+          padding: '0 clamp(24px, 5vw, 48px)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 'clamp(40px, 8vh, 72px)',
+        }}>
           {SECTIONS.map((section, sIdx) => {
-            const isActive = activeSection === sIdx;
+            const isActive = activeIdx === sIdx;
             return (
               <div
                 key={sIdx}
                 ref={el => { sectionRefs.current[sIdx] = el; }}
-                data-section={sIdx}
+                data-idx={sIdx}
                 style={{
+                  opacity: isActive ? 1 : 0.32,
                   transform: isActive ? 'scale(1.02)' : 'scale(1)',
-                  opacity: isActive ? 1 : 0.35,
-                  transition: 'transform 0.6s cubic-bezier(0.23,1,0.32,1), opacity 0.6s ease',
+                  transition: 'opacity 0.7s ease, transform 0.7s cubic-bezier(0.23,1,0.32,1)',
                   transformOrigin: 'center center',
                 }}
               >
-                {section.map((item, lIdx) => renderLine(item, sIdx * 100 + lIdx))}
+                {section.lines.map((line, lIdx) =>
+                  renderLine(line, `${sIdx}-${lIdx}`)
+                )}
               </div>
             );
           })}
         </div>
-
-        {/* Bottom spacer — ensures last section scrolls fully off */}
-        <div style={{ height: '100vh' }} />
       </div>
     </div>
   );

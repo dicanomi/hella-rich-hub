@@ -635,6 +635,23 @@ export default function Landing() {
             >
               About
             </button>
+            <button
+              onClick={() => setCreditsOpen(true)}
+              style={{
+                background: 'none', border: 'none', cursor: 'pointer',
+                fontFamily: "'DM Mono', monospace",
+                fontSize: 'clamp(8px,0.85vw,10px)',
+                letterSpacing: '0.18em',
+                color: 'rgba(255,255,255,0.35)',
+                textTransform: 'uppercase',
+                padding: 0,
+                transition: 'color 0.2s ease',
+              }}
+              onMouseEnter={e => ((e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.65)')}
+              onMouseLeave={e => ((e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.35)')}
+            >
+              Credits
+            </button>
             <a
               href="https://github.com/dicanomi"
               target="_blank"
