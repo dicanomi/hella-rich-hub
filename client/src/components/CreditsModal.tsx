@@ -2,94 +2,102 @@
  * CreditsModal — hella.rich cinematic end credits
  *
  * Design: film end credits — clear, uppercase, cinematic hierarchy
- * DICANOMI = the creative studio. HELLA.RICH = the product world.
- * CSS keyframe upward scroll. Auto-closes when complete.
- * X icon fixed top-right. Click outside closes.
+ * Active-section highlighting: IntersectionObserver on a real scrolling container.
+ * Sections passing through the middle third of the viewport brighten slightly (scale 1.02, opacity boost).
+ * Inactive sections dim to 0.35 opacity. Smooth CSS transitions.
+ * Auto-closes when scroll reaches end. X icon fixed top-right.
  */
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface CreditsModalProps {
   onClose: () => void;
 }
 
-// Scroll duration in seconds — tune to taste (80s = slow/cinematic)
-const SCROLL_DURATION = 80;
+// px/second scroll speed — 40 = slow/cinematic
+const SCROLL_SPEED = 40;
 
-const CREDITS_LINES = [
-  { type: 'spacer' },
-  { type: 'title',    text: 'HELLA.RICH' },
-  { type: 'subtitle', text: 'SMALL INTERNET THINGS' },
-  { type: 'spacer' },
-  { type: 'spacer' },
-  { type: 'label',    text: 'CREATED BY' },
-  { type: 'name',     text: 'DICANOMI' },
-  { type: 'spacer' },
-  { type: 'spacer' },
-  { type: 'label',    text: 'CREATIVE DIRECTION' },
-  { type: 'item',     text: 'CONCEPT DESIGN' },
-  { type: 'item',     text: 'INTERACTION DESIGN' },
-  { type: 'item',     text: 'VISUAL DESIGN' },
-  { type: 'item',     text: 'SOUND DESIGN' },
-  { type: 'item',     text: 'MOTION DESIGN' },
-  { type: 'spacer' },
-  { type: 'spacer' },
-  { type: 'label',    text: 'BUILT WITH' },
-  { type: 'item',     text: 'ARTIFICIAL INTELLIGENCE' },
-  { type: 'item',     text: 'MANUS' },
-  { type: 'item',     text: 'CHATGPT' },
-  { type: 'item',     text: 'REACT' },
-  { type: 'spacer' },
-  { type: 'spacer' },
-  { type: 'label',    text: 'PRODUCTS' },
-  { type: 'product',  text: 'THE EYE' },
-  { type: 'product',  text: 'LOW BATTERY' },
-  { type: 'product',  text: 'SPACE DRONE' },
-  { type: 'product',  text: 'ÆTHER' },
-  { type: 'product',  text: 'DEAD AIR' },
-  { type: 'product',  text: 'FOURCAST' },
-  { type: 'spacer' },
-  { type: 'spacer' },
-  { type: 'label',    text: 'PROCESS' },
-  { type: 'item',     text: 'IDEA' },
-  { type: 'item',     text: 'PROMPT' },
-  { type: 'item',     text: 'PROTOTYPE' },
-  { type: 'item',     text: 'TEST' },
-  { type: 'item',     text: 'REFINE' },
-  { type: 'item',     text: 'PUBLISH' },
-  { type: 'spacer' },
-  { type: 'spacer' },
-  { type: 'label',    text: 'EXPLORING' },
-  { type: 'item',     text: 'HUMAN CREATIVITY' },
-  { type: 'item',     text: 'AI COLLABORATION' },
-  { type: 'item',     text: 'RAPID PRODUCT CREATION' },
-  { type: 'spacer' },
-  { type: 'spacer' },
-  { type: 'spacer' },
-  { type: 'copyright', text: `© ${new Date().getFullYear()} DICANOMI` },
-  { type: 'spacer' },
-  { type: 'spacer' },
-  { type: 'spacer' },
+// Group lines into sections for highlighting
+// Each section is an array of lines
+const SECTIONS = [
+  [
+    { type: 'spacer-lg' },
+    { type: 'title',    text: 'HELLA.RICH' },
+    { type: 'subtitle', text: 'SMALL INTERNET THINGS' },
+    { type: 'spacer-lg' },
+  ],
+  [
+    { type: 'label',    text: 'CREATED BY' },
+    { type: 'name',     text: 'DICANOMI' },
+    { type: 'spacer-lg' },
+  ],
+  [
+    { type: 'label',    text: 'CREATIVE DIRECTION' },
+    { type: 'item',     text: 'CONCEPT DESIGN' },
+    { type: 'item',     text: 'INTERACTION DESIGN' },
+    { type: 'item',     text: 'VISUAL DESIGN' },
+    { type: 'item',     text: 'SOUND DESIGN' },
+    { type: 'item',     text: 'MOTION DESIGN' },
+    { type: 'spacer-lg' },
+  ],
+  [
+    { type: 'label',    text: 'BUILT WITH' },
+    { type: 'item',     text: 'ARTIFICIAL INTELLIGENCE' },
+    { type: 'item',     text: 'MANUS' },
+    { type: 'item',     text: 'CHATGPT' },
+    { type: 'item',     text: 'REACT' },
+    { type: 'spacer-lg' },
+  ],
+  [
+    { type: 'label',    text: 'PRODUCTS' },
+    { type: 'product',  text: 'THE EYE' },
+    { type: 'product',  text: 'LOW BATTERY' },
+    { type: 'product',  text: 'SPACE DRONE' },
+    { type: 'product',  text: 'ÆTHER' },
+    { type: 'product',  text: 'DEAD AIR' },
+    { type: 'product',  text: 'FOURCAST' },
+    { type: 'spacer-lg' },
+  ],
+  [
+    { type: 'label',    text: 'PROCESS' },
+    { type: 'item',     text: 'IDEA' },
+    { type: 'item',     text: 'PROMPT' },
+    { type: 'item',     text: 'PROTOTYPE' },
+    { type: 'item',     text: 'TEST' },
+    { type: 'item',     text: 'REFINE' },
+    { type: 'item',     text: 'PUBLISH' },
+    { type: 'spacer-lg' },
+  ],
+  [
+    { type: 'label',    text: 'EXPLORING' },
+    { type: 'item',     text: 'HUMAN CREATIVITY' },
+    { type: 'item',     text: 'AI COLLABORATION' },
+    { type: 'item',     text: 'RAPID PRODUCT CREATION' },
+    { type: 'spacer-lg' },
+  ],
+  [
+    { type: 'spacer-lg' },
+    { type: 'copyright', text: `© ${new Date().getFullYear()} DICANOMI` },
+    { type: 'spacer-lg' },
+    { type: 'spacer-lg' },
+  ],
 ];
 
 export function CreditsModal({ onClose }: CreditsModalProps) {
   const [visible, setVisible] = useState(false);
   const [closing, setClosing] = useState(false);
+  const [activeSection, setActiveSection] = useState<number | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const posRef = useRef(0);
+  const rafRef = useRef<number>(0);
+  const userPausedRef = useRef(false);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // Fade in
   useEffect(() => {
     const t = requestAnimationFrame(() => setVisible(true));
     return () => cancelAnimationFrame(t);
   }, []);
-
-  // Auto-close when animation completes: SCROLL_DURATION + 0.5s pause + 0.5s fade
-  useEffect(() => {
-    closeTimerRef.current = setTimeout(() => {
-      setClosing(true);
-      setTimeout(onClose, 500);
-    }, (SCROLL_DURATION + 0.5) * 1000);
-    return () => { if (closeTimerRef.current) clearTimeout(closeTimerRef.current); };
-  }, [onClose]);
 
   // ESC closes silently
   useEffect(() => {
@@ -98,16 +106,75 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    cancelAnimationFrame(rafRef.current);
     setClosing(true);
     setTimeout(onClose, 400);
-  };
+  }, [onClose]);
 
-  const renderLine = (item: typeof CREDITS_LINES[0], i: number) => {
-    const key = `${item.type}-${i}`;
+  // rAF scroll loop — smooth, continuous
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const loop = () => {
+      if (!userPausedRef.current) {
+        posRef.current += SCROLL_SPEED / 60; // px per frame at 60fps
+        const maxScroll = el.scrollHeight - el.clientHeight;
+        if (posRef.current >= maxScroll) {
+          posRef.current = maxScroll;
+          // Auto-close: pause 0.5s then fade out
+          closeTimerRef.current = setTimeout(() => {
+            setClosing(true);
+            setTimeout(onClose, 500);
+          }, 500);
+          return; // stop loop
+        }
+        el.scrollTop = posRef.current;
+      }
+      rafRef.current = requestAnimationFrame(loop);
+    };
+    rafRef.current = requestAnimationFrame(loop);
+
+    // Hover pauses
+    const onEnter = () => { userPausedRef.current = true; };
+    const onLeave = () => { userPausedRef.current = false; };
+    el.addEventListener('mouseenter', onEnter);
+    el.addEventListener('mouseleave', onLeave);
+
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+      el.removeEventListener('mouseenter', onEnter);
+      el.removeEventListener('mouseleave', onLeave);
+    };
+  }, [onClose]);
+
+  // IntersectionObserver — active section = intersects middle third of viewport
+  useEffect(() => {
+    const rootMargin = '-33% 0px -33% 0px'; // middle third
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          const idx = Number(entry.target.getAttribute('data-section'));
+          if (entry.isIntersecting) {
+            setActiveSection(idx);
+          } else {
+            setActiveSection(prev => prev === idx ? null : prev);
+          }
+        });
+      },
+      { root: scrollRef.current, rootMargin, threshold: 0 }
+    );
+    sectionRefs.current.forEach(el => { if (el) observer.observe(el); });
+    return () => observer.disconnect();
+  }, []);
+
+  const renderLine = (item: { type: string; text?: string }, i: number) => {
+    const key = `line-${i}`;
     switch (item.type) {
-      case 'spacer':
+      case 'spacer-lg':
         return <div key={key} style={{ height: 'clamp(28px, 5vh, 48px)' }} />;
       case 'title':
         return (
@@ -209,20 +276,6 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
         cursor: 'pointer',
       }}
     >
-      <style>{`
-        @keyframes creditsScroll {
-          0%   { transform: translateY(100vh); }
-          100% { transform: translateY(-100%); }
-        }
-        .credits-track {
-          animation: creditsScroll ${SCROLL_DURATION}s linear forwards;
-          will-change: transform;
-        }
-        .credits-track:hover {
-          animation-play-state: paused;
-        }
-      `}</style>
-
       {/* Fade top */}
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0,
@@ -239,7 +292,7 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
         pointerEvents: 'none', zIndex: 10,
       }} />
 
-      {/* Close icon — fixed top-right, always visible */}
+      {/* Close icon — fixed top-right */}
       <button
         onClick={e => { e.stopPropagation(); handleClose(); }}
         aria-label="Close credits"
@@ -265,23 +318,47 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
         </svg>
       </button>
 
-      {/* Credits track — CSS keyframe upward scroll */}
+      {/* Scrolling container */}
       <div
-        className="credits-track"
+        ref={scrollRef}
         onClick={e => e.stopPropagation()}
         style={{
-          position: 'absolute',
-          left: 0, right: 0,
+          position: 'absolute', inset: 0,
+          overflowY: 'scroll',
+          overflowX: 'hidden',
+          scrollbarWidth: 'none',
           cursor: 'default',
+          WebkitOverflowScrolling: 'touch',
         }}
       >
-        <div style={{
-          maxWidth: '520px',
-          margin: '0 auto',
-          padding: '0 clamp(24px, 5vw, 48px)',
-        }}>
-          {CREDITS_LINES.map((item, i) => renderLine(item, i))}
+        <style>{`div::-webkit-scrollbar { display: none; }`}</style>
+
+        {/* Top spacer — pushes first section to start below viewport */}
+        <div style={{ height: '100vh' }} />
+
+        <div style={{ maxWidth: '520px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 48px)' }}>
+          {SECTIONS.map((section, sIdx) => {
+            const isActive = activeSection === sIdx;
+            return (
+              <div
+                key={sIdx}
+                ref={el => { sectionRefs.current[sIdx] = el; }}
+                data-section={sIdx}
+                style={{
+                  transform: isActive ? 'scale(1.02)' : 'scale(1)',
+                  opacity: isActive ? 1 : 0.35,
+                  transition: 'transform 0.6s cubic-bezier(0.23,1,0.32,1), opacity 0.6s ease',
+                  transformOrigin: 'center center',
+                }}
+              >
+                {section.map((item, lIdx) => renderLine(item, sIdx * 100 + lIdx))}
+              </div>
+            );
+          })}
         </div>
+
+        {/* Bottom spacer — ensures last section scrolls fully off */}
+        <div style={{ height: '100vh' }} />
       </div>
     </div>
   );
