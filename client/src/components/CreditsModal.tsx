@@ -42,11 +42,14 @@ const SECTIONS: Array<{ lines: Array<{ type: string; text?: string }> }> = [
   },
   {
     lines: [
-      { type: 'label',    text: 'BUILT WITH' },
-      { type: 'item',     text: 'ARTIFICIAL INTELLIGENCE' },
+      { type: 'label',    text: 'CREATED WITH' },
       { type: 'item',     text: 'MANUS' },
       { type: 'item',     text: 'CHATGPT' },
       { type: 'item',     text: 'REACT' },
+      { type: 'item',     text: 'GITHUB' },
+      { type: 'item',     text: 'CLOUDFLARE' },
+      { type: 'item',     text: 'PORKBUN' },
+      { type: 'item',     text: 'FORMSPREE' },
     ],
   },
   {
@@ -62,13 +65,13 @@ const SECTIONS: Array<{ lines: Array<{ type: string; text?: string }> }> = [
   },
   {
     lines: [
-      { type: 'label',    text: 'PROCESS' },
+      { type: 'label',    text: 'WORKFLOW' },
       { type: 'item',     text: 'IDEA' },
       { type: 'item',     text: 'PROMPT' },
-      { type: 'item',     text: 'PROTOTYPE' },
+      { type: 'item',     text: 'BUILD' },
       { type: 'item',     text: 'TEST' },
       { type: 'item',     text: 'REFINE' },
-      { type: 'item',     text: 'PUBLISH' },
+      { type: 'item',     text: 'DEPLOY' },
     ],
   },
   {
