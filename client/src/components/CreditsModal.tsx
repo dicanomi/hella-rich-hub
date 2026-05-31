@@ -1,9 +1,10 @@
 /**
  * CreditsModal — hella.rich cinematic end credits
  *
- * Design: film end credits × album liner notes × old software easter egg
- * All uppercase. CSS keyframe upward scroll — starts immediately, no timing bugs.
- * Click anywhere / X icon closes. No ESC hint. No personal names.
+ * Design: film end credits — clear, uppercase, cinematic hierarchy
+ * DICANOMI = the creative studio. HELLA.RICH = the product world.
+ * CSS keyframe upward scroll. Auto-closes when complete.
+ * X icon fixed top-right. Click outside closes.
  */
 import { useEffect, useRef, useState } from 'react';
 
@@ -11,60 +12,60 @@ interface CreditsModalProps {
   onClose: () => void;
 }
 
-// Total animation duration in seconds — adjust to taste
-// At ~80 lines of content, 90s gives a cinematic pace
-const SCROLL_DURATION = 90;
+// Scroll duration in seconds — tune to taste (80s = slow/cinematic)
+const SCROLL_DURATION = 80;
 
 const CREDITS_LINES = [
   { type: 'spacer' },
-  { type: 'title',      text: 'HELLA.RICH' },
-  { type: 'subtitle',   text: 'SMALL INTERNET THINGS' },
+  { type: 'title',    text: 'HELLA.RICH' },
+  { type: 'subtitle', text: 'SMALL INTERNET THINGS' },
   { type: 'spacer' },
   { type: 'spacer' },
-  { type: 'label',      text: 'CREATED BY' },
-  { type: 'name',       text: 'DICANOMI' },
+  { type: 'label',    text: 'CREATED BY' },
+  { type: 'name',     text: 'DICANOMI' },
   { type: 'spacer' },
   { type: 'spacer' },
-  { type: 'label',      text: 'BUILT WITH' },
-  { type: 'item',       text: 'ARTIFICIAL INTELLIGENCE' },
-  { type: 'item',       text: 'QUESTIONABLE DECISIONS' },
-  { type: 'item',       text: 'LATE NIGHT CURIOSITY' },
+  { type: 'label',    text: 'CREATIVE DIRECTION' },
+  { type: 'item',     text: 'CONCEPT DESIGN' },
+  { type: 'item',     text: 'INTERACTION DESIGN' },
+  { type: 'item',     text: 'VISUAL DESIGN' },
+  { type: 'item',     text: 'SOUND DESIGN' },
+  { type: 'item',     text: 'MOTION DESIGN' },
   { type: 'spacer' },
   { type: 'spacer' },
-  { type: 'label',      text: 'EXPERIMENTS IN' },
-  { type: 'item',       text: 'INTERACTION' },
-  { type: 'item',       text: 'SOUND' },
-  { type: 'item',       text: 'MOTION' },
-  { type: 'item',       text: 'EMOTION' },
-  { type: 'item',       text: 'BEAUTIFULLY UNNECESSARY TECHNOLOGY' },
+  { type: 'label',    text: 'BUILT WITH' },
+  { type: 'item',     text: 'ARTIFICIAL INTELLIGENCE' },
+  { type: 'item',     text: 'MANUS' },
+  { type: 'item',     text: 'CHATGPT' },
+  { type: 'item',     text: 'REACT' },
   { type: 'spacer' },
   { type: 'spacer' },
-  { type: 'label',      text: 'TOOLS' },
-  { type: 'item',       text: 'MANUS' },
-  { type: 'item',       text: 'CHATGPT' },
-  { type: 'item',       text: 'REACT' },
-  { type: 'item',       text: 'COFFEE' },
-  { type: 'item',       text: 'MISTAKES' },
+  { type: 'label',    text: 'PRODUCTS' },
+  { type: 'product',  text: 'THE EYE' },
+  { type: 'product',  text: 'LOW BATTERY' },
+  { type: 'product',  text: 'SPACE DRONE' },
+  { type: 'product',  text: 'ÆTHER' },
+  { type: 'product',  text: 'DEAD AIR' },
+  { type: 'product',  text: 'FOURCAST' },
   { type: 'spacer' },
   { type: 'spacer' },
-  { type: 'label',      text: 'PRODUCTS' },
-  { type: 'product',    text: 'ORB' },
-  { type: 'product',    text: 'THE EYE' },
-  { type: 'product',    text: 'LOW BATTERY' },
-  { type: 'product',    text: 'SPACE DRONE' },
-  { type: 'product',    text: 'ÆTHER' },
-  { type: 'product',    text: 'DEAD AIR' },
-  { type: 'product',    text: 'FOURCAST' },
+  { type: 'label',    text: 'PROCESS' },
+  { type: 'item',     text: 'IDEA' },
+  { type: 'item',     text: 'PROMPT' },
+  { type: 'item',     text: 'PROTOTYPE' },
+  { type: 'item',     text: 'TEST' },
+  { type: 'item',     text: 'REFINE' },
+  { type: 'item',     text: 'PUBLISH' },
   { type: 'spacer' },
   { type: 'spacer' },
-  { type: 'label',      text: 'PHILOSOPHY' },
-  { type: 'philosophy', text: 'NO DECKS.' },
-  { type: 'philosophy', text: 'NO HYPOTHETICALS.' },
-  { type: 'philosophy', text: 'JUST THINGS THAT EXIST.' },
+  { type: 'label',    text: 'EXPLORING' },
+  { type: 'item',     text: 'HUMAN CREATIVITY' },
+  { type: 'item',     text: 'AI COLLABORATION' },
+  { type: 'item',     text: 'RAPID PRODUCT CREATION' },
   { type: 'spacer' },
   { type: 'spacer' },
   { type: 'spacer' },
-  { type: 'copyright',  text: `© ${new Date().getFullYear()} DICANOMI` },
+  { type: 'copyright', text: `© ${new Date().getFullYear()} DICANOMI` },
   { type: 'spacer' },
   { type: 'spacer' },
   { type: 'spacer' },
@@ -73,7 +74,7 @@ const CREDITS_LINES = [
 export function CreditsModal({ onClose }: CreditsModalProps) {
   const [visible, setVisible] = useState(false);
   const [closing, setClosing] = useState(false);
-  const animRef = useRef<HTMLDivElement>(null);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Fade in
   useEffect(() => {
@@ -81,7 +82,16 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
     return () => cancelAnimationFrame(t);
   }, []);
 
-  // ESC closes (silent — no hint shown)
+  // Auto-close when animation completes: SCROLL_DURATION + 0.5s pause + 0.5s fade
+  useEffect(() => {
+    closeTimerRef.current = setTimeout(() => {
+      setClosing(true);
+      setTimeout(onClose, 500);
+    }, (SCROLL_DURATION + 0.5) * 1000);
+    return () => { if (closeTimerRef.current) clearTimeout(closeTimerRef.current); };
+  }, [onClose]);
+
+  // ESC closes silently
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') handleClose(); };
     window.addEventListener('keydown', onKey);
@@ -89,6 +99,7 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
   }, []);
 
   const handleClose = () => {
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
     setClosing(true);
     setTimeout(onClose, 400);
   };
@@ -170,19 +181,6 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
             marginBottom: 'clamp(10px, 1.5vh, 16px)',
           }}>{item.text}</div>
         );
-      case 'philosophy':
-        return (
-          <div key={key} style={{
-            fontFamily: "'Space Grotesk', sans-serif",
-            fontSize: 'clamp(12px, 1.2vw, 15px)',
-            fontWeight: 400,
-            letterSpacing: '0.1em',
-            color: 'rgba(255,255,255,0.55)',
-            textAlign: 'center',
-            marginBottom: 'clamp(8px, 1.2vh, 14px)',
-            textTransform: 'uppercase',
-          }}>{item.text}</div>
-        );
       case 'copyright':
         return (
           <div key={key} style={{
@@ -218,7 +216,6 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
         }
         .credits-track {
           animation: creditsScroll ${SCROLL_DURATION}s linear forwards;
-          animation-play-state: running;
           will-change: transform;
         }
         .credits-track:hover {
@@ -268,9 +265,8 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
         </svg>
       </button>
 
-      {/* Credits track — CSS keyframe upward scroll, starts immediately */}
+      {/* Credits track — CSS keyframe upward scroll */}
       <div
-        ref={animRef}
         className="credits-track"
         onClick={e => e.stopPropagation()}
         style={{
