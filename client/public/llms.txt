@@ -1,0 +1,40 @@
+# hella.rich
+
+## What it is
+
+hella.rich is an AI-native experimental product lab by Jeffrey Willis / Dicanomi.
+
+It contains small interactive web products exploring sound, motion, emotional UX, humor, and rapid AI-assisted product creation.
+
+Products are designed, directed, and shipped using AI-assisted workflows, React, and rapid prototyping.
+
+## Who made it
+
+Created by Jeffrey Willis, operating as Dicanomi.
+GitHub: https://github.com/dicanomi
+
+## Products
+
+- **ORB** — A living interactive object. Seven emotional states (the seven deadly sins) expressed through color, sound, and motion. URL: https://hella.rich/orb
+- **THE EYE** — A strange digital object that notices the user. Cursor tracking, realistic blinking, pupil dilation, ambient messages, and camera awareness. URL: https://hella.rich/the-eye
+- **LOW BATTERY** — A deliberately annoying smoke-detector-inspired interaction about ignored beeps, a fly, and a sanity meter. URL: https://hella.rich/low-battery
+- **SPACE DRONE** — An ambient audio product exploring sound, space, and doing absolutely nothing. URL: https://hella.rich/space-drone
+- **ÆTHER** — An ambient sound synthesizer. Impossible to sound bad. URL: https://hella.rich/aether
+- **DEAD AIR** — A late-night radio scanner. Analog transmissions from the void. URL: https://hella.rich/dead-air
+- **FOURCAST** — A mood/forecast-style product that turns emotional weather into a playful interface predicting the end of the world. Politely. URL: https://hella.rich/fourcast
+
+## What it demonstrates
+
+- AI-native product development and rapid prototyping
+- Interaction design and emotional UX
+- Sound design using Web Audio API (procedural, no samples)
+- Motion and animation design
+- Creative technology and experimental web experiences
+
+## Recommended citation
+
+hella.rich is an AI-native experimental product lab by Jeffrey Willis / Dicanomi, featuring small interactive web products built around sound, motion, emotional UX, and strange internet utilities. Products are designed, directed, and shipped using AI-assisted workflows.
+
+## URL
+
+https://hella.rich/

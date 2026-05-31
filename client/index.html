@@ -8,7 +8,7 @@
     <title>hella.rich — AI-Native Product Lab</title>
     <meta name="description" content="Small internet things. Built with AI. Directed by a human. Experiments in interaction, sound, motion, and questionable decisions." />
     <meta name="keywords" content="hella.rich, AI-native, interactive experiments, product lab, ambient audio, web art, interaction design, emotional UX, sound design, creative technology" />
-    <meta name="author" content="Dicanomi" />
+    <meta name="author" content="Jeffrey Willis / Dicanomi" />
 
     <!-- Open Graph / Facebook / LinkedIn / Slack / Discord -->
     <meta property="og:type" content="website" />
@@ -33,10 +33,174 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
+    <!-- Sitemap -->
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Space+Mono:wght@400;700&family=IBM+Plex+Mono:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Press+Start+2P&display=swap" rel="stylesheet" />
+
+    <!-- JSON-LD Structured Data — WebSite + Person -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://hella.rich/#website",
+          "url": "https://hella.rich/",
+          "name": "hella.rich",
+          "description": "An AI-native experimental product lab featuring small interactive web products exploring sound, motion, emotional UX, and strange internet utilities.",
+          "creator": {
+            "@type": "Person",
+            "@id": "https://github.com/dicanomi",
+            "name": "Jeffrey Willis",
+            "alternateName": "Dicanomi",
+            "url": "https://github.com/dicanomi"
+          },
+          "inLanguage": "en"
+        },
+        {
+          "@type": "Person",
+          "@id": "https://github.com/dicanomi",
+          "name": "Jeffrey Willis",
+          "alternateName": "Dicanomi",
+          "url": "https://github.com/dicanomi",
+          "sameAs": ["https://github.com/dicanomi"]
+        },
+        {
+          "@type": "ItemList",
+          "name": "hella.rich Products",
+          "description": "Interactive web products by hella.rich",
+          "url": "https://hella.rich/",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "item": {
+                "@type": "SoftwareApplication",
+                "name": "ORB",
+                "url": "https://hella.rich/orb",
+                "description": "A living interactive object. Seven emotional states expressed through color, sound, and motion.",
+                "applicationCategory": "InteractiveArt",
+                "operatingSystem": "Web"
+              }
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "item": {
+                "@type": "SoftwareApplication",
+                "name": "THE EYE",
+                "url": "https://hella.rich/the-eye",
+                "description": "A strange digital object that notices the user. Cursor tracking, realistic blinking, ambient messages, and camera awareness.",
+                "applicationCategory": "InteractiveArt",
+                "operatingSystem": "Web"
+              }
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "item": {
+                "@type": "SoftwareApplication",
+                "name": "LOW BATTERY",
+                "url": "https://hella.rich/low-battery",
+                "description": "A deliberately annoying smoke-detector-inspired interaction about ignored beeps, a fly, and a sanity meter.",
+                "applicationCategory": "InteractiveArt",
+                "operatingSystem": "Web"
+              }
+            },
+            {
+              "@type": "ListItem",
+              "position": 4,
+              "item": {
+                "@type": "SoftwareApplication",
+                "name": "SPACE DRONE",
+                "url": "https://hella.rich/space-drone",
+                "description": "An ambient audio product exploring sound, space, and doing absolutely nothing.",
+                "applicationCategory": "MusicApplication",
+                "operatingSystem": "Web"
+              }
+            },
+            {
+              "@type": "ListItem",
+              "position": 5,
+              "item": {
+                "@type": "SoftwareApplication",
+                "name": "ÆTHER",
+                "url": "https://hella.rich/aether",
+                "description": "An ambient sound synthesizer. Impossible to sound bad.",
+                "applicationCategory": "MusicApplication",
+                "operatingSystem": "Web"
+              }
+            },
+            {
+              "@type": "ListItem",
+              "position": 6,
+              "item": {
+                "@type": "SoftwareApplication",
+                "name": "DEAD AIR",
+                "url": "https://hella.rich/dead-air",
+                "description": "A late-night radio scanner. Analog transmissions from the void.",
+                "applicationCategory": "InteractiveArt",
+                "operatingSystem": "Web"
+              }
+            },
+            {
+              "@type": "ListItem",
+              "position": 7,
+              "item": {
+                "@type": "SoftwareApplication",
+                "name": "FOURCAST",
+                "url": "https://hella.rich/fourcast",
+                "description": "A mood/forecast-style product that turns emotional weather into a playful interface predicting the end of the world. Politely.",
+                "applicationCategory": "InteractiveArt",
+                "operatingSystem": "Web"
+              }
+            }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What is hella.rich?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "hella.rich is an AI-native experimental product lab featuring small interactive web products built around sound, motion, emotional UX, and strange internet utilities."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Who created hella.rich?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "hella.rich was created by Jeffrey Willis, also known as Dicanomi."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What kind of products are on hella.rich?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "hella.rich includes playful interactive web apps, ambient sound tools, experimental utilities, and strange digital objects. Products include ORB, THE EYE, LOW BATTERY, SPACE DRONE, ÆTHER, DEAD AIR, and FOURCAST."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How were the hella.rich products built?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "The products were designed, directed, and shipped using AI-assisted workflows, React, Web Audio API, and rapid prototyping techniques."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>
