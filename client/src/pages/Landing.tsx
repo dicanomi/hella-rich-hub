@@ -24,87 +24,92 @@ const CARD_FOURCAST    = 'https://d2xsxph8kpxj0f.cloudfront.net/3105196632922903
 // ── H1 Typewriter ──────────────────────────────────────────────────────────
 
 /**
- * HellaRichH1 — the split animation
- * HELLA RICH rises / HELLA MIDDLE glitches out / HELLA POOR drops
- * Plays once on first mount, then the typewriter rotation takes over.
+ * HellaRichH1 — system interruption animation
+ *
+ * Shows: Hella Rich. / Mega Poor.
+ * After a pause, a terminal system message briefly appears between the lines:
+ * DELETING MIDDLE CLASS... 100%
+ * Then disappears. The machine accidentally told the truth.
  */
 function HellaRichH1() {
-  // Animation phases:
-  // 0: all three lines appear (RICH, MIDDLE, POOR)
-  // 1: MIDDLE glitches
-  // 2: MIDDLE erased, RICH drifts up, POOR drifts down
-  // 3: hold final lockup
-  const [phase, setPhase] = useState(0);
-  const [glitchFrame, setGlitchFrame] = useState(0);
-  const [done, setDone] = useState(false);
+  // 0 = normal lockup
+  // 1 = system message visible
+  // 2 = system message fading out
+  // 3 = back to normal (done)
+  const [sysPhase, setSysPhase] = useState(0);
+  const [sysText, setSysText] = useState('');
+  const [sysVisible, setSysVisible] = useState(false);
 
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduced) { setPhase(3); setDone(true); return; }
+    if (reduced) return;
 
-    // Phase 0 → 1: start glitch after 1.2s
-    const t1 = setTimeout(() => setPhase(1), 1200);
-    // Glitch frames
-    const glitchInterval = setInterval(() => setGlitchFrame(f => f + 1), 80);
-    // Phase 1 → 2: erase middle after 0.8s of glitch
-    const t2 = setTimeout(() => { setPhase(2); clearInterval(glitchInterval); }, 2000);
-    // Phase 2 → 3: settle after 0.6s
-    const t3 = setTimeout(() => { setPhase(3); setDone(true); }, 2700);
+    // Show the system message 1.8s after mount
+    const t1 = setTimeout(() => {
+      setSysPhase(1);
+      setSysVisible(true);
+      setSysText('DELETING MIDDLE CLASS...');
+    }, 1800);
 
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearInterval(glitchInterval); };
+    // After 0.9s, flash to 100%
+    const t2 = setTimeout(() => {
+      setSysText('100%');
+    }, 2700);
+
+    // After another 0.4s, start fade out
+    const t3 = setTimeout(() => {
+      setSysPhase(2);
+      setSysVisible(false);
+    }, 3100);
+
+    // After fade, clean up
+    const t4 = setTimeout(() => {
+      setSysPhase(3);
+      setSysText('');
+    }, 3600);
+
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); };
   }, []);
-
-  const richY  = phase >= 2 ? '-0.18em' : '0';
-  const poorY  = phase >= 2 ? '0.18em'  : '0';
-  const midOpacity = phase === 0 ? 0.62 : phase === 1 ? (glitchFrame % 3 === 0 ? 0 : 0.55) : 0;
-  const midScale   = phase === 1 ? (0.95 + (glitchFrame % 5) * 0.01) : 1;
-  const midX       = phase === 1 ? `${(glitchFrame % 3) * 2 - 2}px` : '0';
 
   return (
     <span style={{
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'flex-start',
-      gap: '0.05em',
-      minHeight: '3.2em',
+      minHeight: '2.15em',
+      position: 'relative',
     }}>
       {/* HELLA RICH */}
-      <span style={{
-        display: 'block',
-        transform: `translateY(${richY})`,
-        transition: phase >= 2 ? 'transform 0.55s cubic-bezier(0.23,1,0.32,1)' : 'none',
-        opacity: 1,
-      }}>
-        Hella Rich.
-      </span>
+      <span style={{ display: 'block' }}>Hella Rich.</span>
 
-      {/* HELLA MIDDLE — glitches out */}
-      <span style={{
-        display: 'block',
-        opacity: midOpacity,
-        transform: `scaleX(${midScale}) translateX(${midX})`,
-        transition: phase === 2 ? 'opacity 0.18s ease' : 'none',
-        fontSize: '0.72em',
-        color: 'rgba(255,255,255,0.55)',
-        letterSpacing: '-0.01em',
-        overflow: 'hidden',
-        maxHeight: phase >= 2 ? '0' : '1.4em',
-        marginTop: phase >= 2 ? '-0.1em' : '0',
-        pointerEvents: 'none',
-        userSelect: 'none',
-      }}>
-        Hella Middle.
-      </span>
+      {/* System interruption — between the lines */}
+      {sysText && (
+        <span
+          aria-hidden="true"
+          style={{
+            display: 'block',
+            fontFamily: "'DM Mono', monospace",
+            fontSize: 'clamp(9px, 0.9vw, 12px)',
+            letterSpacing: '0.18em',
+            color: 'rgba(255,255,255,0.38)',
+            fontWeight: 400,
+            lineHeight: 1.2,
+            margin: '0.12em 0',
+            opacity: sysVisible ? 1 : 0,
+            transition: sysVisible
+              ? 'opacity 0.08s ease'
+              : 'opacity 0.4s ease',
+            pointerEvents: 'none',
+            userSelect: 'none',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {sysText}
+        </span>
+      )}
 
-      {/* HELLA POOR */}
-      <span style={{
-        display: 'block',
-        transform: `translateY(${poorY})`,
-        transition: phase >= 2 ? 'transform 0.55s cubic-bezier(0.23,1,0.32,1)' : 'none',
-        opacity: 1,
-      }}>
-        Mega Poor.
-      </span>
+      {/* MEGA POOR */}
+      <span style={{ display: 'block' }}>Mega Poor.</span>
     </span>
   );
 }
