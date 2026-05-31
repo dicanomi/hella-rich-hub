@@ -271,6 +271,33 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
         pointerEvents: 'none', zIndex: 10,
       }} />
 
+      {/* Close icon — fixed top-right, always visible */}
+      <button
+        onClick={e => { e.stopPropagation(); onClose(); }}
+        aria-label="Close credits"
+        style={{
+          position: 'fixed',
+          top: 'clamp(20px, 3.5vh, 32px)',
+          right: 'clamp(20px, 3.5vw, 36px)',
+          zIndex: 30,
+          background: 'none',
+          border: 'none',
+          padding: '8px',
+          cursor: 'pointer',
+          color: 'rgba(255,255,255,0.28)',
+          transition: 'color 0.25s ease, opacity 0.25s ease',
+          opacity: visible ? 1 : 0,
+          lineHeight: 0,
+        }}
+        onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.65)')}
+        onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.28)')}
+      >
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round">
+          <line x1="2" y1="2" x2="14" y2="14" />
+          <line x1="14" y1="2" x2="2" y2="14" />
+        </svg>
+      </button>
+
       {/* Scrolling credits */}
       <div
         ref={containerRef}
