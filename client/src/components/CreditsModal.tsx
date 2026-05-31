@@ -1,12 +1,9 @@
 /**
- * CreditsModal — hella.rich cinematic credits
+ * CreditsModal — hella.rich cinematic end credits
  *
  * Design: film end credits × album liner notes × old software easter egg
- * Discovered, not announced. Quiet. Premium. Monochrome.
- *
- * Triggered by clicking "Dicanomi" in the About modal.
- * ESC / click outside closes.
- * Auto-scrolls slowly. User can override.
+ * All uppercase. Slow upward scroll. Click anywhere to close.
+ * Feels like hidden credits for the hella.rich universe.
  */
 import { useEffect, useRef, useState } from 'react';
 
@@ -15,68 +12,71 @@ interface CreditsModalProps {
 }
 
 const CREDITS = [
-  { type: 'spacer' },
-  { type: 'spacer' },
-  { type: 'title', text: 'HELLA.RICH' },
-  { type: 'subtitle', text: 'small internet things' },
-  { type: 'spacer' },
-  { type: 'spacer' },
-  { type: 'label', text: 'CREATED BY' },
-  { type: 'name', text: 'Dicanomi' },
-  { type: 'spacer' },
-  { type: 'label', text: 'HUMAN DIRECTION' },
-  { type: 'name', text: 'Jeffrey Willis' },
-  { type: 'spacer' },
-  { type: 'spacer' },
-  { type: 'label', text: 'BUILT WITH' },
-  { type: 'item', text: 'Artificial intelligence' },
-  { type: 'item', text: 'Questionable decisions' },
-  { type: 'item', text: 'Late night curiosity' },
-  { type: 'spacer' },
-  { type: 'spacer' },
-  { type: 'label', text: 'EXPERIMENTS IN' },
-  { type: 'item', text: 'Interaction' },
-  { type: 'item', text: 'Sound' },
-  { type: 'item', text: 'Motion' },
-  { type: 'item', text: 'Emotion' },
-  { type: 'item', text: 'Beautifully unnecessary technology' },
-  { type: 'spacer' },
-  { type: 'spacer' },
-  { type: 'label', text: 'TOOLS' },
-  { type: 'item', text: 'Manus' },
-  { type: 'item', text: 'ChatGPT' },
-  { type: 'item', text: 'React' },
-  { type: 'item', text: 'Coffee' },
-  { type: 'item', text: 'Mistakes' },
-  { type: 'spacer' },
-  { type: 'spacer' },
-  { type: 'label', text: 'PRODUCTS' },
-  { type: 'product', text: 'THE EYE' },
-  { type: 'product', text: 'LOW BATTERY' },
-  { type: 'product', text: 'SPACE DRONE' },
-  { type: 'product', text: 'ÆTHER' },
-  { type: 'product', text: 'DEAD AIR' },
-  { type: 'product', text: 'FOURCAST' },
-  { type: 'spacer' },
-  { type: 'spacer' },
-  { type: 'label', text: 'PHILOSOPHY' },
-  { type: 'philosophy', text: 'No decks.' },
-  { type: 'philosophy', text: 'No hypotheticals.' },
-  { type: 'philosophy', text: 'Just things that exist.' },
-  { type: 'spacer' },
-  { type: 'spacer' },
-  { type: 'spacer' },
-  { type: 'copyright', text: `© ${new Date().getFullYear()} Dicanomi` },
-  { type: 'spacer' },
-  { type: 'spacer' },
-  { type: 'spacer' },
+  // Opening — starts below viewport, scrolls up into view
+  { type: 'spacer-xl' },
+  { type: 'spacer-xl' },
+  { type: 'title',      text: 'HELLA.RICH' },
+  { type: 'subtitle',   text: 'SMALL INTERNET THINGS' },
+  { type: 'spacer-xl' },
+  { type: 'spacer-xl' },
+  { type: 'label',      text: 'CREATED BY' },
+  { type: 'name',       text: 'DICANOMI' },
+  { type: 'spacer-xl' },
+  { type: 'spacer-xl' },
+  { type: 'label',      text: 'BUILT WITH' },
+  { type: 'item',       text: 'ARTIFICIAL INTELLIGENCE' },
+  { type: 'item',       text: 'QUESTIONABLE DECISIONS' },
+  { type: 'item',       text: 'LATE NIGHT CURIOSITY' },
+  { type: 'spacer-xl' },
+  { type: 'spacer-xl' },
+  { type: 'label',      text: 'EXPERIMENTS IN' },
+  { type: 'item',       text: 'INTERACTION' },
+  { type: 'item',       text: 'SOUND' },
+  { type: 'item',       text: 'MOTION' },
+  { type: 'item',       text: 'EMOTION' },
+  { type: 'item',       text: 'BEAUTIFULLY UNNECESSARY TECHNOLOGY' },
+  { type: 'spacer-xl' },
+  { type: 'spacer-xl' },
+  { type: 'label',      text: 'TOOLS' },
+  { type: 'item',       text: 'MANUS' },
+  { type: 'item',       text: 'CHATGPT' },
+  { type: 'item',       text: 'REACT' },
+  { type: 'item',       text: 'COFFEE' },
+  { type: 'item',       text: 'MISTAKES' },
+  { type: 'spacer-xl' },
+  { type: 'spacer-xl' },
+  { type: 'label',      text: 'PRODUCTS' },
+  { type: 'product',    text: 'ORB' },
+  { type: 'product',    text: 'THE EYE' },
+  { type: 'product',    text: 'LOW BATTERY' },
+  { type: 'product',    text: 'SPACE DRONE' },
+  { type: 'product',    text: 'ÆTHER' },
+  { type: 'product',    text: 'DEAD AIR' },
+  { type: 'product',    text: 'FOURCAST' },
+  { type: 'spacer-xl' },
+  { type: 'spacer-xl' },
+  { type: 'label',      text: 'PHILOSOPHY' },
+  { type: 'philosophy', text: 'NO DECKS.' },
+  { type: 'philosophy', text: 'NO HYPOTHETICALS.' },
+  { type: 'philosophy', text: 'JUST THINGS THAT EXIST.' },
+  { type: 'spacer-xl' },
+  { type: 'spacer-xl' },
+  { type: 'spacer-xl' },
+  { type: 'copyright',  text: `© ${new Date().getFullYear()} DICANOMI` },
+  // Trailing space so credits fully clear the screen
+  { type: 'spacer-xl' },
+  { type: 'spacer-xl' },
+  { type: 'spacer-xl' },
+  { type: 'spacer-xl' },
 ];
 
 export function CreditsModal({ onClose }: CreditsModalProps) {
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const posRef = useRef(0);       // current Y offset (positive = scrolled up)
   const rafRef = useRef<number>(0);
   const userScrolledRef = useRef(false);
   const [visible, setVisible] = useState(false);
+  const [contentHeight, setContentHeight] = useState(0);
 
   // Fade in
   useEffect(() => {
@@ -91,129 +91,152 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
     return () => window.removeEventListener('keydown', onKey);
   }, [onClose]);
 
-  // Auto-scroll — slow, 0.4px/frame (~24px/s at 60fps)
+  // Measure content height
   useEffect(() => {
-    const el = scrollRef.current;
+    if (containerRef.current) {
+      setContentHeight(containerRef.current.scrollHeight);
+    }
+  }, []);
+
+  // Upward scroll animation — 0.5px per frame (~30px/s at 60fps)
+  useEffect(() => {
+    const SPEED = 0.5;
+    const el = containerRef.current;
     if (!el) return;
 
     const loop = () => {
-      if (!userScrolledRef.current && el) {
-        el.scrollTop += 0.4;
-        // Stop at bottom
-        if (el.scrollTop + el.clientHeight >= el.scrollHeight - 2) {
-          userScrolledRef.current = true;
+      if (!userScrolledRef.current) {
+        posRef.current += SPEED;
+        const maxScroll = el.scrollHeight - window.innerHeight;
+        if (posRef.current >= maxScroll) {
+          posRef.current = maxScroll;
+          userScrolledRef.current = true; // stop at end
         }
+        el.scrollTop = posRef.current;
       }
       rafRef.current = requestAnimationFrame(loop);
     };
     rafRef.current = requestAnimationFrame(loop);
 
-    // Detect manual scroll — pause auto-scroll
-    const onScroll = () => { userScrolledRef.current = true; };
+    // Track manual scroll
+    const onScroll = () => {
+      userScrolledRef.current = true;
+      posRef.current = el.scrollTop;
+    };
     el.addEventListener('scroll', onScroll, { passive: true });
 
     return () => {
       cancelAnimationFrame(rafRef.current);
       el.removeEventListener('scroll', onScroll);
     };
-  }, []);
+  }, [contentHeight]);
 
   const renderLine = (item: typeof CREDITS[0], i: number) => {
     const key = `${item.type}-${i}`;
+    const XL = 'clamp(32px, 6vh, 56px)';
     switch (item.type) {
-      case 'spacer':
-        return <div key={key} style={{ height: 'clamp(24px, 4vh, 40px)' }} />;
+      case 'spacer-xl':
+        return <div key={key} style={{ height: XL }} />;
       case 'title':
         return (
           <div key={key} style={{
             fontFamily: "'DM Mono', monospace",
-            fontSize: 'clamp(11px, 1.2vw, 14px)',
-            letterSpacing: '0.35em',
-            color: 'rgba(255,255,255,0.85)',
+            fontSize: 'clamp(12px, 1.3vw, 16px)',
+            letterSpacing: '0.42em',
+            color: 'rgba(255,255,255,0.88)',
             textTransform: 'uppercase',
             textAlign: 'center',
-            marginBottom: '8px',
+            marginBottom: '10px',
+            paddingLeft: '0.42em', // compensate tracking
           }}>{item.text}</div>
         );
       case 'subtitle':
         return (
           <div key={key} style={{
-            fontFamily: "'Space Grotesk', sans-serif",
-            fontSize: 'clamp(12px, 1.1vw, 14px)',
-            letterSpacing: '0.06em',
-            color: 'rgba(255,255,255,0.28)',
+            fontFamily: "'DM Mono', monospace",
+            fontSize: 'clamp(8px, 0.8vw, 10px)',
+            letterSpacing: '0.3em',
+            color: 'rgba(255,255,255,0.22)',
+            textTransform: 'uppercase',
             textAlign: 'center',
-            fontWeight: 300,
+            paddingLeft: '0.3em',
           }}>{item.text}</div>
         );
       case 'label':
         return (
           <div key={key} style={{
             fontFamily: "'DM Mono', monospace",
-            fontSize: 'clamp(8px, 0.8vw, 10px)',
-            letterSpacing: '0.28em',
-            color: 'rgba(255,255,255,0.22)',
+            fontSize: 'clamp(7px, 0.72vw, 9px)',
+            letterSpacing: '0.32em',
+            color: 'rgba(255,255,255,0.18)',
             textTransform: 'uppercase',
             textAlign: 'center',
-            marginBottom: 'clamp(10px, 1.5vh, 18px)',
+            marginBottom: 'clamp(14px, 2.5vh, 22px)',
+            paddingLeft: '0.32em',
           }}>{item.text}</div>
         );
       case 'name':
         return (
           <div key={key} style={{
-            fontFamily: "'Cormorant Garamond', Georgia, serif",
-            fontSize: 'clamp(20px, 2.8vw, 36px)',
-            fontWeight: 300,
-            letterSpacing: '0.08em',
-            color: 'rgba(255,255,255,0.78)',
+            fontFamily: "'DM Mono', monospace",
+            fontSize: 'clamp(16px, 2.2vw, 28px)',
+            letterSpacing: '0.28em',
+            color: 'rgba(255,255,255,0.82)',
+            textTransform: 'uppercase',
             textAlign: 'center',
-            marginBottom: 'clamp(6px, 1vh, 12px)',
+            marginBottom: 'clamp(6px, 1vh, 10px)',
+            paddingLeft: '0.28em',
           }}>{item.text}</div>
         );
       case 'item':
         return (
           <div key={key} style={{
             fontFamily: "'Space Grotesk', sans-serif",
-            fontSize: 'clamp(13px, 1.3vw, 16px)',
-            fontWeight: 300,
-            letterSpacing: '0.02em',
-            color: 'rgba(255,255,255,0.52)',
+            fontSize: 'clamp(11px, 1.1vw, 14px)',
+            fontWeight: 400,
+            letterSpacing: '0.14em',
+            color: 'rgba(255,255,255,0.42)',
+            textTransform: 'uppercase',
             textAlign: 'center',
-            marginBottom: 'clamp(6px, 1vh, 10px)',
+            marginBottom: 'clamp(8px, 1.2vh, 14px)',
           }}>{item.text}</div>
         );
       case 'product':
         return (
           <div key={key} style={{
             fontFamily: "'DM Mono', monospace",
-            fontSize: 'clamp(9px, 1vw, 12px)',
-            letterSpacing: '0.22em',
-            color: 'rgba(255,255,255,0.38)',
+            fontSize: 'clamp(9px, 0.9vw, 11px)',
+            letterSpacing: '0.24em',
+            color: 'rgba(255,255,255,0.32)',
             textTransform: 'uppercase',
             textAlign: 'center',
-            marginBottom: 'clamp(8px, 1.2vh, 14px)',
+            marginBottom: 'clamp(10px, 1.5vh, 16px)',
+            paddingLeft: '0.24em',
           }}>{item.text}</div>
         );
       case 'philosophy':
         return (
           <div key={key} style={{
             fontFamily: "'Space Grotesk', sans-serif",
-            fontSize: 'clamp(14px, 1.5vw, 18px)',
-            fontWeight: 300,
-            letterSpacing: '0.01em',
-            color: 'rgba(255,255,255,0.62)',
+            fontSize: 'clamp(12px, 1.2vw, 15px)',
+            fontWeight: 400,
+            letterSpacing: '0.1em',
+            color: 'rgba(255,255,255,0.55)',
+            textTransform: 'uppercase',
             textAlign: 'center',
-            marginBottom: 'clamp(6px, 1vh, 10px)',
+            marginBottom: 'clamp(8px, 1.2vh, 14px)',
           }}>{item.text}</div>
         );
       case 'copyright':
         return (
           <div key={key} style={{
             fontFamily: "'DM Mono', monospace",
-            fontSize: 'clamp(8px, 0.75vw, 9px)',
-            letterSpacing: '0.18em',
-            color: 'rgba(255,255,255,0.15)',
+            fontSize: 'clamp(7px, 0.7vw, 8px)',
+            letterSpacing: '0.2em',
+            color: 'rgba(255,255,255,0.12)',
+            textTransform: 'uppercase',
             textAlign: 'center',
+            paddingLeft: '0.2em',
           }}>{item.text}</div>
         );
       default:
@@ -226,36 +249,34 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
       onClick={onClose}
       style={{
         position: 'fixed', inset: 0, zIndex: 2000,
-        background: 'rgba(0,0,0,0.92)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        background: '#030303',
         opacity: visible ? 1 : 0,
-        transition: 'opacity 0.5s ease',
+        transition: 'opacity 0.6s ease',
         cursor: 'pointer',
       }}
     >
       {/* Fade top */}
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0,
-        height: 'clamp(60px, 12vh, 120px)',
-        background: 'linear-gradient(to bottom, rgba(3,3,3,0.98) 0%, transparent 100%)',
+        height: 'clamp(80px, 15vh, 140px)',
+        background: 'linear-gradient(to bottom, #030303 0%, transparent 100%)',
         pointerEvents: 'none', zIndex: 10,
       }} />
 
       {/* Fade bottom */}
       <div style={{
         position: 'absolute', bottom: 0, left: 0, right: 0,
-        height: 'clamp(60px, 12vh, 120px)',
-        background: 'linear-gradient(to top, rgba(3,3,3,0.98) 0%, transparent 100%)',
+        height: 'clamp(80px, 15vh, 140px)',
+        background: 'linear-gradient(to top, #030303 0%, transparent 100%)',
         pointerEvents: 'none', zIndex: 10,
       }} />
 
-      {/* Scrolling content */}
+      {/* Scrolling credits */}
       <div
-        ref={scrollRef}
+        ref={containerRef}
         onClick={e => e.stopPropagation()}
         style={{
-          width: '100%',
-          height: '100vh',
+          position: 'absolute', inset: 0,
           overflowY: 'scroll',
           overflowX: 'hidden',
           scrollbarWidth: 'none',
@@ -267,30 +288,12 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
           div::-webkit-scrollbar { display: none; }
         `}</style>
         <div style={{
-          maxWidth: '480px',
+          maxWidth: '520px',
           margin: '0 auto',
-          padding: '30vh clamp(24px, 5vw, 48px) 0',
+          padding: '100vh clamp(24px, 5vw, 48px) 0',
         }}>
           {CREDITS.map((item, i) => renderLine(item, i))}
         </div>
-      </div>
-
-      {/* ESC hint — fades after 3s */}
-      <div style={{
-        position: 'absolute',
-        bottom: 'clamp(16px, 3vh, 28px)',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        fontFamily: "'DM Mono', monospace",
-        fontSize: 'clamp(7px, 0.75vw, 9px)',
-        letterSpacing: '0.2em',
-        color: 'rgba(255,255,255,0.12)',
-        textTransform: 'uppercase',
-        pointerEvents: 'none',
-        zIndex: 20,
-        whiteSpace: 'nowrap',
-      }}>
-        ESC TO CLOSE
       </div>
     </div>
   );
