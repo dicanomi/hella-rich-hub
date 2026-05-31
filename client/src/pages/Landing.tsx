@@ -120,7 +120,6 @@ function H1Hero() {
 const H1_PHRASES = [
   'Hella Rich.\nMega Poor.',
   'Check_Tomorrow',
-  'Begin_Transmission',
   'Press_The_Button',
   'My_Finger_Is_On_The_Button',
   'Check_My_Day',
