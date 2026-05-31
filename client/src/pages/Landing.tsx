@@ -10,6 +10,7 @@ import { Link } from 'wouter';
 import { ParticleField } from '../components/ParticleField';
 import { HeaderTicker } from '../components/HeaderTicker';
 import { ContactModal } from '../components/ContactModal';
+import { CreditsModal } from '../components/CreditsModal';
 
 // ── Existing Cloudfront card images (from deployed repos) ──────────────────
 const CARD_THE_EYE    = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/4dGTww6dwDMqWYygdCjBiT/the-eye-card-m8kJtzMhgXq8bTQ7kEpxk6.webp';
@@ -111,7 +112,7 @@ function H1TypeWriter() {
 }
 
 // ── About Modal ────────────────────────────────────────────────────────────
-function AboutModal({ onClose }: { onClose: () => void }) {
+function AboutModal({ onClose, onOpenCredits }: { onClose: () => void; onOpenCredits: () => void }) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
     window.addEventListener('keydown', onKey);
@@ -183,7 +184,29 @@ function AboutModal({ onClose }: { onClose: () => void }) {
           motion,<br />
           and questionable decisions.<br />
           <br />
-          Made by Dicanomi.
+          Made by{' '}
+          <button
+            onClick={() => { onClose(); setTimeout(onOpenCredits, 50); }}
+            style={{
+              background: 'none', border: 'none', padding: 0, cursor: 'pointer',
+              fontFamily: 'inherit', fontSize: 'inherit', fontWeight: 'inherit',
+              color: 'rgba(255,255,255,0.72)',
+              textDecoration: 'underline',
+              textDecorationColor: 'rgba(255,255,255,0.2)',
+              textUnderlineOffset: '3px',
+              transition: 'color 0.2s ease, text-decoration-color 0.2s ease',
+            }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.95)';
+              (e.currentTarget as HTMLElement).style.textDecorationColor = 'rgba(255,255,255,0.5)';
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.72)';
+              (e.currentTarget as HTMLElement).style.textDecorationColor = 'rgba(255,255,255,0.2)';
+            }}
+          >
+            Dicanomi
+          </button>.
         </p>
 
         <div style={{ marginBottom: '48px' }}>
@@ -451,6 +474,7 @@ function ProjectCard({ slug, title, tagline, image, index, live = true, cta, fea
 export default function Landing() {
   const [aboutOpen, setAboutOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
+  const [creditsOpen, setCreditsOpen] = useState(false);
 
   return (
     <>
@@ -485,8 +509,9 @@ export default function Landing() {
         }
       `}</style>
 
-      {aboutOpen && <AboutModal onClose={() => setAboutOpen(false)} />}
+      {aboutOpen && <AboutModal onClose={() => setAboutOpen(false)} onOpenCredits={() => setCreditsOpen(true)} />}
       {contactOpen && <ContactModal onClose={() => setContactOpen(false)} />}
+      {creditsOpen && <CreditsModal onClose={() => setCreditsOpen(false)} />}
       <ParticleField />
 
       <div style={{
