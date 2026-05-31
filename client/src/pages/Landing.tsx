@@ -22,6 +22,111 @@ const CARD_ORB         = 'https://d2xsxph8kpxj0f.cloudfront.net/3105196632922903
 const CARD_FOURCAST    = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/Y2GqaD9tuJ99Jnnw3Suzuk/fourcast-card-v2-FTNVUNxhCmBWxuJ5wiNteQ.webp';
 
 // ── H1 Typewriter ──────────────────────────────────────────────────────────
+
+/**
+ * HellaRichH1 — the split animation
+ * HELLA RICH rises / HELLA MIDDLE glitches out / HELLA POOR drops
+ * Plays once on first mount, then the typewriter rotation takes over.
+ */
+function HellaRichH1() {
+  // Animation phases:
+  // 0: all three lines appear (RICH, MIDDLE, POOR)
+  // 1: MIDDLE glitches
+  // 2: MIDDLE erased, RICH drifts up, POOR drifts down
+  // 3: hold final lockup
+  const [phase, setPhase] = useState(0);
+  const [glitchFrame, setGlitchFrame] = useState(0);
+  const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) { setPhase(3); setDone(true); return; }
+
+    // Phase 0 → 1: start glitch after 1.2s
+    const t1 = setTimeout(() => setPhase(1), 1200);
+    // Glitch frames
+    const glitchInterval = setInterval(() => setGlitchFrame(f => f + 1), 80);
+    // Phase 1 → 2: erase middle after 0.8s of glitch
+    const t2 = setTimeout(() => { setPhase(2); clearInterval(glitchInterval); }, 2000);
+    // Phase 2 → 3: settle after 0.6s
+    const t3 = setTimeout(() => { setPhase(3); setDone(true); }, 2700);
+
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearInterval(glitchInterval); };
+  }, []);
+
+  const richY  = phase >= 2 ? '-0.18em' : '0';
+  const poorY  = phase >= 2 ? '0.18em'  : '0';
+  const midOpacity = phase === 0 ? 0.62 : phase === 1 ? (glitchFrame % 3 === 0 ? 0 : 0.55) : 0;
+  const midScale   = phase === 1 ? (0.95 + (glitchFrame % 5) * 0.01) : 1;
+  const midX       = phase === 1 ? `${(glitchFrame % 3) * 2 - 2}px` : '0';
+
+  return (
+    <span style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+      gap: '0.05em',
+      minHeight: '3.2em',
+    }}>
+      {/* HELLA RICH */}
+      <span style={{
+        display: 'block',
+        transform: `translateY(${richY})`,
+        transition: phase >= 2 ? 'transform 0.55s cubic-bezier(0.23,1,0.32,1)' : 'none',
+        opacity: 1,
+      }}>
+        Hella Rich.
+      </span>
+
+      {/* HELLA MIDDLE — glitches out */}
+      <span style={{
+        display: 'block',
+        opacity: midOpacity,
+        transform: `scaleX(${midScale}) translateX(${midX})`,
+        transition: phase === 2 ? 'opacity 0.18s ease' : 'none',
+        fontSize: '0.72em',
+        color: 'rgba(255,255,255,0.55)',
+        letterSpacing: '-0.01em',
+        overflow: 'hidden',
+        maxHeight: phase >= 2 ? '0' : '1.4em',
+        marginTop: phase >= 2 ? '-0.1em' : '0',
+        pointerEvents: 'none',
+        userSelect: 'none',
+      }}>
+        Hella Middle.
+      </span>
+
+      {/* HELLA POOR */}
+      <span style={{
+        display: 'block',
+        transform: `translateY(${poorY})`,
+        transition: phase >= 2 ? 'transform 0.55s cubic-bezier(0.23,1,0.32,1)' : 'none',
+        opacity: 1,
+      }}>
+        Mega Poor.
+      </span>
+    </span>
+  );
+}
+
+/**
+ * H1Hero — shows the split animation once, then hands off to the typewriter rotation
+ */
+function H1Hero() {
+  const [showTypewriter, setShowTypewriter] = useState(false);
+
+  // After the split animation completes (~3.5s), switch to typewriter
+  useEffect(() => {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const delay = reduced ? 0 : 3600;
+    const t = setTimeout(() => setShowTypewriter(true), delay);
+    return () => clearTimeout(t);
+  }, []);
+
+  if (showTypewriter) return <H1TypeWriter />;
+  return <HellaRichH1 />;
+}
+
 const H1_PHRASES = [
   'Hella Rich.\nMega Poor.',
   'Check_Tomorrow',
@@ -569,7 +674,7 @@ export default function Landing() {
             margin: 0,
             maxWidth: '900px',
           }}>
-            <H1TypeWriter />
+            <H1Hero />
           </h1>
 
         </div>
