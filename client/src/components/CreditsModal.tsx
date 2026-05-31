@@ -2,8 +2,8 @@
  * CreditsModal — hella.rich cinematic end credits
  *
  * Design: film end credits × album liner notes × old software easter egg
- * All uppercase. Slow upward scroll. Click anywhere to close.
- * Feels like hidden credits for the hella.rich universe.
+ * All uppercase. CSS keyframe upward scroll — starts immediately, no timing bugs.
+ * Click anywhere / X icon closes. No ESC hint. No personal names.
  */
 import { useEffect, useRef, useState } from 'react';
 
@@ -11,40 +11,42 @@ interface CreditsModalProps {
   onClose: () => void;
 }
 
-const CREDITS = [
-  // Opening — starts below viewport, scrolls up into view
-  { type: 'spacer-xl' },
-  { type: 'spacer-xl' },
+// Total animation duration in seconds — adjust to taste
+// At ~80 lines of content, 90s gives a cinematic pace
+const SCROLL_DURATION = 90;
+
+const CREDITS_LINES = [
+  { type: 'spacer' },
   { type: 'title',      text: 'HELLA.RICH' },
   { type: 'subtitle',   text: 'SMALL INTERNET THINGS' },
-  { type: 'spacer-xl' },
-  { type: 'spacer-xl' },
+  { type: 'spacer' },
+  { type: 'spacer' },
   { type: 'label',      text: 'CREATED BY' },
   { type: 'name',       text: 'DICANOMI' },
-  { type: 'spacer-xl' },
-  { type: 'spacer-xl' },
+  { type: 'spacer' },
+  { type: 'spacer' },
   { type: 'label',      text: 'BUILT WITH' },
   { type: 'item',       text: 'ARTIFICIAL INTELLIGENCE' },
   { type: 'item',       text: 'QUESTIONABLE DECISIONS' },
   { type: 'item',       text: 'LATE NIGHT CURIOSITY' },
-  { type: 'spacer-xl' },
-  { type: 'spacer-xl' },
+  { type: 'spacer' },
+  { type: 'spacer' },
   { type: 'label',      text: 'EXPERIMENTS IN' },
   { type: 'item',       text: 'INTERACTION' },
   { type: 'item',       text: 'SOUND' },
   { type: 'item',       text: 'MOTION' },
   { type: 'item',       text: 'EMOTION' },
   { type: 'item',       text: 'BEAUTIFULLY UNNECESSARY TECHNOLOGY' },
-  { type: 'spacer-xl' },
-  { type: 'spacer-xl' },
+  { type: 'spacer' },
+  { type: 'spacer' },
   { type: 'label',      text: 'TOOLS' },
   { type: 'item',       text: 'MANUS' },
   { type: 'item',       text: 'CHATGPT' },
   { type: 'item',       text: 'REACT' },
   { type: 'item',       text: 'COFFEE' },
   { type: 'item',       text: 'MISTAKES' },
-  { type: 'spacer-xl' },
-  { type: 'spacer-xl' },
+  { type: 'spacer' },
+  { type: 'spacer' },
   { type: 'label',      text: 'PRODUCTS' },
   { type: 'product',    text: 'ORB' },
   { type: 'product',    text: 'THE EYE' },
@@ -53,30 +55,25 @@ const CREDITS = [
   { type: 'product',    text: 'ÆTHER' },
   { type: 'product',    text: 'DEAD AIR' },
   { type: 'product',    text: 'FOURCAST' },
-  { type: 'spacer-xl' },
-  { type: 'spacer-xl' },
+  { type: 'spacer' },
+  { type: 'spacer' },
   { type: 'label',      text: 'PHILOSOPHY' },
   { type: 'philosophy', text: 'NO DECKS.' },
   { type: 'philosophy', text: 'NO HYPOTHETICALS.' },
   { type: 'philosophy', text: 'JUST THINGS THAT EXIST.' },
-  { type: 'spacer-xl' },
-  { type: 'spacer-xl' },
-  { type: 'spacer-xl' },
+  { type: 'spacer' },
+  { type: 'spacer' },
+  { type: 'spacer' },
   { type: 'copyright',  text: `© ${new Date().getFullYear()} DICANOMI` },
-  // Trailing space so credits fully clear the screen
-  { type: 'spacer-xl' },
-  { type: 'spacer-xl' },
-  { type: 'spacer-xl' },
-  { type: 'spacer-xl' },
+  { type: 'spacer' },
+  { type: 'spacer' },
+  { type: 'spacer' },
 ];
 
 export function CreditsModal({ onClose }: CreditsModalProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const posRef = useRef(0);       // current Y offset (positive = scrolled up)
-  const rafRef = useRef<number>(0);
-  const userScrolledRef = useRef(false);
   const [visible, setVisible] = useState(false);
-  const [contentHeight, setContentHeight] = useState(0);
+  const [closing, setClosing] = useState(false);
+  const animRef = useRef<HTMLDivElement>(null);
 
   // Fade in
   useEffect(() => {
@@ -84,70 +81,33 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
     return () => cancelAnimationFrame(t);
   }, []);
 
-  // ESC closes
+  // ESC closes (silent — no hint shown)
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') handleClose(); };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [onClose]);
-
-  // Measure content height
-  useEffect(() => {
-    if (containerRef.current) {
-      setContentHeight(containerRef.current.scrollHeight);
-    }
   }, []);
 
-  // Upward scroll animation — 0.5px per frame (~30px/s at 60fps)
-  useEffect(() => {
-    const SPEED = 0.5;
-    const el = containerRef.current;
-    if (!el) return;
+  const handleClose = () => {
+    setClosing(true);
+    setTimeout(onClose, 400);
+  };
 
-    const loop = () => {
-      if (!userScrolledRef.current) {
-        posRef.current += SPEED;
-        const maxScroll = el.scrollHeight - window.innerHeight;
-        if (posRef.current >= maxScroll) {
-          posRef.current = maxScroll;
-          userScrolledRef.current = true; // stop at end
-        }
-        el.scrollTop = posRef.current;
-      }
-      rafRef.current = requestAnimationFrame(loop);
-    };
-    rafRef.current = requestAnimationFrame(loop);
-
-    // Track manual scroll
-    const onScroll = () => {
-      userScrolledRef.current = true;
-      posRef.current = el.scrollTop;
-    };
-    el.addEventListener('scroll', onScroll, { passive: true });
-
-    return () => {
-      cancelAnimationFrame(rafRef.current);
-      el.removeEventListener('scroll', onScroll);
-    };
-  }, [contentHeight]);
-
-  const renderLine = (item: typeof CREDITS[0], i: number) => {
+  const renderLine = (item: typeof CREDITS_LINES[0], i: number) => {
     const key = `${item.type}-${i}`;
-    const XL = 'clamp(32px, 6vh, 56px)';
     switch (item.type) {
-      case 'spacer-xl':
-        return <div key={key} style={{ height: XL }} />;
+      case 'spacer':
+        return <div key={key} style={{ height: 'clamp(28px, 5vh, 48px)' }} />;
       case 'title':
         return (
           <div key={key} style={{
             fontFamily: "'DM Mono', monospace",
             fontSize: 'clamp(12px, 1.3vw, 16px)',
             letterSpacing: '0.42em',
+            paddingLeft: '0.42em',
             color: 'rgba(255,255,255,0.88)',
-            textTransform: 'uppercase',
             textAlign: 'center',
             marginBottom: '10px',
-            paddingLeft: '0.42em', // compensate tracking
           }}>{item.text}</div>
         );
       case 'subtitle':
@@ -156,10 +116,9 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
             fontFamily: "'DM Mono', monospace",
             fontSize: 'clamp(8px, 0.8vw, 10px)',
             letterSpacing: '0.3em',
-            color: 'rgba(255,255,255,0.22)',
-            textTransform: 'uppercase',
-            textAlign: 'center',
             paddingLeft: '0.3em',
+            color: 'rgba(255,255,255,0.22)',
+            textAlign: 'center',
           }}>{item.text}</div>
         );
       case 'label':
@@ -168,11 +127,10 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
             fontFamily: "'DM Mono', monospace",
             fontSize: 'clamp(7px, 0.72vw, 9px)',
             letterSpacing: '0.32em',
+            paddingLeft: '0.32em',
             color: 'rgba(255,255,255,0.18)',
-            textTransform: 'uppercase',
             textAlign: 'center',
             marginBottom: 'clamp(14px, 2.5vh, 22px)',
-            paddingLeft: '0.32em',
           }}>{item.text}</div>
         );
       case 'name':
@@ -181,11 +139,10 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
             fontFamily: "'DM Mono', monospace",
             fontSize: 'clamp(16px, 2.2vw, 28px)',
             letterSpacing: '0.28em',
+            paddingLeft: '0.28em',
             color: 'rgba(255,255,255,0.82)',
-            textTransform: 'uppercase',
             textAlign: 'center',
             marginBottom: 'clamp(6px, 1vh, 10px)',
-            paddingLeft: '0.28em',
           }}>{item.text}</div>
         );
       case 'item':
@@ -196,9 +153,9 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
             fontWeight: 400,
             letterSpacing: '0.14em',
             color: 'rgba(255,255,255,0.42)',
-            textTransform: 'uppercase',
             textAlign: 'center',
             marginBottom: 'clamp(8px, 1.2vh, 14px)',
+            textTransform: 'uppercase',
           }}>{item.text}</div>
         );
       case 'product':
@@ -207,11 +164,10 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
             fontFamily: "'DM Mono', monospace",
             fontSize: 'clamp(9px, 0.9vw, 11px)',
             letterSpacing: '0.24em',
+            paddingLeft: '0.24em',
             color: 'rgba(255,255,255,0.32)',
-            textTransform: 'uppercase',
             textAlign: 'center',
             marginBottom: 'clamp(10px, 1.5vh, 16px)',
-            paddingLeft: '0.24em',
           }}>{item.text}</div>
         );
       case 'philosophy':
@@ -222,9 +178,9 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
             fontWeight: 400,
             letterSpacing: '0.1em',
             color: 'rgba(255,255,255,0.55)',
-            textTransform: 'uppercase',
             textAlign: 'center',
             marginBottom: 'clamp(8px, 1.2vh, 14px)',
+            textTransform: 'uppercase',
           }}>{item.text}</div>
         );
       case 'copyright':
@@ -233,10 +189,9 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
             fontFamily: "'DM Mono', monospace",
             fontSize: 'clamp(7px, 0.7vw, 8px)',
             letterSpacing: '0.2em',
-            color: 'rgba(255,255,255,0.12)',
-            textTransform: 'uppercase',
-            textAlign: 'center',
             paddingLeft: '0.2em',
+            color: 'rgba(255,255,255,0.12)',
+            textAlign: 'center',
           }}>{item.text}</div>
         );
       default:
@@ -246,15 +201,31 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
 
   return (
     <div
-      onClick={onClose}
+      onClick={handleClose}
       style={{
         position: 'fixed', inset: 0, zIndex: 2000,
         background: '#030303',
-        opacity: visible ? 1 : 0,
-        transition: 'opacity 0.6s ease',
+        overflow: 'hidden',
+        opacity: visible && !closing ? 1 : 0,
+        transition: 'opacity 0.5s ease',
         cursor: 'pointer',
       }}
     >
+      <style>{`
+        @keyframes creditsScroll {
+          0%   { transform: translateY(100vh); }
+          100% { transform: translateY(-100%); }
+        }
+        .credits-track {
+          animation: creditsScroll ${SCROLL_DURATION}s linear forwards;
+          animation-play-state: running;
+          will-change: transform;
+        }
+        .credits-track:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
+
       {/* Fade top */}
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0,
@@ -273,7 +244,7 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
 
       {/* Close icon — fixed top-right, always visible */}
       <button
-        onClick={e => { e.stopPropagation(); onClose(); }}
+        onClick={e => { e.stopPropagation(); handleClose(); }}
         aria-label="Close credits"
         style={{
           position: 'fixed',
@@ -285,8 +256,7 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
           padding: '8px',
           cursor: 'pointer',
           color: 'rgba(255,255,255,0.28)',
-          transition: 'color 0.25s ease, opacity 0.25s ease',
-          opacity: visible ? 1 : 0,
+          transition: 'color 0.25s ease',
           lineHeight: 0,
         }}
         onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.65)')}
@@ -298,28 +268,23 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
         </svg>
       </button>
 
-      {/* Scrolling credits */}
+      {/* Credits track — CSS keyframe upward scroll, starts immediately */}
       <div
-        ref={containerRef}
+        ref={animRef}
+        className="credits-track"
         onClick={e => e.stopPropagation()}
         style={{
-          position: 'absolute', inset: 0,
-          overflowY: 'scroll',
-          overflowX: 'hidden',
-          scrollbarWidth: 'none',
+          position: 'absolute',
+          left: 0, right: 0,
           cursor: 'default',
-          WebkitOverflowScrolling: 'touch',
         }}
       >
-        <style>{`
-          div::-webkit-scrollbar { display: none; }
-        `}</style>
         <div style={{
           maxWidth: '520px',
           margin: '0 auto',
-          padding: '100vh clamp(24px, 5vw, 48px) 0',
+          padding: '0 clamp(24px, 5vw, 48px)',
         }}>
-          {CREDITS.map((item, i) => renderLine(item, i))}
+          {CREDITS_LINES.map((item, i) => renderLine(item, i))}
         </div>
       </div>
     </div>
