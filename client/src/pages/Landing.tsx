@@ -20,6 +20,7 @@ const CARD_AETHER      = 'https://d2xsxph8kpxj0f.cloudfront.net/3105196632922903
 const CARD_DEAD_AIR    = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/9ZxPKGjDMY2C56HR5iUGn8/card-dead-air-Wgkrd7hVm3xLcWTrTUd5hL.webp';
 const CARD_ORB         = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/KQMLixAcwLTktWD55tWJwK/card-orb-v2-GA954d4iJrPLDQTUdJE9eS.webp';
 const CARD_FOURCAST    = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/Y2GqaD9tuJ99Jnnw3Suzuk/fourcast-card-v2-FTNVUNxhCmBWxuJ5wiNteQ.webp';
+const RADIO_CARD       = `${import.meta.env.BASE_URL}radio-card.webp`;
 
 // ── H1 Typewriter ──────────────────────────────────────────────────────────
 
@@ -277,6 +278,7 @@ function ProjectCard({ slug, title, tagline, image, index, live = true, cta, fea
     slug === 'fourcast'    ? "'Press Start 2P', monospace" :
     slug === 'the-eye'     ? "'Cormorant Garamond', 'Georgia', serif" :
     slug === 'low-battery' ? "'ArenaGraffiti', 'GraffitiCity', 'Permanent Marker', cursive" :
+    slug === 'radio'       ? "'TAY Birdie', 'Space Mono', monospace" :
     "'Space Grotesk', sans-serif";
 
   const titleSize =
@@ -503,6 +505,11 @@ export default function Landing() {
   return (
     <>
       <style>{`
+        @font-face {
+          font-family: 'TAY Birdie';
+          src: url('${import.meta.env.BASE_URL}TAYBirdie.otf') format('opentype');
+          font-display: swap;
+        }
         .modal-close-btn {
           transition: color 0.2s ease, transform 0.2s cubic-bezier(0.23,1,0.32,1), background 0.2s ease;
           border-radius: 50%;
@@ -609,7 +616,7 @@ export default function Landing() {
           flexDirection: 'column',
           gap: 'clamp(3px,0.4vw,6px)',
         }}>
-          <ProjectCard slug="radio" title="HELLA_RADIO" tagline="A late-night signal you tune into." cta="Tune In" image="/radio-card.webp" index={1} featured={true} externalHref="https://radio.hella.rich/" enterDelay={80} />
+          <ProjectCard slug="radio" title="HELLA_RADIO" tagline="A late-night signal you tune into." cta="Tune In" image={RADIO_CARD} index={1} featured={true} externalHref="https://radio.hella.rich/" enterDelay={80} />
           <ProjectCard slug="orb" title="ORB" tagline="A living object." cta="Touch It" image={CARD_ORB} index={2} enterDelay={140} />
           <ProjectCard slug="the-eye" title="THE EYE" tagline="A strange object that notices you." cta="Look" image={CARD_THE_EYE} index={3} enterDelay={200} />
           <ProjectCard slug="low-battery" title="LOW BATTERY" tagline="The sound you ignore until it becomes your personality." cta="Begin Ignoring" image={CARD_LOW_BATTERY} index={4} enterDelay={260} />
