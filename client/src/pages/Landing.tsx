@@ -256,9 +256,10 @@ interface ProjectCardProps {
   cta?: string;
   featured?: boolean;
   enterDelay?: number;
+  externalHref?: string;
 }
 
-function ProjectCard({ slug, title, tagline, image, index, live = true, cta, featured = false, enterDelay = 0 }: ProjectCardProps) {
+function ProjectCard({ slug, title, tagline, image, index, live = true, cta, featured = false, enterDelay = 0, externalHref }: ProjectCardProps) {
   const [hovered, setHovered] = useState(false);
   const [visible, setVisible] = useState(false);
   const [pressed, setPressed] = useState(false);
@@ -460,8 +461,8 @@ function ProjectCard({ slug, title, tagline, image, index, live = true, cta, fea
 
   if (!live) return <div style={{ opacity: 0.35 }}>{content}</div>;
   // All routes are internal — use Link for all
-  return <Link href={`/${slug}`} style={{ display: 'block', textDecoration: 'none', color: 'inherit' }}>{content}</Link>;
-}
+if (externalHref) return <a href={externalHref} target="_blank" rel="noopener noreferrer" style={{ display: 'block', textDecoration: 'none', color: 'inherit' }}>{content}</a>;
+  return <Link href={`/${slug}`} style={{ display: 'block', textDecoration: 'none', color: 'inherit' }}>{content}</Link>;}
 
 // ── Cross-awareness messages ──────────────────────────────────────────────
 const CROSS_AWARENESS: Record<string, string[]> = {
@@ -608,13 +609,14 @@ export default function Landing() {
           flexDirection: 'column',
           gap: 'clamp(3px,0.4vw,6px)',
         }}>
-          <ProjectCard slug="orb"         title="ORB"         tagline="A living object."                                           cta="Touch It"        image={CARD_ORB}         index={1} featured={true}  enterDelay={80}  />
-          <ProjectCard slug="the-eye"     title="THE EYE"     tagline="A strange object that notices you."                         cta="Look"            image={CARD_THE_EYE}     index={2}               enterDelay={140} />
-          <ProjectCard slug="low-battery" title="LOW BATTERY" tagline="The sound you ignore until it becomes your personality."    cta="Begin Ignoring"  image={CARD_LOW_BATTERY} index={3}               enterDelay={200} />
-          <ProjectCard slug="space-drone" title="SPACE DRONE" tagline="A drifting machine for doing absolutely nothing."                                 image={CARD_SPACE_DRONE} index={4}               enterDelay={260} />
-          <ProjectCard slug="aether"      title="ÆTHER"       tagline="Impossible to sound bad."                                                         image={CARD_AETHER}      index={5}               enterDelay={320} />
-          <ProjectCard slug="dead-air"    title="DEAD AIR"    tagline="Late night radio scanner."                                  cta="Tune In"         image={CARD_DEAD_AIR}    index={6}               enterDelay={380} />
-          <ProjectCard slug="fourcast"    title="FOURCAST"    tagline="A weather app predicting the end of the world. Politely."   cta="Check My Day"    image={CARD_FOURCAST}    index={7}               enterDelay={440} />
+          <ProjectCard slug="radio" title="HELLA_RADIO" tagline="A late-night signal you tune into." cta="Tune In" image="/radio-card.webp" index={1} featured={true} externalHref="https://radio.hella.rich/" enterDelay={80} />
+          <ProjectCard slug="orb" title="ORB" tagline="A living object." cta="Touch It" image={CARD_ORB} index={2} enterDelay={140} />
+          <ProjectCard slug="the-eye" title="THE EYE" tagline="A strange object that notices you." cta="Look" image={CARD_THE_EYE} index={3} enterDelay={200} />
+          <ProjectCard slug="low-battery" title="LOW BATTERY" tagline="The sound you ignore until it becomes your personality." cta="Begin Ignoring" image={CARD_LOW_BATTERY} index={4} enterDelay={260} />
+          <ProjectCard slug="space-drone" title="SPACE DRONE" tagline="A drifting machine for doing absolutely nothing." image={CARD_SPACE_DRONE} index={5} enterDelay={320} />
+          <ProjectCard slug="aether" title="ÆTHER" tagline="Impossible to sound bad." image={CARD_AETHER} index={6} enterDelay={380} />
+          <ProjectCard slug="dead-air" title="DEAD AIR" tagline="Late night radio scanner." cta="Tune In" image={CARD_DEAD_AIR} index={7} enterDelay={440} />
+          <ProjectCard slug="fourcast" title="FOURCAST" tagline="A weather app predicting the end of the world. Politely." cta="Check My Day" image={CARD_FOURCAST} index={8} enterDelay={500} />
 
           {/* Cross-awareness overlay — rare terminal message on a card */}
           {awarenessMsg && (
