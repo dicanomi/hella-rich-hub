@@ -17,7 +17,7 @@
  */
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { Route, Switch } from "wouter";
+import { Route, Switch, Router as WouterRouter } from "wouter";
 import { Suspense, lazy, useState } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { HellaRichNav } from "./components/HellaRichNav";
@@ -70,6 +70,7 @@ function Router() {
     <>
       {introActive && <IntroSplash onComplete={handleIntroComplete} />}
       <Suspense fallback={<PageFallback />}>
+        <WouterRouter base={(import.meta.env.VITE_ROUTER_BASE as string) || ""}>
         <Switch>
           <Route path="/" component={Landing} />
           <Route path="/the-eye" component={TheEyePage} />
@@ -81,6 +82,7 @@ function Router() {
           <Route path="/fourcast" component={FourcastPage} />
           <Route component={NotFound} />
         </Switch>
+        </WouterRouter>
       </Suspense>
     </>
   );
