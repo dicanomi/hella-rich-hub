@@ -29,13 +29,13 @@
 <div style="min-height:100vh; width:100%; background:#000000; color:#9A948A; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; padding:clamp(22px,4vw,56px); display:flex; flex-direction:column; gap:clamp(22px,3vw,40px);">
 
   <!-- HEADER -->
-  <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:24px; flex-wrap:wrap;">
+  <div style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:14px;">
     <div>
-      <div onMouseEnter="{{ onLogoHover }}" onMouseLeave="{{ onLogoLeave }}" style="font-family:'TAY Birdie','Helvetica Neue',Helvetica,Arial,sans-serif; font-size:clamp(30px,5.2vw,52px); font-weight:400; letter-spacing:.06em; line-height:.95; color:#8A2B12; text-shadow:0 0 13px rgba(138,43,18,.45); display:inline-flex; cursor:default;"><sc-for list="{{ logoChars }}" as="lc" hint-placeholder-count="11"><span style="font-family:{{ lc.ff }}; white-space:pre; opacity:{{ lc.op }}; transition:opacity .22s ease;">{{ lc.ch }}</span></sc-for></div>
+      <div onMouseEnter="{{ onLogoHover }}" onMouseLeave="{{ onLogoLeave }}" style="font-family:'TAY Birdie','Helvetica Neue',Helvetica,Arial,sans-serif; font-size:clamp(30px,5.2vw,52px); font-weight:400; letter-spacing:.06em; line-height:.95; color:#8A2B12; text-shadow:0 0 13px rgba(138,43,18,.45); display:inline-flex; justify-content:center; cursor:default;"><sc-for list="{{ logoChars }}" as="lc" hint-placeholder-count="11"><span style="font-family:{{ lc.ff }}; white-space:pre; opacity:{{ lc.op }}; transition:opacity .22s ease;">{{ lc.ch }}</span></sc-for></div>
       <div style="margin-top:12px; font-size:11px; font-weight:500; letter-spacing:.34em; color:#6E6A62;">GLOBAL SIGNAL NETWORK</div>
       <div style="margin-top:18px; font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace; font-size:10px; letter-spacing:.22em; color:#4E4B45;">NODE_1956 &nbsp;//&nbsp; LIVE TRANSMISSIONS</div>
     </div>
-    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:9px;">
+    <div style="display:flex; flex-direction:column; align-items:center; gap:9px;">
       <div style="display:flex; align-items:center; gap:9px; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:11px; letter-spacing:.18em; color:#8A847A;">
         <span style="width:6px; height:6px; border-radius:50%; background:#FF9F0A; box-shadow:0 0 7px rgba(255,159,10,.7);"></span>
         UTC {{ utc }}
@@ -218,7 +218,7 @@ class Component extends DCLogic {
       { frequency: 102.7, name: 'WARM CURRENT',            type: 'live', band: 'day',   streams: [ 'https://icecast.radiofrance.fr/fipgroove-midfi.mp3', soma('missioncontrol') ] },
 
       // ---- UPPER BAND 103-108 MHz : house / techno / bass / electro / leftfield ----
-      { frequency: 103.1, name: 'WHITE ROOM',      type: 'live', band: 'night', streams: [ 'https://hoer-stream.out.airtime.pro/hoer-stream_a', soma('dubstep') ] },
+      { frequency: 103.1, name: 'HÖR BERLIN',      type: 'live', band: 'night', streams: [ 'https://hoer-stream.out.airtime.pro/hoer-stream_a', soma('dubstep') ] },
       { frequency: 103.7, name: 'PIRATE TIDE',        type: 'live', band: 'night', streams: [ 'https://admin.stream.rinse.fm/proxy/rinse_fm/stream', soma('beatblender') ] },
       { frequency: 104.2, name: 'CONCRETE BLOOM', type: 'live', band: 'night', streams: [ 'https://streaming.radio.co/s3699c5e49/listen', soma('beatblender'), soma('cliqhop') ] },
       { frequency: 104.6, name: 'GLASS BOOTH',     type: 'live', band: 'night', streams: [ 'https://kioskradio.out.airtime.pro/kioskradio_a', soma('cliqhop') ] },
@@ -299,7 +299,7 @@ class Component extends DCLogic {
     'NULL FIELD': ['NULL FIELD IS WHERE DELETED FILES GO TO DANCE', 'IF YOU CAN HEAR THIS, YOU HAVE ALREADY STAYED TOO LONG. WELCOME'],
     'PAPER STATIC': ['THE SAME 4 BARS HAVE LOOPED SINCE 2016. THE STUDENT NEVER GRADUATED'],
     'WARM CURRENT': ['WARM CURRENT IS FRENCH FOR TRUST US, IT GETS WEIRDER'],
-    'WHITE ROOM': ['WHITE ROOM: A TILED CHAMBER WHERE TIME GOES TO SWEAT'],
+    'HÖR BERLIN': ['HÖR BERLIN: A WHITE TILED CHAMBER WHERE TIME GOES TO SWEAT'],
     'PIRATE TIDE': ['PIRATE TIDE WAS ILLEGAL FOR 16 YEARS. THE CRIME WAS BEING TOO GOOD'],
     'CONCRETE BLOOM': ['CONCRETE BLOOM BROADCASTS FROM A FORMER FUNERAL HOME. THE ACOUSTICS ARE TO DIE FOR'],
     'GLASS BOOTH': ['GLASS BOOTH FITS 40 PEOPLE AND ONE EXISTENTIAL CRISIS'],
