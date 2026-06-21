@@ -46,7 +46,9 @@ export function HellaRichNav() {
   }, []);
 
   // Early return AFTER all hooks
-  const isLanding = location === '/';
+  const base = (import.meta.env.VITE_ROUTER_BASE as string) || '';
+  const stripped = location.replace(base, '').replace(/\/+$/, '');
+  const isLanding = stripped === '' || location === '/' || location === '';
   if (isLanding) return null;
 
   const currentProject = PROJECTS.find(p => location.startsWith(p.slug));
