@@ -2,22 +2,13 @@
  * hella.rich — App Router
  * Design: Cinematic Product Lab
  *
- * All products hosted internally — no external hella.rich links.
- * Heavy product pages are lazy-loaded for faster initial bundle.
- *
- * Routes:
- *   /             → Landing (hub)
- *   /the-eye      → THE EYE flagship
- *   /low-battery  → LOW BATTERY
- *   /space-drone  → SPACE DRONE
- *   /aether       → ÆTHER
- *   /orb          → ORB
- *   /dead-air     → DEAD AIR
- *   /fourcast     → FOURCAST
+ * All products hosted internally. Heavy product pages are lazy-loaded.
+ * Router base is import.meta.env.BASE_URL: "/" on live (hella.rich),
+ * "/hella-rich-hub/" on the GitHub Pages staging build.
  */
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { Route, Switch } from "wouter";
+import { Route, Switch, Router as WouterRouter } from "wouter";
 import { Suspense, lazy, useState } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { HellaRichNav } from "./components/HellaRichNav";
@@ -30,7 +21,7 @@ import TheEyePage from "./pages/TheEyePage";
 import LowBatteryPage from "./pages/LowBatteryPage";
 import NotFound from "./pages/NotFound";
 
-// Heavy products — lazy loaded (Tone.js, large CSS, complex canvases)
+// Heavy products — lazy loaded
 const SpaceDronePage = lazy(() => import("./pages/SpaceDronePage"));
 const AetherPage     = lazy(() => import("./pages/AetherPage"));
 const OrbPage        = lazy(() => import("./pages/OrbPage"));
@@ -38,7 +29,6 @@ const DeadAirPage    = lazy(() => import("./pages/DeadAirPage"));
 const FourcastPage   = lazy(() => import("./pages/FourcastPage"));
 const RadioPage      = lazy(() => import("./pages/RadioPage"));
 
-// Minimal fallback — dark screen, no spinner (matches hella.rich aesthetic)
 function PageFallback() {
   return (
     <div style={{
@@ -59,7 +49,10 @@ function PageFallback() {
   );
 }
 
-function Router() {
+// wouter's base must not have a trailing slash; BASE_URL has one (e.g. "/hella-rich-hub/").
+const ROUTER_BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+function AppRoutes() {
   const [introActive, setIntroActive] = useState(() => shouldShowIntro());
 
   const handleIntroComplete = () => {
@@ -94,8 +87,10 @@ function App() {
       <ThemeProvider defaultTheme="dark">
         <TooltipProvider>
           <Toaster />
-          <HellaRichNav />
-          <Router />
+          <WouterRouter base={ROUTER_BASE}>
+            <HellaRichNav />
+            <AppRoutes />
+          </WouterRouter>
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
