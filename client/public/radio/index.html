@@ -3,6 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HELLA_RADIO — Global Signal Network</title>
+<meta name="description" content="HELLA_RADIO — a global signal network. 88–108 MHz of live transmissions. Tune in.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="hella.rich">
+<meta property="og:url" content="https://hella.rich/radio/">
+<meta property="og:title" content="HELLA_RADIO — Global Signal Network">
+<meta property="og:description" content="88–108 MHz of live transmissions. A global signal network. Tune in.">
+<meta property="og:image" content="https://hella.rich/radio/og-radio.webp">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="HELLA_RADIO — Global Signal Network">
+<meta name="twitter:description" content="88–108 MHz of live transmissions. A global signal network. Tune in.">
+<meta name="twitter:image" content="https://hella.rich/radio/og-radio.webp">
 <script src="./support.js"></script>
 </head>
 <body>
@@ -23,10 +38,19 @@
   input[type=range].pr-vol::-moz-range-track{ height:1px; background:rgba(255,159,10,.3); }
   input[type=range].pr-vol::-moz-range-thumb{ width:9px; height:9px; border:none; border-radius:50%; background:#FF9F0A; }
   input[type=range].pr-vol:focus{ outline:none; }
+  /* ---- short-height treatments: compress vertically, keep all info ---- */
+  @media (max-height:720px){
+    .hr-page{ gap:clamp(12px,2vh,24px) !important; padding-top:clamp(12px,2.5vh,28px) !important; padding-bottom:clamp(12px,2.5vh,28px) !important; }
+  }
+  @media (max-height:560px){
+    .hr-page{ gap:clamp(8px,1.6vh,16px) !important; }
+  }
+  /* never let the page scroll sideways on any device */
+  html,body{ max-width:100%; overflow-x:hidden; }
 </style>
 </helmet>
 
-<div style="min-height:100vh; width:100%; background:#000000; color:#9A948A; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; padding:clamp(22px,4vw,56px); display:flex; flex-direction:column; gap:clamp(22px,3vw,40px);">
+<div class="hr-page" style="min-height:100svh; width:100%; overflow-x:hidden; background:#000000; color:#9A948A; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; padding:clamp(16px,4vw,56px); padding-left:max(clamp(16px,4vw,56px),env(safe-area-inset-left)); padding-right:max(clamp(16px,4vw,56px),env(safe-area-inset-right)); padding-top:max(clamp(16px,4vw,56px),env(safe-area-inset-top)); padding-bottom:max(clamp(16px,4vw,56px),env(safe-area-inset-bottom)); display:flex; flex-direction:column; gap:clamp(16px,3vw,40px);">
 
   <!-- HEADER -->
   <div style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:14px;">
@@ -41,6 +65,11 @@
         UTC {{ utc }}
       </div>
       <div style="font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:9.5px; letter-spacing:.2em; color:#6E6A62;">{{ networkLine }}</div>
+      <!-- listener presence indicator (populated by hr-presence script; self-contained, no x-dc binding) -->
+      <div id="hrPresence" aria-live="polite" style="margin-top:4px; min-height:30px; display:flex; flex-direction:column; align-items:center; gap:3px; opacity:0; transition:opacity .6s ease; font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;">
+        <div id="hrPresenceLabel" style="font-size:8.5px; letter-spacing:.28em; color:#6E6A62;"></div>
+        <div id="hrPresenceValue" style="font-size:11px; letter-spacing:.18em; color:#B98A3A; transition:opacity .4s ease;"></div>
+      </div>
     </div>
   </div>
 
@@ -95,12 +124,12 @@
               <button type="button" onClick="{{ lab.onClick }}" aria-label="{{ lab.aria }}" style="appearance:none; -webkit-appearance:none; background:transparent; border:none; padding:2px 4px; margin:0; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:11px; letter-spacing:.06em; line-height:1; cursor:pointer; color:{{ lab.color }}; text-shadow:{{ lab.glow }}; transition:color .15s ease, text-shadow .15s ease;" style-hover="color:#FF9F0A; text-shadow:0 0 9px rgba(255,159,10,.7);">{{ lab.text }}</button>
             </sc-for>
           </div>
-          <canvas ref="{{ setSpecCanvasRef }}" style="display:block; width:100%; height:172px; margin-top:8px;"></canvas>
+          <canvas ref="{{ setSpecCanvasRef }}" style="display:block; width:100%; height:clamp(120px,18vh,172px); margin-top:8px;"></canvas>
         </div>
       </div>
 
       <!-- SIGNAL WINDOW -->
-      <div style="background:rgba(18,14,9,.35); border:1px solid rgba(255,159,10,.28); border-radius:14px; box-shadow:0 0 0 1px rgba(0,0,0,.4); padding:24px 28px; min-height:176px; overflow:hidden; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px;">
+      <div style="background:rgba(18,14,9,.35); border:1px solid rgba(255,159,10,.28); border-radius:14px; box-shadow:0 0 0 1px rgba(0,0,0,.4); padding:clamp(16px,3vw,24px) clamp(18px,3vw,28px); min-height:clamp(140px,20vh,176px); overflow:hidden; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px;">
         <div style="width:100%; height:46px; display:flex; align-items:center; justify-content:center; text-align:center; overflow:hidden;">
           <div style="display: flex; justify-content: center; align-items: center; flex-wrap: nowrap; font-size: clamp(15px,2.3vw,28px); font-weight: 700; line-height: 1; color: {{ nameColor }}; text-shadow: 0 0 16px rgba(255,159,10,.32); max-width: 100%; overflow: hidden; -webkit-mask-image: radial-gradient(circle,#000 1px,transparent 1.5px); -webkit-mask-size: 3px 3px; mask-image: radial-gradient(circle,#000 1px,transparent 1.5px); mask-size: 3px 3px; animation: pr-warm 3.6s ease-in-out infinite">
             <sc-for list="{{ nameChars }}" as="c" hint-placeholder-count="12">
@@ -126,13 +155,13 @@
 
       <!-- TRANSPORT -->
       <div style="display:flex; align-items:center; justify-content:center; gap:clamp(26px,4vw,48px); padding:8px 0;">
-        <button onClick="{{ onPrev }}" aria-label="Previous signal" style="width:62px; height:62px; border-radius:50%; border:1px solid rgba(255,159,10,.45); background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s ease, transform .12s ease, border-color .15s ease;" style-hover="background:rgba(255,159,10,.1); border-color:rgba(255,159,10,.7);" style-active="transform:scale(.92);">
+        <button onClick="{{ onPrev }}" aria-label="Previous signal" style="width:clamp(50px,11vw,62px); height:clamp(50px,11vw,62px); border-radius:50%; border:1px solid rgba(255,159,10,.45); background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s ease, transform .12s ease, border-color .15s ease;" style-hover="background:rgba(255,159,10,.1); border-color:rgba(255,159,10,.7);" style-active="transform:scale(.92);">
           <span style="display:inline-flex; align-items:center; gap:2px;">
             <span style="width:2px; height:14px; background:#FF9F0A;"></span>
             <span style="width:0; height:0; border-top:7px solid transparent; border-bottom:7px solid transparent; border-right:11px solid #FF9F0A;"></span>
           </span>
         </button>
-        <button ref="{{ setPlayBtnRef }}" onClick="{{ onPlay }}" aria-label="{{ playLabel }}" style="width:96px; height:96px; border-radius:50%; border:1px solid rgba(255,159,10,.55); background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s ease, transform .12s ease, border-color .15s ease;" style-hover="background:rgba(255,159,10,.1); border-color:rgba(255,159,10,.8);" style-active="transform:scale(.94);">
+        <button ref="{{ setPlayBtnRef }}" onClick="{{ onPlay }}" aria-label="{{ playLabel }}" style="width:clamp(78px,16vw,96px); height:clamp(78px,16vw,96px); border-radius:50%; border:1px solid rgba(255,159,10,.55); background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s ease, transform .12s ease, border-color .15s ease;" style-hover="background:rgba(255,159,10,.1); border-color:rgba(255,159,10,.8);" style-active="transform:scale(.94);">
           <sc-if value="{{ isPlaying }}" hint-placeholder-val="{{ false }}">
             <span style="display:inline-flex; gap:7px;">
               <span style="width:5px; height:26px; background:#FF9F0A; border-radius:1px;"></span>
@@ -143,7 +172,7 @@
             <span style="width:0; height:0; border-top:15px solid transparent; border-bottom:15px solid transparent; border-left:25px solid #FF9F0A; margin-left:6px;"></span>
           </sc-if>
         </button>
-        <button onClick="{{ onNext }}" aria-label="Next signal" style="width:62px; height:62px; border-radius:50%; border:1px solid rgba(255,159,10,.45); background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s ease, transform .12s ease, border-color .15s ease;" style-hover="background:rgba(255,159,10,.1); border-color:rgba(255,159,10,.7);" style-active="transform:scale(.92);">
+        <button onClick="{{ onNext }}" aria-label="Next signal" style="width:clamp(50px,11vw,62px); height:clamp(50px,11vw,62px); border-radius:50%; border:1px solid rgba(255,159,10,.45); background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s ease, transform .12s ease, border-color .15s ease;" style-hover="background:rgba(255,159,10,.1); border-color:rgba(255,159,10,.7);" style-active="transform:scale(.92);">
           <span style="display:inline-flex; align-items:center; gap:2px;">
             <span style="width:0; height:0; border-top:7px solid transparent; border-bottom:7px solid transparent; border-left:11px solid #FF9F0A;"></span>
             <span style="width:2px; height:14px; background:#FF9F0A;"></span>
@@ -154,7 +183,7 @@
 
     <!-- SIGNAL EQ -->
     <div style="flex:1 1 300px; min-width:280px; align-self:stretch;">
-      <div style="height:100%; min-height:480px; background:rgba(18,14,9,.35); border:1px solid rgba(255,159,10,.28); border-radius:14px; padding:22px 22px 16px; display:flex; flex-direction:column;">
+      <div style="height:100%; min-height:clamp(300px,42vh,480px); background:rgba(18,14,9,.35); border:1px solid rgba(255,159,10,.28); border-radius:14px; padding:22px 22px 16px; display:flex; flex-direction:column;">
         <div style="font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:9.5px; letter-spacing:.26em; color:#8A847A;">SIGNAL EQ</div>
         <div style="flex:1; display:flex; gap:14px; margin-top:22px;">
           <div style="display:flex; flex-direction:column; justify-content:space-between; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:9px; letter-spacing:.06em; color:#6E6A62; padding-bottom:24px;">
@@ -414,7 +443,7 @@ class Component extends DCLogic {
   measure = () => {
     if (this.specCanvas) {
       const w = this.specCanvas.clientWidth || this.specWrapEl && this.specWrapEl.clientWidth || 600;
-      const h = 172; const dpr = Math.min(2, window.devicePixelRatio || 1);
+      const h = this.specCanvas.clientHeight || 172; const dpr = Math.min(2, window.devicePixelRatio || 1);
       this.specCanvas.width = Math.round(w * dpr); this.specCanvas.height = Math.round(h * dpr);
       this.specCtx.setTransform(dpr, 0, 0, dpr, 0, 0); this.specW = w; this.specH = h;
       if (w !== this.state.specW) this.setState({ specW: w });
@@ -1110,6 +1139,131 @@ class Component extends DCLogic {
   }
 }
 </script>
+<script>
+/* ============================================================
+   HELLA_RADIO — listener presence indicator (self-contained).
+   Counts concurrent receivers on hella.rich/radio via a tiny
+   Cloudflare Worker. Atmospheric, never analytics. Heartbeat
+   every 25s, smooth fades, rotating mysterious copy, graceful
+   fallback so the station never feels empty.
+   Touches nothing in the radio app/audio/template above.
+   ============================================================ */
+(function(){
+  var ENDPOINT = 'https://hella-presence.jeffreywillis.workers.dev/beat';     // Cloudflare Worker (free tier)
+  var BEAT_MS  = 25000;
+  var sid = Math.random().toString(36).slice(2) + Date.now().toString(36);
+  var wrap, labelEl, valueEl;
+  var last = null;          // last { count, peakToday, sessionsToday, countries }
+  var failCount = 0;
+  var timer = null, raf = null;
+
+  // copy pools ------------------------------------------------
+  var LABELS = ['SIGNAL RECEIVED BY','CURRENT RECEIVERS','LISTENING NOW',
+    'FREQUENCY POPULATION','EARTH RECEIVERS','ACTIVE RECEIVERS',
+    'CURRENT SIGNAL COUNT','LIFE FORMS DETECTED'];
+  // value renderers given n -> {label?, value}
+  function fmtNormal(n){
+    var pick = Math.floor(Math.random()*5);
+    if(pick===0) return {label:'SIGNAL RECEIVED BY', value:n+' LIFE FORMS'};
+    if(pick===1) return {label:'EARTH RECEIVERS', value:''+n};
+    if(pick===2) return {label:'LISTENING NOW', value:''+n};
+    if(pick===3) return {label:'CURRENT SIGNAL COUNT', value:n+' RECEIVERS'};
+    return {label:'LIFE FORMS DETECTED', value:''+n};
+  }
+  var HELLA = [
+    function(n){return {label:''+n+' PEOPLE', value:'AVOIDING WORK'};},
+    function(n){return {label:''+n+' SOULS', value:'FLOATING THROUGH SPACE'};},
+    function(n){return {label:''+n+' RECEIVERS', value:'QUESTIONING REALITY'};},
+    function(n){return {label:''+n+' HUMANS · SAME SONG', value:'DIFFERENT PROBLEMS'};},
+    function(n){return {label:''+n+' LISTENERS', value:'THIS COULD BE YOU'};}
+  ];
+  function fmtCountries(n, countries){
+    var codes = Object.keys(countries||{}).filter(function(c){return c && c!=='XX';});
+    if(codes.length>=2){
+      if(Math.random()<0.5) return {label:''+n+' RECEIVERS', value:'ACROSS '+codes.length+' COUNTRIES'};
+      var names = codes.slice(0,3).map(cc).join('  ·  ');
+      return {label:'SIGNAL DETECTED IN', value:names};
+    }
+    return null;
+  }
+  function cc(code){
+    var M={US:'UNITED STATES',JP:'JAPAN',DE:'GERMANY',GB:'UNITED KINGDOM',FR:'FRANCE',
+      CA:'CANADA',AU:'AUSTRALIA',NL:'NETHERLANDS',SE:'SWEDEN',BR:'BRAZIL',
+      MX:'MEXICO',ES:'SPAIN',IT:'ITALY',KR:'SOUTH KOREA',IN:'INDIA',
+      PL:'POLAND',RU:'RUSSIA',CN:'CHINA',NO:'NORWAY',FI:'FINLAND',
+      DK:'DENMARK',BE:'BELGIUM',CH:'SWITZERLAND',AT:'AUSTRIA',IE:'IRELAND',
+      PT:'PORTUGAL',NZ:'NEW ZEALAND',ZA:'SOUTH AFRICA',AR:'ARGENTINA',CL:'CHILE'};
+    return M[code] || code;
+  }
+
+  function chooseMessage(d){
+    var n = d.count;
+    // never show 0 — treat as a faint detected signal
+    if(!n || n < 1) return {label:'SIGNAL STATUS', value:'SIGNAL DETECTED'};
+    var r = Math.random();
+    if(r < 0.07) return HELLA[Math.floor(Math.random()*HELLA.length)](n);          // ~7% HELLA mode
+    if(r < 0.17){ var cs = fmtCountries(n, d.countries); if(cs) return cs; }        // ~10% country mode (rare, needs data)
+    return fmtNormal(n);
+  }
+
+  // smooth swap: fade value out, set, fade in -------------------
+  function setMessage(msg){
+    if(!labelEl||!valueEl) return;
+    valueEl.style.opacity = '0';
+    labelEl.style.opacity = '0';
+    setTimeout(function(){
+      labelEl.textContent = msg.label || '';
+      valueEl.textContent = msg.value || '';
+      labelEl.style.opacity = '1';
+      valueEl.style.opacity = '1';
+    }, 260);
+  }
+
+  function render(){
+    if(!wrap) return;
+    if(last){
+      setMessage(chooseMessage(last));
+    } else if(failCount>0){
+      setMessage({label:'SIGNAL STATUS', value: failCount>2 ? 'UNKNOWN' : 'SIGNAL DETECTED'});
+    } else {
+      setMessage({label:'SIGNAL STATUS', value:'SIGNAL DETECTED'});
+    }
+    wrap.style.opacity = '1';
+  }
+
+  function beat(){
+    var ctrl = ('AbortController' in window) ? new AbortController() : null;
+    var to = ctrl ? setTimeout(function(){ try{ctrl.abort();}catch(e){}}, 8000) : null;
+    fetch(ENDPOINT + '?sid=' + encodeURIComponent(sid), {
+      method:'POST', keepalive:true, signal: ctrl?ctrl.signal:undefined,
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({sid:sid})
+    }).then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
+      .then(function(d){ if(to)clearTimeout(to); failCount=0; last=d; render(); })
+      .catch(function(){ if(to)clearTimeout(to); failCount++; if(!last) render(); });
+  }
+
+  function boot(){
+    wrap = document.getElementById('hrPresence');
+    labelEl = document.getElementById('hrPresenceLabel');
+    valueEl = document.getElementById('hrPresenceValue');
+    if(!wrap){ setTimeout(boot, 400); return; }   // wait for x-dc render
+    beat();
+    timer = setInterval(beat, BEAT_MS);
+    // pause polling when tab hidden; resume + immediate beat on return
+    document.addEventListener('visibilitychange', function(){
+      if(document.hidden){ if(timer){clearInterval(timer); timer=null;} }
+      else if(!timer){ beat(); timer=setInterval(beat, BEAT_MS); }
+    });
+    window.addEventListener('pagehide', function(){ if(timer){clearInterval(timer); timer=null;} });
+  }
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded', function(){ setTimeout(boot, 300); });
+  } else { setTimeout(boot, 300); }
+})();
+</script>
+<!-- hella-presence -->
 <script>
 (function(){
   var path = location.pathname;
