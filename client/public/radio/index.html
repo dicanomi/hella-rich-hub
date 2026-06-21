@@ -25,18 +25,18 @@
 <helmet>
 <style>
   *{ box-sizing:border-box; }
-  html,body{ margin:0; padding:0; background:#1A1512; }
+  html,body{ margin:0; padding:0; background:#000; }
   body{ -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
   @font-face{ font-family:'TAY Birdie'; src:url('TAYBirdie.otf') format('opentype'); font-display:swap; }
   @font-face{ font-family:'Galactic'; src:url('StandardGalacticAlphabet-Regular.ttf') format('truetype'); font-display:swap; }
   @keyframes pr-warm{ 0%,100%{ opacity:1; } 50%{ opacity:.66; } }
-  @keyframes pr-air{ 0%,100%{ opacity:1; box-shadow:0 0 9px rgba(122,46,46,.95), 0 0 18px rgba(122,46,46,.55); } 50%{ opacity:.5; box-shadow:0 0 5px rgba(122,46,46,.55); } }
+  @keyframes pr-air{ 0%,100%{ opacity:1; box-shadow:0 0 9px rgba(255,59,48,.95), 0 0 18px rgba(255,59,48,.55); } 50%{ opacity:.5; box-shadow:0 0 5px rgba(255,59,48,.55); } }
   @keyframes pr-marquee{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
   input[type=range].pr-vol{ -webkit-appearance:none; appearance:none; background:transparent; height:12px; cursor:pointer; width:170px; }
-  input[type=range].pr-vol::-webkit-slider-runnable-track{ height:1px; background:rgba(181,101,74,.3); }
-  input[type=range].pr-vol::-webkit-slider-thumb{ -webkit-appearance:none; width:9px; height:9px; margin-top:-4px; border-radius:50%; background:#B5654A; box-shadow:0 0 6px rgba(181,101,74,.6); }
-  input[type=range].pr-vol::-moz-range-track{ height:1px; background:rgba(181,101,74,.3); }
-  input[type=range].pr-vol::-moz-range-thumb{ width:9px; height:9px; border:none; border-radius:50%; background:#B5654A; }
+  input[type=range].pr-vol::-webkit-slider-runnable-track{ height:1px; background:rgba(255,159,10,.3); }
+  input[type=range].pr-vol::-webkit-slider-thumb{ -webkit-appearance:none; width:9px; height:9px; margin-top:-4px; border-radius:50%; background:#FF9F0A; box-shadow:0 0 6px rgba(255,159,10,.6); }
+  input[type=range].pr-vol::-moz-range-track{ height:1px; background:rgba(255,159,10,.3); }
+  input[type=range].pr-vol::-moz-range-thumb{ width:9px; height:9px; border:none; border-radius:50%; background:#FF9F0A; }
   input[type=range].pr-vol:focus{ outline:none; }
   /* ---- short-height treatments: compress vertically, keep all info ---- */
   @media (max-height:720px){
@@ -50,31 +50,31 @@
 </style>
 </helmet>
 
-<div class="hr-page" style="min-height:100svh; width:100%; overflow-x:hidden; background:#1A1512; color:#C9A876; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; padding:clamp(16px,4vw,56px); padding-left:max(clamp(16px,4vw,56px),env(safe-area-inset-left)); padding-right:max(clamp(16px,4vw,56px),env(safe-area-inset-right)); padding-top:max(clamp(16px,4vw,56px),env(safe-area-inset-top)); padding-bottom:max(clamp(16px,4vw,56px),env(safe-area-inset-bottom)); display:flex; flex-direction:column; gap:clamp(16px,3vw,40px);">
+<div class="hr-page" style="min-height:100svh; width:100%; overflow-x:hidden; background:#000000; color:#9A948A; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; padding:clamp(16px,4vw,56px); padding-left:max(clamp(16px,4vw,56px),env(safe-area-inset-left)); padding-right:max(clamp(16px,4vw,56px),env(safe-area-inset-right)); padding-top:max(clamp(16px,4vw,56px),env(safe-area-inset-top)); padding-bottom:max(clamp(16px,4vw,56px),env(safe-area-inset-bottom)); display:flex; flex-direction:column; gap:clamp(16px,3vw,40px);">
 
   <!-- HEADER -->
   <div style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:14px;">
     <div>
-      <div onMouseEnter="{{ onLogoHover }}" onMouseLeave="{{ onLogoLeave }}" style="font-family:'TAY Birdie','Helvetica Neue',Helvetica,Arial,sans-serif; font-size:clamp(30px,5.2vw,52px); font-weight:400; letter-spacing:.06em; line-height:.95; color:#7A2E2E; text-shadow:0 0 13px rgba(122,46,46,.45); display:inline-flex; justify-content:center; cursor:default;"><sc-for list="{{ logoChars }}" as="lc" hint-placeholder-count="11"><span style="font-family:{{ lc.ff }}; white-space:pre; opacity:{{ lc.op }}; transition:opacity .22s ease;">{{ lc.ch }}</span></sc-for></div>
-      <div style="margin-top:12px; font-size:11px; font-weight:500; letter-spacing:.34em; color:#8A6F5A;">GLOBAL SIGNAL NETWORK</div>
+      <div onMouseEnter="{{ onLogoHover }}" onMouseLeave="{{ onLogoLeave }}" style="font-family:'TAY Birdie','Helvetica Neue',Helvetica,Arial,sans-serif; font-size:clamp(30px,5.2vw,52px); font-weight:400; letter-spacing:.06em; line-height:.95; color:#8A2B12; text-shadow:0 0 13px rgba(138,43,18,.45); display:inline-flex; justify-content:center; cursor:default;"><sc-for list="{{ logoChars }}" as="lc" hint-placeholder-count="11"><span style="font-family:{{ lc.ff }}; white-space:pre; opacity:{{ lc.op }}; transition:opacity .22s ease;">{{ lc.ch }}</span></sc-for></div>
+      <div style="margin-top:12px; font-size:11px; font-weight:500; letter-spacing:.34em; color:#6E6A62;">GLOBAL SIGNAL NETWORK</div>
     </div>
     <div style="display:flex; flex-direction:column; align-items:center; gap:9px;">
       <!-- listener presence indicator (populated by hr-presence script; self-contained, no x-dc binding) -->
       <div id="hrPresence" aria-live="polite" style="margin-top:4px; min-height:30px; display:flex; flex-direction:column; align-items:center; gap:3px; opacity:0; transition:opacity .6s ease; font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;">
-        <div id="hrPresenceLabel" style="font-size:8.5px; letter-spacing:.28em; color:#8A6F5A;"></div>
-        <div id="hrPresenceValue" style="font-size:11px; letter-spacing:.18em; color:#C9A876; transition:opacity .4s ease;"></div>
+        <div id="hrPresenceLabel" style="font-size:8.5px; letter-spacing:.28em; color:#6E6A62;"></div>
+        <div id="hrPresenceValue" style="font-size:11px; letter-spacing:.18em; color:#B98A3A; transition:opacity .4s ease;"></div>
       </div>
     </div>
   </div>
 
   <!-- PIRATE FEED MARQUEE (drag to scrub · hold to pause · release to resume) -->
-  <div ref="{{ setTickerWrapRef }}" style="border-top:1px solid rgba(181,101,74,.12); border-bottom:1px solid rgba(181,101,74,.12); padding:10px 0; overflow:hidden; cursor:grab; -webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent); mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);">
-    <div ref="{{ setTickerTrackRef }}" onPointerDown="{{ onTickerDown }}" onPointerMove="{{ onTickerMove }}" onPointerUp="{{ onTickerUp }}" onPointerCancel="{{ onTickerUp }}" style="display:flex; width:max-content; white-space:nowrap; will-change:transform; touch-action:pan-y; user-select:none; cursor:grab; font-family:'TAY Birdie','Helvetica Neue',Helvetica,Arial,sans-serif; font-size:14px; font-weight:400; letter-spacing:.12em; color:#C9A876;">
+  <div ref="{{ setTickerWrapRef }}" style="border-top:1px solid rgba(255,159,10,.12); border-bottom:1px solid rgba(255,159,10,.12); padding:10px 0; overflow:hidden; cursor:grab; -webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent); mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);">
+    <div ref="{{ setTickerTrackRef }}" onPointerDown="{{ onTickerDown }}" onPointerMove="{{ onTickerMove }}" onPointerUp="{{ onTickerUp }}" onPointerCancel="{{ onTickerUp }}" style="display:flex; width:max-content; white-space:nowrap; will-change:transform; touch-action:pan-y; user-select:none; cursor:grab; font-family:'TAY Birdie','Helvetica Neue',Helvetica,Arial,sans-serif; font-size:14px; font-weight:400; letter-spacing:.12em; color:#B98A3A;">
       <sc-for list="{{ tickerItems }}" as="it" hint-placeholder-count="6">
-        <a href="{{ it.url }}" target="_blank" rel="noopener noreferrer" onClick="{{ onTickerItemClick }}" draggable="false" style="padding-right:52px; color:#C9A876; text-decoration:none; white-space:nowrap;">{{ it.text }}</a>
+        <a href="{{ it.url }}" target="_blank" rel="noopener noreferrer" onClick="{{ onTickerItemClick }}" draggable="false" style="padding-right:52px; color:#B98A3A; text-decoration:none; white-space:nowrap;">{{ it.text }}</a>
       </sc-for>
       <sc-for list="{{ tickerItems }}" as="it" hint-placeholder-count="6">
-        <a href="{{ it.url }}" target="_blank" rel="noopener noreferrer" onClick="{{ onTickerItemClick }}" draggable="false" style="padding-right:52px; color:#C9A876; text-decoration:none; white-space:nowrap;">{{ it.text }}</a>
+        <a href="{{ it.url }}" target="_blank" rel="noopener noreferrer" onClick="{{ onTickerItemClick }}" draggable="false" style="padding-right:52px; color:#B98A3A; text-decoration:none; white-space:nowrap;">{{ it.text }}</a>
       </sc-for>
     </div>
   </div>
@@ -85,24 +85,24 @@
     <!-- KNOB -->
     <div style="flex:1 1 280px; min-width:260px; display:flex; flex-direction:column; align-items:center;">
       <div ref="{{ setKnobAreaRef }}" onPointerDown="{{ onKnobPointerDown }}" onWheel="{{ onKnobWheel }}" role="slider" aria-label="Tuning knob" aria-valuemin="88" aria-valuemax="108" aria-valuenow="{{ freqStr }}" tabindex="0" style="position:relative; width:clamp(240px,26vw,340px); aspect-ratio:1; cursor:grab; touch-action:none; outline:none; user-select:none;">
-        <div style="position:absolute; inset:0; border-radius:50%; border:1px solid rgba(181,101,74,.5);"></div>
-        <div style="position:absolute; inset:3%; border-radius:50%; background:repeating-conic-gradient(from 0deg, rgba(181,101,74,.5) 0deg .5deg, transparent .5deg 5deg); -webkit-mask:radial-gradient(closest-side, transparent 90%, #000 91% 98%, transparent 99%); mask:radial-gradient(closest-side, transparent 90%, #000 91% 98%, transparent 99%);"></div>
-        <div style="position:absolute; inset:12%; border-radius:50%; border:1px solid rgba(181,101,74,.16);"></div>
+        <div style="position:absolute; inset:0; border-radius:50%; border:1px solid rgba(255,159,10,.5);"></div>
+        <div style="position:absolute; inset:3%; border-radius:50%; background:repeating-conic-gradient(from 0deg, rgba(255,159,10,.5) 0deg .5deg, transparent .5deg 5deg); -webkit-mask:radial-gradient(closest-side, transparent 90%, #000 91% 98%, transparent 99%); mask:radial-gradient(closest-side, transparent 90%, #000 91% 98%, transparent 99%);"></div>
+        <div style="position:absolute; inset:12%; border-radius:50%; border:1px solid rgba(255,159,10,.16);"></div>
         <div ref="{{ setKnobRef }}" style="position:absolute; inset:5%; border-radius:50%; will-change:transform;">
-          <div ref="{{ setDotARef }}" style="position:absolute; top:-2px; left:50%; transform:translateX(-50%); width:10px; height:10px; border-radius:50%; background:#E8DCC0; box-shadow:0 0 11px rgba(181,101,74,.85);"></div>
+          <div ref="{{ setDotARef }}" style="position:absolute; top:-2px; left:50%; transform:translateX(-50%); width:10px; height:10px; border-radius:50%; background:#FFB45A; box-shadow:0 0 11px rgba(255,159,10,.85);"></div>
         </div>
         <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">
-          <div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:clamp(40px,6vw,64px); font-weight:600; letter-spacing:.01em; color:#B5654A; text-shadow:0 0 22px rgba(181,101,74,.35); font-variant-numeric:tabular-nums; line-height:1; -webkit-mask-image:radial-gradient(circle,#000 1.2px,transparent 1.7px); -webkit-mask-size:4px 4px; mask-image:radial-gradient(circle,#000 1.2px,transparent 1.7px); mask-size:4px 4px;">{{ freqStr }}</div>
-          <div style="margin-top:12px; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:12px; letter-spacing:.34em; color:#8A6F5A;">MHz</div>
+          <div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:clamp(40px,6vw,64px); font-weight:600; letter-spacing:.01em; color:#FF9F0A; text-shadow:0 0 22px rgba(255,159,10,.35); font-variant-numeric:tabular-nums; line-height:1; -webkit-mask-image:radial-gradient(circle,#000 1.2px,transparent 1.7px); -webkit-mask-size:4px 4px; mask-image:radial-gradient(circle,#000 1.2px,transparent 1.7px); mask-size:4px 4px;">{{ freqStr }}</div>
+          <div style="margin-top:12px; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:12px; letter-spacing:.34em; color:#8A847A;">MHz</div>
         </div>
       </div>
-      <div style="margin-top:24px; width:clamp(240px,26vw,320px); display:flex; justify-content:space-between; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:10px; letter-spacing:.12em; color:#5A4A3C;">
+      <div style="margin-top:24px; width:clamp(240px,26vw,320px); display:flex; justify-content:space-between; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:10px; letter-spacing:.12em; color:#54514A;">
         <span>88.00</span><span>108.00</span>
       </div>
-      <div style="margin-top:14px; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:9.5px; letter-spacing:.28em; color:#5A4A3C;">SCROLL OR DRAG TO TUNE</div>
-      <div style="margin-top:28px; width:clamp(240px,26vw,320px); border-top:1px solid rgba(181,101,74,.12); padding-top:20px; display:flex; align-items:center; gap:16px;">
-        <span style="font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:9.5px; letter-spacing:.24em; color:#8A6F5A;">VOL</span>
-        <input type="range" class="pr-vol" min="0" max="100" value="{{ volume }}" onInput="{{ onVolume }}" aria-label="Volume" style="accent-color:#B5654A; flex:1; width:auto;">
+      <div style="margin-top:14px; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:9.5px; letter-spacing:.28em; color:#4E4B45;">SCROLL OR DRAG TO TUNE</div>
+      <div style="margin-top:28px; width:clamp(240px,26vw,320px); border-top:1px solid rgba(255,159,10,.12); padding-top:20px; display:flex; align-items:center; gap:16px;">
+        <span style="font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:9.5px; letter-spacing:.24em; color:#6E6A62;">VOL</span>
+        <input type="range" class="pr-vol" min="0" max="100" value="{{ volume }}" onInput="{{ onVolume }}" aria-label="Volume" style="accent-color:#FF9F0A; flex:1; width:auto;">
       </div>
     </div>
 
@@ -110,12 +110,12 @@
     <div style="flex:2 1 440px; min-width:320px; display:flex; flex-direction:column; gap:clamp(20px,2.4vw,28px);">
 
       <!-- SPECTRUM -->
-      <div style="background:rgba(18,14,9,.35); border:1px solid rgba(181,101,74,.28); border-radius:14px; box-shadow:0 0 0 1px rgba(0,0,0,.4); padding:22px 24px 18px;">
-        <div style="font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:9.5px; letter-spacing:.26em; color:#8A6F5A;">FREQUENCY SPECTRUM</div>
+      <div style="background:rgba(18,14,9,.35); border:1px solid rgba(255,159,10,.28); border-radius:14px; box-shadow:0 0 0 1px rgba(0,0,0,.4); padding:22px 24px 18px;">
+        <div style="font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:9.5px; letter-spacing:.26em; color:#6E6A62;">FREQUENCY SPECTRUM</div>
         <div ref="{{ setSpecWrapRef }}" onPointerDown="{{ onSpecPointerDown }}" onWheel="{{ onKnobWheel }}" style="position:relative; margin-top:16px; cursor:grab; touch-action:none; user-select:none;">
           <div style="position:relative; display:flex; justify-content:space-between; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:11px; letter-spacing:.06em; height:18px;">
             <sc-for list="{{ axisLabels }}" as="lab" hint-placeholder-count="11">
-              <button type="button" onClick="{{ lab.onClick }}" aria-label="{{ lab.aria }}" style="appearance:none; -webkit-appearance:none; background:transparent; border:none; padding:2px 4px; margin:0; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:11px; letter-spacing:.06em; line-height:1; cursor:pointer; color:{{ lab.color }}; text-shadow:{{ lab.glow }}; transition:color .15s ease, text-shadow .15s ease;" style-hover="color:#B5654A; text-shadow:0 0 9px rgba(181,101,74,.7);">{{ lab.text }}</button>
+              <button type="button" onClick="{{ lab.onClick }}" aria-label="{{ lab.aria }}" style="appearance:none; -webkit-appearance:none; background:transparent; border:none; padding:2px 4px; margin:0; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:11px; letter-spacing:.06em; line-height:1; cursor:pointer; color:{{ lab.color }}; text-shadow:{{ lab.glow }}; transition:color .15s ease, text-shadow .15s ease;" style-hover="color:#FF9F0A; text-shadow:0 0 9px rgba(255,159,10,.7);">{{ lab.text }}</button>
             </sc-for>
           </div>
           <canvas ref="{{ setSpecCanvasRef }}" style="display:block; width:100%; height:clamp(120px,18vh,172px); margin-top:8px;"></canvas>
@@ -123,9 +123,9 @@
       </div>
 
       <!-- SIGNAL WINDOW -->
-      <div style="background:rgba(18,14,9,.35); border:1px solid rgba(181,101,74,.28); border-radius:14px; box-shadow:0 0 0 1px rgba(0,0,0,.4); padding:clamp(16px,3vw,24px) clamp(18px,3vw,28px); min-height:clamp(140px,20vh,176px); overflow:hidden; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px;">
+      <div style="background:rgba(18,14,9,.35); border:1px solid rgba(255,159,10,.28); border-radius:14px; box-shadow:0 0 0 1px rgba(0,0,0,.4); padding:clamp(16px,3vw,24px) clamp(18px,3vw,28px); min-height:clamp(140px,20vh,176px); overflow:hidden; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px;">
         <div style="width:100%; height:46px; display:flex; align-items:center; justify-content:center; text-align:center; overflow:hidden;">
-          <div style="display: flex; justify-content: center; align-items: center; flex-wrap: nowrap; font-size: clamp(15px,2.3vw,28px); font-weight: 700; line-height: 1; color: {{ nameColor }}; text-shadow: 0 0 16px rgba(181,101,74,.32); max-width: 100%; overflow: hidden; -webkit-mask-image: radial-gradient(circle,#000 1px,transparent 1.5px); -webkit-mask-size: 3px 3px; mask-image: radial-gradient(circle,#000 1px,transparent 1.5px); mask-size: 3px 3px; animation: pr-warm 3.6s ease-in-out infinite">
+          <div style="display: flex; justify-content: center; align-items: center; flex-wrap: nowrap; font-size: clamp(15px,2.3vw,28px); font-weight: 700; line-height: 1; color: {{ nameColor }}; text-shadow: 0 0 16px rgba(255,159,10,.32); max-width: 100%; overflow: hidden; -webkit-mask-image: radial-gradient(circle,#000 1px,transparent 1.5px); -webkit-mask-size: 3px 3px; mask-image: radial-gradient(circle,#000 1px,transparent 1.5px); mask-size: 3px 3px; animation: pr-warm 3.6s ease-in-out infinite">
             <sc-for list="{{ nameChars }}" as="c" hint-placeholder-count="12">
               <span style="display: inline-block; width: .66em; text-align: center; font-family: {{ c.ff }};">{{ c.ch }}</span>
             </sc-for>
@@ -133,43 +133,43 @@
         </div>
         <div style="min-height:18px; display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:nowrap;">
           <sc-if value="{{ onAir }}" hint-placeholder-val="{{ false }}">
-            <span style="display:inline-flex; align-items:center; gap:8px; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:9.5px; font-weight:600; letter-spacing:.28em; color:#B5654A;">
-              <span ref="{{ setAirDotRef }}" style="width:7px; height:7px; border-radius:50%; background:#7A2E2E; box-shadow:0 0 9px rgba(122,46,46,.95), 0 0 18px rgba(122,46,46,.55); animation:pr-air 2.4s ease-in-out infinite;"></span>
+            <span style="display:inline-flex; align-items:center; gap:8px; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:9.5px; font-weight:600; letter-spacing:.28em; color:#FF6A5A;">
+              <span ref="{{ setAirDotRef }}" style="width:7px; height:7px; border-radius:50%; background:#FF3B30; box-shadow:0 0 9px rgba(255,59,48,.95), 0 0 18px rgba(255,59,48,.55); animation:pr-air 2.4s ease-in-out infinite;"></span>
               ON AIR
             </span>
           </sc-if>
           <sc-if value="{{ showReroute }}" hint-placeholder-val="{{ false }}">
-            <span style="font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:9px; letter-spacing:.22em; color:#C9A876;">SIGNAL REROUTED</span>
+            <span style="font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:9px; letter-spacing:.22em; color:#9A7A3A;">SIGNAL REROUTED</span>
           </sc-if>
         </div>
-        <div style="width:min(440px,88%); border:1px solid rgba(181,101,74,.28); border-radius:8px; box-shadow:0 0 0 1px rgba(0,0,0,.3); padding:6px 12px;">
+        <div style="width:min(440px,88%); border:1px solid rgba(255,159,10,.28); border-radius:8px; box-shadow:0 0 0 1px rgba(0,0,0,.3); padding:6px 12px;">
           <canvas ref="{{ setSignalCanvasRef }}" style="display:block; width:100%; height:40px;"></canvas>
         </div>
       </div>
 
       <!-- TRANSPORT -->
       <div style="display:flex; align-items:center; justify-content:center; gap:clamp(26px,4vw,48px); padding:8px 0;">
-        <button onClick="{{ onPrev }}" aria-label="Previous signal" style="width:clamp(50px,11vw,62px); height:clamp(50px,11vw,62px); border-radius:50%; border:1px solid rgba(181,101,74,.45); background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s ease, transform .12s ease, border-color .15s ease;" style-hover="background:rgba(181,101,74,.1); border-color:rgba(181,101,74,.7);" style-active="transform:scale(.92);">
+        <button onClick="{{ onPrev }}" aria-label="Previous signal" style="width:clamp(50px,11vw,62px); height:clamp(50px,11vw,62px); border-radius:50%; border:1px solid rgba(255,159,10,.45); background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s ease, transform .12s ease, border-color .15s ease;" style-hover="background:rgba(255,159,10,.1); border-color:rgba(255,159,10,.7);" style-active="transform:scale(.92);">
           <span style="display:inline-flex; align-items:center; gap:2px;">
-            <span style="width:2px; height:14px; background:#B5654A;"></span>
-            <span style="width:0; height:0; border-top:7px solid transparent; border-bottom:7px solid transparent; border-right:11px solid #B5654A;"></span>
+            <span style="width:2px; height:14px; background:#FF9F0A;"></span>
+            <span style="width:0; height:0; border-top:7px solid transparent; border-bottom:7px solid transparent; border-right:11px solid #FF9F0A;"></span>
           </span>
         </button>
-        <button ref="{{ setPlayBtnRef }}" onClick="{{ onPlay }}" aria-label="{{ playLabel }}" style="width:clamp(78px,16vw,96px); height:clamp(78px,16vw,96px); border-radius:50%; border:1px solid rgba(181,101,74,.55); background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s ease, transform .12s ease, border-color .15s ease;" style-hover="background:rgba(181,101,74,.1); border-color:rgba(181,101,74,.8);" style-active="transform:scale(.94);">
+        <button ref="{{ setPlayBtnRef }}" onClick="{{ onPlay }}" aria-label="{{ playLabel }}" style="width:clamp(78px,16vw,96px); height:clamp(78px,16vw,96px); border-radius:50%; border:1px solid rgba(255,159,10,.55); background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s ease, transform .12s ease, border-color .15s ease;" style-hover="background:rgba(255,159,10,.1); border-color:rgba(255,159,10,.8);" style-active="transform:scale(.94);">
           <sc-if value="{{ isPlaying }}" hint-placeholder-val="{{ false }}">
             <span style="display:inline-flex; gap:7px;">
-              <span style="width:5px; height:26px; background:#B5654A; border-radius:1px;"></span>
-              <span style="width:5px; height:26px; background:#B5654A; border-radius:1px;"></span>
+              <span style="width:5px; height:26px; background:#FF9F0A; border-radius:1px;"></span>
+              <span style="width:5px; height:26px; background:#FF9F0A; border-radius:1px;"></span>
             </span>
           </sc-if>
           <sc-if value="{{ notPlaying }}" hint-placeholder-val="{{ true }}">
-            <span style="width:0; height:0; border-top:15px solid transparent; border-bottom:15px solid transparent; border-left:25px solid #B5654A; margin-left:6px;"></span>
+            <span style="width:0; height:0; border-top:15px solid transparent; border-bottom:15px solid transparent; border-left:25px solid #FF9F0A; margin-left:6px;"></span>
           </sc-if>
         </button>
-        <button onClick="{{ onNext }}" aria-label="Next signal" style="width:clamp(50px,11vw,62px); height:clamp(50px,11vw,62px); border-radius:50%; border:1px solid rgba(181,101,74,.45); background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s ease, transform .12s ease, border-color .15s ease;" style-hover="background:rgba(181,101,74,.1); border-color:rgba(181,101,74,.7);" style-active="transform:scale(.92);">
+        <button onClick="{{ onNext }}" aria-label="Next signal" style="width:clamp(50px,11vw,62px); height:clamp(50px,11vw,62px); border-radius:50%; border:1px solid rgba(255,159,10,.45); background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s ease, transform .12s ease, border-color .15s ease;" style-hover="background:rgba(255,159,10,.1); border-color:rgba(255,159,10,.7);" style-active="transform:scale(.92);">
           <span style="display:inline-flex; align-items:center; gap:2px;">
-            <span style="width:0; height:0; border-top:7px solid transparent; border-bottom:7px solid transparent; border-left:11px solid #B5654A;"></span>
-            <span style="width:2px; height:14px; background:#B5654A;"></span>
+            <span style="width:0; height:0; border-top:7px solid transparent; border-bottom:7px solid transparent; border-left:11px solid #FF9F0A;"></span>
+            <span style="width:2px; height:14px; background:#FF9F0A;"></span>
           </span>
         </button>
       </div>
@@ -177,10 +177,10 @@
 
     <!-- SIGNAL EQ -->
     <div style="flex:1 1 300px; min-width:280px; align-self:stretch;">
-      <div style="height:100%; min-height:clamp(300px,42vh,480px); background:rgba(18,14,9,.35); border:1px solid rgba(181,101,74,.28); border-radius:14px; padding:22px 22px 16px; display:flex; flex-direction:column;">
-        <div style="font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:9.5px; letter-spacing:.26em; color:#8A6F5A;">SIGNAL EQ</div>
+      <div style="height:100%; min-height:clamp(300px,42vh,480px); background:rgba(18,14,9,.35); border:1px solid rgba(255,159,10,.28); border-radius:14px; padding:22px 22px 16px; display:flex; flex-direction:column;">
+        <div style="font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:9.5px; letter-spacing:.26em; color:#8A847A;">SIGNAL EQ</div>
         <div style="flex:1; display:flex; gap:14px; margin-top:22px;">
-          <div style="display:flex; flex-direction:column; justify-content:space-between; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:9px; letter-spacing:.06em; color:#8A6F5A; padding-bottom:24px;">
+          <div style="display:flex; flex-direction:column; justify-content:space-between; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:9px; letter-spacing:.06em; color:#6E6A62; padding-bottom:24px;">
             <span>+12</span><span>0</span><span>-12</span>
           </div>
           <div style="flex:1; display:flex; align-items:stretch; justify-content:space-between; gap:7px;">
@@ -191,7 +191,7 @@
                     <div style="flex:1; min-height:5px; width:100%; border-radius:1px; background:{{ seg.bg }}; border:{{ seg.border }}; box-shadow:{{ seg.glow }};"></div>
                   </sc-for>
                 </div>
-                <div style="margin-top:11px; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:8.5px; letter-spacing:.02em; color:#8A6F5A;">{{ col.label }}</div>
+                <div style="margin-top:11px; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:8.5px; letter-spacing:.02em; color:#8A847A;">{{ col.label }}</div>
               </div>
             </sc-for>
           </div>
@@ -201,8 +201,8 @@
   </div>
 
   <!-- FOOTER -->
-  <div style="display:flex; justify-content:space-between; align-items:center; gap:24px; flex-wrap:wrap; border-top:1px solid rgba(181,101,74,.07); padding-top:22px;">
-    <div style="font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:10px; letter-spacing:.24em; color:#5A4A3C;">THE WORLD IS ALWAYS BROADCASTING. &nbsp;HELLA RADIO IS SIMPLY LISTENING.</div>
+  <div style="display:flex; justify-content:space-between; align-items:center; gap:24px; flex-wrap:wrap; border-top:1px solid rgba(255,159,10,.07); padding-top:22px;">
+    <div style="font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:10px; letter-spacing:.24em; color:#4E4B45;">THE WORLD IS ALWAYS BROADCASTING. &nbsp;HELLA RADIO IS SIMPLY LISTENING.</div>
   </div>
 </div>
 </x-dc>
@@ -210,7 +210,7 @@
 class Component extends DCLogic {
   state = {
     freq: 88.1,
-    statusColor: '#B5654A',
+    statusColor: '#FF9F0A',
     phase: 'found',
     signal: 1,
     lockedIdx: 0,
@@ -512,18 +512,18 @@ class Component extends DCLogic {
       const nn = (noise + 1) / 2;
       const amp = (0.05 + 0.95 * gauss) * (0.2 + 0.85 * this.env) * (0.32 + 0.68 * nn);
       const h = amp * H * 0.74; const alpha = Math.min(0.95, 0.1 + 0.62 * gauss + 0.18 * this.env);
-      c.fillStyle = 'rgba(181,101,74,' + alpha + ')'; c.fillRect(x, base - h, 2, h);
-      c.fillStyle = 'rgba(181,101,74,' + (alpha * 0.22) + ')'; c.fillRect(x, base + 1, 2, h * 0.35);
+      c.fillStyle = 'rgba(255,159,10,' + alpha + ')'; c.fillRect(x, base - h, 2, h);
+      c.fillStyle = 'rgba(255,159,10,' + (alpha * 0.22) + ')'; c.fillRect(x, base + 1, 2, h * 0.35);
     }
     const ph = H * 0.8 * (0.5 + 0.5 * this.env);
-    c.save(); c.shadowColor = 'rgba(181,101,74,0.9)'; c.shadowBlur = 16;
-    c.fillStyle = 'rgba(232,220,192,0.95)'; c.fillRect(peakX - 1.5, base - ph, 3, ph); c.restore();
-    c.fillStyle = 'rgba(181,101,74,0.16)'; c.fillRect(0, base, W, 1);
+    c.save(); c.shadowColor = 'rgba(255,159,10,0.9)'; c.shadowBlur = 16;
+    c.fillStyle = 'rgba(255,214,150,0.95)'; c.fillRect(peakX - 1.5, base - ph, 3, ph); c.restore();
+    c.fillStyle = 'rgba(255,159,10,0.16)'; c.fillRect(0, base, W, 1);
   }
 
   updateTubes(t) {
     const e = this.env;
-    if (this.dotAEl) this.dotAEl.style.boxShadow = '0 0 ' + (8 + 13 * e) + 'px rgba(181,101,74,' + Math.min(1, 0.55 + 0.45 * e) + ')';
+    if (this.dotAEl) this.dotAEl.style.boxShadow = '0 0 ' + (8 + 13 * e) + 'px rgba(255,159,10,' + Math.min(1, 0.55 + 0.45 * e) + ')';
   }
 
   drawSignal(t) {
@@ -537,7 +537,7 @@ class Component extends DCLogic {
     this._spikes = this._spikes.filter(s => t - s.born < 520);
     const amp = (0.1 + 0.9 * Q) * (H * 0.40);
     c.clearRect(0, 0, W, H);
-    c.strokeStyle = 'rgba(181,101,74,0.1)'; c.lineWidth = 1; c.beginPath(); c.moveTo(0, cy); c.lineTo(W, cy); c.stroke();
+    c.strokeStyle = 'rgba(255,159,10,0.1)'; c.lineWidth = 1; c.beginPath(); c.moveTo(0, cy); c.lineTo(W, cy); c.stroke();
     c.beginPath();
     for (let x = 0; x <= W; x += 2) {
       const xr = x / W; let v = 0;
@@ -548,7 +548,7 @@ class Component extends DCLogic {
       v += sp * 2.0; const edge = Math.sin(Math.PI * xr); const y = cy - v * amp * (0.35 + 0.65 * edge);
       if (x === 0) c.moveTo(x, y); else c.lineTo(x, y);
     }
-    c.strokeStyle = 'rgba(255,170,45,0.9)'; c.lineWidth = 1.5; c.shadowColor = 'rgba(181,101,74,0.7)'; c.shadowBlur = 6; c.stroke(); c.shadowBlur = 0;
+    c.strokeStyle = 'rgba(255,170,45,0.9)'; c.lineWidth = 1.5; c.shadowColor = 'rgba(255,159,10,0.7)'; c.shadowBlur = 6; c.stroke(); c.shadowBlur = 0;
   }
 
   // ====================================================================
@@ -847,7 +847,7 @@ class Component extends DCLogic {
     const now = performance.now();
     if (!force && now - this._lastCommit < 55) return;
     this._lastCommit = now;
-    const color = this._phase === 'found' ? '#B5654A' : (this._phase === 'weak' ? '#8A6F5A' : '#C9A876');
+    const color = this._phase === 'found' ? '#FF9F0A' : (this._phase === 'weak' ? '#7A746A' : '#B98A3A');
     this.setState({ freq: this.freq, statusColor: color, phase: this._phase, signal: this._signal, lockedIdx: this._lockedIdx });
   }
 
@@ -1035,7 +1035,7 @@ class Component extends DCLogic {
       const nm = showStation ? st.name : 'NO SIGNAL';
       nameChars = nm.split('').map(c => ({ ch: c, ff: MONO }));
     }
-    const nameColor = showStation ? '#E8DCC0' : '#8A6F5A';
+    const nameColor = showStation ? '#FFB347' : '#6E6A62';
     // HELLA_RADIO logo: morph each glyph from the alien font to TAY Birdie, left-to-right
     const LOGO = 'HELLA_RADIO';
     const TB = "'TAY Birdie','Helvetica Neue',Helvetica,Arial,sans-serif";
@@ -1098,13 +1098,13 @@ class Component extends DCLogic {
       const lit = Math.max(0, Math.round(lv * SEG)); const segs = [];
       for (let i = 0; i < SEG; i++) {
         const on = i < lit; const peak = i === lit - 1;
-        segs.push({ bg: on ? (peak ? '#E8DCC0' : '#B5654A') : 'transparent', border: on ? '1px solid transparent' : '1px solid rgba(181,101,74,.18)', glow: on ? '0 0 4px rgba(181,101,74,.4)' : 'none' });
+        segs.push({ bg: on ? (peak ? '#FFD089' : '#FF9F0A') : 'transparent', border: on ? '1px solid transparent' : '1px solid rgba(255,159,10,.18)', glow: on ? '0 0 4px rgba(255,159,10,.4)' : 'none' });
       }
       return { segs, label: eqLabels[bi] };
     });
 
     const activeEven = Math.round(this.freq / 2) * 2;
-    const axisLabels = [88, 90, 92, 94, 96, 98, 100, 102, 104, 106, 108].map(v => ({ text: String(v), color: v === activeEven ? '#B5654A' : '#8A6F5A', glow: v === activeEven ? '0 0 8px rgba(181,101,74,.5)' : 'none', aria: 'Tune to ' + v + ' MHz', onClick: () => this.tuneToNumber(v) }));
+    const axisLabels = [88, 90, 92, 94, 96, 98, 100, 102, 104, 106, 108].map(v => ({ text: String(v), color: v === activeEven ? '#FF9F0A' : '#6E6A62', glow: v === activeEven ? '0 0 8px rgba(255,159,10,.5)' : 'none', aria: 'Tune to ' + v + ' MHz', onClick: () => this.tuneToNumber(v) }));
 
     const networkLine = this.STATIONS.filter(s => s.type !== 'anomaly').length + ' LIVE STATIONS';
     const anomOn = this._anomActive && s.isPlaying;
