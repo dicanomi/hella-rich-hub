@@ -1114,5 +1114,45 @@ class Component extends DCLogic {
   }
 }
 </script>
+<script>
+(function(){
+  // Derive hub base from this iframe's own path: .../radio/ -> .../
+  var path = location.pathname;
+  var base = path.replace(/radio\/?(index\.html)?$/, '');
+  if (base.slice(-1) !== '/') base += '/';
+  var P = [["THE EYE","the-eye"],["LOW BATTERY","low-battery"],["SPACE DRONE","space-drone"],["AETHER","aether"],["DEAD AIR","dead-air"],["ORB","orb"],["FOURCAST","fourcast"],["RADIO","radio"]];
+  var CSS = "#hrNav{position:fixed;top:16px;left:18px;z-index:2147483647;display:flex;align-items:center;gap:6px;font-family:'DM Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace}"
+  +"#hrNav .b{display:flex;align-items:center;gap:8px;padding:0 13px;height:34px;background:rgba(20,20,18,.92);border:1px solid rgba(255,255,255,.22);border-radius:3px;text-decoration:none;color:rgba(255,255,255,.72)}"
+  +"#hrNav .b:hover{background:rgba(40,40,36,.95);color:#fff}"
+  +"#hrNav .ar{font-size:12px;line-height:1}#hrNav .bl{font-size:10px;letter-spacing:.18em;text-transform:uppercase;line-height:1}"
+  +"#hrNav .sw{width:34px;height:34px;border-radius:3px;background:rgba(20,20,18,.92);border:1px solid rgba(255,255,255,.22);cursor:pointer;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.72);font-size:13px;padding:0}"
+  +"#hrNav .sw:hover{background:rgba(40,40,36,.95);color:#fff}"
+  +"#hrNav .dd{position:absolute;top:40px;left:0;min-width:176px;background:rgba(14,14,12,.98);border:1px solid rgba(255,255,255,.2);border-radius:3px;padding:4px;box-shadow:0 8px 32px rgba(0,0,0,.6);display:none}"
+  +"#hrNav .dd.open{display:block}#hrNav .ddl{padding:6px 8px;font-size:8px;letter-spacing:.22em;color:rgba(255,255,255,.4);text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:3px}"
+  +"#hrNav .it{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:2px;text-decoration:none}#hrNav .it:hover{background:rgba(255,255,255,.1)}#hrNav .it.cur{background:rgba(255,255,255,.08)}"
+  +"#hrNav .dot{width:4px;height:4px;border-radius:50%;background:rgba(80,200,120,.8);flex-shrink:0}#hrNav .t{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.78);line-height:1}";
+  function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;}
+  function build(){
+    if(document.getElementById('hrNav'))return;
+    var st=document.createElement('style');st.textContent=CSS;document.head.appendChild(st);
+    var nav=el('div');nav.id='hrNav';
+    var back=el('a','b');back.href=base;back.target='_top';
+    back.appendChild(el('span','ar','←'));back.appendChild(el('span','bl','hella.rich'));
+    nav.appendChild(back);
+    var wrap=el('div');wrap.style.position='relative';
+    var btn=el('button','sw','☰');
+    var dd=el('div','dd');dd.appendChild(el('div','ddl','Products'));
+    for(var i=0;i<P.length;i++){(function(label,slug){var a=el('a','it'+(slug==='radio'?' cur':''));a.href=base+slug;a.target='_top';a.appendChild(el('span','dot'));a.appendChild(el('span','t',label));dd.appendChild(a);})(P[i][0],P[i][1]);}
+    wrap.appendChild(btn);wrap.appendChild(dd);nav.appendChild(wrap);
+    document.body.appendChild(nav);
+    btn.addEventListener('click',function(e){e.stopPropagation();dd.classList.toggle('open');});
+    document.addEventListener('click',function(e){if(!dd.contains(e.target)&&e.target!==btn)dd.classList.remove('open');});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')dd.classList.remove('open');});
+  }
+  function boot(){build();new MutationObserver(function(){build();}).observe(document.body,{childList:true});}
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',function(){setTimeout(boot,200);});}else{setTimeout(boot,200);}
+})();
+</script>
+<!-- hella-nav-iframe -->
 </body>
 </html>
