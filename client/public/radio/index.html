@@ -203,31 +203,31 @@ class Component extends DCLogic {
     const soma = (id) => 'https://ice.somafm.com/' + id + '-128-mp3';
     return [
       // ---- LOWER BAND 88-102 MHz : ambient / downtempo / trip-hop / chill / jazz ----
-      { frequency: 88.1,  name: 'GROOVE SALAD',          type: 'live', band: 'day',   streams: [ soma('groovesalad') ] },
-      { frequency: 88.7,  name: 'SECRET AGENT',          type: 'live', band: 'day',   streams: [ soma('secretagent') ] },
-      { frequency: 89.3,  name: 'ILL STREET LOUNGE',     type: 'live', band: 'day',   streams: [ soma('illstreet') ] },
-      { frequency: 90.1,  name: 'DEEP SPACE ONE',        type: 'live', band: 'day',   streams: [ soma('deepspaceone') ] },
-      { frequency: 91.4,  name: 'NTS RADIO',             type: 'live', band: 'day',   streams: [ 'https://stream-relay-geo.ntslive.net/stream', soma('cliqhop') ] },
-      { frequency: 93.8,  name: 'DUBLAB',                type: 'live', band: 'day',   streams: [ 'https://dublab.out.airtime.pro/dublab_a', soma('sonicuniverse') ] },
-      { frequency: 94.5,  name: 'DUBSTEP BEYOND',        type: 'live', band: 'day',   streams: [ soma('dubstep'), 'https://ice1.somafm.com/dubstep-128-mp3', 'https://ice2.somafm.com/dubstep-128-mp3' ] },
-      { frequency: 95.2,  name: 'THE LOT RADIO',         type: 'live', band: 'day',   streams: [ 'https://thelot.out.airtime.pro/thelot_a', soma('suburbsofgoa') ] },
-      { frequency: 96.4,  name: 'NOODS RADIO',           type: 'live', band: 'day',   streams: [ soma('fluid') ] },
-      { frequency: 97.8,  name: 'AMBIENT SLEEPING PILL', type: 'live', band: 'day',   streams: [ 'https://radio.stereoscenic.com/asp-h', soma('dronezone') ] },
-      { frequency: 99.3,  name: 'THE DARK ZONE',         type: 'live', band: 'day',   streams: [ soma('darkzone'), 'https://ice1.somafm.com/darkzone-128-mp3', 'https://ice2.somafm.com/darkzone-128-mp3' ] },
-      { frequency: 101.7, name: 'DI.FM LOFI LOUNGE',     type: 'live', band: 'day',   streams: [ soma('gsclassic') ] },
-      { frequency: 102.7, name: 'FIP GROOVE',            type: 'live', band: 'day',   streams: [ 'https://icecast.radiofrance.fr/fipgroove-midfi.mp3', soma('missioncontrol') ] },
+      { frequency: 88.1,  name: 'VELVET DRIFT',          type: 'live', band: 'day',   streams: [ soma('groovesalad') ] },
+      { frequency: 88.7,  name: 'MIDNIGHT CIPHER',          type: 'live', band: 'day',   streams: [ soma('secretagent') ] },
+      { frequency: 89.3,  name: 'AMBER HOURS',     type: 'live', band: 'day',   streams: [ soma('illstreet') ] },
+      { frequency: 90.1,  name: 'OUTER FIELD',        type: 'live', band: 'day',   streams: [ soma('deepspaceone') ] },
+      { frequency: 91.4,  name: 'OPEN SPECTRUM',             type: 'live', band: 'day',   streams: [ 'https://stream-relay-geo.ntslive.net/stream', soma('cliqhop') ] },
+      { frequency: 93.8,  name: 'ECHO CHAMBER',                type: 'live', band: 'day',   streams: [ 'https://dublab.out.airtime.pro/dublab_a', soma('sonicuniverse') ] },
+      { frequency: 94.5,  name: 'LOW ORBIT',        type: 'live', band: 'day',   streams: [ soma('dubstep'), 'https://ice1.somafm.com/dubstep-128-mp3', 'https://ice2.somafm.com/dubstep-128-mp3' ] },
+      { frequency: 95.2,  name: 'CORNER SIGNAL',         type: 'live', band: 'day',   streams: [ 'https://thelot.out.airtime.pro/thelot_a', soma('suburbsofgoa') ] },
+      { frequency: 96.4,  name: 'BARE WIRE',           type: 'live', band: 'day',   streams: [ soma('fluid') ] },
+      { frequency: 97.8,  name: 'SLOW HALO', type: 'live', band: 'day',   streams: [ 'https://radio.stereoscenic.com/asp-h', soma('dronezone') ] },
+      { frequency: 99.3,  name: 'NULL FIELD',         type: 'live', band: 'day',   streams: [ soma('darkzone'), 'https://ice1.somafm.com/darkzone-128-mp3', 'https://ice2.somafm.com/darkzone-128-mp3' ] },
+      { frequency: 101.7, name: 'PAPER STATIC',     type: 'live', band: 'day',   streams: [ soma('gsclassic') ] },
+      { frequency: 102.7, name: 'WARM CURRENT',            type: 'live', band: 'day',   streams: [ 'https://icecast.radiofrance.fr/fipgroove-midfi.mp3', soma('missioncontrol') ] },
 
       // ---- UPPER BAND 103-108 MHz : house / techno / bass / electro / leftfield ----
-      { frequency: 103.1, name: 'HÖR BERLIN',      type: 'live', band: 'night', streams: [ 'https://hoer-stream.out.airtime.pro/hoer-stream_a', soma('dubstep') ] },
-      { frequency: 103.7, name: 'RINSE FM',        type: 'live', band: 'night', streams: [ 'https://admin.stream.rinse.fm/proxy/rinse_fm/stream', soma('beatblender') ] },
-      { frequency: 104.2, name: 'REFUGE WORLDWIDE', type: 'live', band: 'night', streams: [ 'https://streaming.radio.co/s3699c5e49/listen', soma('beatblender'), soma('cliqhop') ] },
-      { frequency: 104.6, name: 'KIOSK RADIO',     type: 'live', band: 'night', streams: [ 'https://kioskradio.out.airtime.pro/kioskradio_a', soma('cliqhop') ] },
-      { frequency: 104.9, name: 'DEF CON RADIO',   type: 'live', band: 'night', streams: [ soma('defcon'), 'https://ice1.somafm.com/defcon-128-mp3', 'https://ice2.somafm.com/defcon-128-mp3' ] },
-      { frequency: 105.5, name: 'FIP ELECTRO',     type: 'live', band: 'night', streams: [ 'https://icecast.radiofrance.fr/fipelectro-midfi.mp3', soma('vaporwaves') ] },
-      { frequency: 106.1, name: 'RADIO ALHARA',    type: 'live', band: 'night', streams: [ 'https://radioalhara.out.airtime.pro/radioalhara_a', soma('sf1033') ] },
-      { frequency: 106.7, name: 'SUB FM',          type: 'live', band: 'night', streams: [ 'https://sub.fm/stream', soma('darkzone') ] },
-      { frequency: 107.1, name: 'MUTANT RADIO',    type: 'live', band: 'night', streams: [ 'https://listen.radioking.com/radio/282820/stream/328621', soma('cliqhop'), soma('vaporwaves') ] },
-      { frequency: 107.5, name: 'RADIO RAHEEM',    type: 'live', band: 'night', streams: [ 'https://radioraheem.out.airtime.pro/radioraheem_a', soma('spacestation') ] },
+      { frequency: 103.1, name: 'WHITE ROOM',      type: 'live', band: 'night', streams: [ 'https://hoer-stream.out.airtime.pro/hoer-stream_a', soma('dubstep') ] },
+      { frequency: 103.7, name: 'PIRATE TIDE',        type: 'live', band: 'night', streams: [ 'https://admin.stream.rinse.fm/proxy/rinse_fm/stream', soma('beatblender') ] },
+      { frequency: 104.2, name: 'CONCRETE BLOOM', type: 'live', band: 'night', streams: [ 'https://streaming.radio.co/s3699c5e49/listen', soma('beatblender'), soma('cliqhop') ] },
+      { frequency: 104.6, name: 'GLASS BOOTH',     type: 'live', band: 'night', streams: [ 'https://kioskradio.out.airtime.pro/kioskradio_a', soma('cliqhop') ] },
+      { frequency: 104.9, name: 'GHOST PROTOCOL',   type: 'live', band: 'night', streams: [ soma('defcon'), 'https://ice1.somafm.com/defcon-128-mp3', 'https://ice2.somafm.com/defcon-128-mp3' ] },
+      { frequency: 105.5, name: 'NEON CIRCUIT',     type: 'live', band: 'night', streams: [ 'https://icecast.radiofrance.fr/fipelectro-midfi.mp3', soma('vaporwaves') ] },
+      { frequency: 106.1, name: 'BORDERLESS',    type: 'live', band: 'night', streams: [ 'https://radioalhara.out.airtime.pro/radioalhara_a', soma('sf1033') ] },
+      { frequency: 106.7, name: 'DEEP PRESSURE',          type: 'live', band: 'night', streams: [ 'https://sub.fm/stream', soma('darkzone') ] },
+      { frequency: 107.1, name: 'STRANGE MATTER',    type: 'live', band: 'night', streams: [ 'https://listen.radioking.com/radio/282820/stream/328621', soma('cliqhop'), soma('vaporwaves') ] },
+      { frequency: 107.5, name: 'MAX VOLUME',    type: 'live', band: 'night', streams: [ 'https://radioraheem.out.airtime.pro/radioraheem_a', soma('spacestation') ] },
       { frequency: 107.9, name: 'SIGNAL ANOMALY', type: 'anomaly', band: 'night', streams: [] },
     ];
   })();
@@ -286,29 +286,29 @@ class Component extends DCLogic {
   ];
   // Per-station signature lines, tied to each station's identity
   STATION_LINES = {
-    'GROOVE SALAD': ['GROOVE SALAD CONTAINS NO VEGETABLES, ONLY REVERB AND REGRET', 'STUDIES SHOW DOWNTEMPO ADDS 4 YEARS TO YOUR LIFE AND REMOVES 4 FROM YOUR AMBITION', 'THE SALAD IS TOSSED NIGHTLY BY AN ENTITY THAT DECLINES TO BE NAMED'],
-    'SECRET AGENT': ['SECRET AGENT HAS BEEN SURVEILLING YOU SINCE TRACK ONE. YOU LOOK GREAT', 'CLASSIFIED: THE BOSSA NOVA WAS A CODED CONFESSION ALL ALONG'],
-    'ILL STREET LOUNGE': ['THE LOUNGE NEVER CLOSES BECAUSE TIME DOES NOT WORK IN HERE', 'EVERY MARTINI ORDERED ON THIS FREQUENCY ARRIVES IN A PARALLEL BAR'],
-    'DEEP SPACE ONE': ['DEEP SPACE ONE BROADCASTS FROM A POINT THAT NO LONGER EXISTS', 'VOYAGER HEARD THIS STATION AND DECIDED TO KEEP GOING'],
-    'NTS RADIO': ['NTS STANDS FOR NOTHING. THAT IS THE ENTIRE POINT', 'SOMEWHERE A SELECTOR IS PLAYING A RECORD THAT DOES NOT OFFICIALLY EXIST'],
-    'DUBLAB': ['DUBLAB SCIENTISTS HAVE SUCCESSFULLY WEAPONIZED THE OFFBEAT'],
-    'DUBSTEP BEYOND': ['THE BASS DROP REGISTERED ON A SEISMOGRAPH 600 MILES AWAY', 'WARNING: THIS WOBBLE HAS ACHIEVED SENTIENCE AND DEMANDS RIGHTS'],
-    'THE LOT RADIO': ['BROADCASTING FROM A SHIPPING CONTAINER THAT IS TECHNICALLY A NATION NOW'],
-    'NOODS RADIO': ['NO ADS. NO BOSSES. NO CLOTHES. NOODS RADIO'],
-    'AMBIENT SLEEPING PILL': ['DO NOT OPERATE HEAVY MACHINERY. DO NOT OPERATE LIGHT MACHINERY EITHER', 'SIDE EFFECTS INCLUDE PEACE, DROWSINESS, AND BRIEF GLIMPSES OF THE INFINITE'],
-    'THE DARK ZONE': ['THE DARK ZONE IS WHERE DELETED FILES GO TO DANCE', 'IF YOU CAN HEAR THIS, YOU HAVE ALREADY STAYED TOO LONG. WELCOME'],
-    'DI.FM LOFI LOUNGE': ['THE SAME 4 BARS HAVE LOOPED SINCE 2016. THE STUDENT NEVER GRADUATED'],
-    'FIP GROOVE': ['FIP IS FRENCH FOR TRUST US, IT GETS WEIRDER'],
-    'HÖR BERLIN': ['HÖR: A WHITE TILED ROOM WHERE TIME GOES TO SWEAT'],
-    'RINSE FM': ['RINSE WAS ILLEGAL FOR 16 YEARS. THE CRIME WAS BEING TOO GOOD'],
-    'REFUGE WORLDWIDE': ['REFUGE BROADCASTS FROM A FORMER FUNERAL HOME. THE ACOUSTICS ARE TO DIE FOR'],
-    'KIOSK RADIO': ['KIOSK FITS 40 PEOPLE AND ONE EXISTENTIAL CRISIS'],
-    'DEF CON RADIO': ['DEF CON RADIO: IF YOU CAN READ THIS, THEY ARE ALREADY IN YOUR ROUTER', 'THIS TRANSMISSION IS ENCRYPTED. YOU DECODED IT WITH YOUR EARS'],
-    'FIP ELECTRO': ['ELECTRO IS JUST THE GRAND ORDER OF DESIGN SHOWING OFF'],
-    'RADIO ALHARA': ['ALHARA MEANS THE NEIGHBORHOOD. EVERYONE IS INVITED, ESPECIALLY YOU'],
-    'SUB FM': ['SUB FM: SO LOW YOU FEEL IT IN A TOOTH YOU FORGOT YOU HAD'],
-    'MUTANT RADIO': ['MUTANT RADIO BROADCASTS FROM A FORMER POWER PLANT. IT IS STILL HUMMING', 'THE MUTATION IS WORKING. YOU HAVE NOT CHANGED THE STATION IN AN HOUR'],
-    'RADIO RAHEEM': ['RADIO RAHEEM REFUSES TO TURN IT DOWN. THAT IS THE ENTIRE EDITORIAL POLICY'],
+    'VELVET DRIFT': ['VELVET DRIFT CONTAINS NO VELVET, ONLY REVERB AND REGRET', 'STUDIES SHOW DOWNTEMPO ADDS 4 YEARS TO YOUR LIFE AND REMOVES 4 FROM YOUR AMBITION', 'THE DRIFT IS TUNED NIGHTLY BY AN ENTITY THAT DECLINES TO BE NAMED'],
+    'MIDNIGHT CIPHER': ['MIDNIGHT CIPHER HAS BEEN SURVEILLING YOU SINCE TRACK ONE. YOU LOOK GREAT', 'CLASSIFIED: THE BOSSA NOVA WAS A CODED CONFESSION ALL ALONG'],
+    'AMBER HOURS': ['AMBER HOURS NEVER CLOSES BECAUSE TIME DOES NOT WORK IN HERE', 'EVERY MARTINI ORDERED ON THIS FREQUENCY ARRIVES IN A PARALLEL BAR'],
+    'OUTER FIELD': ['OUTER FIELD BROADCASTS FROM A POINT THAT NO LONGER EXISTS', 'VOYAGER HEARD THIS FREQUENCY AND DECIDED TO KEEP GOING'],
+    'OPEN SPECTRUM': ['OPEN SPECTRUM PLAYS EVERYTHING AND PROMISES NOTHING', 'SOMEWHERE A SELECTOR IS PLAYING A RECORD THAT DOES NOT OFFICIALLY EXIST'],
+    'ECHO CHAMBER': ['ECHO CHAMBER SCIENTISTS HAVE SUCCESSFULLY WEAPONIZED THE OFFBEAT', 'THE DELAY ON THIS FREQUENCY HAS OUTLIVED THREE OF ITS ENGINEERS'],
+    'LOW ORBIT': ['THE BASS DROP REGISTERED ON A SEISMOGRAPH 600 MILES AWAY', 'WARNING: THIS WOBBLE HAS ACHIEVED SENTIENCE AND DEMANDS RIGHTS'],
+    'CORNER SIGNAL': ['BROADCASTING FROM A SHIPPING CONTAINER THAT IS TECHNICALLY A NATION NOW'],
+    'BARE WIRE': ['NO ADS. NO BOSSES. NO SAFETY NET. BARE WIRE'],
+    'SLOW HALO': ['DO NOT OPERATE HEAVY MACHINERY. DO NOT OPERATE LIGHT MACHINERY EITHER', 'SIDE EFFECTS INCLUDE PEACE, DROWSINESS, AND BRIEF GLIMPSES OF THE INFINITE'],
+    'NULL FIELD': ['NULL FIELD IS WHERE DELETED FILES GO TO DANCE', 'IF YOU CAN HEAR THIS, YOU HAVE ALREADY STAYED TOO LONG. WELCOME'],
+    'PAPER STATIC': ['THE SAME 4 BARS HAVE LOOPED SINCE 2016. THE STUDENT NEVER GRADUATED'],
+    'WARM CURRENT': ['WARM CURRENT IS FRENCH FOR TRUST US, IT GETS WEIRDER'],
+    'WHITE ROOM': ['WHITE ROOM: A TILED CHAMBER WHERE TIME GOES TO SWEAT'],
+    'PIRATE TIDE': ['PIRATE TIDE WAS ILLEGAL FOR 16 YEARS. THE CRIME WAS BEING TOO GOOD'],
+    'CONCRETE BLOOM': ['CONCRETE BLOOM BROADCASTS FROM A FORMER FUNERAL HOME. THE ACOUSTICS ARE TO DIE FOR'],
+    'GLASS BOOTH': ['GLASS BOOTH FITS 40 PEOPLE AND ONE EXISTENTIAL CRISIS'],
+    'GHOST PROTOCOL': ['GHOST PROTOCOL: IF YOU CAN READ THIS, THEY ARE ALREADY IN YOUR ROUTER', 'THIS TRANSMISSION IS ENCRYPTED. YOU DECODED IT WITH YOUR EARS'],
+    'NEON CIRCUIT': ['ELECTRO IS JUST THE GRAND ORDER OF DESIGN SHOWING OFF'],
+    'BORDERLESS': ['BORDERLESS MEANS EVERYONE IS INVITED, ESPECIALLY YOU'],
+    'DEEP PRESSURE': ['DEEP PRESSURE: SO LOW YOU FEEL IT IN A TOOTH YOU FORGOT YOU HAD'],
+    'STRANGE MATTER': ['STRANGE MATTER BROADCASTS FROM A FORMER POWER PLANT. IT IS STILL HUMMING', 'THE MUTATION IS WORKING. YOU HAVE NOT CHANGED THE STATION IN AN HOUR'],
+    'MAX VOLUME': ['MAX VOLUME REFUSES TO TURN IT DOWN. THAT IS THE ENTIRE EDITORIAL POLICY'],
     'SIGNAL ANOMALY': ['SOURCE UNKNOWN. ORIGIN UNVERIFIED. LANGUAGE UNRECOGNIZED', 'THIS IS NOT A STATION. THIS IS SOMETHING LISTENING BACK'],
   };
   // SIGNAL ANOMALY (107.9) — procedurally synthesized, no recordings, no copyright
@@ -323,13 +323,9 @@ class Component extends DCLogic {
     { t: '赫拉电台',          ff: 'SANS' },   // Chinese Mandarin
     { t: '헬라 라디오',        ff: 'SANS' },   // Korean Hangul
     { t: '赫拉電台',          ff: 'SANS' },   // Cantonese (Traditional)
-    { t: 'เฮลลา เรดิโอ',      ff: 'SANS' },   // Thai
     { t: 'हेला रेडियो',        ff: 'SANS' },   // Hindi (Devanagari)
-    { t: 'ஹெல்லா ரேடியோ',    ff: 'SANS' },   // Tamil
-    { t: 'হেল্লা রেডিও',       ff: 'SANS' },   // Bengali
     { t: 'הלה רדיו',         ff: 'SANS' },   // Hebrew
     { t: 'هيلا راديو',        ff: 'SANS' },   // Arabic
-    { t: '⟟⋏⏁⌇ ⍀⏃⎅⟟⍜',     ff: 'SANS' },   // alien / unknown signal
   ];
   _logoRestIdx = 0; _logoSwap = null;  // current resting language + active crossfade
   rotateLogo = () => {
