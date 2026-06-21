@@ -17,7 +17,7 @@
  */
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { Route, Switch, Router as WouterRouter } from "wouter";
+import { Route, Switch } from "wouter";
 import { Suspense, lazy, useState } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { HellaRichNav } from "./components/HellaRichNav";
@@ -36,6 +36,7 @@ const AetherPage     = lazy(() => import("./pages/AetherPage"));
 const OrbPage        = lazy(() => import("./pages/OrbPage"));
 const DeadAirPage    = lazy(() => import("./pages/DeadAirPage"));
 const FourcastPage   = lazy(() => import("./pages/FourcastPage"));
+const RadioPage      = lazy(() => import("./pages/RadioPage"));
 
 // Minimal fallback — dark screen, no spinner (matches hella.rich aesthetic)
 function PageFallback() {
@@ -70,7 +71,6 @@ function Router() {
     <>
       {introActive && <IntroSplash onComplete={handleIntroComplete} />}
       <Suspense fallback={<PageFallback />}>
-        <WouterRouter base={(import.meta.env.VITE_ROUTER_BASE as string) || ""}>
         <Switch>
           <Route path="/" component={Landing} />
           <Route path="/the-eye" component={TheEyePage} />
@@ -80,9 +80,9 @@ function Router() {
           <Route path="/orb" component={OrbPage} />
           <Route path="/dead-air" component={DeadAirPage} />
           <Route path="/fourcast" component={FourcastPage} />
+          <Route path="/radio" component={RadioPage} />
           <Route component={NotFound} />
         </Switch>
-        </WouterRouter>
       </Suspense>
     </>
   );
