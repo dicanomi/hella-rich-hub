@@ -23,6 +23,7 @@ const PROJECTS: NavProject[] = [
   { title: 'DEAD AIR', slug: '/dead-air' },
   { title: 'ORB', slug: '/orb' },
   { title: 'FOURCAST', slug: '/fourcast' },
+  { title: 'RADIO', slug: '/radio' },
 ];
 
 export function HellaRichNav() {

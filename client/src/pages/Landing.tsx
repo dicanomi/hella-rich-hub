@@ -616,7 +616,7 @@ export default function Landing() {
           flexDirection: 'column',
           gap: 'clamp(3px,0.4vw,6px)',
         }}>
-          <ProjectCard slug="radio" title="HELLA_RADIO" tagline="A late-night signal you tune into." cta="Tune In" image={RADIO_CARD} index={1} featured={true} externalHref="https://radio.hella.rich/" enterDelay={80} />
+          <ProjectCard slug="radio" title="HELLA_RADIO" tagline="A late-night signal you tune into." cta="Tune In" image={RADIO_CARD} index={1} featured={true} enterDelay={80} />
           <ProjectCard slug="orb" title="ORB" tagline="A living object." cta="Touch It" image={CARD_ORB} index={2} enterDelay={140} />
           <ProjectCard slug="the-eye" title="THE EYE" tagline="A strange object that notices you." cta="Look" image={CARD_THE_EYE} index={3} enterDelay={200} />
           <ProjectCard slug="low-battery" title="LOW BATTERY" tagline="The sound you ignore until it becomes your personality." cta="Begin Ignoring" image={CARD_LOW_BATTERY} index={4} enterDelay={260} />
