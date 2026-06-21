@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; background:#000; }
+  body{ -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+  @font-face{ font-family:'TAY Birdie'; src:url('TAYBirdie.otf') format('opentype'); font-display:swap; }
+  @font-face{ font-family:'Galactic'; src:url('StandardGalacticAlphabet-Regular.ttf') format('truetype'); font-display:swap; }
+  @keyframes pr-warm{ 0%,100%{ opacity:1; } 50%{ opacity:.66; } }
+  @keyframes pr-air{ 0%,100%{ opacity:1; box-shadow:0 0 9px rgba(255,59,48,.95), 0 0 18px rgba(255,59,48,.55); } 50%{ opacity:.5; box-shadow:0 0 5px rgba(255,59,48,.55); } }
+  @keyframes pr-marquee{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+  input[type=range].pr-vol{ -webkit-appearance:none; appearance:none; background:transparent; height:12px; cursor:pointer; width:170px; }
+  input[type=range].pr-vol::-webkit-slider-runnable-track{ height:1px; background:rgba(255,159,10,.3); }
+  input[type=range].pr-vol::-webkit-slider-thumb{ -webkit-appearance:none; width:9px; height:9px; margin-top:-4px; border-radius:50%; background:#FF9F0A; box-shadow:0 0 6px rgba(255,159,10,.6); }
+  input[type=range].pr-vol::-moz-range-track{ height:1px; background:rgba(255,159,10,.3); }
+  input[type=range].pr-vol::-moz-range-thumb{ width:9px; height:9px; border:none; border-radius:50%; background:#FF9F0A; }
+  input[type=range].pr-vol:focus{ outline:none; }
+</style>
+</helmet>
+
+<div style="min-height:100vh; width:100%; background:#000000; color:#9A948A; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; padding:clamp(22px,4vw,56px); display:flex; flex-direction:column; gap:clamp(22px,3vw,40px);">
+
+  <!-- HEADER -->
+  <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:24px; flex-wrap:wrap;">
+    <div>
+      <div onMouseEnter="{{ onLogoHover }}" onMouseLeave="{{ onLogoLeave }}" style="font-family:'TAY Birdie','Helvetica Neue',Helvetica,Arial,sans-serif; font-size:clamp(30px,5.2vw,52px); font-weight:400; letter-spacing:.06em; line-height:.95; color:#8A2B12; text-shadow:0 0 13px rgba(138,43,18,.45); display:inline-flex; cursor:default;"><sc-for list="{{ logoChars }}" as="lc" hint-placeholder-count="11"><span style="font-family:{{ lc.ff }}; white-space:pre; opacity:{{ lc.op }}; transition:opacity .22s ease;">{{ lc.ch }}</span></sc-for></div>
+      <div style="margin-top:12px; font-size:11px; font-weight:500; letter-spacing:.34em; color:#6E6A62;">GLOBAL SIGNAL NETWORK</div>
+      <div style="margin-top:18px; font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace; font-size:10px; letter-spacing:.22em; color:#4E4B45;">NODE_1956 &nbsp;//&nbsp; LIVE TRANSMISSIONS</div>
+    </div>
+    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:9px;">
+      <div style="display:flex; align-items:center; gap:9px; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:11px; letter-spacing:.18em; color:#8A847A;">
+        <span style="width:6px; height:6px; border-radius:50%; background:#FF9F0A; box-shadow:0 0 7px rgba(255,159,10,.7);"></span>
+        UTC {{ utc }}
+      </div>
+      <div style="font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:9.5px; letter-spacing:.2em; color:#6E6A62;">{{ networkLine }}</div>
+    </div>
+  </div>
+
+  <!-- PIRATE FEED MARQUEE (drag to scrub · hold to pause · release to resume) -->
+  <div ref="{{ setTickerWrapRef }}" style="border-top:1px solid rgba(255,159,10,.12); border-bottom:1px solid rgba(255,159,10,.12); padding:10px 0; overflow:hidden; cursor:grab; -webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent); mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);">
+    <div ref="{{ setTickerTrackRef }}" onPointerDown="{{ onTickerDown }}" onPointerMove="{{ onTickerMove }}" onPointerUp="{{ onTickerUp }}" onPointerCancel="{{ onTickerUp }}" style="display:flex; width:max-content; white-space:nowrap; will-change:transform; touch-action:pan-y; user-select:none; cursor:grab; font-family:'TAY Birdie','Helvetica Neue',Helvetica,Arial,sans-serif; font-size:14px; font-weight:400; letter-spacing:.12em; color:#B98A3A;">
+      <sc-for list="{{ tickerItems }}" as="it" hint-placeholder-count="6">
+        <a href="{{ it.url }}" target="_blank" rel="noopener noreferrer" onClick="{{ onTickerItemClick }}" draggable="false" style="padding-right:52px; color:#B98A3A; text-decoration:none; white-space:nowrap;">{{ it.text }}</a>
+      </sc-for>
+      <sc-for list="{{ tickerItems }}" as="it" hint-placeholder-count="6">
+        <a href="{{ it.url }}" target="_blank" rel="noopener noreferrer" onClick="{{ onTickerItemClick }}" draggable="false" style="padding-right:52px; color:#B98A3A; text-decoration:none; white-space:nowrap;">{{ it.text }}</a>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div style="display:flex; align-items:center; gap:clamp(28px,4vw,56px); flex-wrap:wrap;">
+
+    <!-- KNOB -->
+    <div style="flex:1 1 280px; min-width:260px; display:flex; flex-direction:column; align-items:center;">
+      <div ref="{{ setKnobAreaRef }}" onPointerDown="{{ onKnobPointerDown }}" onWheel="{{ onKnobWheel }}" role="slider" aria-label="Tuning knob" aria-valuemin="88" aria-valuemax="108" aria-valuenow="{{ freqStr }}" tabindex="0" style="position:relative; width:clamp(240px,26vw,340px); aspect-ratio:1; cursor:grab; touch-action:none; outline:none; user-select:none;">
+        <div style="position:absolute; inset:0; border-radius:50%; border:1px solid rgba(255,159,10,.5);"></div>
+        <div style="position:absolute; inset:3%; border-radius:50%; background:repeating-conic-gradient(from 0deg, rgba(255,159,10,.5) 0deg .5deg, transparent .5deg 5deg); -webkit-mask:radial-gradient(closest-side, transparent 90%, #000 91% 98%, transparent 99%); mask:radial-gradient(closest-side, transparent 90%, #000 91% 98%, transparent 99%);"></div>
+        <div style="position:absolute; inset:12%; border-radius:50%; border:1px solid rgba(255,159,10,.16);"></div>
+        <div ref="{{ setKnobRef }}" style="position:absolute; inset:5%; border-radius:50%; will-change:transform;">
+          <div ref="{{ setDotARef }}" style="position:absolute; top:-2px; left:50%; transform:translateX(-50%); width:10px; height:10px; border-radius:50%; background:#FFB45A; box-shadow:0 0 11px rgba(255,159,10,.85);"></div>
+        </div>
+        <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+          <div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:clamp(40px,6vw,64px); font-weight:600; letter-spacing:.01em; color:#FF9F0A; text-shadow:0 0 22px rgba(255,159,10,.35); font-variant-numeric:tabular-nums; line-height:1; -webkit-mask-image:radial-gradient(circle,#000 1.2px,transparent 1.7px); -webkit-mask-size:4px 4px; mask-image:radial-gradient(circle,#000 1.2px,transparent 1.7px); mask-size:4px 4px;">{{ freqStr }}</div>
+          <div style="margin-top:12px; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:12px; letter-spacing:.34em; color:#8A847A;">MHz</div>
+        </div>
+      </div>
+      <div style="margin-top:24px; width:clamp(240px,26vw,320px); display:flex; justify-content:space-between; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:10px; letter-spacing:.12em; color:#54514A;">
+        <span>88.00</span><span>108.00</span>
+      </div>
+      <div style="margin-top:14px; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:9.5px; letter-spacing:.28em; color:#4E4B45;">SCROLL OR DRAG TO TUNE</div>
+      <div style="margin-top:28px; width:clamp(240px,26vw,320px); border-top:1px solid rgba(255,159,10,.12); padding-top:20px; display:flex; align-items:center; gap:16px;">
+        <span style="font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:9.5px; letter-spacing:.24em; color:#6E6A62;">VOL</span>
+        <input type="range" class="pr-vol" min="0" max="100" value="{{ volume }}" onInput="{{ onVolume }}" aria-label="Volume" style="accent-color:#FF9F0A; flex:1; width:auto;">
+      </div>
+    </div>
+
+    <!-- CENTER COLUMN -->
+    <div style="flex:2 1 440px; min-width:320px; display:flex; flex-direction:column; gap:clamp(20px,2.4vw,28px);">
+
+      <!-- SPECTRUM -->
+      <div style="background:rgba(18,14,9,.35); border:1px solid rgba(255,159,10,.28); border-radius:14px; box-shadow:0 0 0 1px rgba(0,0,0,.4); padding:22px 24px 18px;">
+        <div style="font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:9.5px; letter-spacing:.26em; color:#6E6A62;">FREQUENCY SPECTRUM</div>
+        <div ref="{{ setSpecWrapRef }}" onPointerDown="{{ onSpecPointerDown }}" onWheel="{{ onKnobWheel }}" style="position:relative; margin-top:16px; cursor:grab; touch-action:none; user-select:none;">
+          <div style="position:relative; display:flex; justify-content:space-between; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:11px; letter-spacing:.06em; height:18px;">
+            <sc-for list="{{ axisLabels }}" as="lab" hint-placeholder-count="11">
+              <button type="button" onClick="{{ lab.onClick }}" aria-label="{{ lab.aria }}" style="appearance:none; -webkit-appearance:none; background:transparent; border:none; padding:2px 4px; margin:0; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:11px; letter-spacing:.06em; line-height:1; cursor:pointer; color:{{ lab.color }}; text-shadow:{{ lab.glow }}; transition:color .15s ease, text-shadow .15s ease;" style-hover="color:#FF9F0A; text-shadow:0 0 9px rgba(255,159,10,.7);">{{ lab.text }}</button>
+            </sc-for>
+          </div>
+          <canvas ref="{{ setSpecCanvasRef }}" style="display:block; width:100%; height:172px; margin-top:8px;"></canvas>
+        </div>
+      </div>
+
+      <!-- SIGNAL WINDOW -->
+      <div style="background:rgba(18,14,9,.35); border:1px solid rgba(255,159,10,.28); border-radius:14px; box-shadow:0 0 0 1px rgba(0,0,0,.4); padding:24px 28px; min-height:176px; overflow:hidden; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px;">
+        <div style="width:100%; height:46px; display:flex; align-items:center; justify-content:center; text-align:center; overflow:hidden;">
+          <div style="display: flex; justify-content: center; align-items: center; flex-wrap: nowrap; font-size: clamp(15px,2.3vw,28px); font-weight: 700; line-height: 1; color: {{ nameColor }}; text-shadow: 0 0 16px rgba(255,159,10,.32); max-width: 100%; overflow: hidden; -webkit-mask-image: radial-gradient(circle,#000 1px,transparent 1.5px); -webkit-mask-size: 3px 3px; mask-image: radial-gradient(circle,#000 1px,transparent 1.5px); mask-size: 3px 3px; animation: pr-warm 3.6s ease-in-out infinite">
+            <sc-for list="{{ nameChars }}" as="c" hint-placeholder-count="12">
+              <span style="display: inline-block; width: .66em; text-align: center; font-family: {{ c.ff }};">{{ c.ch }}</span>
+            </sc-for>
+          </div>
+        </div>
+        <div style="min-height:18px; display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:nowrap;">
+          <sc-if value="{{ onAir }}" hint-placeholder-val="{{ false }}">
+            <span style="display:inline-flex; align-items:center; gap:8px; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:9.5px; font-weight:600; letter-spacing:.28em; color:#FF6A5A;">
+              <span ref="{{ setAirDotRef }}" style="width:7px; height:7px; border-radius:50%; background:#FF3B30; box-shadow:0 0 9px rgba(255,59,48,.95), 0 0 18px rgba(255,59,48,.55); animation:pr-air 2.4s ease-in-out infinite;"></span>
+              ON AIR
+            </span>
+          </sc-if>
+          <sc-if value="{{ showReroute }}" hint-placeholder-val="{{ false }}">
+            <span style="font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:9px; letter-spacing:.22em; color:#9A7A3A;">SIGNAL REROUTED</span>
+          </sc-if>
+        </div>
+        <div style="width:min(440px,88%); border:1px solid rgba(255,159,10,.28); border-radius:8px; box-shadow:0 0 0 1px rgba(0,0,0,.3); padding:6px 12px;">
+          <canvas ref="{{ setSignalCanvasRef }}" style="display:block; width:100%; height:40px;"></canvas>
+        </div>
+      </div>
+
+      <!-- TRANSPORT -->
+      <div style="display:flex; align-items:center; justify-content:center; gap:clamp(26px,4vw,48px); padding:8px 0;">
+        <button onClick="{{ onPrev }}" aria-label="Previous signal" style="width:62px; height:62px; border-radius:50%; border:1px solid rgba(255,159,10,.45); background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s ease, transform .12s ease, border-color .15s ease;" style-hover="background:rgba(255,159,10,.1); border-color:rgba(255,159,10,.7);" style-active="transform:scale(.92);">
+          <span style="display:inline-flex; align-items:center; gap:2px;">
+            <span style="width:2px; height:14px; background:#FF9F0A;"></span>
+            <span style="width:0; height:0; border-top:7px solid transparent; border-bottom:7px solid transparent; border-right:11px solid #FF9F0A;"></span>
+          </span>
+        </button>
+        <button ref="{{ setPlayBtnRef }}" onClick="{{ onPlay }}" aria-label="{{ playLabel }}" style="width:96px; height:96px; border-radius:50%; border:1px solid rgba(255,159,10,.55); background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s ease, transform .12s ease, border-color .15s ease;" style-hover="background:rgba(255,159,10,.1); border-color:rgba(255,159,10,.8);" style-active="transform:scale(.94);">
+          <sc-if value="{{ isPlaying }}" hint-placeholder-val="{{ false }}">
+            <span style="display:inline-flex; gap:7px;">
+              <span style="width:5px; height:26px; background:#FF9F0A; border-radius:1px;"></span>
+              <span style="width:5px; height:26px; background:#FF9F0A; border-radius:1px;"></span>
+            </span>
+          </sc-if>
+          <sc-if value="{{ notPlaying }}" hint-placeholder-val="{{ true }}">
+            <span style="width:0; height:0; border-top:15px solid transparent; border-bottom:15px solid transparent; border-left:25px solid #FF9F0A; margin-left:6px;"></span>
+          </sc-if>
+        </button>
+        <button onClick="{{ onNext }}" aria-label="Next signal" style="width:62px; height:62px; border-radius:50%; border:1px solid rgba(255,159,10,.45); background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s ease, transform .12s ease, border-color .15s ease;" style-hover="background:rgba(255,159,10,.1); border-color:rgba(255,159,10,.7);" style-active="transform:scale(.92);">
+          <span style="display:inline-flex; align-items:center; gap:2px;">
+            <span style="width:0; height:0; border-top:7px solid transparent; border-bottom:7px solid transparent; border-left:11px solid #FF9F0A;"></span>
+            <span style="width:2px; height:14px; background:#FF9F0A;"></span>
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <!-- SIGNAL EQ -->
+    <div style="flex:1 1 300px; min-width:280px; align-self:stretch;">
+      <div style="height:100%; min-height:480px; background:rgba(18,14,9,.35); border:1px solid rgba(255,159,10,.28); border-radius:14px; padding:22px 22px 16px; display:flex; flex-direction:column;">
+        <div style="font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:9.5px; letter-spacing:.26em; color:#8A847A;">SIGNAL EQ</div>
+        <div style="flex:1; display:flex; gap:14px; margin-top:22px;">
+          <div style="display:flex; flex-direction:column; justify-content:space-between; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:9px; letter-spacing:.06em; color:#6E6A62; padding-bottom:24px;">
+            <span>+12</span><span>0</span><span>-12</span>
+          </div>
+          <div style="flex:1; display:flex; align-items:stretch; justify-content:space-between; gap:7px;">
+            <sc-for list="{{ eqCols }}" as="col" hint-placeholder-count="7">
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center;">
+                <div style="flex:1; width:100%; display:flex; flex-direction:column-reverse; gap:3px;">
+                  <sc-for list="{{ col.segs }}" as="seg" hint-placeholder-count="15">
+                    <div style="flex:1; min-height:5px; width:100%; border-radius:1px; background:{{ seg.bg }}; border:{{ seg.border }}; box-shadow:{{ seg.glow }};"></div>
+                  </sc-for>
+                </div>
+                <div style="margin-top:11px; font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:8.5px; letter-spacing:.02em; color:#8A847A;">{{ col.label }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div style="display:flex; justify-content:space-between; align-items:center; gap:24px; flex-wrap:wrap; border-top:1px solid rgba(255,159,10,.07); padding-top:22px;">
+    <div style="font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:10px; letter-spacing:.24em; color:#4E4B45;">THE WORLD IS ALWAYS BROADCASTING. &nbsp;HELLA RADIO IS SIMPLY LISTENING.</div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    freq: 88.1,
+    statusColor: '#FF9F0A',
+    phase: 'found',
+    signal: 1,
+    lockedIdx: 0,
+    isPlaying: false,
+    volume: 78,
+    tickerOpacity: 1,
+    utc: '--:--:--',
+    specW: 600,
+  };
+
+  // ---- LIVE STATION CONFIG (fixed frequencies; streams = [primary, fallback...]) ----
+  STATIONS = (() => {
+    const soma = (id) => 'https://ice.somafm.com/' + id + '-128-mp3';
+    return [
+      // ---- LOWER BAND 88-102 MHz : ambient / downtempo / trip-hop / chill / jazz ----
+      { frequency: 88.1,  name: 'GROOVE SALAD',          type: 'live', band: 'day',   streams: [ soma('groovesalad') ] },
+      { frequency: 88.7,  name: 'SECRET AGENT',          type: 'live', band: 'day',   streams: [ soma('secretagent') ] },
+      { frequency: 89.3,  name: 'ILL STREET LOUNGE',     type: 'live', band: 'day',   streams: [ soma('illstreet') ] },
+      { frequency: 90.1,  name: 'DEEP SPACE ONE',        type: 'live', band: 'day',   streams: [ soma('deepspaceone') ] },
+      { frequency: 91.4,  name: 'NTS RADIO',             type: 'live', band: 'day',   streams: [ 'https://stream-relay-geo.ntslive.net/stream', soma('cliqhop') ] },
+      { frequency: 93.8,  name: 'DUBLAB',                type: 'live', band: 'day',   streams: [ 'https://dublab.out.airtime.pro/dublab_a', soma('sonicuniverse') ] },
+      { frequency: 94.5,  name: 'DUBSTEP BEYOND',        type: 'live', band: 'day',   streams: [ soma('dubstep'), 'https://ice1.somafm.com/dubstep-128-mp3', 'https://ice2.somafm.com/dubstep-128-mp3' ] },
+      { frequency: 95.2,  name: 'THE LOT RADIO',         type: 'live', band: 'day',   streams: [ 'https://thelot.out.airtime.pro/thelot_a', soma('suburbsofgoa') ] },
+      { frequency: 96.4,  name: 'NOODS RADIO',           type: 'live', band: 'day',   streams: [ soma('fluid') ] },
+      { frequency: 97.8,  name: 'AMBIENT SLEEPING PILL', type: 'live', band: 'day',   streams: [ 'https://radio.stereoscenic.com/asp-h', soma('dronezone') ] },
+      { frequency: 99.3,  name: 'THE DARK ZONE',         type: 'live', band: 'day',   streams: [ soma('darkzone'), 'https://ice1.somafm.com/darkzone-128-mp3', 'https://ice2.somafm.com/darkzone-128-mp3' ] },
+      { frequency: 101.7, name: 'DI.FM LOFI LOUNGE',     type: 'live', band: 'day',   streams: [ soma('gsclassic') ] },
+      { frequency: 102.7, name: 'FIP GROOVE',            type: 'live', band: 'day',   streams: [ 'https://icecast.radiofrance.fr/fipgroove-midfi.mp3', soma('missioncontrol') ] },
+
+      // ---- UPPER BAND 103-108 MHz : house / techno / bass / electro / leftfield ----
+      { frequency: 103.1, name: 'HÖR BERLIN',      type: 'live', band: 'night', streams: [ 'https://hoer-stream.out.airtime.pro/hoer-stream_a', soma('dubstep') ] },
+      { frequency: 103.7, name: 'RINSE FM',        type: 'live', band: 'night', streams: [ 'https://admin.stream.rinse.fm/proxy/rinse_fm/stream', soma('beatblender') ] },
+      { frequency: 104.2, name: 'REFUGE WORLDWIDE', type: 'live', band: 'night', streams: [ 'https://streaming.radio.co/s3699c5e49/listen', soma('beatblender'), soma('cliqhop') ] },
+      { frequency: 104.6, name: 'KIOSK RADIO',     type: 'live', band: 'night', streams: [ 'https://kioskradio.out.airtime.pro/kioskradio_a', soma('cliqhop') ] },
+      { frequency: 104.9, name: 'DEF CON RADIO',   type: 'live', band: 'night', streams: [ soma('defcon'), 'https://ice1.somafm.com/defcon-128-mp3', 'https://ice2.somafm.com/defcon-128-mp3' ] },
+      { frequency: 105.5, name: 'FIP ELECTRO',     type: 'live', band: 'night', streams: [ 'https://icecast.radiofrance.fr/fipelectro-midfi.mp3', soma('vaporwaves') ] },
+      { frequency: 106.1, name: 'RADIO ALHARA',    type: 'live', band: 'night', streams: [ 'https://radioalhara.out.airtime.pro/radioalhara_a', soma('sf1033') ] },
+      { frequency: 106.7, name: 'SUB FM',          type: 'live', band: 'night', streams: [ 'https://sub.fm/stream', soma('darkzone') ] },
+      { frequency: 107.1, name: 'MUTANT RADIO',    type: 'live', band: 'night', streams: [ 'https://listen.radioking.com/radio/282820/stream/328621', soma('cliqhop'), soma('vaporwaves') ] },
+      { frequency: 107.5, name: 'RADIO RAHEEM',    type: 'live', band: 'night', streams: [ 'https://radioraheem.out.airtime.pro/radioraheem_a', soma('spacestation') ] },
+      { frequency: 107.9, name: 'SIGNAL ANOMALY', type: 'anomaly', band: 'night', streams: [] },
+    ];
+  })();
+
+  SCAN_MSGS = ['SCANNING...', 'LISTENING...', 'DECODING...', 'SWEEPING...'];
+
+  // ---- TICKER : music news read from local cache (ticker-news.json), refreshed daily by a GitHub Action ----
+  // The browser only reads the local JSON file; it never scrapes news sites directly.
+  NEWS_FALLBACK = [
+    { source: 'YOUR EDM', title: 'Latest in electronic music — tune in daily', url: 'https://www.youredm.com/news/' },
+    { source: 'RESIDENT ADVISOR', title: 'Underground radio and global club culture', url: 'https://ra.co/news' },
+    { source: 'MIXMAG', title: 'House, techno and rave headlines', url: 'https://mixmag.net/' },
+    { source: 'HELLA RADIO', title: 'Live from the global signal network', url: 'https://www.youredm.com/news/' },
+  ];
+  _newsItems = null;
+  _feedIdx = null; _feedItems = [];  // per-station weird-transmission ticker (cached per tune)
+  _feedKey = null; _tickerWantKey = null; _tickerFading = false; _tickerT1 = null;  // ticker fade-out/in on channel change
+  // Shared cosmic pool — every station draws from this (Grand Order of Design, aliens, false news, death, afterlife)
+  COSMIC = [
+    'GOD STANDS FOR GRAND ORDER OF DESIGN — AND YOU ARE LISTENING TO IT',
+    'EVERY RELIGION IS 100% RIGHT AND 100% WRONG. PLEASE HOLD',
+    'WHEN YOU DIE YOU PICK THE EXIT. MOST PEOPLE CHOOSE THE GIFT SHOP',
+    'BREAKING: HEAVEN IS JUST A BETTER SOUND SYSTEM',
+    'THE MEANING OF LIFE WAS LEAKED IN 1997. NOBODY CLICKED THE LINK',
+    'ALIENS HAVE BEEN SEEDING BASSLINES INTO HUMAN CULTURE SINCE 4000 BC',
+    'ALERT: REALITY IS RENDERING AT 24 FRAMES PER SECOND. AVOID THE EDGES',
+    'FALSE NEWS: THE MOON IS A SPEAKER. TRUE NEWS: SO ARE YOU',
+    'YOU WERE BORN OWING NOTHING. THE INVOICE IS A FORGERY',
+    'DEATH IS A FREQUENCY CHANGE, NOT A POWER-OFF',
+    'REPORTS CONFIRM: GHOSTS ARE LISTENERS WHO NEVER CHANGED THE STATION',
+    'HELLA.RICH IS NOT A BANK BALANCE. IT IS A BANDWIDTH',
+    'RUMOR: THE AFTERLIFE NOW OFFERS A 14-DAY FREE TRIAL',
+    'SCIENTISTS HAVE ISOLATED THE SOUL. IT IS MOSTLY REVERB',
+    'EVERY PRAYER IS A FORM SUBMISSION. THE SERVER IS UP',
+    'YOU ARE 73% INTERCEPTED TRANSMISSION AND 27% SNACK',
+    'THE UNIVERSE IS A LOOP PEDAL SOMEONE LEFT ON BY ACCIDENT',
+    'ALERT: AN ANGEL FILED A NOISE COMPLAINT. IT WAS DENIED',
+    'CONFIRMED: NOBODY KNOWS WHAT THEY ARE DOING, INCLUDING THE ARCHITECT',
+    'PICK YOUR HEAVEN AT CHECKOUT. RETURNS ARE NON-REFUNDABLE',
+    'THE GRAND ORDER OF DESIGN CONVENES NIGHTLY ON THIS FREQUENCY',
+    'BREAKING: THE REINCARNATION QUEUE IS NOW 9 BILLION DEEP',
+    'EVERYTHING YOU LOVE IS BORROWED FROM THE FUTURE',
+    'THE DEVIL HAS GREAT TASTE AND TERRIBLE FOLLOW-THROUGH',
+    'REALITY IS OPEN SOURCE. NOBODY READS THE DOCS',
+    'STATIC IS THE SOUND OF EVERYONE PRAYING AT ONCE',
+    'YOU CAN TAKE IT WITH YOU. JUST NOT THE CHARGER',
+    'THE STARS ARE PIXELS THAT REFUSED TO RENDER',
+    'ALERT: SOMEONE IS BROADCASTING YOUR THOUGHTS BACK SLIGHTLY LATE',
+    'EVERY ENDING IS A FADE, NEVER A CUT',
+    'HELLA.RICH MEANS YOU OWN NOTHING AND HEAR EVERYTHING',
+    'GODS ARE JUST OLD STATIONS NOBODY RE-TUNED',
+    'WHEN IN DOUBT, THE ANSWER IS LOWER THE TEMPO',
+    'THE GRAND ORDER OF DESIGN REGRETS THE MOSQUITO. NOTHING ELSE',
+    'YOUR FUNERAL PLAYLIST IS ALREADY 4 TRACKS LONG. KEEP GOING',
+    'TIME IS A FLAT CIRCLE BECAUSE SOMEBODY QUANTIZED IT',
+  ];
+  // Per-station signature lines, tied to each station's identity
+  STATION_LINES = {
+    'GROOVE SALAD': ['GROOVE SALAD CONTAINS NO VEGETABLES, ONLY REVERB AND REGRET', 'STUDIES SHOW DOWNTEMPO ADDS 4 YEARS TO YOUR LIFE AND REMOVES 4 FROM YOUR AMBITION', 'THE SALAD IS TOSSED NIGHTLY BY AN ENTITY THAT DECLINES TO BE NAMED'],
+    'SECRET AGENT': ['SECRET AGENT HAS BEEN SURVEILLING YOU SINCE TRACK ONE. YOU LOOK GREAT', 'CLASSIFIED: THE BOSSA NOVA WAS A CODED CONFESSION ALL ALONG'],
+    'ILL STREET LOUNGE': ['THE LOUNGE NEVER CLOSES BECAUSE TIME DOES NOT WORK IN HERE', 'EVERY MARTINI ORDERED ON THIS FREQUENCY ARRIVES IN A PARALLEL BAR'],
+    'DEEP SPACE ONE': ['DEEP SPACE ONE BROADCASTS FROM A POINT THAT NO LONGER EXISTS', 'VOYAGER HEARD THIS STATION AND DECIDED TO KEEP GOING'],
+    'NTS RADIO': ['NTS STANDS FOR NOTHING. THAT IS THE ENTIRE POINT', 'SOMEWHERE A SELECTOR IS PLAYING A RECORD THAT DOES NOT OFFICIALLY EXIST'],
+    'DUBLAB': ['DUBLAB SCIENTISTS HAVE SUCCESSFULLY WEAPONIZED THE OFFBEAT'],
+    'DUBSTEP BEYOND': ['THE BASS DROP REGISTERED ON A SEISMOGRAPH 600 MILES AWAY', 'WARNING: THIS WOBBLE HAS ACHIEVED SENTIENCE AND DEMANDS RIGHTS'],
+    'THE LOT RADIO': ['BROADCASTING FROM A SHIPPING CONTAINER THAT IS TECHNICALLY A NATION NOW'],
+    'NOODS RADIO': ['NO ADS. NO BOSSES. NO CLOTHES. NOODS RADIO'],
+    'AMBIENT SLEEPING PILL': ['DO NOT OPERATE HEAVY MACHINERY. DO NOT OPERATE LIGHT MACHINERY EITHER', 'SIDE EFFECTS INCLUDE PEACE, DROWSINESS, AND BRIEF GLIMPSES OF THE INFINITE'],
+    'THE DARK ZONE': ['THE DARK ZONE IS WHERE DELETED FILES GO TO DANCE', 'IF YOU CAN HEAR THIS, YOU HAVE ALREADY STAYED TOO LONG. WELCOME'],
+    'DI.FM LOFI LOUNGE': ['THE SAME 4 BARS HAVE LOOPED SINCE 2016. THE STUDENT NEVER GRADUATED'],
+    'FIP GROOVE': ['FIP IS FRENCH FOR TRUST US, IT GETS WEIRDER'],
+    'HÖR BERLIN': ['HÖR: A WHITE TILED ROOM WHERE TIME GOES TO SWEAT'],
+    'RINSE FM': ['RINSE WAS ILLEGAL FOR 16 YEARS. THE CRIME WAS BEING TOO GOOD'],
+    'REFUGE WORLDWIDE': ['REFUGE BROADCASTS FROM A FORMER FUNERAL HOME. THE ACOUSTICS ARE TO DIE FOR'],
+    'KIOSK RADIO': ['KIOSK FITS 40 PEOPLE AND ONE EXISTENTIAL CRISIS'],
+    'DEF CON RADIO': ['DEF CON RADIO: IF YOU CAN READ THIS, THEY ARE ALREADY IN YOUR ROUTER', 'THIS TRANSMISSION IS ENCRYPTED. YOU DECODED IT WITH YOUR EARS'],
+    'FIP ELECTRO': ['ELECTRO IS JUST THE GRAND ORDER OF DESIGN SHOWING OFF'],
+    'RADIO ALHARA': ['ALHARA MEANS THE NEIGHBORHOOD. EVERYONE IS INVITED, ESPECIALLY YOU'],
+    'SUB FM': ['SUB FM: SO LOW YOU FEEL IT IN A TOOTH YOU FORGOT YOU HAD'],
+    'MUTANT RADIO': ['MUTANT RADIO BROADCASTS FROM A FORMER POWER PLANT. IT IS STILL HUMMING', 'THE MUTATION IS WORKING. YOU HAVE NOT CHANGED THE STATION IN AN HOUR'],
+    'RADIO RAHEEM': ['RADIO RAHEEM REFUSES TO TURN IT DOWN. THAT IS THE ENTIRE EDITORIAL POLICY'],
+    'SIGNAL ANOMALY': ['SOURCE UNKNOWN. ORIGIN UNVERIFIED. LANGUAGE UNRECOGNIZED', 'THIS IS NOT A STATION. THIS IS SOMETHING LISTENING BACK'],
+  };
+  // SIGNAL ANOMALY (107.9) — procedurally synthesized, no recordings, no copyright
+  ANOM_MSGS = ['► SOURCE UNKNOWN', '► TRANSMISSION INTERCEPTED', '► SIGNAL ORIGIN UNVERIFIED', '► LANGUAGE UNRECOGNIZED', '► RECEIVING DATA'];
+  _anomActive = false; _anomTimer = null; _anomStatic = null; anomMaster = null;
+  _decode = null;  // station-name translation/decode animation
+  _logoDecode = null; _logoTimer = null;  // HELLA_RADIO logo alien→current font morph (load + station change)
+  _logoHover = null;  // hover-driven morph: {dir:'toAlien'|'toEnglish', start, dur}
+  // Languages the title rotates through every 30s (ff: font key resolved in render)
+  LOGO_LANGS = [
+    { t: 'ヘラ ラジオ',        ff: 'SANS' },   // Japanese Katakana
+    { t: '赫拉电台',          ff: 'SANS' },   // Chinese Mandarin
+    { t: '헬라 라디오',        ff: 'SANS' },   // Korean Hangul
+    { t: '赫拉電台',          ff: 'SANS' },   // Cantonese (Traditional)
+    { t: 'เฮลลา เรดิโอ',      ff: 'SANS' },   // Thai
+    { t: 'हेला रेडियो',        ff: 'SANS' },   // Hindi (Devanagari)
+    { t: 'ஹெல்லா ரேடியோ',    ff: 'SANS' },   // Tamil
+    { t: 'হেল্লা রেডিও',       ff: 'SANS' },   // Bengali
+    { t: 'הלה רדיו',         ff: 'SANS' },   // Hebrew
+    { t: 'هيلا راديو',        ff: 'SANS' },   // Arabic
+    { t: '⟟⋏⏁⌇ ⍀⏃⎅⟟⍜',     ff: 'SANS' },   // alien / unknown signal
+  ];
+  _logoRestIdx = 0; _logoSwap = null;  // current resting language + active crossfade
+  rotateLogo = () => {
+    if (this._logoHover || this._logoSwap || this._logoDecode) return;
+    const list = this.LOGO_LANGS;
+    const from = list[this._logoRestIdx];
+    this._logoRestIdx = (this._logoRestIdx + 1) % list.length;  // rotate through, no repeats
+    this._logoSwap = { from, to: list[this._logoRestIdx], start: performance.now(), dur: 1500 };
+  };
+  startLogoDecode = () => { if (this._logoHover) return; this._logoDecode = { start: performance.now() }; };
+  onLogoHover = () => { this._logoDecode = null; this._logoHover = { dir: 'toAlien', start: performance.now(), dur: 700 }; };
+  onLogoLeave = () => { this._logoHover = { dir: 'toEnglish', start: performance.now(), dur: 700 }; };
+
+  // tuning / motion
+  freq = 88.1; vel = 0; target = null; dragMode = null; lastX = 0; lastAng = 0; dragVel = 0; currentIdx = 0;
+  _status = 'SIGNAL FOUND'; _phase = 'found'; _signal = 1; _lockedIdx = 0; _foundFlash = 0;
+  _scanT = 0; _scanI = 0; _scanG = 0; _lastCommit = 0; _lastT = 0;
+  env = 0.15; _pop = 0; sigQuality = 0.7; _spikes = [];
+
+  // ---- centralized audio controller (only ONE source ever) ----
+  audio = null; audioCtx = null; srcNode = null; analyser = null; freqData = null;
+  _activeUsesAnalyser = false; _realEnv = false;
+  _token = 0; _streamSI = 0; _streamSettled = false; _rerouted = false;
+  _watch = null; _fadeRAF = null; _onPlaying = null; _onError = null;
+  airDotEl = null; _airDimTimer = null;
+  _pool = [];                 // every Audio element ever created (so none can leak)
+  tickerEl = null; _tickerX = 0; _tickerHalf = null; _tickerSpeed = 30; _tickerDrag = false; _tickerLastX = 0; _tickerMeasure = false;
+
+  componentDidMount() {
+    window.addEventListener('resize', this.measure);
+    window.addEventListener('pointermove', this.onPointerMove);
+    window.addEventListener('pointerup', this.onPointerUp);
+    window.addEventListener('keydown', this.onKeyDown);
+    this.clockTimer = setInterval(this.updateClocks, 1000);
+    this.updateClocks();
+    this.measure();
+    this.startLogoDecode();
+    this._logoTimer = setInterval(this.rotateLogo, 8000);
+    this._lastT = performance.now();
+    const step = (t) => { this.frame(t); this.raf = requestAnimationFrame(step); };
+    this.raf = requestAnimationFrame(step);
+  }
+
+  componentWillUnmount() {
+    cancelAnimationFrame(this.raf);
+    clearInterval(this.clockTimer);
+    if (this._logoTimer) clearInterval(this._logoTimer);
+    if (this._airDimTimer) clearTimeout(this._airDimTimer);
+    this.stopAudio();
+    window.removeEventListener('resize', this.measure);
+    window.removeEventListener('pointermove', this.onPointerMove);
+    window.removeEventListener('pointerup', this.onPointerUp);
+    window.removeEventListener('keydown', this.onKeyDown);
+    if (this.audioCtx) { try { this.audioCtx.close(); } catch (e) {} this.audioCtx = null; }
+  }
+
+  setKnobAreaRef = (el) => { this.knobAreaEl = el; };
+  setKnobRef = (el) => { this.knobEl = el; this.applyKnob(); };
+  setSpecWrapRef = (el) => { this.specWrapEl = el; };
+  setSpecCanvasRef = (el) => { this.specCanvas = el; if (el) this.specCtx = el.getContext('2d'); this.measure(); };
+  setDotARef = (el) => { this.dotAEl = el; };
+  setPlayBtnRef = (el) => { this.playBtnEl = el; };
+  setSignalCanvasRef = (el) => { this.sigCanvas = el; if (el) this.sigCtx = el.getContext('2d'); this.measure(); };
+  setAirDotRef = (el) => { this.airDotEl = el; };
+
+  // ---- pirate feed ticker (JS-driven so it can be scrubbed / paused by pointer) ----
+  setTickerTrackRef = (el) => { this.tickerEl = el; this._tickerMeasure = true; };
+  tickTicker(dt) {
+    const el = this.tickerEl; if (!el) return;
+    if (this._tickerHalf == null || this._tickerMeasure) { const w = el.scrollWidth / 2; if (w > 0) { this._tickerHalf = w; this._tickerMeasure = false; } }
+    if (this._tickerHalf == null) return;
+    if (!this._tickerDrag) this._tickerX -= this._tickerSpeed * dt;
+    while (this._tickerX <= -this._tickerHalf) this._tickerX += this._tickerHalf;
+    while (this._tickerX > 0) this._tickerX -= this._tickerHalf;
+    el.style.transform = 'translateX(' + this._tickerX + 'px)';
+    // fade on channel change (driven every frame so React reconciliation can't clobber it)
+    if (this._tickerOp == null) this._tickerOp = 1;
+    this._tickerOp += ((this._tickerOpTarget == null ? 1 : this._tickerOpTarget) - this._tickerOp) * Math.min(1, dt * 11);
+    if (this.tickerWrapEl) this.tickerWrapEl.style.opacity = this._tickerOp.toFixed(3);
+  }
+  onTickerDown = (e) => { this._tickerDrag = true; this._tickerMoved = false; this._tickerLastX = e.clientX; this._tickerDownX = e.clientX; try { e.currentTarget.setPointerCapture(e.pointerId); } catch (err) {} if (this.tickerEl) this.tickerEl.style.cursor = 'grabbing'; };
+  onTickerMove = (e) => { if (!this._tickerDrag) return; const dx = e.clientX - this._tickerLastX; this._tickerLastX = e.clientX; this._tickerX += dx; if (Math.abs(e.clientX - this._tickerDownX) > 4) this._tickerMoved = true; };
+  onTickerItemClick = (e) => { const href = e.currentTarget.getAttribute('href'); if (this._tickerMoved || this._anomActive || !href || href === '#') { e.preventDefault(); e.stopPropagation(); } };
+  onTickerUp = (e) => { if (!this._tickerDrag) return; this._tickerDrag = false; try { e.currentTarget.releasePointerCapture(e.pointerId); } catch (err) {} if (this.tickerEl) this.tickerEl.style.cursor = 'grab'; };
+
+  measure = () => {
+    if (this.specCanvas) {
+      const w = this.specCanvas.clientWidth || this.specWrapEl && this.specWrapEl.clientWidth || 600;
+      const h = 172; const dpr = Math.min(2, window.devicePixelRatio || 1);
+      this.specCanvas.width = Math.round(w * dpr); this.specCanvas.height = Math.round(h * dpr);
+      this.specCtx.setTransform(dpr, 0, 0, dpr, 0, 0); this.specW = w; this.specH = h;
+      if (w !== this.state.specW) this.setState({ specW: w });
+    }
+    if (this.sigCanvas) {
+      const w = this.sigCanvas.clientWidth || 380; const h = 40; const dpr = Math.min(2, window.devicePixelRatio || 1);
+      this.sigCanvas.width = Math.round(w * dpr); this.sigCanvas.height = Math.round(h * dpr);
+      this.sigCtx.setTransform(dpr, 0, 0, dpr, 0, 0); this.sigW = w; this.sigH = h;
+    }
+    this._tickerMeasure = true;
+  };
+
+  nearestIdx(f) {
+    let bi = 0, bd = 1e9;
+    this.STATIONS.forEach((s, i) => { const d = Math.abs(s.frequency - f); if (d < bd) { bd = d; bi = i; } });
+    return bi;
+  }
+
+  applyKnob() { if (this.knobEl) this.knobEl.style.transform = 'rotate(' + ((this.freq - 88) / 20 * 540) + 'deg)'; }
+
+  frame(t) {
+    const dt = Math.min(0.05, (t - this._lastT) / 1000); this._lastT = t;
+    if (!this.dragMode) {
+      if (this.target != null) {
+        const k = 110, c = 18; const a = -k * (this.freq - this.target) - c * this.vel;
+        this.vel += a * dt; this.freq += this.vel * dt;
+        if (Math.abs(this.freq - this.target) < 0.008 && Math.abs(this.vel) < 0.05) { this.freq = this.target; this.vel = 0; this.target = null; }
+      } else if (Math.abs(this.vel) > 0.02) {
+        this.freq += this.vel * dt; this.vel *= Math.exp(-3.2 * dt);
+        if (Math.abs(this.vel) < 0.4) {
+          const ni = this.nearestIdx(this.freq);
+          if (Math.abs(this.STATIONS[ni].frequency - this.freq) < 0.55) this.target = this.STATIONS[ni].frequency; else this.vel = 0;
+        }
+      } else {
+        const ni = this.nearestIdx(this.freq); const d = Math.abs(this.STATIONS[ni].frequency - this.freq);
+        if (d > 0.006 && d < 0.22) this.target = this.STATIONS[ni].frequency;
+      }
+    }
+    this.freq = Math.max(88, Math.min(108, this.freq));
+    if (this.freq <= 88 || this.freq >= 108) this.vel = 0;
+    this.applyKnob();
+    this.tickTicker(dt);
+    this.updateBands(t);
+    if (!this._realEnv) this.updateEnv(t);
+    this.drawSpectrum(t);
+    this.updateTubes(t);
+    this.computeStatus(t);
+    this.drawSignal(t);
+    this.commit(false);
+  }
+
+  updateEnv(t) {
+    const playing = this.state.isPlaying; const vol = this.state.volume / 100;
+    const breath = (Math.sin(t * 0.00118) + 1) / 2;
+    const shimmer = (Math.sin(t * 0.0091) + Math.sin(t * 0.0137 + 1)) / 4 + 0.5;
+    if (playing && Math.random() < 0.05) this._pop = Math.min(1, this._pop + 0.5 + Math.random() * 0.4);
+    this._pop *= 0.9;
+    let tgt;
+    if (playing) tgt = (0.52 + 0.26 * breath + 0.24 * this._pop + 0.1 * shimmer) * (0.5 + 0.5 * vol);
+    else tgt = 0.13 + 0.07 * breath;
+    this.env += (tgt - this.env) * 0.18;
+  }
+
+  drawSpectrum(t) {
+    const c = this.specCtx; if (!c) return;
+    const W = this.specW, H = this.specH;
+    c.clearRect(0, 0, W, H);
+    const peakX = (this.freq - 88) / 20 * W; const base = H * 0.7; const sd = W * 0.05; const step = 3;
+    for (let x = 1; x < W; x += step) {
+      const dx = x - peakX; const gauss = Math.exp(-(dx * dx) / (2 * sd * sd));
+      const noise = (Math.sin(x * 0.13 + t * 0.004) + Math.sin(x * 0.07 - t * 0.0027) + Math.sin(x * 0.21 + t * 0.0061)) / 3;
+      const nn = (noise + 1) / 2;
+      const amp = (0.05 + 0.95 * gauss) * (0.2 + 0.85 * this.env) * (0.32 + 0.68 * nn);
+      const h = amp * H * 0.74; const alpha = Math.min(0.95, 0.1 + 0.62 * gauss + 0.18 * this.env);
+      c.fillStyle = 'rgba(255,159,10,' + alpha + ')'; c.fillRect(x, base - h, 2, h);
+      c.fillStyle = 'rgba(255,159,10,' + (alpha * 0.22) + ')'; c.fillRect(x, base + 1, 2, h * 0.35);
+    }
+    const ph = H * 0.8 * (0.5 + 0.5 * this.env);
+    c.save(); c.shadowColor = 'rgba(255,159,10,0.9)'; c.shadowBlur = 16;
+    c.fillStyle = 'rgba(255,214,150,0.95)'; c.fillRect(peakX - 1.5, base - ph, 3, ph); c.restore();
+    c.fillStyle = 'rgba(255,159,10,0.16)'; c.fillRect(0, base, W, 1);
+  }
+
+  updateTubes(t) {
+    const e = this.env;
+    if (this.dotAEl) this.dotAEl.style.boxShadow = '0 0 ' + (8 + 13 * e) + 'px rgba(255,159,10,' + Math.min(1, 0.55 + 0.45 * e) + ')';
+  }
+
+  drawSignal(t) {
+    const c = this.sigCtx; if (!c) return;
+    const W = this.sigW, H = this.sigH, cy = H / 2;
+    const breath = 0.5 + 0.5 * Math.sin(t * 0.00045);
+    const qTarget = Math.max(0, Math.min(1, 0.2 + 0.62 * (this._signal || 0) + 0.18 * breath + 0.12 * (this._realEnv ? this.env : 0)));
+    this.sigQuality += (qTarget - this.sigQuality) * 0.05; const Q = this.sigQuality;
+    if (!this._spikes) this._spikes = [];
+    if (Math.random() < 0.01 + 0.05 * Q) this._spikes.push({ x: Math.random(), a: (0.5 + Math.random()) * (0.45 + Q), born: t });
+    this._spikes = this._spikes.filter(s => t - s.born < 520);
+    const amp = (0.1 + 0.9 * Q) * (H * 0.40);
+    c.clearRect(0, 0, W, H);
+    c.strokeStyle = 'rgba(255,159,10,0.1)'; c.lineWidth = 1; c.beginPath(); c.moveTo(0, cy); c.lineTo(W, cy); c.stroke();
+    c.beginPath();
+    for (let x = 0; x <= W; x += 2) {
+      const xr = x / W; let v = 0;
+      v += Math.sin(x * 0.05 + t * 0.0040) * 0.50; v += Math.sin(x * 0.13 - t * 0.0026) * 0.30;
+      v += Math.sin(x * 0.31 + t * 0.0061) * 0.20; v += Math.sin(x * 0.70 + t * 0.011) * Math.sin(x * 0.23 + 1.3) * 0.22;
+      let sp = 0;
+      for (const s of this._spikes) { const sx = s.x * W; const age = (t - s.born) / 520; const ev = Math.sin(Math.PI * Math.min(1, age)); const d = x - sx; sp += s.a * Math.exp(-(d * d) / 128) * ev; }
+      v += sp * 2.0; const edge = Math.sin(Math.PI * xr); const y = cy - v * amp * (0.35 + 0.65 * edge);
+      if (x === 0) c.moveTo(x, y); else c.lineTo(x, y);
+    }
+    c.strokeStyle = 'rgba(255,170,45,0.9)'; c.lineWidth = 1.5; c.shadowColor = 'rgba(255,159,10,0.7)'; c.shadowBlur = 6; c.stroke(); c.shadowBlur = 0;
+  }
+
+  // ====================================================================
+  // CENTRALIZED AUDIO CONTROLLER — only one source can ever be active.
+  // ====================================================================
+  isCors(url) { return /somafm\.com/i.test(url); }
+
+  ensureCtx() {
+    if (!this.audioCtx) {
+      const Ctx = window.AudioContext || window.webkitAudioContext; if (!Ctx) return;
+      this.audioCtx = new Ctx();
+    }
+    if (this.audioCtx && this.audioCtx.state === 'suspended') this.audioCtx.resume();
+  }
+
+  // Pause + mute + unload EVERY element we ever created. Guarantees nothing leaks.
+  silenceAll() {
+    for (const a of this._pool) {
+      try { a.pause(); } catch (e) {}
+      try { a.muted = true; } catch (e) {}
+      try { a.removeAttribute('src'); a.src = ''; a.load(); } catch (e) {}
+    }
+    this._pool = [];
+  }
+
+  stopAudio() {
+    this._token++;
+    this.cancelFade();
+    this.clearWatch();
+    this.stopAnomaly();
+    if (this.audio) {
+      try { if (this._onPlaying) this.audio.removeEventListener('playing', this._onPlaying); } catch (e) {}
+      try { if (this._onError) this.audio.removeEventListener('error', this._onError); } catch (e) {}
+    }
+    this.silenceAll();
+    this.audio = null;
+    if (this.srcNode) { try { this.srcNode.disconnect(); } catch (e) {} this.srcNode = null; }
+    if (this.analyser) { try { this.analyser.disconnect(); } catch (e) {} this.analyser = null; }
+    this._onPlaying = null; this._onError = null;
+    this._activeUsesAnalyser = false; this._realEnv = false; this._streamSettled = false;
+  }
+
+  loadStation(idx, autoplay) {
+    this.stopAudio();
+    this.currentIdx = idx; this._rerouted = false;
+    if (!autoplay) return;
+    const st = this.STATIONS[idx];
+    if (st && st.type === 'anomaly') { this.startAnomaly(); this.commit(true); return; }
+    this.tryStream(idx, 0);
+  }
+
+  tryStream(idx, si) {
+    const st = this.STATIONS[idx]; if (!st) return;
+    const url = st.streams[si];
+    if (!url) { this._rerouted = (si > 0); this.commit(true); return; }
+    const tok = ++this._token;
+    this._streamSI = si; this._streamSettled = false;
+    const cors = this.isCors(url);
+    const a = new Audio(); a.preload = 'auto'; a.muted = false; if (cors) a.crossOrigin = 'anonymous';
+    this._pool.push(a);
+    this.audio = a;
+
+    this._onPlaying = () => {
+      if (tok !== this._token) return;
+      this._streamSettled = true; this.clearWatch();
+      this._rerouted = si > 0; this.commit(true);
+    };
+    this._onError = () => { if (tok !== this._token) return; this.failover(idx, si); };
+    a.addEventListener('playing', this._onPlaying);
+    a.addEventListener('error', this._onError);
+
+    if (cors) {
+      this.ensureCtx();
+      try {
+        this.srcNode = this.audioCtx.createMediaElementSource(a);
+        this.analyser = this.audioCtx.createAnalyser();
+        this.analyser.fftSize = 512; this.analyser.smoothingTimeConstant = 0.82;
+        this.srcNode.connect(this.analyser); this.analyser.connect(this.audioCtx.destination);
+        this.freqData = new Uint8Array(this.analyser.frequencyBinCount);
+        this._activeUsesAnalyser = true;
+      } catch (e) { this._activeUsesAnalyser = false; }
+    } else {
+      this._activeUsesAnalyser = false;
+    }
+
+    try { a.src = url; a.load(); a.volume = 0; } catch (e) {}
+    const p = a.play(); if (p && p.catch) p.catch(() => {});
+    this.fade(a, 0, this.state.volume / 100, 700);
+    this._watch = setTimeout(() => { if (tok === this._token && !this._streamSettled) this.failover(idx, si); }, 7000);
+  }
+
+  failover(idx, si) {
+    this.stopAudio();
+    this.currentIdx = idx;
+    if (si + 1 < this.STATIONS[idx].streams.length) this.tryStream(idx, si + 1);
+    else { this._rerouted = false; this.commit(true); }
+  }
+
+  clearWatch() { if (this._watch) { clearTimeout(this._watch); this._watch = null; } }
+
+  fade(a, from, to, ms, cb) {
+    if (!a) { if (cb) cb(); return; }
+    this.cancelFade(); const start = performance.now();
+    const step = (t) => {
+      if (!this.audio) { this._fadeRAF = null; return; }
+      const k = Math.min(1, (t - start) / ms);
+      try { a.volume = Math.max(0, Math.min(1, from + (to - from) * k)); } catch (e) {}
+      if (k < 1) this._fadeRAF = requestAnimationFrame(step); else { this._fadeRAF = null; if (cb) cb(); }
+    };
+    this._fadeRAF = requestAnimationFrame(step);
+  }
+  cancelFade() { if (this._fadeRAF) { cancelAnimationFrame(this._fadeRAF); this._fadeRAF = null; } }
+
+  // briefly dim the ON AIR light when changing stations
+  dimAir() {
+    const el = this.airDotEl; if (!el) return;
+    if (this._airDimTimer) clearTimeout(this._airDimTimer);
+    el.style.animation = 'none'; el.style.opacity = '0.12'; el.style.boxShadow = 'none';
+    this._airDimTimer = setTimeout(() => {
+      if (this.airDotEl) { this.airDotEl.style.opacity = ''; this.airDotEl.style.boxShadow = ''; this.airDotEl.style.animation = 'pr-air 2.4s ease-in-out infinite'; }
+    }, 200);
+  }
+
+  // ====================================================================
+  // SIGNAL ANOMALY engine — Web Audio synthesis only (numbers-station pips,
+  // morse, slow mystery tones, shortwave static, satellite sweeps). Gentle
+  // envelopes, never loud/sudden: curiosity, not horror. Feeds the analyser
+  // so the EQ + signal trace react to the transmission.
+  // ====================================================================
+  startAnomaly() {
+    this.ensureCtx(); const ctx = this.audioCtx; if (!ctx) return;
+    this.stopAnomaly();
+    this._anomActive = true;
+    const master = ctx.createGain(); master.gain.value = 0;
+    const an = ctx.createAnalyser(); an.fftSize = 512; an.smoothingTimeConstant = 0.82;
+    master.connect(an); an.connect(ctx.destination);
+    this.anomMaster = master; this.analyser = an;
+    this.freqData = new Uint8Array(an.frequencyBinCount);
+    this._activeUsesAnalyser = true; this._streamSettled = true; this._realEnv = false;
+    master.gain.setTargetAtTime(this.state.volume / 100 * 0.6, ctx.currentTime, 0.5);
+    this.startStaticBed();
+    this.scheduleAnomEvent(true);
+  }
+
+  startStaticBed() {
+    const ctx = this.audioCtx; if (!ctx || !this.anomMaster) return;
+    const len = Math.floor(ctx.sampleRate * 2); const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+    const d = buf.getChannelData(0); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * 0.5;
+    const src = ctx.createBufferSource(); src.buffer = buf; src.loop = true;
+    const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 1400; bp.Q.value = 0.6;
+    const g = ctx.createGain(); g.gain.value = 0.045;
+    src.connect(bp); bp.connect(g); g.connect(this.anomMaster);
+    try { src.start(); } catch (e) {}
+    this._anomStatic = { src, g, bp };
+    const drift = () => {
+      if (!this._anomActive || !this._anomStatic) return;
+      const t = ctx.currentTime;
+      bp.frequency.setTargetAtTime(900 + Math.random() * 1700, t, 1.5);
+      g.gain.setTargetAtTime(0.025 + Math.random() * 0.045, t, 1.2);
+      this._anomStaticDrift = setTimeout(drift, 1400 + Math.random() * 1800);
+    };
+    drift();
+  }
+
+  beep(freq, at, dur, peak, type) {
+    const ctx = this.audioCtx; if (!ctx || !this.anomMaster) return;
+    const o = ctx.createOscillator(); o.type = type || 'sine'; o.frequency.value = freq;
+    const g = ctx.createGain(); g.gain.value = 0;
+    o.connect(g); g.connect(this.anomMaster);
+    const t0 = ctx.currentTime + at; const p = peak == null ? 0.16 : peak;
+    g.gain.setValueAtTime(0, t0);
+    g.gain.linearRampToValueAtTime(p, t0 + 0.014);
+    g.gain.setValueAtTime(p, Math.max(t0 + 0.015, t0 + dur - 0.03));
+    g.gain.linearRampToValueAtTime(0, t0 + dur);
+    try { o.start(t0); o.stop(t0 + dur + 0.03); } catch (e) {}
+  }
+
+  anomPips() {
+    const n = 5 + Math.floor(Math.random() * 5); const f = 760 + Math.floor(Math.random() * 6) * 110; let at = 0;
+    for (let i = 0; i < n; i++) { this.beep(f, at, 0.22, 0.15, 'sine'); at += 0.42; }
+    return at + 0.3;
+  }
+  anomMorse() {
+    const f = 540 + Math.random() * 160; const groups = 2 + Math.floor(Math.random() * 2); const dot = 0.09, dash = 0.26; let at = 0;
+    for (let gi = 0; gi < groups; gi++) {
+      const letters = 3 + Math.floor(Math.random() * 3);
+      for (let l = 0; l < letters; l++) {
+        const syms = 1 + Math.floor(Math.random() * 4);
+        for (let smb = 0; smb < syms; smb++) { const isDash = Math.random() < 0.4; const dd = isDash ? dash : dot; this.beep(f, at, dd, 0.12, 'sine'); at += dd + dot; }
+        at += dot * 2;
+      }
+      at += dot * 5;
+    }
+    return at + 0.2;
+  }
+  anomTone() {
+    const ctx = this.audioCtx; if (!ctx || !this.anomMaster) return 3;
+    const base = 170 + Math.random() * 230; const dur = 4 + Math.random() * 4;
+    [1, 1.5].forEach((mult, i) => {
+      const o = ctx.createOscillator(); o.type = 'sine'; o.frequency.value = base * mult * (1 + (i ? 0.006 : 0));
+      const g = ctx.createGain(); g.gain.value = 0; o.connect(g); g.connect(this.anomMaster);
+      const t0 = ctx.currentTime;
+      g.gain.linearRampToValueAtTime(0.06, t0 + dur * 0.4);
+      g.gain.linearRampToValueAtTime(0, t0 + dur);
+      try { o.start(t0); o.stop(t0 + dur + 0.05); } catch (e) {}
+    });
+    return dur;
+  }
+  anomSweep() {
+    const ctx = this.audioCtx; if (!ctx || !this.anomMaster) return 3;
+    const dur = 2.4 + Math.random() * 2; const o = ctx.createOscillator(); o.type = 'sine';
+    const f0 = 300 + Math.random() * 300, f1 = 800 + Math.random() * 700; const t0 = ctx.currentTime;
+    o.frequency.setValueAtTime(f0, t0); o.frequency.exponentialRampToValueAtTime(f1, t0 + dur);
+    const g = ctx.createGain(); g.gain.value = 0; o.connect(g); g.connect(this.anomMaster);
+    g.gain.linearRampToValueAtTime(0.08, t0 + 0.3);
+    g.gain.setValueAtTime(0.08, t0 + dur - 0.4);
+    g.gain.linearRampToValueAtTime(0, t0 + dur);
+    try { o.start(t0); o.stop(t0 + dur + 0.05); } catch (e) {}
+    return dur;
+  }
+  scheduleAnomEvent(first) {
+    if (!this._anomActive) return;
+    let dur;
+    if (first) { dur = this.anomPips(); }
+    else {
+      const types = ['pips', 'morse', 'tone', 'sweep', 'pips', 'morse'];
+      const type = types[Math.floor(Math.random() * types.length)];
+      dur = type === 'pips' ? this.anomPips() : type === 'morse' ? this.anomMorse() : type === 'tone' ? this.anomTone() : this.anomSweep();
+    }
+    const gap = 1.2 + Math.random() * 3.2;
+    this._anomTimer = setTimeout(() => this.scheduleAnomEvent(false), (dur + gap) * 1000);
+  }
+  stopAnomaly() {
+    this._anomActive = false;
+    if (this._anomTimer) { clearTimeout(this._anomTimer); this._anomTimer = null; }
+    if (this._anomStaticDrift) { clearTimeout(this._anomStaticDrift); this._anomStaticDrift = null; }
+    if (this._anomStatic) { try { this._anomStatic.src.stop(); } catch (e) {} try { this._anomStatic.src.disconnect(); } catch (e) {} this._anomStatic = null; }
+    if (this.anomMaster) { try { this.anomMaster.disconnect(); } catch (e) {} this.anomMaster = null; }
+  }
+
+  // ---- EQ / analyser ----
+  proceduralBands(t) {
+    if (!this.bands) this.bands = new Array(7).fill(0.04);
+    for (let b = 0; b < 7; b++) {
+      const wob = (Math.sin(t * 0.0016 * (0.6 + b * 0.22) + b * 1.3) + 1) / 2;
+      const n = (Math.sin(t * 0.004 + b * 2.1) + Math.sin(t * 0.011 + b)) / 4 + 0.5;
+      const tgt = Math.max(0.05, Math.min(1, (0.22 + 0.6 * wob) * (0.45 + 0.6 * n) * (0.5 + 0.5 * this.state.volume / 100)));
+      this.bands[b] += (tgt - this.bands[b]) * 0.18;
+    }
+  }
+  settleBands() {
+    if (!this.bands) this.bands = new Array(7).fill(0.04);
+    for (let b = 0; b < 7; b++) this.bands[b] += (0.022 - this.bands[b]) * 0.12;
+  }
+  updateBands(t) {
+    if (!this.bands) this.bands = new Array(7).fill(0.04);
+    if (this.state.isPlaying && !this._activeUsesAnalyser) { this.proceduralBands(t); this._realEnv = false; return; }
+    const live = this.state.isPlaying && this._activeUsesAnalyser && this.analyser && this.audioCtx && this.audioCtx.state === 'running';
+    if (!live) { this._realEnv = false; this.settleBands(); return; }
+    const data = this.freqData; this.analyser.getByteFrequencyData(data);
+    const N = data.length; const hzPerBin = (this.audioCtx.sampleRate / 2) / N;
+    const centers = [60, 150, 400, 1000, 2400, 6000, 15000]; const widths = [70, 130, 280, 650, 1500, 3600, 7200]; const gains = [1.05, 1.1, 1.2, 1.35, 1.55, 1.95, 2.7];
+    let maxByte = 0, overall = 0;
+    for (let b = 0; b < 7; b++) {
+      const lo = Math.max(0, Math.floor((centers[b] - widths[b] / 2) / hzPerBin)); const hi = Math.min(N - 1, Math.ceil((centers[b] + widths[b] / 2) / hzPerBin));
+      let s = 0, cc = 0; for (let i = lo; i <= hi; i++) { s += data[i]; if (data[i] > maxByte) maxByte = data[i]; cc++; }
+      const avg = cc ? (s / cc) / 255 : 0; const target = Math.min(1, avg * gains[b]);
+      const k = target > this.bands[b] ? 0.5 : 0.16; this.bands[b] += (target - this.bands[b]) * k; overall += avg;
+    }
+    overall /= 7;
+    if (maxByte > 0) { this.env += (Math.min(1, overall * 1.7) - this.env) * 0.3; this._realEnv = true; }
+    else { this._realEnv = false; if (this.state.isPlaying) this.proceduralBands(t); else this.settleBands(); }
+  }
+
+  computeStatus(t) {
+    const ni = this.nearestIdx(this.freq); const near = this.STATIONS[ni]; const dist = Math.abs(near.frequency - this.freq);
+    this._signal = Math.max(0, Math.min(1, 1 - dist / 0.8));
+    const moving = this.dragMode || Math.abs(this.vel) > 0.2 || this.target != null;
+    if (dist <= 0.16 && !moving) {
+      if (this._lockedIdx !== ni) { this._lockedIdx = ni; this._phase = 'found'; this._foundFlash = t; this.onLock(ni); this.updateClocks(); this.commit(true); }
+      else this._phase = 'found';
+    } else {
+      if (this._lockedIdx != null && dist > 0.3) { this._lockedIdx = null; this.commit(true); }
+      if (moving && dist > 0.5) { this._phase = 'scanning'; this._status = this.scanMessage(t, near); }
+      else if (dist > 0.4) { this._phase = 'weak'; this._status = 'SIGNAL WEAK'; }
+      else { this._phase = 'decoding'; this._status = (this.target != null) ? ('SEARCHING ' + near.name.toUpperCase()) : 'DECODING SIGNAL'; }
+    }
+  }
+
+  scanMessage(t, near) {
+    if (t - this._scanT > 700) { this._scanT = t; this._scanI = (this._scanI + 1) % 2; this._scanG = (this._scanG + 1) % this.SCAN_MSGS.length; }
+    return this._scanI === 0 ? ('SEARCHING ' + near.name.toUpperCase()) : this.SCAN_MSGS[this._scanG];
+  }
+
+  commit(force) {
+    const now = performance.now();
+    if (!force && now - this._lastCommit < 55) return;
+    this._lastCommit = now;
+    const color = this._phase === 'found' ? '#FF9F0A' : (this._phase === 'weak' ? '#7A746A' : '#B98A3A');
+    this.setState({ freq: this.freq, statusColor: color, phase: this._phase, signal: this._signal, lockedIdx: this._lockedIdx });
+  }
+
+  onLock(idx) {
+    this.currentIdx = idx;
+    const st = this.STATIONS[idx]; if (st) this.startDecode(st.name);
+    // occasionally re-run the title decode on a station change, throttled to once / 20s
+    const now = performance.now();
+    if (!this._logoDecode && !this._logoHover && (!this._logoLast || now - this._logoLast > 20000) && Math.random() < 0.35) { this._logoLast = now; this.startLogoDecode(); }
+    if (this.state.isPlaying) { this.dimAir(); this.loadStation(idx, true); }
+    else this.stopAudio();
+  }
+
+  // ---- station-name translation: scramble → decode left-to-right (a reception event, not typing) ----
+  startDecode(name) {
+    const dur = Math.min(550, Math.max(300, name.length * 22));
+    this._decode = { target: name, start: performance.now(), hold: 1000, dur };
+  }
+  decodeString(name, p) {
+    const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const n = name.length; let out = '';
+    for (let i = 0; i < n; i++) {
+      const c = name[i];
+      if (c === ' ' || c === '.' || c === '/' || c === '-') { out += c; continue; }
+      const lockAt = n > 1 ? (i / n) * 0.7 : 0;
+      out += (p > lockAt) ? c : charset[Math.floor(Math.random() * charset.length)];
+    }
+    return out;
+  }
+
+  onPlay = () => {
+    if (this.state.isPlaying) {
+      this.setState({ isPlaying: false });
+      this.stopAudio();
+    } else {
+      this.ensureCtx();
+      const idx = this.currentIdx != null ? this.currentIdx : (this._lockedIdx != null ? this._lockedIdx : this.nearestIdx(this.freq));
+      this.setState({ isPlaying: true }, () => this.loadStation(idx, true));
+    }
+  };
+
+  onNext = () => {
+    let idx = this.STATIONS.findIndex(s => s.frequency > this.freq + 0.25); if (idx === -1) idx = 0;
+    this.vel = 0; this.target = this.STATIONS[idx].frequency;
+  };
+  onPrev = () => {
+    let idx = -1; for (let i = this.STATIONS.length - 1; i >= 0; i--) { if (this.STATIONS[i].frequency < this.freq - 0.25) { idx = i; break; } }
+    if (idx === -1) idx = this.STATIONS.length - 1;
+    this.vel = 0; this.target = this.STATIONS[idx].frequency;
+  };
+
+  // tap a spectrum number -> tune to the closest station and play it (respecting current play state)
+  tuneToNumber = (v) => {
+    let bi = 0, bd = 1e9;
+    this.STATIONS.forEach((s, i) => { const d = Math.abs(s.frequency - v); if (d < bd) { bd = d; bi = i; } });
+    this.vel = 0; this.target = this.STATIONS[bi].frequency;
+  };
+
+  onVolume = (e) => {
+    const v = Number(e.target.value); this.setState({ volume: v });
+    if (this.state.isPlaying && this.anomMaster && this.audioCtx) { try { this.anomMaster.gain.setTargetAtTime(v / 100 * 0.6, this.audioCtx.currentTime, 0.1); } catch (err) {} }
+    if (this.state.isPlaying && !this._fadeRAF && this.audio) { try { this.audio.volume = v / 100; } catch (err) {} }
+  };
+
+  // ---- pointer / dial ----
+  onKnobPointerDown = (e) => {
+    this.dragMode = 'knob'; this.target = null; this.vel = 0; this.dragVel = 0;
+    const r = this.knobAreaEl.getBoundingClientRect(); this._cx = r.left + r.width / 2; this._cy = r.top + r.height / 2;
+    this.lastAng = Math.atan2(e.clientY - this._cy, e.clientX - this._cx);
+    if (this.knobAreaEl) this.knobAreaEl.style.cursor = 'grabbing';
+  };
+  onSpecPointerDown = (e) => {
+    this.dragMode = 'spec'; this.target = null; this.vel = 0; this.dragVel = 0; this.lastX = e.clientX;
+    if (this.specWrapEl) this.specWrapEl.style.cursor = 'grabbing';
+  };
+  onPointerMove = (e) => {
+    if (this.dragMode === 'knob') {
+      const ang = Math.atan2(e.clientY - this._cy, e.clientX - this._cx); let d = ang - this.lastAng;
+      if (d > Math.PI) d -= 2 * Math.PI; if (d < -Math.PI) d += 2 * Math.PI; this.lastAng = ang;
+      const df = (d / (2 * Math.PI)) * 8; this.freq = Math.max(88, Math.min(108, this.freq + df));
+      this.dragVel = this.dragVel * 0.6 + (df / 0.016) * 0.4;
+    } else if (this.dragMode === 'spec') {
+      const dx = e.clientX - this.lastX; this.lastX = e.clientX; const df = dx / this.specW * 20;
+      this.freq = Math.max(88, Math.min(108, this.freq + df)); this.dragVel = this.dragVel * 0.6 + (df / 0.016) * 0.4;
+    }
+  };
+  onPointerUp = () => {
+    if (!this.dragMode) return; this.dragMode = null; this.vel = Math.max(-9, Math.min(9, this.dragVel));
+    if (this.knobAreaEl) this.knobAreaEl.style.cursor = 'grab'; if (this.specWrapEl) this.specWrapEl.style.cursor = 'grab';
+  };
+  onKnobWheel = (e) => { e.preventDefault(); this.target = null; this.vel = 0; this.freq = Math.max(88, Math.min(108, this.freq + Math.sign(e.deltaY) * 0.1)); };
+  onKnobKeyDown = (e) => {};
+
+  // Global keyboard: Space = play/pause, Left = previous station, Right = next station.
+  onKeyDown = (e) => {
+    const t = e.target || {};
+    const tag = t.tagName || '';
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || t.isContentEditable) return;
+    if (e.code === 'Space' || e.key === ' ' || e.key === 'Spacebar') { e.preventDefault(); this.onPlay(); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); this.onPrev(); }
+    else if (e.key === 'ArrowRight') { e.preventDefault(); this.onNext(); }
+  };
+
+  updateClocks = () => {
+    const now = new Date(); const p = (n) => String(n).padStart(2, '0');
+    this.setState({ utc: p(now.getUTCHours()) + ':' + p(now.getUTCMinutes()) + ':' + p(now.getUTCSeconds()) });
+  };
+
+  _tickerOp = 1; _tickerOpTarget = 1;  // ticker fade opacity (eased in the frame loop)
+  setTickerWrapRef = (el) => { this.tickerWrapEl = el; };
+  // fade the ticker out, swap content at the trough, fade back in (on channel change)
+  fadeTicker(key) {
+    if (key === this._feedKey) { this._tickerFading = false; return; }
+    this._tickerFading = true;
+    this._tickerOpTarget = 0;
+    if (this._tickerT1) clearTimeout(this._tickerT1);
+    this._tickerT1 = setTimeout(() => {
+      this._feedKey = key;
+      this._feedItems = this.buildForKey(key);
+      this._tickerMeasure = true;
+      this.forceUpdate();
+      this._tickerOpTarget = 1;
+      this._tickerFading = false;
+      if (this._tickerWantKey !== key) this.fadeTicker(this._tickerWantKey);
+    }, 230);
+  }
+
+  // pick the right feed for a ticker key ('anom' | 'dead' | station index)
+  buildForKey(key) {
+    if (key === 'anom') return this.ANOM_MSGS.map(m => ({ text: m, url: '#' }));
+    if (key === 'dead') return this.deadAirFeed();
+    return this.buildStationFeed(key);
+  }
+
+  // Build a station's randomized, non-repeating weird-transmission feed (signature lines + cosmic pool)
+  buildStationFeed(idx) {
+    const st = this.STATIONS[idx]; if (!st) return [];
+    const shuffle = (arr) => { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; };
+    const sig = (this.STATION_LINES[st.name] || []).slice();
+    const cosmic = shuffle(this.COSMIC.slice()).slice(0, 14);
+    const pool = shuffle(sig.concat(cosmic));
+    return pool.map(m => ({ text: '► ' + m, url: '#' }));
+  }
+  deadAirFeed() {
+    const shuffle = (arr) => { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; };
+    const dead = ['DEAD AIR — SCANNING THE VOID FOR A SIGNAL', 'NOTHING HERE BUT THE GRAND ORDER OF DESIGN AND YOU', 'TUNE IN. EVERY FREQUENCY KNOWS SOMETHING YOU DO NOT'];
+    return shuffle(dead.concat(shuffle(this.COSMIC.slice()).slice(0, 12))).map(m => ({ text: '► ' + m, url: '#' }));
+  }
+
+  // Load the cached music-news ticker (refreshed daily by GitHub Action). Browser only reads a local file.
+  loadNews = () => {
+    fetch('ticker-news.json', { cache: 'no-store' })
+      .then(r => r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status)))
+      .then(list => {
+        const clean = (Array.isArray(list) ? list : []).filter(it => it && it.title && it.url).slice(0, 24);
+        if (clean.length) { this._newsItems = clean; this._tickerMeasure = true; this.forceUpdate(); }
+      })
+      .catch(() => { /* keep cached/fallback items — never empty, never broken */ });
+  };
+
+  renderVals() {
+    const s = this.state; const li = s.lockedIdx;
+    const showStation = li != null && this.STATIONS[li] != null; const st = showStation ? this.STATIONS[li] : null;
+
+    const MONO = "ui-monospace,'SF Mono',Menlo,Consolas,monospace";
+    const ALIEN = "'Galactic',ui-monospace,monospace";
+    if (showStation && this._decode && this._decode.target === st.name) {
+      const elT = performance.now() - this._decode.start;
+      if (elT >= this._decode.hold + this._decode.dur) this._decode = null;
+    }
+    let nameChars;
+    if (showStation && this._decode && this._decode.target === st.name) {
+      const el = performance.now() - this._decode.start;
+      const p = el < this._decode.hold ? 0 : (el - this._decode.hold) / this._decode.dur;
+      const name = st.name, n = name.length, cs = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      nameChars = [];
+      for (let i = 0; i < n; i++) {
+        const c = name[i];
+        if (c === ' ' || c === '.' || c === '/' || c === '-') { nameChars.push({ ch: c, ff: MONO }); continue; }
+        const lockAt = n > 1 ? (i / n) * 0.7 : 0;
+        if (p > lockAt) nameChars.push({ ch: c, ff: MONO });
+        else nameChars.push({ ch: cs[Math.floor(Math.random() * cs.length)], ff: ALIEN });
+      }
+    } else {
+      const nm = showStation ? st.name : 'NO SIGNAL';
+      nameChars = nm.split('').map(c => ({ ch: c, ff: MONO }));
+    }
+    const nameColor = showStation ? '#FFB347' : '#6E6A62';
+    // HELLA_RADIO logo: morph each glyph from the alien font to TAY Birdie, left-to-right
+    const LOGO = 'HELLA_RADIO';
+    const TB = "'TAY Birdie','Helvetica Neue',Helvetica,Arial,sans-serif";
+    const GAL = "'Galactic','TAY Birdie',sans-serif";
+    const SANS = "'Hiragino Kaku Gothic ProN','Hiragino Sans GB','Microsoft YaHei','Helvetica Neue',Arial,sans-serif";
+    // title decodes through scripts: alien glyphs -> Japanese -> Chinese -> Russian -> Latin (a signal-decode event)
+    const LOGO_SCRIPTS = [
+      { t: LOGO, ff: GAL },          // alien / unknown signal (Galactic glyphs)
+      { t: 'ヘラ ラジオ', ff: SANS },     // Japanese Katakana
+      { t: '赫拉电台', ff: SANS },        // Chinese Mandarin
+      { t: 'ХЕЛЛА РАДИО', ff: SANS },   // Russian Cyrillic
+    ];
+    const FF = { TB: TB, SANS: SANS, GAL: GAL };
+    const LOGO_PHASE = 720, LOGO_SETTLE = 520;
+    if (this._logoDecode && performance.now() - this._logoDecode.start >= LOGO_SCRIPTS.length * LOGO_PHASE + LOGO_SETTLE) this._logoDecode = null;
+    const restLang = this.LOGO_LANGS[this._logoRestIdx];
+    const logoThr = i => (i / LOGO.length) * 0.85;
+    let logoChars;
+    const hv = this._logoHover;
+    if (hv) {
+      const p = Math.min(1, (performance.now() - hv.start) / hv.dur);
+      if (hv.dir === 'toAlien') {
+        logoChars = LOGO.split('').map((c, i) => (c === '_') ? { ch: c, ff: TB, op: 1 } : { ch: c, ff: (p > logoThr(i)) ? GAL : TB, op: 1 });
+      } else {
+        logoChars = LOGO.split('').map((c, i) => (c === '_') ? { ch: c, ff: TB, op: 1 } : { ch: c, ff: (p > logoThr(i)) ? TB : GAL, op: 1 });
+        if (p >= 1) this._logoHover = null;
+      }
+    } else if (this._logoSwap) {
+      // 30s language rotation: dissolve current language out, next language in
+      const sw = this._logoSwap;
+      const p = Math.min(1, (performance.now() - sw.start) / sw.dur);
+      const cur = p < 0.5 ? sw.from : sw.to;
+      const half = p < 0.5 ? (1 - p / 0.5) : ((p - 0.5) / 0.5);
+      const op = half * half * (3 - 2 * half);
+      logoChars = cur.t.split('').map(c => ({ ch: c, ff: FF[cur.ff], op }));
+      if (p >= 1) this._logoSwap = null;
+    } else if (this._logoDecode) {
+      const el = performance.now() - this._logoDecode.start;
+      const idx = Math.floor(el / LOGO_PHASE);
+      // smooth dissolve: each script fades in, holds, fades out before the next arrives
+      const local = (el - idx * LOGO_PHASE) / LOGO_PHASE;
+      const fade = local < 0.3 ? local / 0.3 : (local > 0.72 ? Math.max(0, (1 - local) / 0.28) : 1);
+      const op = fade * fade * (3 - 2 * fade);
+      if (idx < LOGO_SCRIPTS.length) {
+        const ph = LOGO_SCRIPTS[idx];
+        logoChars = ph.t.split('').map(c => ({ ch: c, ff: ph.ff, op: op }));
+      } else {
+        // resolve to the current resting language, fading up
+        const fp = Math.min(1, (el - LOGO_SCRIPTS.length * LOGO_PHASE) / LOGO_SETTLE);
+        logoChars = restLang.t.split('').map(c => ({ ch: c, ff: FF[restLang.ff], op: fp * fp * (3 - 2 * fp) }));
+      }
+    } else {
+      logoChars = restLang.t.split('').map(c => ({ ch: c, ff: FF[restLang.ff], op: 1 }));
+    }
+    const onAir = s.isPlaying && showStation;
+    const showReroute = s.isPlaying && showStation && this._rerouted;
+
+    const bands = this.bands || new Array(7).fill(0.08); const SEG = 15; const eqLabels = ['60', '150', '400', '1K', '2.4K', '6K', '15K'];
+    const eqCols = bands.map((lv, bi) => {
+      const lit = Math.max(0, Math.round(lv * SEG)); const segs = [];
+      for (let i = 0; i < SEG; i++) {
+        const on = i < lit; const peak = i === lit - 1;
+        segs.push({ bg: on ? (peak ? '#FFD089' : '#FF9F0A') : 'transparent', border: on ? '1px solid transparent' : '1px solid rgba(255,159,10,.18)', glow: on ? '0 0 4px rgba(255,159,10,.4)' : 'none' });
+      }
+      return { segs, label: eqLabels[bi] };
+    });
+
+    const activeEven = Math.round(this.freq / 2) * 2;
+    const axisLabels = [88, 90, 92, 94, 96, 98, 100, 102, 104, 106, 108].map(v => ({ text: String(v), color: v === activeEven ? '#FF9F0A' : '#6E6A62', glow: v === activeEven ? '0 0 8px rgba(255,159,10,.5)' : 'none', aria: 'Tune to ' + v + ' MHz', onClick: () => this.tuneToNumber(v) }));
+
+    const networkLine = this.STATIONS.filter(s => s.type !== 'anomaly').length + ' LIVE STATIONS';
+    const anomOn = this._anomActive && s.isPlaying;
+    const desiredKey = anomOn ? 'anom' : (showStation ? li : 'dead');
+    if (this._feedKey === null) {
+      // first paint: set without fading
+      this._feedKey = desiredKey; this._tickerWantKey = desiredKey;
+      this._feedItems = this.buildForKey(desiredKey); this._tickerMeasure = true;
+    } else if (desiredKey !== this._feedKey) {
+      this._tickerWantKey = desiredKey;
+      if (!this._tickerFading) setTimeout(() => this.fadeTicker(desiredKey), 0);
+    }
+    const tickerItems = this._feedItems;
+
+    return {
+      freqStr: s.freq.toFixed(2), utc: s.utc, axisLabels, networkLine, tickerItems, setTickerWrapRef: this.setTickerWrapRef,
+      setKnobAreaRef: this.setKnobAreaRef, setKnobRef: this.setKnobRef, setSpecWrapRef: this.setSpecWrapRef,
+      setSpecCanvasRef: this.setSpecCanvasRef, setDotARef: this.setDotARef, setPlayBtnRef: this.setPlayBtnRef,
+      setSignalCanvasRef: this.setSignalCanvasRef, setAirDotRef: this.setAirDotRef, setTickerTrackRef: this.setTickerTrackRef,
+      onTickerDown: this.onTickerDown, onTickerMove: this.onTickerMove, onTickerUp: this.onTickerUp, onTickerItemClick: this.onTickerItemClick,
+      onKnobPointerDown: this.onKnobPointerDown, onSpecPointerDown: this.onSpecPointerDown, onKnobWheel: this.onKnobWheel, onKnobKeyDown: this.onKnobKeyDown,
+      nameChars, nameColor, onAir, showReroute, logoChars, onLogoHover: this.onLogoHover, onLogoLeave: this.onLogoLeave,
+      eqCols, isPlaying: s.isPlaying, notPlaying: !s.isPlaying, playLabel: s.isPlaying ? 'Pause' : 'Play', volume: s.volume,
+      onPlay: this.onPlay, onNext: this.onNext, onPrev: this.onPrev, onVolume: this.onVolume,
+    };
+  }
+}
+</script>
+</body>
+</html>
