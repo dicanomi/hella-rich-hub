@@ -87,63 +87,43 @@ export function useHumanExeAudio() {
     noise.start(now + 0.05);
   }, [getCtx]);
 
-  // ── Continuous scan hum ────────────────────────────────────────────────────
+  // ── Continuous scan hum — very faint 40Hz sub-bass (same as Space Drone) ──────────
   const startScanHum = useCallback((): StopFn => {
     const ctx = getCtx();
     const now = ctx.currentTime;
 
-    // 432Hz drone — the "healing frequency", naturally calming to humans
-    // Harmonic series: 432 (fundamental), 864 (octave), 216 (sub-octave), 648 (fifth)
+    // Single 40Hz sine — barely audible, just a felt presence
+    // Lowpass filtered at 80Hz so only the sub-bass comes through
+    const osc = ctx.createOscillator();
+    const filter = ctx.createBiquadFilter();
     const masterGain = ctx.createGain();
-    const reverb = ctx.createConvolver();
 
-    // Simple convolution reverb buffer for warmth
-    const reverbLen = ctx.sampleRate * 1.5;
-    const reverbBuf = ctx.createBuffer(2, reverbLen, ctx.sampleRate);
-    for (let ch = 0; ch < 2; ch++) {
-      const d = reverbBuf.getChannelData(ch);
-      for (let i = 0; i < reverbLen; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (reverbLen * 0.3));
-    }
-    reverb.buffer = reverbBuf;
-    const reverbGain = ctx.createGain();
-    reverbGain.gain.value = 0.18;
-    masterGain.connect(reverb);
-    reverb.connect(reverbGain);
-    reverbGain.connect(ctx.destination);
-    masterGain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.value = 40;
+    filter.type = 'lowpass';
+    filter.frequency.value = 80;
+    filter.Q.value = 0.8;
 
-    // LFO for gentle tremolo
+    // Slow LFO breathing pulse (same as Space Drone)
     const lfo = ctx.createOscillator();
     const lfoGain = ctx.createGain();
     lfo.type = 'sine';
-    lfo.frequency.value = 0.15; // very slow, meditative
-    lfoGain.gain.value = 0.04;
+    lfo.frequency.value = 0.12; // very slow breath
+    lfoGain.gain.value = 3; // modulates osc frequency slightly
     lfo.connect(lfoGain);
-    lfoGain.connect(masterGain.gain);
+    lfoGain.connect(osc.frequency);
 
-    const tones = [
-      { freq: 432,  gain: 0.22 }, // fundamental — 432Hz
-      { freq: 216,  gain: 0.12 }, // sub-octave — deep warmth
-      { freq: 864,  gain: 0.08 }, // octave — clarity
-      { freq: 648,  gain: 0.06 }, // perfect fifth — harmony
-      { freq: 540,  gain: 0.04 }, // major third — warmth
-    ];
+    osc.connect(filter);
+    filter.connect(masterGain);
+    masterGain.connect(ctx.destination);
 
-    const oscs = tones.map(({ freq, gain }) => {
-      const osc = ctx.createOscillator();
-      const g = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.value = freq;
-      g.gain.value = gain;
-      osc.connect(g);
-      g.connect(masterGain);
-      osc.start(now);
-      return osc;
-    });
-
+    // Very low gain — felt not heard
     masterGain.gain.setValueAtTime(0, now);
-    masterGain.gain.linearRampToValueAtTime(0.45, now + 2.0); // slow fade in
+    masterGain.gain.linearRampToValueAtTime(0.08, now + 2.5); // slow fade in, very quiet
+    osc.start(now);
     lfo.start(now);
+
+    const oscs = [osc, lfo]; // for cleanup
 
     // Alien click scheduler — random chirps during scan
     let alienClickRunning = true;
@@ -193,7 +173,7 @@ export function useHumanExeAudio() {
       masterGain.gain.setValueAtTime(masterGain.gain.value, t);
       masterGain.gain.exponentialRampToValueAtTime(0.001, t + 1.2); // slow fade out
       setTimeout(() => {
-        try { oscs.forEach(o => o.stop()); lfo.stop(); } catch {}
+        try { oscs.forEach(o => o.stop()); } catch {}
       }, 1400);
     };
 
