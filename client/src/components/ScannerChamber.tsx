@@ -1,15 +1,18 @@
 /**
  * ScannerChamber — CSS-based scanner chamber
  *
- * No Three.js. No rotation. No 3D grid.
- * Just the figures, the scan beam, and the morph crossfade.
+ * The scan beam REVEALS the alien as it passes — below the beam the alien
+ * is visible, above the beam the human is visible. This creates the effect
+ * of the machine "discovering" the alien through the scan.
  *
- * Human outline fades out as alien fades in during morph.
- * Scan beam sweeps top→bottom during scanning state.
- * Floating particles via CSS animation.
- * Terminal green only.
+ * Morph sequence (triggered after scan):
+ * - Human visible at rest
+ * - Scan beam sweeps: alien revealed below beam
+ * - After scan: brief flashes of alien, then full morph
+ * - Alien fully revealed in alien/emergency/final states
+ *
+ * Terminal green only. No rotation. No 3D.
  */
-import { useEffect, useRef, useState } from 'react';
 import type { ScanState } from './HumanScanner3D';
 
 interface ScannerChamberProps {
@@ -19,24 +22,30 @@ interface ScannerChamberProps {
 }
 
 const GREEN = '#33ff33';
-const GREEN_DIM = 'rgba(51,255,51,0.25)';
 
 export function ScannerChamber({ scanState, scanProgress, morphProgress }: ScannerChamberProps) {
   const isScanning = scanState === 'scanning';
   const isGlitch = scanState === 'glitch';
   const isEmergency = ['emergency', 'final'].includes(scanState);
-  const isAlienVisible = morphProgress > 0 || ['alien', 'emergency', 'final'].includes(scanState);
+  const isAlienState = ['alien', 'emergency', 'final'].includes(scanState);
+  const isMorphing = scanState === 'morphing';
 
-  // Human: fully visible when morphProgress=0, fades out as morph progresses
-  const humanOpacity = morphProgress === 0 ? 1 : Math.max(0, 1 - morphProgress * 2);
-  // Alien: fades in as morph passes 0.5, full opacity in alien/emergency/final states
-  const alienOpacity = ['alien', 'emergency', 'final'].includes(scanState)
-    ? 1
-    : Math.max(0, morphProgress * 2 - 1);
-  const finalAlienOpacity = alienOpacity;
-
-  // Scan beam Y position as percentage
+  // During scan: alien is revealed below the beam line
+  // beamY is 0–100 (top to bottom percentage)
   const beamY = scanProgress;
+
+  // Human opacity
+  const humanOpacity = isAlienState ? 0
+    : isMorphing ? Math.max(0, 1 - morphProgress * 2)
+    : 1;
+
+  // Alien opacity
+  const alienOpacity = isAlienState ? 1
+    : isMorphing ? Math.max(0, morphProgress * 2 - 1)
+    : 0;
+
+  // Show alien layer during scan (revealed below beam) and morph states
+  const showAlienLayer = isScanning || isMorphing || isAlienState || scanState === 'glitch' || scanState === 'anomaly';
 
   return (
     <div style={{
@@ -51,23 +60,26 @@ export function ScannerChamber({ scanState, scanProgress, morphProgress }: Scann
     }}>
       <style>{`
         @keyframes particleFloat {
-          0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.3; }
-          33% { transform: translateY(-8px) translateX(4px) scale(1.1); opacity: 0.5; }
-          66% { transform: translateY(-4px) translateX(-6px) scale(0.9); opacity: 0.25; }
+          0%   { transform: translateY(0) translateX(0) scale(1); opacity: 0.3; }
+          33%  { transform: translateY(-8px) translateX(4px) scale(1.1); opacity: 0.5; }
+          66%  { transform: translateY(-4px) translateX(-6px) scale(0.9); opacity: 0.25; }
           100% { transform: translateY(0) translateX(0) scale(1); opacity: 0.3; }
         }
         @keyframes glitchFlicker {
-          0%,100% { opacity: 1; transform: translateX(0); }
-          10% { opacity: 0.3; transform: translateX(-3px); }
-          20% { opacity: 0.8; transform: translateX(3px); }
-          30% { opacity: 0.2; transform: translateX(-2px); }
-          40% { opacity: 0.9; transform: translateX(0); }
-          50% { opacity: 0.1; transform: translateX(2px); }
-          60% { opacity: 0.7; transform: translateX(-1px); }
+          0%,100% { opacity: 1; transform: translateX(0); filter: none; }
+          10%  { opacity: 0.3; transform: translateX(-4px); filter: hue-rotate(30deg); }
+          20%  { opacity: 0.8; transform: translateX(4px); }
+          30%  { opacity: 0.2; transform: translateX(-2px); filter: hue-rotate(-20deg); }
+          50%  { opacity: 0.7; transform: translateX(2px); }
+          70%  { opacity: 0.4; transform: translateX(-1px); filter: brightness(1.5); }
         }
         @keyframes emergencyPulse {
           0%,100% { filter: brightness(1); }
-          50% { filter: brightness(1.3) hue-rotate(10deg); }
+          50%     { filter: brightness(1.25); }
+        }
+        @keyframes targetSpin {
+          from { transform: translate(-50%, -50%) rotate(0deg); }
+          to   { transform: translate(-50%, -50%) rotate(360deg); }
         }
         .scanner-figure {
           position: absolute;
@@ -75,43 +87,16 @@ export function ScannerChamber({ scanState, scanProgress, morphProgress }: Scann
           display: flex;
           align-items: center;
           justify-content: center;
-          transition: opacity 0.3s ease;
+          pointer-events: none;
         }
         .scanner-figure img {
-          max-height: 90%;
-          max-width: 80%;
+          max-height: 88%;
+          max-width: 72%;
           object-fit: contain;
-          filter: drop-shadow(0 0 4px rgba(51,255,51,0.3));
-        }
-        .scanner-glitch .scanner-figure {
-          animation: glitchFlicker 0.12s steps(1) infinite;
-        }
-        .scanner-emergency .scanner-figure {
-          animation: emergencyPulse 0.8s ease infinite;
-        }
-        .scan-beam {
-          position: absolute;
-          left: 0;
-          right: 0;
-          height: 2px;
-          background: ${GREEN};
-          box-shadow: 0 0 8px ${GREEN}, 0 0 20px rgba(51,255,51,0.4);
-          pointer-events: none;
-          transition: top 0.08s linear;
-        }
-        .scan-glow {
-          position: absolute;
-          left: 0;
-          right: 0;
-          height: 40px;
-          background: linear-gradient(to bottom, transparent, rgba(51,255,51,0.06), transparent);
-          pointer-events: none;
-          transition: top 0.08s linear;
+          filter: drop-shadow(0 0 6px rgba(51,255,51,0.35));
         }
         .particle {
           position: absolute;
-          width: 4px;
-          height: 4px;
           border-radius: 50%;
           background: ${GREEN};
           opacity: 0.3;
@@ -122,28 +107,18 @@ export function ScannerChamber({ scanState, scanProgress, morphProgress }: Scann
           position: absolute;
           border: 1px solid ${GREEN};
           border-radius: 50%;
-          opacity: 0;
           pointer-events: none;
-          transition: opacity 0.3s ease;
-        }
-        .target-ring.active {
-          opacity: 0.7;
-          animation: targetSpin var(--spin-dur) linear infinite;
-        }
-        @keyframes targetSpin {
-          from { transform: translate(-50%, -50%) rotate(0deg); }
-          to { transform: translate(-50%, -50%) rotate(360deg); }
         }
       `}</style>
 
       {/* Floating particles */}
-      {Array.from({ length: 18 }, (_, i) => (
+      {Array.from({ length: 16 }, (_, i) => (
         <div
           key={i}
           className="particle"
           style={{
-            left: `${10 + (i * 73 % 80)}%`,
-            top: `${5 + (i * 47 % 88)}%`,
+            left: `${8 + (i * 73 % 84)}%`,
+            top: `${4 + (i * 47 % 90)}%`,
             '--dur': `${2.5 + (i * 0.4 % 2.5)}s`,
             '--delay': `${(i * 0.3 % 2.5)}s`,
             width: `${3 + (i % 4)}px`,
@@ -152,81 +127,98 @@ export function ScannerChamber({ scanState, scanProgress, morphProgress }: Scann
         />
       ))}
 
-      {/* Scanner figures container */}
+      {/* ── HUMAN figure ── */}
       <div
-        className={`${isGlitch ? 'scanner-glitch' : ''} ${isEmergency ? 'scanner-emergency' : ''}`}
-        style={{ position: 'absolute', inset: 0 }}
+        className="scanner-figure"
+        style={{
+          opacity: humanOpacity,
+          transition: isMorphing ? 'opacity 0.3s ease' : 'none',
+          animation: isGlitch ? 'glitchFlicker 0.12s steps(1) infinite' : 'none',
+        }}
       >
-        {/* Human figure */}
-        <div
-          className="scanner-figure"
-          style={{ opacity: humanOpacity }}
-        >
-          <img src="/human-outline.png" alt="HUMAN SUBJECT" />
-        </div>
-
-        {/* Alien figure */}
-        {isAlienVisible && (
-          <div
-            className="scanner-figure"
-            style={{ opacity: finalAlienOpacity }}
-          >
-            <img src="/alien-outline.png" alt="UNKNOWN LIFEFORM" />
-          </div>
-        )}
+        <img src="/human-outline.png" alt="HUMAN SUBJECT" />
       </div>
 
-      {/* Scan beam */}
+      {/* ── ALIEN figure — revealed below scan beam during scan ── */}
+      {showAlienLayer && (
+        <div
+          className="scanner-figure"
+          style={{
+            opacity: isAlienState ? alienOpacity
+              : isMorphing ? alienOpacity
+              : 1, // during scan, clipping mask handles visibility
+            transition: isMorphing ? 'opacity 0.3s ease' : 'none',
+            animation: isEmergency ? 'emergencyPulse 0.7s ease infinite' : 'none',
+            // During scan: clip to only show alien below the beam
+            clipPath: isScanning
+              ? `inset(${beamY}% 0 0 0)`
+              : 'none',
+          }}
+        >
+          <img src="/alien-outline.png" alt="UNKNOWN LIFEFORM" />
+        </div>
+      )}
+
+      {/* ── Scan beam ── */}
       {isScanning && (
         <>
-          <div
-            className="scan-beam"
-            style={{ top: `${beamY}%` }}
-          />
-          <div
-            className="scan-glow"
-            style={{ top: `calc(${beamY}% - 20px)` }}
-          />
+          {/* Bright beam line */}
+          <div style={{
+            position: 'absolute',
+            left: 0, right: 0,
+            top: `${beamY}%`,
+            height: '2px',
+            background: GREEN,
+            boxShadow: `0 0 10px ${GREEN}, 0 0 24px rgba(51,255,51,0.5)`,
+            pointerEvents: 'none',
+            zIndex: 10,
+          }} />
+          {/* Glow above beam */}
+          <div style={{
+            position: 'absolute',
+            left: 0, right: 0,
+            top: `calc(${beamY}% - 30px)`,
+            height: '30px',
+            background: 'linear-gradient(to bottom, transparent, rgba(51,255,51,0.08))',
+            pointerEvents: 'none',
+            zIndex: 9,
+          }} />
         </>
       )}
 
-      {/* Target rings — analysis state */}
+      {/* ── Target rings — analysis state ── */}
       {scanState === 'analysis' && (
         <>
-          {/* Head ring */}
-          <div
-            className="target-ring active"
-            style={{
-              width: '60px',
-              height: '60px',
-              left: '50%',
-              top: '12%',
-              '--spin-dur': '2s',
-            } as React.CSSProperties}
-          />
-          {/* Torso ring */}
-          <div
-            className="target-ring active"
-            style={{
-              width: '90px',
-              height: '90px',
-              left: '50%',
-              top: '38%',
-              '--spin-dur': '3s',
-              animationDirection: 'reverse',
-            } as React.CSSProperties}
-          />
+          <div style={{
+            position: 'absolute',
+            width: '70px', height: '70px',
+            left: '50%', top: '14%',
+            border: `1px solid ${GREEN}`,
+            borderRadius: '50%',
+            transform: 'translate(-50%, -50%)',
+            animation: 'targetSpin 2s linear infinite',
+            opacity: 0.7,
+          }} />
+          <div style={{
+            position: 'absolute',
+            width: '100px', height: '100px',
+            left: '50%', top: '40%',
+            border: `1px solid ${GREEN}`,
+            borderRadius: '50%',
+            transform: 'translate(-50%, -50%)',
+            animation: 'targetSpin 3s linear infinite reverse',
+            opacity: 0.5,
+          }} />
         </>
       )}
 
-      {/* Emergency red flash overlay */}
+      {/* ── Emergency overlay ── */}
       {isEmergency && (
         <div style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'rgba(51,255,51,0.03)',
+          position: 'absolute', inset: 0,
+          background: 'rgba(51,255,51,0.02)',
           pointerEvents: 'none',
-          animation: 'emergencyPulse 0.6s ease infinite',
+          animation: 'emergencyPulse 0.5s ease infinite',
         }} />
       )}
     </div>

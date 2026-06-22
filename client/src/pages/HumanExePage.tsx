@@ -2,9 +2,14 @@
  * HUMAN.EXE — hella.rich
  * Human Diagnostic Machine. NODE_1956.
  *
- * Design: cultdeadcow.com ASCII terminal × spacecraft diagnostic
- * Color: terminal green (#33ff33) only. Black background.
- * Typography: monospace. Raw machine output.
+ * 4-Act cinematic experience:
+ * ACT 1 — Human Analysis (scanner as hero, minimal UI)
+ * ACT 2 — Anomaly Detection (machine confusion)
+ * ACT 3 — Contact Event (alien reveal through scan beam)
+ * ACT 4 — Reclassification (SUBJECT WAS NEVER HUMAN)
+ *
+ * Design: spacecraft diagnostic chamber × cultdeadcow terminal
+ * Color: terminal green (#33ff33) only
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { HellaRichSEO } from '../components/HellaRichSEO';
@@ -12,136 +17,79 @@ import { ScannerChamber } from '../components/ScannerChamber';
 import type { ScanState } from '../components/HumanScanner3D';
 import { useHumanExeAudio } from '../hooks/useHumanExeAudio';
 
-// ── Types ──────────────────────────────────────────────────────────────────
-interface Metric {
-  id: string;
-  label: string;
-  value: number;
-}
-
-interface DiagnosticResult {
-  metrics: Metric[];
-  finalReport: string;
-  subjectId: string;
-}
-
 // ── Data ───────────────────────────────────────────────────────────────────
-const METRICS_POOL = [
+const METRICS = [
   { id: 'anxiety',        label: 'ANXIETY' },
-  { id: 'denial',         label: 'DENIAL' },
-  { id: 'caffeine',       label: 'CAFFEINE' },
+  { id: 'thought_noise',  label: 'THOUGHT NOISE' },
   { id: 'focus',          label: 'FOCUS' },
   { id: 'social_battery', label: 'SOCIAL BATTERY' },
-  { id: 'snack_urgency',  label: 'SNACK URGENCY' },
-  { id: 'main_character', label: 'MAIN CHARACTER' },
-  { id: 'spiritual_debt', label: 'SPIRITUAL DEBT' },
-  { id: 'existential',    label: 'EXISTENTIAL STATIC' },
   { id: 'regret_cache',   label: 'REGRET CACHE' },
+  { id: 'main_character', label: 'MAIN CHARACTER INDEX' },
   { id: 'vibe_integrity', label: 'VIBE INTEGRITY' },
-  { id: 'thought_noise',  label: 'THOUGHT NOISE' },
-  { id: 'impulse_ctrl',   label: 'IMPULSE CONTROL' },
   { id: 'dream_residue',  label: 'DREAM RESIDUE' },
-  { id: 'emotional_wifi', label: 'EMOTIONAL WIFI' },
+  { id: 'caffeine',       label: 'CAFFEINE' },
+  { id: 'snack_urgency',  label: 'SNACK URGENCY' },
+  { id: 'existential',    label: 'EXISTENTIAL STATIC' },
+  { id: 'impulse_ctrl',   label: 'IMPULSE CONTROL' },
 ];
 
-const FINAL_REPORTS = [
-  'USER IS FUNCTIONAL BUT STRANGELY LIT FROM WITHIN.',
-  'SUBJECT CONTAINS 14% WEATHER.',
-  'EMOTIONAL FIRMWARE OUTDATED.',
-  'USER APPEARS NORMAL UNTIL LEFT ALONE WITH A DECISION.',
+const REPORTS = [
+  'SUBJECT APPEARS STABLE. BIOLOGICAL PROFILE WITHIN EXPECTED RANGE.',
+  'SUBJECT FUNCTIONAL. EMOTIONAL FIRMWARE SLIGHTLY OUTDATED.',
+  'SUBJECT CONTAINS 14% UNRESOLVED WEATHER.',
+  'BRAIN OPERATING WITH MINIMAL SUPERVISION. WITHIN TOLERANCE.',
   'SOUL DETECTED. PLEASE CONFIRM.',
-  'BRAIN OPERATING WITH MINIMAL SUPERVISION.',
   'SUBJECT IS MOSTLY WATER AND UNFINISHED TASKS.',
-  'REGRET CACHE APPROACHING CAPACITY.',
-  'HUMAN DETECTED. CLASSIFICATION: PROBABLY FINE.',
-  'INTERNAL MONOLOGUE LOUDER THAN EXPECTED.',
-  'PURPOSE NOT FOUND. CONTINUING ANYWAY.',
-  'THOUGHT NOISE WITHIN ACCEPTABLE PARAMETERS. BARELY.',
-];
-
-const ALIEN_FINAL_MESSAGES = [
-  'THEY WERE NEVER HIDING.',
-  'SUBJECT SUCCESSFULLY CONCEALED.',
-  'CLASSIFICATION ERROR CORRECTED.',
-  'HUMAN STATUS REMOVED.',
-  'WE HAVE SEEN THIS BEFORE.',
-  'YOU PASSED THE SCAN.',
-  'WELCOME BACK.',
-  'SIGNAL RECOGNIZED.',
-  'BIOLOGICAL IDENTITY UPDATED.',
-];
-
-const LOG_MESSAGES = [
-  'BOOTING HUMAN.EXE...',
-  'CALIBRATING SUBJECT...',
-  'INITIALIZING SCAN ARRAY...',
-  'DETECTING HUMAN...',
-  'HUMAN DETECTED.',
-  'SCANNING REGRET CACHE...',
-  'CHECKING EMOTIONAL WIFI...',
-  'MEASURING THOUGHT NOISE...',
-  'ANALYZING SPINE SIGNAL...',
-  'VERIFYING PURPOSE...',
-  'PURPOSE NOT FOUND.',
-  'CHECKING SNACK URGENCY...',
-  'CALCULATING MAIN CHARACTER INDEX...',
-  'SCANNING CAFFEINE LEVELS...',
-  'RUNNING FINAL ANALYSIS...',
-  'COMPILING DIAGNOSTIC REPORT...',
-  'ANALYSIS COMPLETE.',
+  'INTERNAL MONOLOGUE LOUDER THAN EXPECTED. NON-CRITICAL.',
+  'PURPOSE NOT FOUND. CONTINUING ANYWAY. STATUS: NOMINAL.',
 ];
 
 const SUBJECT_IDS = ['HMN-0042', 'HMN-1138', 'HMN-7734', 'HMN-2001', 'HMN-9999', 'HMN-0001', 'HMN-3141', 'HMN-6502'];
 
-function randomInt(min: number, max: number) {
+const ACT4_MESSAGES = [
+  'RECHECKING PREVIOUS SCANS...',
+  'RECHECKING PREVIOUS SCANS...',
+  'MATCH FOUND',
+  'YOU HAVE BEEN SCANNED BEFORE',
+  'SIGNAL RECOGNIZED',
+  'WELCOME BACK',
+];
+
+function rnd(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function generateDiagnostics(): DiagnosticResult {
-  const count = randomInt(6, 9);
-  const pool = [...METRICS_POOL].sort(() => Math.random() - 0.5).slice(0, count);
-  const metrics = pool.map(m => ({ ...m, value: randomInt(12, 97) }));
+function generateResult() {
+  const count = rnd(6, 8);
+  const pool = [...METRICS].sort(() => Math.random() - 0.5).slice(0, count);
   return {
-    metrics,
-    finalReport: FINAL_REPORTS[Math.floor(Math.random() * FINAL_REPORTS.length)],
+    metrics: pool.map(m => ({ ...m, value: rnd(12, 97) })),
+    report: REPORTS[Math.floor(Math.random() * REPORTS.length)],
     subjectId: SUBJECT_IDS[Math.floor(Math.random() * SUBJECT_IDS.length)],
   };
 }
 
 // ── ASCII bar ──────────────────────────────────────────────────────────────
-function AsciiBar({ value, width = 20 }: { value: number; width?: number }) {
+function AsciiBar({ value, width = 18 }: { value: number; width?: number }) {
   const filled = Math.round(value / 100 * width);
-  const empty = width - filled;
   return (
-    <span style={{ fontFamily: 'monospace', letterSpacing: '0' }}>
-      [{'█'.repeat(filled)}{'░'.repeat(empty)}] {String(value).padStart(3)}
+    <span style={{ fontFamily: 'monospace', letterSpacing: 0 }}>
+      [{'█'.repeat(filled)}{'░'.repeat(width - filled)}] {String(value).padStart(3)}
     </span>
   );
 }
 
-// ── System log ─────────────────────────────────────────────────────────────
-function SystemLog({ lines }: { lines: string[] }) {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (ref.current) ref.current.scrollTop = ref.current.scrollHeight;
-  }, [lines]);
+// ── Status ticker ──────────────────────────────────────────────────────────
+function StatusTicker({ message, dim = false }: { message: string; dim?: boolean }) {
   return (
-    <div ref={ref} style={{
-      height: '110px',
-      overflowY: 'auto',
-      fontFamily: 'monospace',
-      fontSize: 'clamp(9px,0.9vw,11px)',
-      color: '#33ff33',
-      lineHeight: 1.7,
-      scrollbarWidth: 'none',
-      padding: '4px 0',
+    <div style={{
+      fontFamily: "'Courier New', monospace",
+      fontSize: 'clamp(9px, 1vw, 11px)',
+      letterSpacing: '0.15em',
+      color: dim ? 'rgba(51,255,51,0.4)' : '#33ff33',
+      lineHeight: 1.8,
     }}>
-      {lines.map((line, i) => (
-        <div key={i} style={{ opacity: i === lines.length - 1 ? 1 : 0.45 + (i / lines.length) * 0.4 }}>
-          &gt; {line}
-        </div>
-      ))}
-      <span style={{ display: 'inline-block', width: 7, height: 12, background: '#33ff33', animation: 'cursorBlink 0.7s steps(1) infinite', verticalAlign: 'middle' }} />
+      {message}
     </div>
   );
 }
@@ -149,47 +97,62 @@ function SystemLog({ lines }: { lines: string[] }) {
 // ── Main Component ─────────────────────────────────────────────────────────
 export default function HumanExePage() {
   const [scanState, setScanState] = useState<ScanState>('idle');
-  const [scanY, setScanY] = useState(0);
-  const [logLines, setLogLines] = useState<string[]>(['HUMAN.EXE MKII -- READY.', 'AWAITING SUBJECT...']);
-  const [result, setResult] = useState<DiagnosticResult | null>(null);
-  const [activeZones, setActiveZones] = useState<string[]>([]);
   const [scanProgress, setScanProgress] = useState(0);
   const [morphProgress, setMorphProgress] = useState(0);
-  const [finalMessage, setFinalMessage] = useState('');
-  const [isRareEvent, setIsRareEvent] = useState(false);
+  const [statusMsg, setStatusMsg] = useState('SYSTEM READY');
+  const [subStatusMsg, setSubStatusMsg] = useState('BIOLOGICAL ANALYSIS AVAILABLE');
+  const [result, setResult] = useState<ReturnType<typeof generateResult> | null>(null);
+  const [act4Msg, setAct4Msg] = useState('');
+  const [climaxVisible, setClimaxVisible] = useState(false);
+  const [isRare, setIsRare] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+
   const scanRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const morphRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const stopScanHumRef = useRef<(() => void) | null>(null);
   const audio = useHumanExeAudio();
 
-  const addLog = useCallback((msg: string) => {
-    setLogLines(prev => [...prev.slice(-25), msg]);
-  }, []);
+  const canStart = ['idle', 'alien', 'final', 'empty'].includes(scanState);
 
-  const triggerRevealSequence = useCallback(() => {
+  // ── Reveal sequence ────────────────────────────────────────────────────
+  const triggerReveal = useCallback(() => {
     // 1% rare: empty chamber
     if (Math.random() < 0.01) {
-      setIsRareEvent(true);
+      setIsRare(true);
       setScanState('empty');
-      setTimeout(() => addLog('NO HUMAN DETECTED.'), 1200);
-      setTimeout(() => addLog('CHAMBER IS EMPTY.'), 2200);
-      setTimeout(() => addLog('CONTINUING SCAN...'), 3200);
+      setStatusMsg('NO HUMAN DETECTED');
+      setSubStatusMsg('CHAMBER IS EMPTY');
       return;
     }
-    // Anomaly
-    setTimeout(() => { setScanState('anomaly'); addLog('REVIEWING RESULTS...'); addLog('VERIFYING HUMAN STATUS...'); }, 2500);
-    setTimeout(() => addLog('ANALYZING BIOLOGICAL SIGNATURE...'), 3400);
-    setTimeout(() => addLog('UNKNOWN PATTERN DETECTED'), 4200);
-    setTimeout(() => addLog('CROSS-CHECKING DATABASE...'), 4800);
-    setTimeout(() => addLog('DATABASE MISMATCH'), 5400);
-    // Glitch
-    setTimeout(() => { setScanState('glitch'); addLog('WARNING'); }, 5800);
-    setTimeout(() => addLog('WARNING'), 6200);
-    setTimeout(() => addLog('WARNING'), 6600);
-    // Morph
+
+    // ACT 2: Anomaly
+    setTimeout(() => {
+      setScanState('anomaly');
+      setStatusMsg('REVIEWING RESULTS...');
+      setSubStatusMsg('VERIFYING BIOLOGICAL SIGNATURE...');
+    }, 3000);
+
+    setTimeout(() => setSubStatusMsg('PLEASE WAIT...'), 4200);
+    setTimeout(() => setSubStatusMsg('CROSS-CHECKING DNA RECORDS...'), 5400);
+    setTimeout(() => { setStatusMsg('DATABASE MISMATCH'); setSubStatusMsg('UNKNOWN SIGNATURE DETECTED'); }, 6400);
+    setTimeout(() => setSubStatusMsg('RECHECKING RESULTS'), 7000);
+    setTimeout(() => setSubStatusMsg('RECHECKING RESULTS'), 7600);
+    setTimeout(() => setSubStatusMsg('RECHECKING RESULTS'), 8200);
+
+    // ACT 3: Glitch + Contact
+    setTimeout(() => {
+      setScanState('glitch');
+      setStatusMsg('WARNING');
+      setSubStatusMsg('UNAUTHORIZED BIOLOGICAL STRUCTURE');
+    }, 9000);
+    setTimeout(() => setSubStatusMsg('SUBJECT DOES NOT MATCH HUMAN RECORDS'), 9600);
+    setTimeout(() => setSubStatusMsg('SUBJECT DOES NOT MATCH ANY RECORDS'), 10400);
+    setTimeout(() => setSubStatusMsg('SUBJECT SHOULD NOT EXIST'), 11200);
+
+    // Morph: human fades out, alien fades in
     setTimeout(() => {
       setScanState('morphing');
-      addLog('UNAUTHORIZED LIFEFORM DETECTED');
+      setStatusMsg('CONTACT EVENT DETECTED');
+      setSubStatusMsg('UNKNOWN LIFEFORM IDENTIFIED');
       let mp = 0;
       if (morphRef.current) clearInterval(morphRef.current);
       morphRef.current = setInterval(() => {
@@ -197,115 +160,135 @@ export default function HumanExePage() {
         setMorphProgress(Math.min(mp, 1));
         if (mp >= 1) { clearInterval(morphRef.current!); morphRef.current = null; }
       }, 40);
-    }, 7000);
+    }, 12000);
+
     // Alien revealed
-    setTimeout(() => { setScanState('alien'); addLog('SPECIES UNKNOWN'); addLog('HUMAN CLASSIFICATION REVOKED'); }, 11200);
+    setTimeout(() => {
+      setScanState('alien');
+      setStatusMsg('BIOLOGICAL CLASSIFICATION FAILURE');
+      setSubStatusMsg('HUMAN CLASSIFICATION REVOKED');
+    }, 17000);
+
     // Emergency
     setTimeout(() => {
       setScanState('emergency');
-      ['DATABASE FAILURE','BIOLOGICAL MISMATCH','UNAUTHORIZED LIFEFORM DETECTED','ORIGIN: UNKNOWN','CONTACT EVENT POSSIBLE','QUARANTINE RECOMMENDED','DO NOT TERMINATE ANALYSIS']
-        .forEach((m, i) => setTimeout(() => addLog(m), i * 350));
-    }, 12000);
-    // Final message
+      setStatusMsg('DATABASE FAILURE');
+      setSubStatusMsg('ORIGIN UNKNOWN — QUARANTINE RECOMMENDED');
+    }, 18000);
+
+    // CLIMAX: SUBJECT WAS NEVER HUMAN
+    setTimeout(() => {
+      setClimaxVisible(true);
+      setStatusMsg('');
+      setSubStatusMsg('');
+    }, 20000);
+
+    // Climax holds, then ACT 4
+    setTimeout(() => {
+      setClimaxVisible(false);
+    }, 23000);
+
     setTimeout(() => {
       setScanState('final');
-      const msg = ALIEN_FINAL_MESSAGES[Math.floor(Math.random() * ALIEN_FINAL_MESSAGES.length)];
-      setFinalMessage(msg);
-      addLog(msg);
-    }, 16000);
-    setTimeout(() => setScanState('alien'), 20000);
-  }, [addLog]);
+      setStatusMsg('RECHECKING PREVIOUS SCANS...');
+      setSubStatusMsg('');
+    }, 24000);
 
+    // ACT 4 messages
+    ACT4_MESSAGES.forEach((msg, i) => {
+      setTimeout(() => {
+        if (i < 3) setStatusMsg(msg);
+        else setAct4Msg(msg);
+      }, 25000 + i * 1200);
+    });
+
+    // Final stable state
+    setTimeout(() => {
+      setStatusMsg('SIGNAL RECOGNIZED');
+      setSubStatusMsg('WELCOME BACK');
+    }, 32000);
+
+  }, []);
+
+  // ── Start scan ─────────────────────────────────────────────────────────
   const startScan = useCallback(() => {
-    const canStart = ['idle', 'results', 'alien', 'final', 'empty'].includes(scanState);
     if (!canStart) return;
-    if (stopScanHumRef.current) { stopScanHumRef.current(); stopScanHumRef.current = null; }
+    if (scanRef.current) clearInterval(scanRef.current);
     if (morphRef.current) { clearInterval(morphRef.current); morphRef.current = null; }
 
     setResult(null);
-    setActiveZones([]);
     setScanProgress(0);
-    setScanY(0);
     setMorphProgress(0);
-    setFinalMessage('');
-    setIsRareEvent(false);
+    setAct4Msg('');
+    setClimaxVisible(false);
+    setIsRare(false);
+    setShowResults(false);
     setScanState('powering');
-    setLogLines(['BOOTING HUMAN.EXE...', 'CALIBRATING SUBJECT...']);
+    setStatusMsg('CALIBRATING SUBJECT');
+    setSubStatusMsg('ESTABLISHING BIOLOGICAL PROFILE');
     audio.powerOn();
 
     setTimeout(() => {
       setScanState('scanning');
-      addLog('DETECTING HUMAN...');
-      addLog('HUMAN DETECTED.');
-      stopScanHumRef.current = audio.startScanHum();
+      setStatusMsg('SCANNING NEURAL STRUCTURE');
+      setSubStatusMsg('ANALYZING ORGANIC SYSTEMS');
+      audio.startScanHum();
 
       let y = 0;
-      let logIdx = 4;
-      let lastClickY = -8;
-      let lastBeepY = -15;
+      let lastClick = -8;
+      let lastBeep = -15;
       scanRef.current = setInterval(() => {
         y += 1.2;
-        setScanY(Math.min(y, 100));
         setScanProgress(Math.min(y, 100));
-
-        if (y - lastClickY > 12 + Math.random() * 8) { audio.relayClick(); lastClickY = y; }
-        if (y - lastBeepY > 18 + Math.random() * 12) { audio.beep(440 + Math.random() * 880, 0.06, 0.08); lastBeepY = y; }
-        if (y % 8 < 1.2 && logIdx < LOG_MESSAGES.length) addLog(LOG_MESSAGES[logIdx++]);
+        if (y - lastClick > 12 + Math.random() * 8) { audio.relayClick(); lastClick = y; }
+        if (y - lastBeep > 18 + Math.random() * 12) { audio.beep(440 + Math.random() * 880, 0.06, 0.08); lastBeep = y; }
 
         if (y >= 100) {
           clearInterval(scanRef.current!);
-          if (stopScanHumRef.current) { stopScanHumRef.current(); stopScanHumRef.current = null; }
           setScanState('analysis');
-          addLog('RUNNING FINAL ANALYSIS...');
+          setStatusMsg('VERIFYING HUMAN CLASSIFICATION');
+          setSubStatusMsg('GENERATING REPORT');
           setTimeout(() => audio.targetLock(), 300);
           setTimeout(() => audio.targetLock(), 700);
+
           setTimeout(() => {
-            const diag = generateDiagnostics();
-            setResult(diag);
-            setActiveZones(diag.metrics.map(() => 'full'));
+            const r = generateResult();
+            setResult(r);
             setScanState('results');
-            addLog('ANALYSIS COMPLETE.');
-            addLog(diag.finalReport);
+            setStatusMsg('SUBJECT APPEARS STABLE.');
+            setSubStatusMsg('BIOLOGICAL PROFILE WITHIN EXPECTED RANGE.');
+            setShowResults(true);
             audio.scanComplete();
-            triggerRevealSequence();
+            triggerReveal();
           }, 2200);
         }
       }, 40);
     }, 900);
-  }, [scanState, addLog, audio, triggerRevealSequence]);
+  }, [canStart, audio, triggerReveal]);
 
   useEffect(() => {
     return () => {
       if (scanRef.current) clearInterval(scanRef.current);
       if (morphRef.current) clearInterval(morphRef.current);
-      if (stopScanHumRef.current) stopScanHumRef.current();
     };
   }, []);
 
   const G = '#33ff33';
   const DIM = 'rgba(51,255,51,0.35)';
-  const DIMMER = 'rgba(51,255,51,0.18)';
-  const BG = '#020a02';
+  const DIMMER = 'rgba(51,255,51,0.15)';
+  const BG = '#010601';
   const FONT = "'Courier New', 'Lucida Console', monospace";
-
   const isEmergency = ['emergency', 'final'].includes(scanState);
-  const isAlienState = ['alien', 'emergency', 'final'].includes(scanState);
-  const canStart = ['idle', 'results', 'alien', 'final', 'empty'].includes(scanState);
 
-  const statusLabel =
-    scanState === 'idle' ? 'STANDBY' :
-    scanState === 'powering' ? 'POWERING UP' :
-    scanState === 'scanning' ? 'SCANNING' :
-    scanState === 'analysis' ? 'ANALYZING' :
-    scanState === 'results' ? 'COMPLETE' :
-    scanState === 'anomaly' ? 'ANOMALY' :
-    scanState === 'glitch' ? '!!! WARNING !!!' :
-    scanState === 'morphing' ? 'MORPHING' :
-    scanState === 'alien' ? 'UNKNOWN LIFEFORM' :
-    scanState === 'emergency' ? '!!! EMERGENCY !!!' :
-    scanState === 'final' ? 'CLASSIFICATION UPDATED' :
-    scanState === 'empty' ? 'CHAMBER EMPTY' :
-    'UNKNOWN';
+  const btnLabel =
+    scanState === 'idle' ? '[ BEGIN SCAN ]' :
+    scanState === 'powering' ? '[ POWERING UP... ]' :
+    scanState === 'scanning' ? `[ SCANNING ${Math.round(scanProgress)}% ]` :
+    scanState === 'analysis' ? '[ ANALYZING... ]' :
+    ['anomaly','glitch','morphing','emergency'].includes(scanState) ? '[ PROCESSING... ]' :
+    scanState === 'empty' ? '[ NEXT SUBJECT ]' :
+    canStart ? '[ NEXT SUBJECT ]' :
+    '[ PROCESSING... ]';
 
   return (
     <>
@@ -316,147 +299,179 @@ export default function HumanExePage() {
       />
       <style>{`
         @keyframes cursorBlink { 0%,49%{opacity:1} 50%,100%{opacity:0} }
-        @keyframes glitchShake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-4px)} 40%{transform:translateX(4px)} 60%{transform:translateX(-2px)} 80%{transform:translateX(2px)} }
-        @keyframes scanline { 0%{background-position:0 0} 100%{background-position:0 100%} }
         @keyframes resultIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes climaxIn { from{opacity:0;transform:scale(0.95)} to{opacity:1;transform:scale(1)} }
+        @keyframes climaxOut { from{opacity:1} to{opacity:0} }
+        @keyframes scannerGlow { 0%,100%{box-shadow:0 0 0 rgba(51,255,51,0)} 50%{box-shadow:0 0 20px rgba(51,255,51,0.08)} }
         .human-exe { font-family: ${FONT}; }
-        .human-exe-glitch { animation: glitchShake 0.12s steps(1) infinite; }
-        .ascii-border { border: 1px solid ${DIM}; }
-        .ascii-border-bright { border: 1px solid ${G}; }
-        .ascii-border-emergency { border: 1px solid ${G}; box-shadow: 0 0 12px rgba(51,255,51,0.15); }
+        .scan-btn:hover:not(:disabled) { background: rgba(51,255,51,0.08) !important; }
+        .scan-btn:active:not(:disabled) { transform: scale(0.98); }
       `}</style>
 
-      <div
-        className={`human-exe${scanState === 'glitch' ? ' human-exe-glitch' : ''}`}
-        style={{ minHeight: '100vh', background: BG, color: G, overflowX: 'hidden', position: 'relative' }}
-      >
+      <div className="human-exe" style={{ minHeight: '100vh', background: BG, color: G, overflowX: 'hidden' }}>
         {/* CRT scanlines */}
         <div style={{
-          position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 100,
-          backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.12) 2px, rgba(0,0,0,0.12) 4px)',
+          position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 200,
+          backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px)',
         }} />
 
         {/* ── Header ── */}
         <header style={{
-          padding: 'clamp(52px,8vh,68px) clamp(12px,2vw,20px) clamp(8px,1.5vh,14px)',
-          borderBottom: `1px solid ${DIM}`,
-          fontFamily: FONT,
+          padding: 'clamp(52px,8vh,68px) clamp(16px,3vw,24px) clamp(8px,1.5vh,12px)',
+          display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
+          borderBottom: `1px solid ${DIMMER}`,
         }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '8px' }}>
-            <div>
-              <div style={{ fontSize: 'clamp(11px,1.3vw,14px)', letterSpacing: '0.3em', color: G }}>HUMAN.EXE</div>
-              <div style={{ fontSize: 'clamp(8px,0.8vw,10px)', color: DIM, letterSpacing: '0.15em' }}>HUMAN DIAGNOSTIC MACHINE</div>
-            </div>
-            <div style={{ display: 'flex', gap: '24px', fontSize: 'clamp(8px,0.8vw,9px)', color: DIM, letterSpacing: '0.12em' }}>
-              {[['MODEL','HUMAN.EXE MKII'],['SERIAL','HR-1956-HMN'],['STATUS', statusLabel]].map(([k,v]) => (
-                <div key={k}>
-                  <div style={{ color: DIMMER }}>{k}</div>
-                  <div style={{ color: isEmergency && k === 'STATUS' ? G : DIM }}>{v}</div>
-                </div>
-              ))}
-            </div>
+          <div>
+            <div style={{ fontSize: 'clamp(11px,1.2vw,14px)', letterSpacing: '0.3em' }}>HUMAN.EXE</div>
+            <div style={{ fontSize: 'clamp(8px,0.8vw,9px)', color: DIM, letterSpacing: '0.15em' }}>HUMAN DIAGNOSTIC MACHINE</div>
+          </div>
+          <div style={{ display: 'flex', gap: '20px', fontSize: 'clamp(7px,0.75vw,9px)', color: DIM, letterSpacing: '0.12em', textAlign: 'right' }}>
+            <div><div style={{ color: DIMMER }}>NODE</div><div>NODE_1956</div></div>
+            <div><div style={{ color: DIMMER }}>STATUS</div><div style={{ color: isEmergency ? G : DIM }}>{isEmergency ? '!!! ALERT !!!' : scanState === 'idle' ? 'STANDBY' : 'ACTIVE'}</div></div>
           </div>
         </header>
 
-        {/* ── Main ── */}
+        {/* ── Main layout ── */}
         <main style={{
           display: 'grid',
-          gridTemplateColumns: '1fr clamp(160px,30vw,280px) 1fr',
+          gridTemplateColumns: showResults ? '1fr clamp(200px,32vw,320px) 1fr' : '1fr clamp(240px,40vw,420px) 1fr',
           gap: 'clamp(8px,1.5vw,16px)',
-          padding: 'clamp(10px,1.5vh,16px) clamp(12px,2vw,20px)',
+          padding: 'clamp(10px,1.5vh,16px) clamp(16px,3vw,24px)',
           minHeight: 'calc(100vh - 120px)',
           alignItems: 'start',
+          transition: 'grid-template-columns 0.5s ease',
         }}>
 
-          {/* ── Left panel ── */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontFamily: FONT, fontSize: 'clamp(8px,0.85vw,10px)' }}>
-
-            {/* Machine specs */}
-            <div className="ascii-border" style={{ padding: '10px' }}>
-              <div style={{ color: DIM, marginBottom: '6px', letterSpacing: '0.2em' }}>+-- MACHINE SPECIFICATIONS --+</div>
-              {[
-                ['NODE', 'NODE_1956'],
-                ['SCAN MODE', 'HUMAN'],
-                ['CALIBRATION', 'NOMINAL'],
-                ['CERTIFICATION', 'CLASSIFIED'],
-                ['FIRMWARE', 'v4.2.0-BETA'],
-                ['UPTIME', '...'],
-              ].map(([k, v]) => (
-                <div key={k} style={{ display: 'flex', justifyContent: 'space-between', padding: '2px 0', borderBottom: `1px solid ${DIMMER}`, color: DIM }}>
-                  <span>{k}</span><span style={{ color: G }}>{v}</span>
+          {/* ── Left: status messages ── */}
+          <div style={{ paddingTop: '8px', fontFamily: FONT }}>
+            {/* Status messages */}
+            <div style={{ marginBottom: '16px' }}>
+              {statusMsg && <StatusTicker message={statusMsg} />}
+              {subStatusMsg && <StatusTicker message={subStatusMsg} dim />}
+              {act4Msg && (
+                <div style={{
+                  fontSize: 'clamp(10px,1.1vw,13px)',
+                  letterSpacing: '0.2em',
+                  color: G,
+                  marginTop: '8px',
+                  animation: 'resultIn 0.4s ease',
+                }}>
+                  {act4Msg}
                 </div>
-              ))}
+              )}
             </div>
 
-            {/* Radar - ASCII style */}
-            <div className="ascii-border" style={{ padding: '10px' }}>
-              <div style={{ color: DIM, marginBottom: '6px', letterSpacing: '0.2em' }}>+-- SIGNAL MONITOR --+</div>
-              <pre style={{ color: DIM, fontSize: 'clamp(7px,0.75vw,9px)', lineHeight: 1.3, margin: 0 }}>
-{`    .  *  .  *  .
-  *  .  |  .  *  .
-  . ---(+)--- .  *
-  *  .  |  .  *  .
-    .  *  .  *  .`}
-              </pre>
-              <div style={{ color: DIMMER, marginTop: '4px' }}>
-                {scanState !== 'idle' ? 'SIGNAL ACTIVE' : 'SIGNAL STANDBY'}
+            {/* System log — only show during scan */}
+            {['scanning', 'analysis', 'anomaly', 'glitch', 'morphing'].includes(scanState) && (
+              <div style={{
+                fontSize: 'clamp(8px,0.8vw,9px)',
+                color: DIMMER,
+                letterSpacing: '0.1em',
+                lineHeight: 1.8,
+              }}>
+                <div>&gt; NODE_1956 ACTIVE</div>
+                <div>&gt; BIOLOGICAL SCAN IN PROGRESS</div>
+                {scanState === 'scanning' && <div>&gt; SCAN {Math.round(scanProgress)}% COMPLETE</div>}
+                {scanState === 'analysis' && <div>&gt; RUNNING FINAL ANALYSIS...</div>}
+                {scanState === 'anomaly' && <div>&gt; ANOMALY DETECTED</div>}
+                {scanState === 'glitch' && <div>&gt; !!! SYSTEM INSTABILITY !!!</div>}
+                {scanState === 'morphing' && <div>&gt; CONTACT EVENT IN PROGRESS</div>}
               </div>
-            </div>
+            )}
 
-            {/* System log */}
-            <div className="ascii-border" style={{ padding: '10px' }}>
-              <div style={{ color: DIM, marginBottom: '4px', letterSpacing: '0.2em' }}>+-- SYSTEM LOG --+</div>
-              <SystemLog lines={logLines} />
-            </div>
+            {/* Results — human metrics */}
+            {showResults && result && (
+              <div style={{ animation: 'resultIn 0.5s ease', marginTop: '8px' }}>
+                <div style={{ fontSize: '8px', color: DIM, letterSpacing: '0.2em', marginBottom: '10px' }}>
+                  +-- DIAGNOSTIC METRICS --+
+                </div>
+                {result.metrics.map((m, i) => (
+                  <div key={m.id} style={{
+                    marginBottom: '6px',
+                    animation: `resultIn 0.3s ease ${i * 0.04}s both`,
+                  }}>
+                    <div style={{ fontSize: '7px', color: DIMMER, letterSpacing: '0.1em', marginBottom: '2px' }}>{m.label}</div>
+                    <div style={{ fontSize: 'clamp(7px,0.75vw,9px)', color: DIM }}>
+                      <AsciiBar value={m.value} width={14} />
+                    </div>
+                  </div>
+                ))}
+                <div style={{
+                  marginTop: '12px',
+                  fontSize: '8px',
+                  color: DIM,
+                  letterSpacing: '0.1em',
+                  lineHeight: 1.7,
+                  borderTop: `1px solid ${DIMMER}`,
+                  paddingTop: '8px',
+                }}>
+                  {result.report}
+                </div>
+              </div>
+            )}
           </div>
 
-          {/* ── Center: Scanner chamber ── */}
+          {/* ── Center: Scanner chamber (HERO) ── */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {/* Chamber frame */}
-            <div
-              className={isEmergency ? 'ascii-border-emergency' : 'ascii-border'}
-              style={{
-                position: 'relative',
-                background: '#010601',
-                padding: '8px',
-              }}
-            >
+
+            {/* Chamber */}
+            <div style={{
+              position: 'relative',
+              border: `1px solid ${isEmergency ? G : DIMMER}`,
+              background: '#010601',
+              animation: isEmergency ? 'scannerGlow 0.6s ease infinite' : 'none',
+            }}>
               {/* Corner markers */}
-              <div style={{ position: 'absolute', top: 0, left: 0, color: G, fontSize: '10px', lineHeight: 1, padding: '2px' }}>+</div>
-              <div style={{ position: 'absolute', top: 0, right: 0, color: G, fontSize: '10px', lineHeight: 1, padding: '2px' }}>+</div>
-              <div style={{ position: 'absolute', bottom: 0, left: 0, color: G, fontSize: '10px', lineHeight: 1, padding: '2px' }}>+</div>
-              <div style={{ position: 'absolute', bottom: 0, right: 0, color: G, fontSize: '10px', lineHeight: 1, padding: '2px' }}>+</div>
+              {[['0','0'],['0','auto'],['auto','0'],['auto','auto']].map(([t,b], i) => (
+                <div key={i} style={{
+                  position: 'absolute',
+                  top: t === '0' ? 0 : 'auto',
+                  bottom: b === 'auto' ? 0 : 'auto',
+                  left: i < 2 ? 0 : 'auto',
+                  right: i >= 2 ? 0 : 'auto',
+                  color: G, fontSize: '10px', lineHeight: 1, padding: '2px',
+                }}>+</div>
+              ))}
 
               {/* Subject ID */}
-              <div style={{ textAlign: 'center', fontSize: '8px', color: DIM, letterSpacing: '0.2em', marginBottom: '4px', fontFamily: FONT }}>
+              <div style={{
+                textAlign: 'center',
+                fontSize: '8px',
+                color: DIM,
+                letterSpacing: '0.2em',
+                padding: '6px 0 4px',
+                fontFamily: FONT,
+              }}>
                 SUBJECT: {result?.subjectId || '---'}
               </div>
 
-              {/* 3D scanner */}
-              <div style={{ height: 'clamp(300px,48vw,440px)', position: 'relative' }}>
+              {/* Scanner */}
+              <div style={{ height: 'clamp(320px,55vw,520px)', position: 'relative' }}>
                 <ScannerChamber
                   scanState={scanState}
                   scanProgress={scanProgress}
                   morphProgress={morphProgress}
                 />
-                {/* Scan progress */}
-                {scanState === 'scanning' && (
-                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '2px', background: DIMMER }}>
-                    <div style={{ height: '100%', background: G, width: `${scanProgress}%`, transition: 'width 0.1s linear' }} />
-                  </div>
-                )}
               </div>
 
+              {/* Scan progress bar */}
+              {scanState === 'scanning' && (
+                <div style={{ height: '2px', background: DIMMER }}>
+                  <div style={{ height: '100%', background: G, width: `${scanProgress}%`, transition: 'width 0.1s linear' }} />
+                </div>
+              )}
+
               {/* Scan button */}
-              <div style={{ marginTop: '8px' }}>
+              <div style={{ padding: '8px' }}>
                 <button
+                  className="scan-btn"
                   onClick={startScan}
                   disabled={!canStart}
                   style={{
                     width: '100%',
                     background: 'none',
-                    border: `1px solid ${canStart ? G : DIM}`,
-                    color: canStart ? G : DIM,
+                    border: `1px solid ${canStart ? G : DIMMER}`,
+                    color: canStart ? G : DIMMER,
                     fontFamily: FONT,
                     fontSize: 'clamp(9px,0.9vw,11px)',
                     letterSpacing: '0.3em',
@@ -464,122 +479,86 @@ export default function HumanExePage() {
                     cursor: canStart ? 'pointer' : 'not-allowed',
                     transition: 'all 0.15s ease',
                   }}
-                  onMouseEnter={e => { if (canStart) (e.currentTarget as HTMLElement).style.background = 'rgba(51,255,51,0.08)'; }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'none'; }}
                 >
-                  {scanState === 'idle' ? '[ BEGIN SCAN ]' :
-                   scanState === 'powering' ? '[ POWERING UP... ]' :
-                   scanState === 'scanning' ? `[ SCANNING ${Math.round(scanProgress)}% ]` :
-                   scanState === 'analysis' ? '[ ANALYZING... ]' :
-                   scanState === 'anomaly' ? '[ REVIEWING... ]' :
-                   scanState === 'glitch' ? '[ !!! WARNING !!! ]' :
-                   scanState === 'morphing' ? '[ MORPHING... ]' :
-                   scanState === 'emergency' ? '[ !!! EMERGENCY !!! ]' :
-                   scanState === 'empty' ? '[ SCAN NEXT SUBJECT ]' :
-                   isAlienState ? '[ SCAN NEXT SUBJECT ]' :
-                   '[ SCAN AGAIN ]'}
+                  {btnLabel}
                 </button>
               </div>
             </div>
 
-            {/* Emergency alert */}
-            {isEmergency && (
-              <div className="ascii-border-bright" style={{ padding: '10px', fontFamily: FONT, animation: 'resultIn 0.3s ease' }}>
-                <pre style={{ color: G, fontSize: 'clamp(7px,0.75vw,9px)', margin: 0, lineHeight: 1.5 }}>
-{`!!! CRITICAL ALERT !!!
-SPECIES UNKNOWN
-BIOLOGICAL MISMATCH CONFIRMED
-QUARANTINE RECOMMENDED`}
-                </pre>
-              </div>
-            )}
-
-            {/* Final message */}
-            {scanState === 'final' && finalMessage && (
-              <div className="ascii-border-bright" style={{ padding: '12px', fontFamily: FONT, textAlign: 'center', animation: 'resultIn 0.5s ease' }}>
-                <div style={{ fontSize: 'clamp(9px,1vw,12px)', letterSpacing: '0.15em', color: G, lineHeight: 1.6 }}>
-                  {finalMessage}
-                </div>
-              </div>
-            )}
-
             {/* Rare event */}
-            {scanState === 'empty' && (
-              <div className="ascii-border" style={{ padding: '12px', fontFamily: FONT, textAlign: 'center', animation: 'resultIn 0.5s ease' }}>
-                <pre style={{ color: G, fontSize: 'clamp(8px,0.85vw,10px)', margin: 0, lineHeight: 1.6 }}>
-{`NO HUMAN DETECTED.
-CHAMBER IS EMPTY.
-CONTINUING SCAN...`}
-                </pre>
-              </div>
-            )}
-
-            {/* Final report */}
-            {result && scanState === 'results' && (
-              <div className="ascii-border" style={{ padding: '10px', fontFamily: FONT, animation: 'resultIn 0.5s ease' }}>
-                <div style={{ color: DIM, fontSize: '8px', letterSpacing: '0.2em', marginBottom: '6px' }}>+-- FINAL DIAGNOSTIC REPORT --+</div>
-                <div style={{ color: G, fontSize: 'clamp(8px,0.85vw,10px)', letterSpacing: '0.1em', lineHeight: 1.6 }}>
-                  {result.finalReport}
+            {isRare && (
+              <div style={{
+                border: `1px solid ${G}`,
+                padding: '14px',
+                textAlign: 'center',
+                fontFamily: FONT,
+                animation: 'resultIn 0.5s ease',
+              }}>
+                <div style={{ fontSize: 'clamp(9px,1vw,11px)', letterSpacing: '0.2em', lineHeight: 1.8 }}>
+                  NO HUMAN DETECTED.<br />
+                  <span style={{ color: DIM }}>SUBJECT NOT PRESENT.</span>
                 </div>
               </div>
             )}
           </div>
 
-          {/* ── Right panel: Metrics ── */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontFamily: FONT, fontSize: 'clamp(8px,0.85vw,10px)' }}>
-
-            {/* Diagnostic metrics */}
-            <div className="ascii-border" style={{ padding: '10px' }}>
-              <div style={{ color: DIM, marginBottom: '8px', letterSpacing: '0.2em' }}>+-- DIAGNOSTIC METRICS --+</div>
-              {result ? (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  {result.metrics.map((m, i) => (
-                    <div key={m.id} style={{ animation: `resultIn 0.3s ease ${i * 0.05}s both` }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', color: DIM, marginBottom: '2px' }}>
-                        <span>{m.label}</span>
-                      </div>
-                      <div style={{ color: G, fontSize: 'clamp(7px,0.75vw,9px)' }}>
-                        <AsciiBar value={m.value} width={16} />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div style={{ color: DIMMER }}>
-                  {Array.from({ length: 6 }, (_, i) => (
-                    <div key={i} style={{ marginBottom: '6px' }}>
-                      <div style={{ color: DIMMER }}>---</div>
-                      <div style={{ color: DIMMER, fontSize: '9px' }}>[░░░░░░░░░░░░░░░░]   0</div>
-                    </div>
-                  ))}
-                </div>
-              )}
+          {/* ── Right: machine info ── */}
+          <div style={{ paddingTop: '8px', fontFamily: FONT, fontSize: 'clamp(8px,0.8vw,9px)' }}>
+            <div style={{ color: DIM, marginBottom: '8px', letterSpacing: '0.15em' }}>
+              +-- MACHINE SPECIFICATIONS --+
             </div>
-
-            {/* Vital waveform - ASCII */}
-            <div className="ascii-border" style={{ padding: '10px' }}>
-              <div style={{ color: DIM, marginBottom: '6px', letterSpacing: '0.2em' }}>+-- VITAL WAVEFORM --+</div>
-              <pre style={{ color: DIM, fontSize: 'clamp(7px,0.75vw,9px)', margin: 0, lineHeight: 1.2 }}>
-{scanState === 'idle'
-  ? '_____________________________'
-  : '___/\\___/\\__/\\___/\\___/\\____'}
-              </pre>
-            </div>
+            {[
+              ['SCAN MODE', 'HUMAN'],
+              ['CALIBRATION', 'NOMINAL'],
+              ['CERTIFICATION', 'CLASSIFIED'],
+              ['FIRMWARE', 'v4.2.0-BETA'],
+              ['UPTIME', '...'],
+            ].map(([k, v]) => (
+              <div key={k} style={{
+                display: 'flex', justifyContent: 'space-between',
+                padding: '3px 0',
+                borderBottom: `1px solid ${DIMMER}`,
+                color: DIMMER,
+              }}>
+                <span>{k}</span><span style={{ color: DIM }}>{v}</span>
+              </div>
+            ))}
 
             {/* Certification */}
-            <div className="ascii-border" style={{ padding: '10px' }}>
-              <div style={{ color: DIM, marginBottom: '6px', letterSpacing: '0.2em' }}>+-- CERTIFICATION --+</div>
-              <pre style={{ color: DIMMER, fontSize: 'clamp(7px,0.75vw,8px)', margin: 0, lineHeight: 1.6 }}>
-{`HUMAN.EXE MKII
-AUTHORIZED BIOLOGICAL
-ANALYSIS ONLY.
-RESULTS: INFORMATIONAL.
-CALIBRATION: NOMINAL.
-(C) HELLA.RICH / NODE_1956`}
-              </pre>
+            <div style={{ marginTop: '16px', color: DIMMER, lineHeight: 1.8 }}>
+              <div style={{ color: DIM, marginBottom: '4px' }}>+-- CERTIFICATION --+</div>
+              <div>HUMAN.EXE MKII</div>
+              <div>AUTHORIZED BIOLOGICAL</div>
+              <div>ANALYSIS ONLY.</div>
+              <div>CALIBRATION: NOMINAL.</div>
+              <div style={{ marginTop: '8px', color: DIMMER }}>
+                {`(C) HELLA.RICH / NODE_1956`}
+              </div>
             </div>
           </div>
         </main>
+
+        {/* ── CLIMAX OVERLAY: SUBJECT WAS NEVER HUMAN ── */}
+        {climaxVisible && (
+          <div style={{
+            position: 'fixed', inset: 0,
+            background: 'rgba(1,6,1,0.96)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            zIndex: 500,
+            animation: 'climaxIn 0.5s ease',
+          }}>
+            <div style={{
+              fontFamily: FONT,
+              fontSize: 'clamp(18px,3.5vw,42px)',
+              letterSpacing: '0.2em',
+              color: G,
+              textAlign: 'center',
+              lineHeight: 1.4,
+            }}>
+              SUBJECT WAS NEVER HUMAN
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
