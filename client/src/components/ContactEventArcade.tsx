@@ -311,7 +311,8 @@ export function ContactEventArcade({ onComplete, onExit }: ContactEventArcadePro
       if (e.key === 'ArrowLeft')  s.keys.left  = e.type === 'keydown';
       if (e.key === 'ArrowRight') s.keys.right = e.type === 'keydown';
       if (e.key === ' ')          s.keys.space = e.type === 'keydown';
-      if (e.type === 'keydown') e.preventDefault();
+      if (e.key === 'Escape' && e.type === 'keydown') onExit();
+      if (e.type === 'keydown' && e.key !== 'Escape') e.preventDefault();
     };
 
     window.addEventListener('keydown', onKey);
@@ -440,10 +441,22 @@ THE MACHINE NEEDS ASSISTANCE`}
         height={Math.min(window.innerHeight - 80, 520)}
         style={{ border: `1px solid rgba(51,255,51,0.3)`, imageRendering: 'pixelated' }}
       />
-      <div style={{ marginTop: '8px', color: 'rgba(51,255,51,0.3)', fontSize: '9px', letterSpacing: '0.2em', fontFamily: FONT }}>
-        ← → MOVE &nbsp; SPACE FIRE &nbsp;&nbsp;
-        <button onClick={onExit} style={{ background: 'none', border: 'none', color: 'rgba(51,255,51,0.3)', fontFamily: FONT, fontSize: '9px', letterSpacing: '0.2em', cursor: 'pointer' }}>
-          RETURN TO HELLA.RICH
+      <div style={{ marginTop: '8px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', maxWidth: `${Math.min(window.innerWidth - 32, 640)}px`, fontFamily: FONT }}>
+        <div style={{ color: 'rgba(51,255,51,0.35)', fontSize: '9px', letterSpacing: '0.15em' }}>← → MOVE &nbsp; SPACE FIRE</div>
+        <button
+          onClick={onExit}
+          style={{
+            background: 'none',
+            border: '1px solid rgba(51,255,51,0.4)',
+            color: 'rgba(51,255,51,0.7)',
+            fontFamily: FONT,
+            fontSize: '9px',
+            letterSpacing: '0.2em',
+            padding: '4px 10px',
+            cursor: 'pointer',
+          }}
+        >
+          [ RETURN TO SCAN ] ESC
         </button>
       </div>
     </div>
