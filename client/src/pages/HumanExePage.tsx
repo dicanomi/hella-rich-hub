@@ -8,7 +8,7 @@
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { HellaRichSEO } from '../components/HellaRichSEO';
-import { HumanScanner3D } from '../components/HumanScanner3D';
+import { ScannerChamber } from '../components/ScannerChamber';
 import type { ScanState } from '../components/HumanScanner3D';
 import { useHumanExeAudio } from '../hooks/useHumanExeAudio';
 
@@ -434,10 +434,9 @@ export default function HumanExePage() {
 
               {/* 3D scanner */}
               <div style={{ height: 'clamp(300px,48vw,440px)', position: 'relative' }}>
-                <HumanScanner3D
+                <ScannerChamber
                   scanState={scanState}
                   scanProgress={scanProgress}
-                  activeZones={activeZones}
                   morphProgress={morphProgress}
                 />
                 {/* Scan progress */}
