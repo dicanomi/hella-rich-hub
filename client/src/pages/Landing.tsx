@@ -481,7 +481,7 @@ const PRODUCT_SLUGS = ['orb', 'the-eye', 'low-battery', 'space-drone', 'aether',
 
 // ── Main Landing ───────────────────────────────────────────────────────────
 // ── ArchiveRow — catalog list item (digital archive / OS index feel) ──────────
-function ArchiveRow({ slug, n, title, desc }: { slug: string; n: string; title: string; desc: string }) {
+function ArchiveRow({ slug, n, title, desc, img }: { slug: string; n: string; title: string; desc: string; img: string }) {
   const [hovered, setHovered] = useState(false);
   const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
   return (
@@ -493,7 +493,7 @@ function ArchiveRow({ slug, n, title, desc }: { slug: string; n: string; title: 
       onMouseLeave={() => setHovered(false)}
       style={{
         display: 'grid',
-        gridTemplateColumns: 'clamp(34px,4vw,52px) 1fr auto',
+        gridTemplateColumns: 'clamp(56px,8vw,84px) clamp(34px,4vw,52px) 1fr auto',
         alignItems: 'baseline',
         columnGap: 'clamp(12px,2vw,28px)',
         textDecoration: 'none',
@@ -504,6 +504,25 @@ function ArchiveRow({ slug, n, title, desc }: { slug: string; n: string; title: 
         cursor: 'pointer',
       }}
     >
+      {/* thumbnail */}
+      <img
+        src={img}
+        alt=""
+        aria-hidden="true"
+        loading="lazy"
+        style={{
+          width: 'clamp(56px,8vw,84px)',
+          height: 'clamp(40px,5.5vw,56px)',
+          objectFit: 'cover',
+          borderRadius: '2px',
+          border: '1px solid rgba(255,255,255,0.1)',
+          alignSelf: 'center',
+          opacity: hovered ? 1 : 0.82,
+          transition: 'opacity 0.18s ease',
+          display: 'block',
+        }}
+      />
+
       {/* index number */}
       <span style={{
         fontFamily: "'DM Mono', monospace",
@@ -758,16 +777,16 @@ export default function Landing() {
           ) : (
           <div role="list" style={{ display: 'flex', flexDirection: 'column', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
             {[
-              { slug: 'radio',       n: '01', title: 'HELLA_RADIO', desc: 'A late-night signal you tune into.' },
-              { slug: 'orb',         n: '02', title: 'ORB',         desc: 'A living object. Seven moods rendered as sound and color.' },
-              { slug: 'the-eye',     n: '03', title: 'THE EYE',     desc: 'A strange object that notices you.' },
-              { slug: 'low-battery', n: '04', title: 'LOW BATTERY', desc: 'The sound you ignore until it becomes your personality.' },
-              { slug: 'space-drone', n: '05', title: 'SPACE DRONE', desc: 'A drifting machine for doing absolutely nothing.' },
-              { slug: 'aether',      n: '06', title: 'ÆTHER',       desc: 'Impossible to sound bad.' },
-              { slug: 'dead-air',    n: '07', title: 'DEAD AIR',    desc: 'Lost transmissions and impossible frequencies.' },
-              { slug: 'fourcast',    n: '08', title: 'FOURCAST',    desc: 'A weather app predicting the end of the world. Politely.' },
+              { slug: 'radio',       n: '01', title: 'HELLA_RADIO', desc: 'A late-night signal you tune into.', img: RADIO_CARD },
+              { slug: 'orb',         n: '02', title: 'ORB',         desc: 'A living object. Seven moods rendered as sound and color.', img: CARD_ORB },
+              { slug: 'the-eye',     n: '03', title: 'THE EYE',     desc: 'A strange object that notices you.', img: CARD_THE_EYE },
+              { slug: 'low-battery', n: '04', title: 'LOW BATTERY', desc: 'The sound you ignore until it becomes your personality.', img: CARD_LOW_BATTERY },
+              { slug: 'space-drone', n: '05', title: 'SPACE DRONE', desc: 'A drifting machine for doing absolutely nothing.', img: CARD_SPACE_DRONE },
+              { slug: 'aether',      n: '06', title: 'ÆTHER',       desc: 'Impossible to sound bad.', img: CARD_AETHER },
+              { slug: 'dead-air',    n: '07', title: 'DEAD AIR',    desc: 'Lost transmissions and impossible frequencies.', img: CARD_DEAD_AIR },
+              { slug: 'fourcast',    n: '08', title: 'FOURCAST',    desc: 'A weather app predicting the end of the world. Politely.', img: CARD_FOURCAST },
             ].map(p => (
-              <ArchiveRow key={p.slug} slug={p.slug} n={p.n} title={p.title} desc={p.desc} />
+              <ArchiveRow key={p.slug} slug={p.slug} n={p.n} title={p.title} desc={p.desc} img={p.img} />
             ))}
           </div>
           )}
