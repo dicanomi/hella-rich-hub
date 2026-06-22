@@ -20,7 +20,7 @@ interface HumanScanner3DProps {
   activeZones: string[];
 }
 
-const MODEL_URL = '/Xbot.glb';
+const MODEL_URL = '/male02.glb';
 
 // ── Scan beam ─────────────────────────────────────────────────────────────────
 function ScanBeam({ scanProgress, visible }: { scanProgress: number; visible: boolean }) {
@@ -125,8 +125,8 @@ function HumanModel({ scanState, scanProgress, activeZones }: HumanScanner3DProp
     const size = box.getSize(new THREE.Vector3());
     const center = box.getCenter(new THREE.Vector3());
 
-    // Scale to 1.7 units tall
-    const scale = 1.7 / size.y;
+    // Scale to 1.5 units tall — fits portrait canvas with head room
+    const scale = 1.5 / size.y;
     scene.scale.setScalar(scale);
     scene.position.x = -center.x * scale;
     scene.position.y = -box.min.y * scale;
@@ -198,6 +198,99 @@ function LoadingFallback() {
   );
 }
 
+// ── Floating particles ────────────────────────────────────────────────────────────────
+const PARTICLE_COUNT = 60;
+
+// Pre-compute particle data (stable across renders)
+const particleData = Array.from({ length: PARTICLE_COUNT }, (_, i) => ({
+  // Orbit radius and angle
+  radius: 0.55 + Math.random() * 0.65,
+  angle: (i / PARTICLE_COUNT) * Math.PI * 2,
+  yBase: 0.1 + Math.random() * 1.6,
+  yAmp: 0.08 + Math.random() * 0.12,
+  yFreq: 0.4 + Math.random() * 0.8,
+  yPhase: Math.random() * Math.PI * 2,
+  orbitSpeed: (0.12 + Math.random() * 0.18) * (Math.random() > 0.5 ? 1 : -1),
+  size: 0.008 + Math.random() * 0.012,
+  brightness: 0.3 + Math.random() * 0.5,
+}));
+
+function FloatingParticles({ scanState }: { scanState: ScanState }) {
+  const meshRef = useRef<THREE.InstancedMesh>(null);
+  const dummy = useRef(new THREE.Object3D());
+
+  const isActive = scanState !== 'idle';
+  const baseOpacity = scanState === 'idle' ? 0.35 : 0.6;
+
+  useFrame(() => {
+    if (!meshRef.current) return;
+    const t = Date.now() * 0.001;
+
+    particleData.forEach((p, i) => {
+      const angle = p.angle + t * p.orbitSpeed;
+      const x = Math.cos(angle) * p.radius;
+      const z = Math.sin(angle) * p.radius;
+      const y = p.yBase + Math.sin(t * p.yFreq + p.yPhase) * p.yAmp;
+
+      dummy.current.position.set(x, y, z);
+      dummy.current.scale.setScalar(p.size * (1 + Math.sin(t * 1.5 + i) * 0.2));
+      dummy.current.updateMatrix();
+      meshRef.current!.setMatrixAt(i, dummy.current.matrix);
+    });
+    meshRef.current.instanceMatrix.needsUpdate = true;
+  });
+
+  return (
+    <instancedMesh ref={meshRef} args={[undefined, undefined, PARTICLE_COUNT]}>
+      <sphereGeometry args={[1, 4, 4]} />
+      <meshBasicMaterial
+        color={scanState === 'results' ? '#d4900a' : '#40e8d0'}
+        transparent
+        opacity={baseOpacity}
+        depthWrite={false}
+      />
+    </instancedMesh>
+  );
+}
+
+// ── Body glow pulse ────────────────────────────────────────────────────────────────
+function BodyGlowPulse({ scanState }: { scanState: ScanState }) {
+  const meshRef = useRef<THREE.Mesh>(null);
+
+  useFrame(() => {
+    if (!meshRef.current) return;
+    const mat = meshRef.current.material as THREE.MeshBasicMaterial;
+    const t = Date.now() * 0.001;
+
+    if (scanState === 'idle') {
+      // Slow ambient pulse
+      mat.opacity = 0.025 + Math.sin(t * 0.6) * 0.015;
+    } else if (scanState === 'scanning') {
+      // Faster pulse during scan
+      mat.opacity = 0.04 + Math.sin(t * 2.5) * 0.02;
+    } else if (scanState === 'results') {
+      // Warm amber glow on results
+      mat.color.set('#d4900a');
+      mat.opacity = 0.05 + Math.sin(t * 1.2) * 0.02;
+    } else {
+      mat.opacity = 0.03;
+    }
+  });
+
+  return (
+    <mesh ref={meshRef} position={[0, 0.85, 0]}>
+      <cylinderGeometry args={[0.5, 0.4, 1.8, 16, 1, true]} />
+      <meshBasicMaterial
+        color="#40e8d0"
+        transparent
+        opacity={0.03}
+        side={THREE.BackSide}
+        depthWrite={false}
+      />
+    </mesh>
+  );
+}
+
 // ── Main scene ────────────────────────────────────────────────────────────────
 function Scene(props: HumanScanner3DProps) {
   const { scanState, scanProgress } = props;
@@ -205,8 +298,13 @@ function Scene(props: HumanScanner3DProps) {
   return (
     <>
       <color attach="background" args={['#0a0908']} />
-      <ambientLight intensity={0.05} />
-      <pointLight position={[0, 2, 2]} intensity={0.15} color="#40c060" />
+      <ambientLight intensity={0.08} />
+      {/* Key light — front cyan tint */}
+      <pointLight position={[0, 1.5, 2]} intensity={0.4} color="#40c8b0" />
+      {/* Fill light — back warm */}
+      <pointLight position={[0, 0.5, -1.5]} intensity={0.12} color="#604020" />
+      {/* Top rim light */}
+      <pointLight position={[0, 3, 0]} intensity={0.15} color="#40e8d0" />
 
       <ScanLines />
 
@@ -214,6 +312,9 @@ function Scene(props: HumanScanner3DProps) {
       {scanState !== 'idle' && (
         <gridHelper args={[3, 20, '#1a2a1a', '#0d180d']} position={[0, 0, 0]} />
       )}
+
+      <FloatingParticles scanState={scanState} />
+      <BodyGlowPulse scanState={scanState} />
 
       <Suspense fallback={<LoadingFallback />}>
         <HumanModel {...props} />
@@ -236,7 +337,7 @@ function Scene(props: HumanScanner3DProps) {
 export function HumanScanner3D(props: HumanScanner3DProps) {
   return (
     <Canvas
-      camera={{ position: [0, 0.85, 2.5], fov: 50 }}
+      camera={{ position: [0, 0.6, 2.6], fov: 48 }}
       style={{ width: '100%', height: '100%', background: '#0a0908' }}
       gl={{ antialias: true, alpha: false }}
     >
