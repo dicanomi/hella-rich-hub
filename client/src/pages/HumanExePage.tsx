@@ -8,6 +8,7 @@
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { HellaRichSEO } from '../components/HellaRichSEO';
+import { HumanScanner3D } from '../components/HumanScanner3D';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 type ScanState = 'idle' | 'powering' | 'scanning' | 'analysis' | 'results';
@@ -740,9 +741,9 @@ export default function HumanExePage() {
                 SUBJECT: {result?.subjectId || '---'}
               </div>
 
-              {/* Human body */}
+              {/* 3D Human scanner */}
               <div style={{ height: 'clamp(280px,45vw,420px)', position: 'relative' }}>
-                <HumanBody activeZones={activeZones} scanY={scanY} scanState={scanState} />
+                <HumanScanner3D scanState={scanState} scanProgress={scanProgress} activeZones={activeZones} />
 
                 {/* Scan progress bar */}
                 {(scanState === 'scanning') && (
