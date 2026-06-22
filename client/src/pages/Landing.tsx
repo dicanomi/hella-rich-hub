@@ -14,7 +14,7 @@ import { CreditsModal } from '../components/CreditsModal';
 
 // ── Existing Cloudfront card images (from deployed repos) ──────────────────
 const CARD_THE_EYE    = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/4dGTww6dwDMqWYygdCjBiT/the-eye-card-m8kJtzMhgXq8bTQ7kEpxk6.webp';
-const CARD_HUMAN_EXE  = '/manus-storage/pasted_file_CGJ0gh_image_16b2a6ff.png';
+const CARD_HUMAN_EXE  = 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663292290338/kngkAhgBAywkXaqO.png';
 const CARD_LOW_BATTERY = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/c8PJjjHRHohroqXKsYYz7X/card-low-battery-b2i2kASdULLNdxF4XMjptc.webp';
 const CARD_SPACE_DRONE = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/c8PJjjHRHohroqXKsYYz7X/card-space-drone-ZSPMYcoBfZnyXPZaTunNjX.webp';
 const CARD_AETHER      = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/jbzZmqNRVq8gZbr6uL7crh/card-aether-dCswxwbBYi2VWJHwFeF2rN.webp';
