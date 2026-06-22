@@ -223,8 +223,16 @@ export default function HumanExePage() {
           borderBottom: `1px solid ${DIMMER}`,
         }}>
           <div>
-            <div style={{ fontSize: 'clamp(11px,1.2vw,14px)', letterSpacing: '0.3em' }}>HUMAN.EXE</div>
-            <div style={{ fontSize: 'clamp(8px,0.8vw,9px)', color: DIM, letterSpacing: '0.15em' }}>HUMAN DIAGNOSTIC MACHINE</div>
+            <img
+              src="/human-exe-logo.png"
+              alt="HUMAN.EXE — Human Diagnostic Machine"
+              style={{
+                height: 'clamp(28px, 4vh, 44px)',
+                width: 'auto',
+                display: 'block',
+                imageRendering: 'crisp-edges',
+              }}
+            />
           </div>
           <div style={{ display: 'flex', gap: '20px', fontSize: 'clamp(7px,0.75vw,9px)', color: DIM, letterSpacing: '0.12em', textAlign: 'right' }}>
             <div><div style={{ color: DIMMER }}>NODE</div><div>NODE_1956</div></div>
