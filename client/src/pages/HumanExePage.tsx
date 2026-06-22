@@ -1,9 +1,9 @@
 /**
  * HUMAN.EXE — hella.rich
- * A fake human diagnostic machine.
+ * HUMAN.EXE — Human Diagnostic Machine
  * Model: HUMAN.EXE MKII | Serial: HR-1956-HMN | Node: 1956
  *
- * Design: Cold-war laboratory equipment × Braun industrial × Retro-futurism
+ * Design: Spacecraft diagnostic chamber × Weyland-Yutani terminal × Industrial aerospace
  * Palette: Deep black-brown bg / aged cream machine / amber accent / muted green activity / faded cyan signal
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -577,8 +577,8 @@ export default function HumanExePage() {
     <>
       <HellaRichSEO
         title="HUMAN.EXE — hella.rich"
-        description="A fake human diagnostic machine. Stand in front of the scanner. The machine knows too much."
-        keywords="human scanner, diagnostic machine, hella.rich, HUMAN.EXE, fake scanner, interactive art"
+        description="HUMAN.EXE. Human diagnostic machine. Biological analysis system. NODE_1956."
+        keywords="human scanner, diagnostic machine, hella.rich, HUMAN.EXE, biological analysis, diagnostic system"
       />
       <style>{`
         @keyframes cursorBlink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
@@ -627,7 +627,7 @@ export default function HumanExePage() {
                 HUMAN.EXE
               </div>
               <div style={{ fontSize: '8px', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.3)', marginTop: '2px' }}>
-                DIAGNOSTIC SYSTEM MKII
+                HUMAN DIAGNOSTIC MACHINE
               </div>
             </div>
           </div>
@@ -673,8 +673,8 @@ export default function HumanExePage() {
               {[
                 ['NODE', 'NODE_1956'],
                 ['SCAN MODE', 'HUMAN'],
-                ['CALIBRATION', 'QUESTIONABLE'],
-                ['CERTIFICATION', 'ABSOLUTELY NOT'],
+                ['CALIBRATION', 'NOMINAL'],
+                ['CERTIFICATION', 'CLASSIFIED'],
                 ['FIRMWARE', 'v4.2.0-BETA'],
                 ['UPTIME', '∞'],
               ].map(([k, v]) => (
@@ -958,10 +958,10 @@ export default function HumanExePage() {
               lineHeight: 2,
             }}>
               <div style={{ color: amber, opacity: 0.5, marginBottom: '4px', letterSpacing: '0.3em' }}>CERTIFICATION</div>
-              HUMAN.EXE IS NOT A MEDICAL DEVICE.<br />
-              RESULTS ARE ENTIRELY FABRICATED.<br />
-              MACHINE ACCEPTS NO RESPONSIBILITY.<br />
-              CALIBRATION: QUESTIONABLE.<br />
+              HUMAN.EXE MKII DIAGNOSTIC SYSTEM.<br />
+              AUTHORIZED BIOLOGICAL ANALYSIS ONLY.<br />
+              RESULTS ARE FOR INFORMATIONAL PURPOSES.<br />
+              CALIBRATION: NOMINAL.<br />
               <span style={{ color: amber, opacity: 0.4 }}>© HELLA.RICH / NODE_1956</span>
             </div>
           </div>
