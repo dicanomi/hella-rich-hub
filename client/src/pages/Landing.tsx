@@ -333,8 +333,8 @@ function ProjectCard({ slug, title, tagline, image, index, live = true, cta, fea
           ? `opacity 0.55s cubic-bezier(0.23,1,0.32,1), transform 0.55s cubic-bezier(0.23,1,0.32,1), box-shadow 0.35s ease`
           : 'none',
         boxShadow: hovered
-          ? `0 8px 48px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,${featured ? '0.12' : '0.07'})`
-          : `0 2px 16px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04)`,
+          ? `0 8px 48px rgba(0,0,0,0.7)`
+          : `0 2px 16px rgba(0,0,0,0.5)`,
         willChange: 'transform',
       }}
       onMouseEnter={() => setHovered(true)}
