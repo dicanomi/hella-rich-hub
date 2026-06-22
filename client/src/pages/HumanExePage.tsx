@@ -12,7 +12,8 @@ import { HumanScanner3D } from '../components/HumanScanner3D';
 import { useHumanExeAudio } from '../hooks/useHumanExeAudio';
 
 // ── Types ──────────────────────────────────────────────────────────────────
-type ScanState = 'idle' | 'powering' | 'scanning' | 'analysis' | 'results';
+type ScanState = 'idle' | 'powering' | 'scanning' | 'analysis' | 'results'
+  | 'anomaly' | 'glitch' | 'morphing' | 'alien' | 'emergency' | 'final' | 'empty';
 
 interface Metric {
   id: string;
@@ -455,9 +456,13 @@ export default function HumanExePage() {
   const [activeZones, setActiveZones] = useState<string[]>([]);
   const [blinkState, setBlinkState] = useState(false);
   const [scanProgress, setScanProgress] = useState(0);
+  const [morphProgress, setMorphProgress] = useState(0);
+  const [finalMessage, setFinalMessage] = useState('');
+  const [isRareEvent, setIsRareEvent] = useState(false);
   const scanRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const logRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const stopScanHumRef = useRef<(() => void) | null>(null);
+  const morphRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const audio = useHumanExeAudio();
 
   // Idle blink
@@ -470,6 +475,51 @@ export default function HumanExePage() {
     setLogLines(prev => [...prev.slice(-20), msg]);
   }, []);
 
+  const triggerRevealSequence = useCallback(() => {
+    const rare = Math.random() < 0.01;
+    if (rare) {
+      setIsRareEvent(true);
+      setScanState('empty');
+      setTimeout(() => addLog('NO HUMAN DETECTED.'), 1200);
+      setTimeout(() => addLog('CHAMBER IS EMPTY.'), 2200);
+      setTimeout(() => addLog('CONTINUING SCAN...'), 3200);
+      return;
+    }
+    setTimeout(() => { setScanState('anomaly'); addLog('REVIEWING RESULTS...'); addLog('VERIFYING HUMAN STATUS...'); }, 2500);
+    setTimeout(() => addLog('ANALYZING BIOLOGICAL SIGNATURE...'), 3400);
+    setTimeout(() => addLog('UNKNOWN PATTERN DETECTED'), 4200);
+    setTimeout(() => addLog('CROSS-CHECKING DATABASE...'), 4800);
+    setTimeout(() => addLog('DATABASE MISMATCH'), 5400);
+    setTimeout(() => { setScanState('glitch'); addLog('WARNING'); }, 5800);
+    setTimeout(() => addLog('WARNING'), 6200);
+    setTimeout(() => addLog('WARNING'), 6600);
+    setTimeout(() => {
+      setScanState('morphing');
+      addLog('UNAUTHORIZED LIFEFORM DETECTED');
+      let mp = 0;
+      if (morphRef.current) clearInterval(morphRef.current);
+      morphRef.current = setInterval(() => {
+        mp += 0.01;
+        setMorphProgress(Math.min(mp, 1));
+        if (mp >= 1) { clearInterval(morphRef.current!); morphRef.current = null; }
+      }, 40);
+    }, 7000);
+    setTimeout(() => { setScanState('alien'); addLog('SPECIES UNKNOWN'); addLog('HUMAN CLASSIFICATION REVOKED'); }, 11000);
+    setTimeout(() => {
+      setScanState('emergency');
+      ['DATABASE FAILURE','BIOLOGICAL MISMATCH','UNAUTHORIZED LIFEFORM DETECTED','ORIGIN: UNKNOWN','CONTACT EVENT POSSIBLE','QUARANTINE RECOMMENDED','DO NOT TERMINATE ANALYSIS']
+        .forEach((m, i) => setTimeout(() => addLog(m), i * 400));
+    }, 12000);
+    setTimeout(() => {
+      setScanState('final');
+      const msgs = ['THEY WERE NEVER HIDING.','SUBJECT SUCCESSFULLY CONCEALED.','CLASSIFICATION ERROR CORRECTED.','HUMAN STATUS REMOVED.','WE HAVE SEEN THIS BEFORE.','YOU PASSED THE SCAN.','WELCOME BACK.','SIGNAL RECOGNIZED.','BIOLOGICAL IDENTITY UPDATED.'];
+      const msg = msgs[Math.floor(Math.random() * msgs.length)];
+      setFinalMessage(msg);
+      addLog(msg);
+    }, 16000);
+    setTimeout(() => setScanState('alien'), 20000);
+  }, [addLog]);
+
   const startScan = useCallback(() => {
     if (scanState !== 'idle' && scanState !== 'results') return;
 
@@ -480,6 +530,9 @@ export default function HumanExePage() {
     setActiveZones([]);
     setScanProgress(0);
     setScanY(0);
+    setMorphProgress(0);
+    setFinalMessage('');
+    setIsRareEvent(false);
     setScanState('powering');
     setLogLines(['BOOTING HUMAN.EXE...', 'CALIBRATING SUBJECT...']);
 
@@ -553,6 +606,9 @@ export default function HumanExePage() {
 
             // Scan complete tone
             audio.scanComplete();
+
+            // Trigger reveal sequence after results display
+            triggerRevealSequence();
           }, 2200);
         }
       }, 40);
@@ -588,12 +644,16 @@ export default function HumanExePage() {
         @keyframes crtFlicker { 0%, 98%, 100% { opacity: 1; } 99% { opacity: 0.85; } }
         @keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
         @keyframes resultIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes glitchShake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-3px)} 40%{transform:translateX(3px)} 60%{transform:translateX(-2px)} 80%{transform:translateX(2px)} }
+        @keyframes emergencyPulse { 0%,100%{box-shadow:inset 0 0 0 rgba(224,48,96,0)} 50%{box-shadow:inset 0 0 40px rgba(224,48,96,0.08)} }
         .human-exe-page { animation: crtFlicker 4s steps(1) infinite; }
+        .human-exe-glitch { animation: glitchShake 0.15s steps(1) infinite, crtFlicker 0.2s steps(1) infinite; }
+        .human-exe-emergency { animation: emergencyPulse 0.8s ease infinite; }
         .scan-btn:hover { background: rgba(212,144,10,0.18) !important; border-color: rgba(212,144,10,0.7) !important; }
         .scan-btn:active { transform: scale(0.97); }
       `}</style>
 
-      <div className="human-exe-page" style={{
+      <div className={`human-exe-page${scanState === 'glitch' ? ' human-exe-glitch' : ''}${['emergency','final'].includes(scanState) ? ' human-exe-emergency' : ''}`} style={{
         minHeight: '100vh',
         background: bg,
         color: cream,
@@ -782,7 +842,7 @@ export default function HumanExePage() {
 
               {/* 3D Human scanner */}
               <div style={{ height: 'clamp(280px,45vw,420px)', position: 'relative' }}>
-                <HumanScanner3D scanState={scanState} scanProgress={scanProgress} activeZones={activeZones} />
+                <HumanScanner3D scanState={scanState} scanProgress={scanProgress} activeZones={activeZones} morphProgress={morphProgress} />
 
                 {/* Scan progress bar */}
                 {(scanState === 'scanning') && (
@@ -805,18 +865,19 @@ export default function HumanExePage() {
                 <button
                   className="scan-btn"
                   onClick={startScan}
-                  disabled={scanState === 'scanning' || scanState === 'analysis' || scanState === 'powering'}
+                  disabled={!['idle','results','alien','final','empty'].includes(scanState)}
                   style={{
-                    background: scanState === 'idle' || scanState === 'results'
-                      ? 'rgba(212,144,10,0.08)' : 'rgba(0,0,0,0.3)',
-                    border: `1px solid rgba(212,144,10,${scanState === 'idle' || scanState === 'results' ? '0.5' : '0.2'})`,
-                    color: scanState === 'idle' || scanState === 'results'
-                      ? amber : 'rgba(255,255,255,0.2)',
+                    background: ['idle','results','alien','final','empty'].includes(scanState)
+                      ? (scanState === 'empty' ? 'rgba(255,32,64,0.06)' : 'rgba(212,144,10,0.08)') : 'rgba(0,0,0,0.3)',
+                    border: `1px solid rgba(${['alien','final'].includes(scanState) ? '192,64,224' : scanState === 'empty' ? '255,32,64' : '212,144,10'},${['idle','results','alien','final','empty'].includes(scanState) ? '0.5' : '0.2'})`,
+                    color: ['idle','results','alien','final','empty'].includes(scanState)
+                      ? (['alien','final'].includes(scanState) ? '#c040e0' : scanState === 'empty' ? '#ff2040' : amber)
+                      : 'rgba(255,255,255,0.2)',
                     fontFamily: "'DM Mono', monospace",
                     fontSize: '10px',
                     letterSpacing: '0.3em',
                     padding: '10px 24px',
-                    cursor: scanState === 'idle' || scanState === 'results' ? 'pointer' : 'not-allowed',
+                    cursor: ['idle','results','alien','final','empty'].includes(scanState) ? 'pointer' : 'not-allowed',
                     transition: 'all 0.2s ease',
                     width: '100%',
                   }}
@@ -825,10 +886,67 @@ export default function HumanExePage() {
                    scanState === 'powering' ? 'POWERING UP...' :
                    scanState === 'scanning' ? `SCANNING ${Math.round(scanProgress)}%` :
                    scanState === 'analysis' ? 'ANALYZING...' :
+                   scanState === 'anomaly' ? 'REVIEWING...' :
+                   scanState === 'glitch' ? 'WARNING' :
+                   scanState === 'morphing' ? 'MORPHING...' :
+                   scanState === 'emergency' ? 'EMERGENCY' :
+                   scanState === 'empty' ? 'SCAN NEXT SUBJECT' :
+                   ['alien','final'].includes(scanState) ? 'SCAN NEXT SUBJECT' :
                    'SCAN AGAIN'}
                 </button>
               </div>
             </div>
+
+            {/* Emergency overlay */}
+            {['emergency','final'].includes(scanState) && (
+              <div style={{
+                width: '100%',
+                border: '1px solid rgba(224,48,96,0.5)',
+                padding: '12px 14px',
+                background: 'rgba(224,48,96,0.06)',
+                animation: 'resultIn 0.3s ease',
+              }}>
+                <div style={{ fontSize: '7px', letterSpacing: '0.3em', color: '#e03060', marginBottom: '6px', animation: 'ledPulse 0.5s ease infinite' }}>CRITICAL ALERT</div>
+                <div style={{ fontSize: 'clamp(8px,0.9vw,10px)', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.7)', lineHeight: 1.8 }}>
+                  SPECIES UNKNOWN<br />
+                  BIOLOGICAL MISMATCH CONFIRMED<br />
+                  QUARANTINE RECOMMENDED
+                </div>
+              </div>
+            )}
+
+            {/* Final message */}
+            {scanState === 'final' && finalMessage && (
+              <div style={{
+                width: '100%',
+                border: '1px solid rgba(192,64,224,0.4)',
+                padding: '14px',
+                background: 'rgba(192,64,224,0.05)',
+                animation: 'resultIn 0.5s ease',
+                textAlign: 'center',
+              }}>
+                <div style={{ fontSize: 'clamp(10px,1.2vw,13px)', letterSpacing: '0.2em', color: '#c040e0', lineHeight: 1.5 }}>
+                  {finalMessage}
+                </div>
+              </div>
+            )}
+
+            {/* Rare event: empty chamber */}
+            {scanState === 'empty' && (
+              <div style={{
+                width: '100%',
+                border: '1px solid rgba(255,32,64,0.3)',
+                padding: '14px',
+                background: 'rgba(255,32,64,0.04)',
+                animation: 'resultIn 0.5s ease',
+                textAlign: 'center',
+              }}>
+                <div style={{ fontSize: 'clamp(9px,1vw,11px)', letterSpacing: '0.2em', color: '#ff2040', lineHeight: 1.8 }}>
+                  NO HUMAN DETECTED.<br />
+                  <span style={{ opacity: 0.5 }}>CHAMBER IS EMPTY.</span>
+                </div>
+              </div>
+            )}
 
             {/* Final report */}
             {result && scanState === 'results' && (

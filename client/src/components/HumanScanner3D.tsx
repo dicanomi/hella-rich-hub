@@ -13,7 +13,8 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 
-type ScanState = 'idle' | 'powering' | 'scanning' | 'analysis' | 'results';
+type ScanState = 'idle' | 'powering' | 'scanning' | 'analysis' | 'results'
+  | 'anomaly' | 'glitch' | 'morphing' | 'alien' | 'emergency' | 'final' | 'empty';
 
 interface HumanScanner3DProps {
   scanState: ScanState;
@@ -251,42 +252,126 @@ function ScanLines() {
 }
 
 // ── Human figure ──────────────────────────────────────────────────────────────
-function HumanFigure({ scanState, scanProgress, activeZones }: HumanScanner3DProps) {
-  const groupRef = useRef<THREE.Group>(null);
-  const parts = useMemo(() => buildHuman(), []);
+// ── Alien geometry ────────────────────────────────────────────────────────────────
+function buildAlien(): BodyPart[] {
+  const p: BodyPart[] = [];
+  // Elongated skull
+  p.push({ geo: new THREE.SphereGeometry(0.1, 12, 16), pos: [0, 1.82, 0], zone: 'head' });
+  p.push({ geo: new THREE.TorusGeometry(0.09, 0.018, 6, 18), pos: [0, 1.88, 0], rot: [Math.PI/2,0,0], zone: 'head' });
+  p.push({ geo: new THREE.CylinderGeometry(0.035, 0.045, 0.22, 10), pos: [0, 1.59, 0], zone: 'head' });
+  // Thorax with rib rings
+  p.push({ geo: new THREE.CylinderGeometry(0.2, 0.15, 0.45, 8), pos: [0, 1.28, 0], zone: 'chest' });
+  [1.42,1.28,1.14,1.0].forEach((y,i) => p.push({ geo: new THREE.TorusGeometry(0.18-i*0.01,0.012,5,14), pos:[0,y,0], rot:[Math.PI/2,0,0], zone:'chest' }));
+  // Abdomen segments
+  p.push({ geo: new THREE.CylinderGeometry(0.12,0.18,0.32,8), pos:[0,0.82,0], zone:'gut' });
+  [0.9,0.78,0.66].forEach(y => p.push({ geo: new THREE.TorusGeometry(0.14,0.01,5,12), pos:[0,y,0], rot:[Math.PI/2,0,0], zone:'gut' }));
+  // Pelvis + hip spurs
+  p.push({ geo: new THREE.CylinderGeometry(0.22,0.18,0.14,8), pos:[0,0.6,0], zone:'gut' });
+  p.push({ geo: new THREE.ConeGeometry(0.04,0.18,6), pos:[-0.28,0.6,0], rot:[0,0,Math.PI/2], zone:'arms' });
+  p.push({ geo: new THREE.ConeGeometry(0.04,0.18,6), pos:[0.28,0.6,0], rot:[0,0,-Math.PI/2], zone:'arms' });
+  // Arms
+  p.push({ geo: new THREE.CylinderGeometry(0.04,0.05,0.38,10), pos:[-0.32,1.22,0], rot:[0,0,0.3], zone:'arms' });
+  p.push({ geo: new THREE.CylinderGeometry(0.04,0.05,0.38,10), pos:[0.32,1.22,0], rot:[0,0,-0.3], zone:'arms' });
+  p.push({ geo: new THREE.CylinderGeometry(0.03,0.04,0.42,10), pos:[-0.36,0.88,0], zone:'arms' });
+  p.push({ geo: new THREE.CylinderGeometry(0.03,0.04,0.42,10), pos:[0.36,0.88,0], zone:'arms' });
+  [-0.06,0,0.06].forEach(dx => {
+    p.push({ geo: new THREE.CylinderGeometry(0.01,0.015,0.16,6), pos:[-0.36+dx,0.58,0], zone:'arms' });
+    p.push({ geo: new THREE.CylinderGeometry(0.01,0.015,0.16,6), pos:[0.36+dx,0.58,0], zone:'arms' });
+  });
+  // Digitigrade legs
+  p.push({ geo: new THREE.CylinderGeometry(0.07,0.08,0.42,12), pos:[-0.12,0.38,0.04], rot:[0.2,0,0], zone:'legs' });
+  p.push({ geo: new THREE.CylinderGeometry(0.07,0.08,0.42,12), pos:[0.12,0.38,0.04], rot:[0.2,0,0], zone:'legs' });
+  p.push({ geo: new THREE.CylinderGeometry(0.05,0.07,0.44,12), pos:[-0.12,0.06,-0.04], rot:[-0.25,0,0], zone:'legs' });
+  p.push({ geo: new THREE.CylinderGeometry(0.05,0.07,0.44,12), pos:[0.12,0.06,-0.04], rot:[-0.25,0,0], zone:'legs' });
+  [-0.04,0,0.04].forEach(dx => {
+    p.push({ geo: new THREE.CylinderGeometry(0.015,0.02,0.2,6), pos:[-0.12+dx,-0.24,0.08], rot:[Math.PI/2-0.3,0,0], zone:'legs' });
+    p.push({ geo: new THREE.CylinderGeometry(0.015,0.02,0.2,6), pos:[0.12+dx,-0.24,0.08], rot:[Math.PI/2-0.3,0,0], zone:'legs' });
+  });
+  return p;
+}
 
-  // Shared materials
-  const solidMat = useMemo(() => new THREE.MeshBasicMaterial({
-    color: '#030a07', transparent: true, opacity: 0.82,
-  }), []);
-  const wireMat = useMemo(() => new THREE.MeshBasicMaterial({
-    color: '#40c8b0', wireframe: true, transparent: true, opacity: 0.6,
-  }), []);
+function AlienFigure({ scanState, morphProgress }: { scanState: ScanState; morphProgress: number }) {
+  const groupRef = useRef<THREE.Group>(null);
+  const parts = useMemo(() => buildAlien(), []);
+  const solidMat = useMemo(() => new THREE.MeshBasicMaterial({ color:'#050a08', transparent:true, opacity:0 }), []);
+  const wireMat = useMemo(() => new THREE.MeshBasicMaterial({ color:'#c040e0', wireframe:true, transparent:true, opacity:0 }), []);
 
   useFrame((_, dt) => {
     if (!groupRef.current) return;
+    groupRef.current.rotation.y += dt * 0.18;
+    const t = Date.now() * 0.001;
+    const vis = Math.max(0, morphProgress * 2 - 1);
+    if (scanState === 'emergency') {
+      wireMat.color.set('#e03060');
+      wireMat.opacity = vis * (0.5 + Math.sin(t * 9) * 0.25);
+    } else if (scanState === 'final') {
+      wireMat.color.set('#c040e0');
+      wireMat.opacity = vis * 0.65;
+    } else {
+      wireMat.color.set('#c040e0');
+      wireMat.opacity = vis * 0.6;
+    }
+    solidMat.opacity = vis * 0.88;
+  });
 
-    // Always rotate
+  return (
+    <group ref={groupRef} position={[0, 0.12, 0]}>
+      {parts.map((part, i) => (
+        <group key={i} position={part.pos} rotation={part.rot}>
+          <mesh geometry={part.geo} material={solidMat} renderOrder={0} />
+          <mesh geometry={part.geo} material={wireMat} renderOrder={1} />
+        </group>
+      ))}
+    </group>
+  );
+}
+
+function GlitchOverlay({ active }: { active: boolean }) {
+  const ref = useRef<THREE.Mesh>(null);
+  useFrame(() => {
+    if (!ref.current) return;
+    const mat = ref.current.material as THREE.MeshBasicMaterial;
+    if (!active) { mat.opacity = 0; return; }
+    mat.opacity = Math.random() > 0.65 ? 0.06 + Math.random() * 0.1 : 0;
+    mat.color.set(Math.random() > 0.5 ? '#ff2040' : '#ffffff');
+    ref.current.position.x = (Math.random() - 0.5) * 0.05;
+  });
+  return (
+    <mesh ref={ref} position={[0, 0.8, 0.01]}>
+      <planeGeometry args={[1.2, 1.8]} />
+      <meshBasicMaterial color="#ff2040" transparent opacity={0} depthWrite={false} side={THREE.DoubleSide} />
+    </mesh>
+  );
+}
+
+function HumanFigure({ scanState, scanProgress, activeZones, morphProgress = 0 }: HumanScanner3DProps & { morphProgress?: number }) {
+  const groupRef = useRef<THREE.Group>(null);
+  const parts = useMemo(() => buildHuman(), []);
+  const solidMat = useMemo(() => new THREE.MeshBasicMaterial({ color:'#030a07', transparent:true, opacity:0.82 }), []);
+  const wireMat = useMemo(() => new THREE.MeshBasicMaterial({ color:'#40c8b0', wireframe:true, transparent:true, opacity:0.6 }), []);
+
+  useFrame((_, dt) => {
+    if (!groupRef.current) return;
     const speed = scanState === 'idle' ? 0.22 : scanState === 'scanning' ? 0.32 : 0.18;
     groupRef.current.rotation.y += dt * speed;
 
-    // Update wireframe color
-    const t = Date.now() * 0.001;
-    const beamY = 1.62 - (scanProgress / 100) * 2.02;
-    const isScanning = scanState === 'scanning';
-
-    if (scanState === 'idle') {
-      wireMat.color.set('#40c8b0');
-      wireMat.opacity = 0.5 + Math.sin(t * 0.8) * 0.08;
-    } else if (isScanning) {
-      wireMat.color.set('#40e8d0');
-      wireMat.opacity = 0.55;
-    } else if (scanState === 'analysis') {
-      wireMat.color.set('#d4900a');
-      wireMat.opacity = 0.55;
-    } else if (scanState === 'results') {
-      wireMat.color.set('#40e8d0');
-      wireMat.opacity = 0.6;
+    if (morphProgress > 0) {
+      const fade = Math.max(0, 1 - morphProgress * 2);
+      wireMat.opacity = fade * 0.6;
+      solidMat.opacity = fade * 0.82;
+      if (morphProgress > 0.1 && morphProgress < 0.9) {
+        const d = 1 + Math.sin(Date.now() * 0.02) * morphProgress * 0.08;
+        groupRef.current.scale.set(d, 1/d, d);
+      }
+    } else {
+      groupRef.current.scale.set(1, 1, 1);
+      const t = Date.now() * 0.001;
+      if (scanState === 'idle') { wireMat.color.set('#40c8b0'); wireMat.opacity = 0.5 + Math.sin(t*0.8)*0.08; }
+      else if (scanState === 'scanning') { wireMat.color.set('#40e8d0'); wireMat.opacity = 0.55; }
+      else if (scanState === 'analysis') { wireMat.color.set('#d4900a'); wireMat.opacity = 0.55; }
+      else if (scanState === 'results' || scanState === 'anomaly') { wireMat.color.set('#40e8d0'); wireMat.opacity = 0.6; }
+      else if (scanState === 'glitch') { wireMat.color.set(Math.random()>0.5?'#ff4060':'#40e8d0'); wireMat.opacity = 0.3+Math.random()*0.4; }
+      else { wireMat.color.set('#40c8b0'); wireMat.opacity = 0.5; }
     }
   });
 
@@ -294,9 +379,7 @@ function HumanFigure({ scanState, scanProgress, activeZones }: HumanScanner3DPro
     <group ref={groupRef}>
       {parts.map((part, i) => (
         <group key={i} position={part.pos} rotation={part.rot}>
-          {/* Solid fill — occludes what's behind */}
           <mesh geometry={part.geo} material={solidMat} renderOrder={0} />
-          {/* Wireframe overlay */}
           <mesh geometry={part.geo} material={wireMat} renderOrder={1} />
         </group>
       ))}
@@ -305,14 +388,18 @@ function HumanFigure({ scanState, scanProgress, activeZones }: HumanScanner3DPro
 }
 
 // ── Main scene ────────────────────────────────────────────────────────────────
-function Scene(props: HumanScanner3DProps) {
-  const { scanState, scanProgress } = props;
+function Scene(props: HumanScanner3DProps & { morphProgress?: number }) {
+  const { scanState, scanProgress, morphProgress = 0 } = props;
+  const isReveal = ['morphing','alien','emergency','final'].includes(scanState);
+  const isGlitch = scanState === 'glitch';
+  const isEmergency = scanState === 'emergency' || scanState === 'final';
 
   return (
     <>
-      <color attach="background" args={['#0a0908']} />
-      <ambientLight intensity={0.06} />
-      <pointLight position={[0, 1.5, 2]} intensity={0.5} color="#40c8b0" />
+      <color attach="background" args={[isEmergency ? '#120004' : '#0a0908']} />
+      <ambientLight intensity={isEmergency ? 0.15 : 0.06} />
+      <pointLight position={[0, 1.5, 2]} intensity={isEmergency ? 0.8 : 0.5}
+        color={isEmergency ? '#e03060' : '#40c8b0'} />
       <pointLight position={[0, 0.5, -1.5]} intensity={0.1} color="#604020" />
       <pointLight position={[0, 3, 0]} intensity={0.12} color="#40e8d0" />
 
@@ -324,7 +411,9 @@ function Scene(props: HumanScanner3DProps) {
 
       <FloatingParticles scanState={scanState} />
       <BodyGlowPulse scanState={scanState} />
-      <HumanFigure {...props} />
+      <HumanFigure {...props} morphProgress={morphProgress} />
+      {morphProgress > 0 && <AlienFigure scanState={scanState} morphProgress={morphProgress} />}
+      <GlitchOverlay active={isGlitch || isReveal} />
       <ScanBeam scanProgress={scanProgress} visible={scanState === 'scanning'} />
       <TargetRings visible={scanState === 'analysis'} />
 
@@ -335,7 +424,7 @@ function Scene(props: HumanScanner3DProps) {
 }
 
 // ── Export ────────────────────────────────────────────────────────────────────
-export function HumanScanner3D(props: HumanScanner3DProps) {
+export function HumanScanner3D(props: HumanScanner3DProps & { morphProgress?: number }) {
   return (
     <Canvas
       camera={{ position: [0, 0.72, 3.0], fov: 46 }}
