@@ -20,7 +20,7 @@ interface HumanScanner3DProps {
   activeZones: string[];
 }
 
-const MODEL_URL = '/male02.glb';
+const MODEL_URL = '/human_body.glb';
 
 // ── Scan beam ─────────────────────────────────────────────────────────────────
 function ScanBeam({ scanProgress, visible }: { scanProgress: number; visible: boolean }) {
@@ -110,10 +110,11 @@ function HumanModel({ scanState, scanProgress, activeZones }: HumanScanner3DProp
 
   // Materials refs for dynamic updates
   const wireMatRef = useRef<THREE.MeshBasicMaterial>(
-    new THREE.MeshBasicMaterial({ color: '#40c8b0', wireframe: true, transparent: true, opacity: 0.45 })
+    new THREE.MeshBasicMaterial({ color: '#40c8b0', wireframe: true, transparent: true, opacity: 0.55 })
   );
+  // Solid fill: very dark, just enough to occlude what's behind
   const solidMatRef = useRef<THREE.MeshBasicMaterial>(
-    new THREE.MeshBasicMaterial({ color: '#040c0a', transparent: true, opacity: 0.92 })
+    new THREE.MeshBasicMaterial({ color: '#040c0a', transparent: true, opacity: 0.75 })
   );
 
   // Apply materials and scale once scene is available
@@ -337,7 +338,7 @@ function Scene(props: HumanScanner3DProps) {
 export function HumanScanner3D(props: HumanScanner3DProps) {
   return (
     <Canvas
-      camera={{ position: [0, 0.6, 2.6], fov: 48 }}
+      camera={{ position: [0, 0.75, 2.8], fov: 50 }}
       style={{ width: '100%', height: '100%', background: '#0a0908' }}
       gl={{ antialias: true, alpha: false }}
     >
