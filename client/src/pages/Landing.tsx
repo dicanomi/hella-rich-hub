@@ -480,97 +480,11 @@ const CROSS_AWARENESS: Record<string, string[]> = {
 const PRODUCT_SLUGS = ['orb', 'the-eye', 'low-battery', 'space-drone', 'aether', 'dead-air', 'fourcast'];
 
 // ── Main Landing ───────────────────────────────────────────────────────────
-// ── ArchiveRow — catalog list item (digital archive / OS index feel) ──────────
-function ArchiveRow({ slug, n, title, desc }: { slug: string; n: string; title: string; desc: string }) {
-  const [hovered, setHovered] = useState(false);
-  const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
-  return (
-    <Link
-      href={'/' + slug}
-      role="listitem"
-      aria-label={title + ' — ' + desc}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'clamp(34px,4vw,52px) 1fr auto',
-        alignItems: 'baseline',
-        columnGap: 'clamp(12px,2vw,28px)',
-        textDecoration: 'none',
-        padding: 'clamp(16px,2vw,22px) clamp(4px,1vw,10px)',
-        borderBottom: '1px solid rgba(255,255,255,0.1)',
-        background: hovered ? 'rgba(255,255,255,0.03)' : 'transparent',
-        transition: 'background 0.18s ease',
-        cursor: 'pointer',
-      }}
-    >
-      {/* index number */}
-      <span style={{
-        fontFamily: "'DM Mono', monospace",
-        fontSize: 'clamp(10px,1vw,12px)',
-        letterSpacing: '0.1em',
-        color: hovered ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.3)',
-        transition: 'color 0.18s ease',
-        fontVariantNumeric: 'tabular-nums',
-      }}>{n}</span>
-
-      {/* name + description */}
-      <span style={{ display: 'flex', flexDirection: 'column', gap: '5px', minWidth: 0 }}>
-        <span style={{
-          fontFamily: "'DM Mono', monospace",
-          fontSize: 'clamp(13px,1.5vw,18px)',
-          letterSpacing: '0.14em',
-          textTransform: 'uppercase',
-          color: hovered ? 'rgba(255,255,255,0.96)' : 'rgba(255,255,255,0.82)',
-          transition: 'color 0.18s ease',
-        }}>{title}</span>
-        <span style={{
-          fontFamily: "'Space Grotesk', sans-serif",
-          fontSize: 'clamp(12px,1.15vw,14px)',
-          fontWeight: 300,
-          lineHeight: 1.4,
-          color: 'rgba(255,255,255,0.42)',
-        }}>{desc}</span>
-      </span>
-
-      {/* hover arrow */}
-      <span aria-hidden="true" style={{
-        fontFamily: "'DM Mono', monospace",
-        fontSize: 'clamp(13px,1.4vw,17px)',
-        color: 'rgba(255,255,255,0.7)',
-        opacity: hovered ? 1 : 0,
-        transform: hovered ? 'translateX(0)' : 'translateX(-6px)',
-        transition: 'opacity 0.18s ease, transform 0.18s ease',
-        alignSelf: 'center',
-      }}>→</span>
-    </Link>
-  );
-}
-
 export default function Landing() {
   const [aboutOpen, setAboutOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
   const [creditsOpen, setCreditsOpen] = useState(false);
   const [awarenessMsg, setAwarenessMsg] = useState<{slug: string; text: string} | null>(null);
-
-  // ── View mode: 'gallery' (cards) | 'archive' (catalog list) ──
-  const [view, setView] = useState<'gallery' | 'archive'>('gallery');
-  const [viewSwapping, setViewSwapping] = useState(false);
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem('hella_view');
-      if (saved === 'archive' || saved === 'gallery') setView(saved);
-    } catch (e) { /* ignore */ }
-  }, []);
-  const switchView = (next: 'gallery' | 'archive') => {
-    if (next === view) return;
-    try { localStorage.setItem('hella_view', next); } catch (e) {}
-    const reduce = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce) { setView(next); return; }
-    setViewSwapping(true);
-    setTimeout(() => { setView(next); setViewSwapping(false); }, 160);
-  };
-
 
   // Cross-awareness: rare random message on a card after 8s on page
   useEffect(() => {
@@ -695,57 +609,13 @@ export default function Landing() {
 
         </div>
 
-        {/* ── View toggle: GALLERY / ARCHIVE ── */}
-        <div style={{
-          padding: '0 clamp(24px,5vw,72px)',
-          display: 'flex', justifyContent: 'flex-end', marginBottom: 'clamp(14px,1.6vw,22px)',
-        }}>
-          <div role="tablist" aria-label="Catalog view" style={{
-            display: 'inline-flex', alignItems: 'center', gap: '2px',
-            border: '1px solid rgba(255,255,255,0.12)', borderRadius: '2px',
-            padding: '2px', background: 'rgba(255,255,255,0.02)',
-          }}>
-            {([['gallery','▦','GALLERY'],['archive','☰','ARCHIVE']] as const).map(([mode, glyph, label]) => {
-              const active = view === mode;
-              return (
-                <button
-                  key={mode}
-                  role="tab"
-                  aria-selected={active}
-                  aria-label={label + ' view'}
-                  tabIndex={0}
-                  onClick={() => switchView(mode)}
-                  style={{
-                    display: 'inline-flex', alignItems: 'center', gap: '7px',
-                    fontFamily: "'DM Mono', monospace", fontSize: 'clamp(9px,0.85vw,11px)',
-                    letterSpacing: '0.18em', textTransform: 'uppercase',
-                    padding: '7px 13px', borderRadius: '1px', border: 'none', cursor: 'pointer',
-                    color: active ? 'rgba(0,0,0,0.9)' : 'rgba(255,255,255,0.5)',
-                    background: active ? 'rgba(255,255,255,0.88)' : 'transparent',
-                    transition: 'background 0.22s ease, color 0.22s ease',
-                  }}
-                  onMouseEnter={e => { if (!active) (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.85)'; }}
-                  onMouseLeave={e => { if (!active) (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.5)'; }}
-                >
-                  <span aria-hidden="true" style={{ fontSize: '1.05em', lineHeight: 1 }}>{glyph}</span>
-                  {label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* ── Products: GALLERY (cards) or ARCHIVE (catalog) ── */}
+        {/* ── Cards — all internal routes ── */}
         <main style={{
           padding: '0 clamp(24px,5vw,72px) clamp(64px,10vh,100px)',
           display: 'flex',
           flexDirection: 'column',
-          gap: view === 'archive' ? '0' : 'clamp(3px,0.4vw,6px)',
-          opacity: viewSwapping ? 0 : 1,
-          transition: 'opacity 0.16s ease',
+          gap: 'clamp(3px,0.4vw,6px)',
         }}>
-          {view === 'gallery' ? (
-          <>
           <ProjectCard slug="radio" title="HELLA_RADIO" tagline="A late-night signal you tune into." cta="Tune In" image={RADIO_CARD} index={1} featured={true} enterDelay={80} />
           <ProjectCard slug="orb" title="ORB" tagline="A living object." cta="Touch It" image={CARD_ORB} index={2} enterDelay={140} />
           <ProjectCard slug="the-eye" title="THE EYE" tagline="A strange object that notices you." cta="Look" image={CARD_THE_EYE} index={3} enterDelay={200} />
@@ -754,23 +624,6 @@ export default function Landing() {
           <ProjectCard slug="aether" title="ÆTHER" tagline="Impossible to sound bad." image={CARD_AETHER} index={6} enterDelay={380} />
           <ProjectCard slug="dead-air" title="DEAD AIR" tagline="Late night radio scanner." cta="Tune In" image={CARD_DEAD_AIR} index={7} enterDelay={440} />
           <ProjectCard slug="fourcast" title="FOURCAST" tagline="A weather app predicting the end of the world. Politely." cta="Check My Day" image={CARD_FOURCAST} index={8} enterDelay={500} />
-          </>
-          ) : (
-          <div role="list" style={{ display: 'flex', flexDirection: 'column', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-            {[
-              { slug: 'radio',       n: '01', title: 'HELLA_RADIO', desc: 'A late-night signal you tune into.' },
-              { slug: 'orb',         n: '02', title: 'ORB',         desc: 'A living object. Seven moods rendered as sound and color.' },
-              { slug: 'the-eye',     n: '03', title: 'THE EYE',     desc: 'A strange object that notices you.' },
-              { slug: 'low-battery', n: '04', title: 'LOW BATTERY', desc: 'The sound you ignore until it becomes your personality.' },
-              { slug: 'space-drone', n: '05', title: 'SPACE DRONE', desc: 'A drifting machine for doing absolutely nothing.' },
-              { slug: 'aether',      n: '06', title: 'ÆTHER',       desc: 'Impossible to sound bad.' },
-              { slug: 'dead-air',    n: '07', title: 'DEAD AIR',    desc: 'Lost transmissions and impossible frequencies.' },
-              { slug: 'fourcast',    n: '08', title: 'FOURCAST',    desc: 'A weather app predicting the end of the world. Politely.' },
-            ].map(p => (
-              <ArchiveRow key={p.slug} slug={p.slug} n={p.n} title={p.title} desc={p.desc} />
-            ))}
-          </div>
-          )}
 
           {/* Cross-awareness overlay — rare terminal message on a card */}
           {awarenessMsg && (
