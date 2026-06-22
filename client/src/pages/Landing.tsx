@@ -282,6 +282,7 @@ function ProjectCard({ slug, title, tagline, image, index, live = true, cta, fea
     slug === 'the-eye'     ? "'Cormorant Garamond', 'Georgia', serif" :
     slug === 'low-battery' ? "'ArenaGraffiti', 'GraffitiCity', 'Permanent Marker', cursive" :
     slug === 'radio'       ? "'TAY Birdie', 'Space Mono', monospace" :
+    slug === 'human-exe'   ? "'Courier New', 'Lucida Console', monospace" :
     "'Space Grotesk', sans-serif";
 
   const titleSize =
