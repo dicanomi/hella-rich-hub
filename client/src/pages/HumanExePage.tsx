@@ -609,7 +609,7 @@ export default function HumanExePage() {
 
         {/* Machine header */}
         <header style={{
-          padding: 'clamp(12px,2vh,20px) clamp(16px,3vw,32px)',
+          padding: 'clamp(56px,8vh,72px) clamp(16px,3vw,32px) clamp(12px,2vh,20px)',
           borderBottom: `1px solid rgba(212,144,10,0.2)`,
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           background: 'rgba(0,0,0,0.3)',
