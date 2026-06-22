@@ -82,6 +82,7 @@ export default function HumanExePage() {
   const [alertActive, setAlertActive] = useState(false);
 
   const scanRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const contactEventPlayed = useRef(false);
   const audio = useHumanExeAudio();
 
   const canStart = ['idle', 'alien', 'final', 'empty'].includes(scanState);
@@ -98,6 +99,7 @@ export default function HumanExePage() {
     setShowEngage(false);
     setIsRare(false);
     setAlertActive(false);
+    contactEventPlayed.current = false;
     setScanState('powering');
     setStatusMsg('CALIBRATING SUBJECT');
     setSubStatusMsg('ESTABLISHING BIOLOGICAL PROFILE');
@@ -132,16 +134,23 @@ export default function HumanExePage() {
           setSubStatusMsg('BIOLOGICAL PROFILE WITHIN EXPECTED RANGE');
           audio.scanComplete();
 
-          // ACT 3 — ALERT after 3 seconds
+          // ACT 3 — Contact event audio (0.5s after results, once only)
+          setTimeout(() => {
+            if (!contactEventPlayed.current) {
+              contactEventPlayed.current = true;
+              audio.contactEvent();
+            }
+          }, 500);
+
+          // ALERT after 4.5s (lets contact event audio finish first)
           setTimeout(() => {
             setAlertActive(true);
             setScanState('emergency');
             setStatusMsg('WARNING');
             setSubStatusMsg('UNAUTHORIZED LIFEFORM DETECTED');
-            // Trigger alert sound
             audio.targetLock();
             setTimeout(() => audio.targetLock(), 400);
-          }, 3000);
+          }, 4500);
 
           setTimeout(() => setSubStatusMsg('CONTACT EVENT DETECTED'), 4200);
           setTimeout(() => setSubStatusMsg('BIOLOGICAL CLASSIFICATION FAILURE'), 5400);

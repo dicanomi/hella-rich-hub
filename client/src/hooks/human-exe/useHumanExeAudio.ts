@@ -181,6 +181,45 @@ export function useHumanExeAudio() {
   }, [getCtx]);
 
   // ── Relay click ────────────────────────────────────────────────────────────
+
+  // ── Contact event audio — alien communication motif ──────────────────────
+  const contactEvent = useCallback(() => {
+    const ctx = getCtx();
+    const now = ctx.currentTime;
+    const signal = (t: number, freq: number, dur: number, type: OscillatorType = 'sine', g = 0.13, freqEnd?: number) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, t);
+      if (freqEnd) osc.frequency.exponentialRampToValueAtTime(freqEnd, t + dur);
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(g, t + 0.01);
+      gain.gain.setValueAtTime(g, t + dur - 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + dur);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(t); osc.stop(t + dur + 0.02);
+    };
+    signal(now + 0.0,  440,  0.12, 'square', 0.12);
+    signal(now + 0.35, 660,  0.08, 'square', 0.10);
+    signal(now + 0.48, 660,  0.08, 'square', 0.10);
+    signal(now + 0.75, 880,  0.18, 'sine',   0.13, 1320);
+    signal(now + 1.15, 1174, 0.22, 'triangle', 0.09);
+    signal(now + 1.15, 987,  0.22, 'sine',     0.07);
+    const bufLen = Math.floor(ctx.sampleRate * 0.06);
+    const buf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < bufLen; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufLen * 0.4));
+    const n = ctx.createBufferSource();
+    const ng = ctx.createGain(); ng.gain.value = 0.04;
+    n.buffer = buf; n.connect(ng); ng.connect(ctx.destination);
+    n.start(now + 1.15);
+    signal(now + 1.65, 1047, 0.10, 'square', 0.10);
+    signal(now + 1.80, 784,  0.10, 'square', 0.10);
+    signal(now + 1.95, 523,  0.16, 'sine',   0.12);
+    signal(now + 2.5,  1760, 0.06, 'square', 0.08);
+    signal(now + 2.62, 880,  0.08, 'square', 0.08);
+  }, [getCtx]);
+
   const relayClick = useCallback(() => {
     const ctx = getCtx();
     const now = ctx.currentTime;
@@ -340,6 +379,7 @@ export function useHumanExeAudio() {
     targetLock,
     scanComplete,
     startAmbient,
+    contactEvent,
     stopAll,
     isUnlocked: () => unlocked.current,
   };
