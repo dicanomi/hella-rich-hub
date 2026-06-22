@@ -58,14 +58,15 @@ const SECTIONS: Array<{ lines: Array<{ type: string; text?: string }> }> = [
   {
     lines: [
       { type: 'label',    text: 'PRODUCTS' },
-      { type: 'product',  text: 'HELLA_RADIO' },
-      { type: 'product',  text: 'ORB' },
-      { type: 'product',  text: 'THE EYE' },
-      { type: 'product',  text: 'LOW BATTERY' },
       { type: 'product',  text: 'SPACE DRONE' },
+      { type: 'product',  text: 'HUMAN.EXE' },
+      { type: 'product',  text: 'LOW BATTERY' },
       { type: 'product',  text: 'ÆTHER' },
       { type: 'product',  text: 'DEAD AIR' },
+      { type: 'product',  text: 'ORB' },
       { type: 'product',  text: 'FOURCAST' },
+      { type: 'product',  text: 'THE EYE' },
+      { type: 'product',  text: 'HELLA_RADIO' },
     ],
   },
   {

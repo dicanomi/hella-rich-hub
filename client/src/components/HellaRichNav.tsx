@@ -16,15 +16,15 @@ interface NavProject {
 }
 
 const PROJECTS: NavProject[] = [
-  { title: 'THE EYE', slug: '/the-eye' },
-  { title: 'LOW BATTERY', slug: '/low-battery' },
   { title: 'SPACE DRONE', slug: '/space-drone' },
+  { title: 'HUMAN.EXE', slug: '/human-exe' },
+  { title: 'LOW BATTERY', slug: '/low-battery' },
   { title: 'ÆTHER', slug: '/aether' },
   { title: 'DEAD AIR', slug: '/dead-air' },
   { title: 'ORB', slug: '/orb' },
   { title: 'FOURCAST', slug: '/fourcast' },
+  { title: 'THE EYE', slug: '/the-eye' },
   { title: 'RADIO', slug: '/radio' },
-  { title: 'HUMAN.EXE', slug: '/human-exe' },
 ];
 
 export function HellaRichNav() {

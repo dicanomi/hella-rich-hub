@@ -198,8 +198,8 @@ export default function HumanExePage() {
     <>
       <HellaRichSEO
         title="HUMAN.EXE — hella.rich"
-        description="HUMAN.EXE. Human diagnostic machine. Biological analysis system. NODE_1956."
-        keywords="human scanner, diagnostic machine, hella.rich, HUMAN.EXE, biological analysis"
+        description="HUMAN.EXE. Human Diagnostic Machine. Biological analysis system. NODE_1956. Human scanner, alien detection, contact event, terminal defense system."
+        keywords="human scanner, alien detection, diagnostic machine, contact event, node_1956, terminal defense system, hella.rich, HUMAN.EXE"
       />
       <style>{`
         @keyframes cursorBlink { 0%,49%{opacity:1} 50%,100%{opacity:0} }
