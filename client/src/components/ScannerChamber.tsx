@@ -27,13 +27,13 @@ export function ScannerChamber({ scanState, scanProgress, morphProgress }: Scann
   const isEmergency = ['emergency', 'final'].includes(scanState);
   const isAlienVisible = morphProgress > 0 || ['alien', 'emergency', 'final'].includes(scanState);
 
-  // Human opacity: fades out as morph progresses
-  const humanOpacity = Math.max(0, 1 - morphProgress * 2);
-  // Alien opacity: fades in as morph passes 0.5
-  const alienOpacity = Math.max(0, morphProgress * 2 - 1);
-  // For alien-only states, show alien at full opacity
-  const finalAlienOpacity = ['alien', 'emergency', 'final'].includes(scanState) && morphProgress >= 1
-    ? 1 : alienOpacity;
+  // Human: fully visible when morphProgress=0, fades out as morph progresses
+  const humanOpacity = morphProgress === 0 ? 1 : Math.max(0, 1 - morphProgress * 2);
+  // Alien: fades in as morph passes 0.5, full opacity in alien/emergency/final states
+  const alienOpacity = ['alien', 'emergency', 'final'].includes(scanState)
+    ? 1
+    : Math.max(0, morphProgress * 2 - 1);
+  const finalAlienOpacity = alienOpacity;
 
   // Scan beam Y position as percentage
   const beamY = scanProgress;
