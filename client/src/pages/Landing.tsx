@@ -842,7 +842,7 @@ export default function Landing() {
         }}>
           {view === 'gallery' ? (
           <>
-          <ProjectCard slug="radio" title="HELLA_RADIO" tagline="A late-night signal you tune into." cta="Tune In" image={RADIO_CARD} index={1} featured={true} enterDelay={80} />
+          <ProjectCard slug="radio" title="HELLA_RADIO" tagline="A late-night signal you tune into." cta="Tune In" image={RADIO_CARD} index={1} enterDelay={80} />
           <ProjectCard slug="space-drone" title="SPACE DRONE" tagline="A drifting machine for doing absolutely nothing." image={CARD_SPACE_DRONE} index={1} enterDelay={80} />
           <ProjectCard slug="human-exe" title="HUMAN.EXE" tagline="Human Diagnostic Machine" cta="ENTER" image={CARD_HUMAN_EXE} index={2} enterDelay={140} />
           <ProjectCard slug="low-battery" title="LOW BATTERY" tagline="The sound you ignore until it becomes your personality." cta="Begin Ignoring" image={CARD_LOW_BATTERY} index={3} enterDelay={200} />
