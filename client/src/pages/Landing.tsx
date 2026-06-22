@@ -322,7 +322,7 @@ function ProjectCard({ slug, title, tagline, image, index, live = true, cta, fea
       style={{
         position: 'relative',
         height: cardHeight,
-        borderRadius: '2px',
+        borderRadius: '0',
         overflow: 'hidden',
         cursor: live ? 'pointer' : 'default',
         opacity: visible ? (live ? 1 : 0.4) : 0,
@@ -838,7 +838,7 @@ export default function Landing() {
           padding: '0 clamp(24px,5vw,72px) clamp(64px,10vh,100px)',
           display: 'flex',
           flexDirection: 'column',
-          gap: view === 'archive' ? '0' : 'clamp(3px,0.4vw,6px)',
+          gap: '0',
           opacity: viewSwapping ? 0 : 1,
           transition: 'opacity 0.16s ease',
         }}>
