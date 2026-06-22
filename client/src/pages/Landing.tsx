@@ -13,15 +13,16 @@ import { ContactModal } from '../components/ContactModal';
 import { CreditsModal } from '../components/CreditsModal';
 
 // ── Existing Cloudfront card images (from deployed repos) ──────────────────
-const CARD_THE_EYE    = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/4dGTww6dwDMqWYygdCjBiT/the-eye-card-m8kJtzMhgXq8bTQ7kEpxk6.webp';
-const CARD_HUMAN_EXE  = 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663292290338/SBErDWwwENygynDU.png';
-const CARD_LOW_BATTERY = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/c8PJjjHRHohroqXKsYYz7X/card-low-battery-b2i2kASdULLNdxF4XMjptc.webp';
-const CARD_SPACE_DRONE = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/c8PJjjHRHohroqXKsYYz7X/card-space-drone-ZSPMYcoBfZnyXPZaTunNjX.webp';
-const CARD_AETHER      = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/jbzZmqNRVq8gZbr6uL7crh/card-aether-dCswxwbBYi2VWJHwFeF2rN.webp';
-const CARD_DEAD_AIR    = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/9ZxPKGjDMY2C56HR5iUGn8/card-dead-air-Wgkrd7hVm3xLcWTrTUd5hL.webp';
-const CARD_ORB         = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/KQMLixAcwLTktWD55tWJwK/card-orb-v2-GA954d4iJrPLDQTUdJE9eS.webp';
-const CARD_FOURCAST    = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/Y2GqaD9tuJ99Jnnw3Suzuk/fourcast-card-v2-FTNVUNxhCmBWxuJ5wiNteQ.webp';
-const RADIO_CARD       = `${import.meta.env.BASE_URL}radio-card.webp`;
+// ── New unified halftone/pulp sci-fi visual system (2026-06-22) ──────────────
+const CARD_THE_EYE    = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-the-eye-v2-e6nZVkwikVb3HXogEWNVcr.webp';
+const CARD_HUMAN_EXE  = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-human-exe-v2-jkapXL5EJDbC76jMomipMG.webp';
+const CARD_LOW_BATTERY = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-low-battery-v2-U2SozegwBi3DGAcs4cqCcq.webp';
+const CARD_SPACE_DRONE = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-space-drone-v2-aszqEoM8xQYCmcdXCXSr5c.webp';
+const CARD_AETHER      = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-aether-v2-Vo6vprnNoFYjftKmKSYAni.webp';
+const CARD_DEAD_AIR    = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-dead-air-v2-h3F8sPAQWVSRnQyy7Rs2Wk.webp';
+const CARD_ORB         = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-orb-v2-PR2ygqeFy9cjD9WwKtiRXC.webp';
+const CARD_FOURCAST    = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-fourcast-v2-V5pY4RWLUsrMb2rVGycNUb.webp';
+const RADIO_CARD       = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-radio-v2-ZyZwESEgmFMqXQkoUx6iyK.webp';
 
 // ── H1 Typewriter ──────────────────────────────────────────────────────────
 
