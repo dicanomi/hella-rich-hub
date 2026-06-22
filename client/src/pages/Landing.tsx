@@ -848,6 +848,7 @@ export default function Landing() {
           <ProjectCard slug="aether" title="ÆTHER" tagline="Impossible to sound bad." image={CARD_AETHER} index={6} enterDelay={380} />
           <ProjectCard slug="dead-air" title="DEAD AIR" tagline="Late night radio scanner." cta="Tune In" image={CARD_DEAD_AIR} index={7} enterDelay={440} />
           <ProjectCard slug="fourcast" title="FOURCAST" tagline="A weather app predicting the end of the world. Politely." cta="Check My Day" image={CARD_FOURCAST} index={8} enterDelay={500} />
+          <ProjectCard slug="human-exe" title="HUMAN.EXE" tagline="A fake human diagnostic machine. Stand in front of the scanner." cta="Begin Scan" image={CARD_THE_EYE} index={9} enterDelay={560} />
           </>
           ) : view === 'featured' ? (
           <div className="hr-featured-grid">

@@ -28,6 +28,7 @@ const OrbPage        = lazy(() => import("./pages/OrbPage"));
 const DeadAirPage    = lazy(() => import("./pages/DeadAirPage"));
 const FourcastPage   = lazy(() => import("./pages/FourcastPage"));
 const RadioPage      = lazy(() => import("./pages/RadioPage"));
+const HumanExePage   = lazy(() => import("./pages/HumanExePage"));
 
 function PageFallback() {
   return (
@@ -74,6 +75,7 @@ function AppRoutes() {
           <Route path="/dead-air" component={DeadAirPage} />
           <Route path="/fourcast" component={FourcastPage} />
           <Route path="/radio" component={RadioPage} />
+          <Route path="/human-exe" component={HumanExePage} />
           <Route component={NotFound} />
         </Switch>
       </Suspense>

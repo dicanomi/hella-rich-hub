@@ -24,6 +24,7 @@ const PROJECTS: NavProject[] = [
   { title: 'ORB', slug: '/orb' },
   { title: 'FOURCAST', slug: '/fourcast' },
   { title: 'RADIO', slug: '/radio' },
+  { title: 'HUMAN.EXE', slug: '/human-exe' },
 ];
 
 export function HellaRichNav() {
