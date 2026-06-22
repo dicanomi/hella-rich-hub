@@ -141,3 +141,19 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ── Featured view — 3-up showcase grid (2-up tablet, 1 mobile) ── */
+.hr-featured-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(16px, 2vw, 32px);
+}
+@media (max-width: 960px) {
+  .hr-featured-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .hr-featured-grid { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hr-featured-grid a, .hr-featured-grid img { transition: none !important; }
+}

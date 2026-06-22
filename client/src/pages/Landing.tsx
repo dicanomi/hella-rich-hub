@@ -481,6 +481,80 @@ const CROSS_AWARENESS: Record<string, string[]> = {
 const PRODUCT_SLUGS = ['orb', 'the-eye', 'low-battery', 'space-drone', 'aether', 'dead-air', 'fourcast'];
 
 // ── Main Landing ───────────────────────────────────────────────────────────
+// ── FeaturedCard — large showcase card (premium curated browsing) ─────────────
+function FeaturedCard({ slug, title, desc, img }: { slug: string; title: string; desc: string; img: string }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <Link
+      href={'/' + slug}
+      aria-label={title + ' — ' + desc}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: 'flex', flexDirection: 'column',
+        textDecoration: 'none',
+        border: '1px solid rgba(255,255,255,0.08)',
+        borderColor: hovered ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.08)',
+        borderRadius: '3px',
+        overflow: 'hidden',
+        background: 'rgba(255,255,255,0.015)',
+        transform: hovered ? 'translateY(-3px)' : 'translateY(0)',
+        transition: 'transform 0.25s cubic-bezier(0.23,1,0.32,1), border-color 0.25s ease',
+        cursor: 'pointer',
+      }}
+    >
+      {/* image */}
+      <div style={{ position: 'relative', width: '100%', aspectRatio: '4 / 3', overflow: 'hidden', background: '#0d0c0b' }}>
+        <img
+          src={img}
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          style={{
+            width: '100%', height: '100%', objectFit: 'cover', display: 'block',
+            transform: hovered ? 'scale(1.03)' : 'scale(1)',
+            opacity: hovered ? 1 : 0.92,
+            transition: 'transform 0.4s cubic-bezier(0.23,1,0.32,1), opacity 0.3s ease',
+          }}
+        />
+      </div>
+
+      {/* content */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: 'clamp(18px,1.8vw,26px)' }}>
+        <span style={{
+          fontFamily: "'DM Mono', monospace",
+          fontSize: 'clamp(15px,1.5vw,20px)',
+          letterSpacing: '0.12em',
+          textTransform: 'uppercase',
+          color: hovered ? 'rgba(255,255,255,0.96)' : 'rgba(255,255,255,0.85)',
+          transition: 'color 0.2s ease',
+        }}>{title}</span>
+        <span style={{
+          fontFamily: "'Space Grotesk', sans-serif",
+          fontSize: 'clamp(13px,1.05vw,15px)',
+          fontWeight: 300,
+          lineHeight: 1.5,
+          color: 'rgba(255,255,255,0.45)',
+          minHeight: '2.8em',
+        }}>{desc}</span>
+        <span style={{
+          marginTop: '6px',
+          alignSelf: 'flex-start',
+          fontFamily: "'DM Mono', monospace",
+          fontSize: 'clamp(9px,0.85vw,11px)',
+          letterSpacing: '0.2em',
+          textTransform: 'uppercase',
+          color: hovered ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.5)',
+          borderBottom: '1px solid',
+          borderColor: hovered ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.2)',
+          paddingBottom: '3px',
+          transition: 'color 0.2s ease, border-color 0.2s ease',
+        }}>Launch →</span>
+      </div>
+    </Link>
+  );
+}
+
 // ── ArchiveRow — catalog list item (digital archive / OS index feel) ──────────
 function ArchiveRow({ slug, n, title, desc, img }: { slug: string; n: string; title: string; desc: string; img: string }) {
   const [hovered, setHovered] = useState(false);
@@ -574,15 +648,15 @@ export default function Landing() {
   const [awarenessMsg, setAwarenessMsg] = useState<{slug: string; text: string} | null>(null);
 
   // ── View mode: 'gallery' (cards) | 'archive' (catalog list) ──
-  const [view, setView] = useState<'gallery' | 'archive'>('gallery');
+  const [view, setView] = useState<'gallery' | 'featured' | 'archive'>('gallery');
   const [viewSwapping, setViewSwapping] = useState(false);
   useEffect(() => {
     try {
       const saved = localStorage.getItem('hella_view');
-      if (saved === 'archive' || saved === 'gallery') setView(saved);
+      if (saved === 'archive' || saved === 'gallery' || saved === 'featured') setView(saved);
     } catch (e) { /* ignore */ }
   }, []);
-  const switchView = (next: 'gallery' | 'archive') => {
+  const switchView = (next: 'gallery' | 'featured' | 'archive') => {
     if (next === view) return;
     try { localStorage.setItem('hella_view', next); } catch (e) {}
     const reduce = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -725,7 +799,7 @@ export default function Landing() {
             border: '1px solid rgba(255,255,255,0.12)', borderRadius: '2px',
             padding: '2px', background: 'rgba(255,255,255,0.02)',
           }}>
-            {([['gallery','▦','GALLERY'],['archive','☰','ARCHIVE']] as const).map(([mode, glyph, label]) => {
+            {([['gallery','▦','GALLERY'],['featured','◫','FEATURED'],['archive','☰','ARCHIVE']] as const).map(([mode, glyph, label]) => {
               const active = view === mode;
               return (
                 <button
@@ -775,6 +849,21 @@ export default function Landing() {
           <ProjectCard slug="dead-air" title="DEAD AIR" tagline="Late night radio scanner." cta="Tune In" image={CARD_DEAD_AIR} index={7} enterDelay={440} />
           <ProjectCard slug="fourcast" title="FOURCAST" tagline="A weather app predicting the end of the world. Politely." cta="Check My Day" image={CARD_FOURCAST} index={8} enterDelay={500} />
           </>
+          ) : view === 'featured' ? (
+          <div className="hr-featured-grid">
+            {[
+              { slug: 'radio',       title: 'HELLA_RADIO', desc: 'A late-night signal you tune into.', img: RADIO_CARD },
+              { slug: 'orb',         title: 'ORB',         desc: 'A living object. Seven moods rendered as sound and color.', img: CARD_ORB },
+              { slug: 'the-eye',     title: 'THE EYE',     desc: 'A strange object that notices you.', img: CARD_THE_EYE },
+              { slug: 'low-battery', title: 'LOW BATTERY', desc: 'The sound you ignore until it becomes your personality.', img: CARD_LOW_BATTERY },
+              { slug: 'space-drone', title: 'SPACE DRONE', desc: 'A drifting machine for doing absolutely nothing.', img: CARD_SPACE_DRONE },
+              { slug: 'aether',      title: 'ÆTHER',       desc: 'Impossible to sound bad.', img: CARD_AETHER },
+              { slug: 'dead-air',    title: 'DEAD AIR',    desc: 'Lost transmissions and impossible frequencies.', img: CARD_DEAD_AIR },
+              { slug: 'fourcast',    title: 'FOURCAST',    desc: 'A weather app predicting the end of the world. Politely.', img: CARD_FOURCAST },
+            ].map(p => (
+              <FeaturedCard key={p.slug} slug={p.slug} title={p.title} desc={p.desc} img={p.img} />
+            ))}
+          </div>
           ) : (
           <div role="list" style={{ display: 'flex', flexDirection: 'column', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
             {[
