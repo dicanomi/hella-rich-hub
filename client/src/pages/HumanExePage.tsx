@@ -1,26 +1,22 @@
 /**
  * HUMAN.EXE — hella.rich
- * HUMAN.EXE — Human Diagnostic Machine
- * Model: HUMAN.EXE MKII | Serial: HR-1956-HMN | Node: 1956
+ * Human Diagnostic Machine. NODE_1956.
  *
- * Design: Spacecraft diagnostic chamber × Weyland-Yutani terminal × Industrial aerospace
- * Palette: Deep black-brown bg / aged cream machine / amber accent / muted green activity / faded cyan signal
+ * Design: cultdeadcow.com ASCII terminal × spacecraft diagnostic
+ * Color: terminal green (#33ff33) only. Black background.
+ * Typography: monospace. Raw machine output.
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { HellaRichSEO } from '../components/HellaRichSEO';
 import { HumanScanner3D } from '../components/HumanScanner3D';
+import type { ScanState } from '../components/HumanScanner3D';
 import { useHumanExeAudio } from '../hooks/useHumanExeAudio';
 
 // ── Types ──────────────────────────────────────────────────────────────────
-type ScanState = 'idle' | 'powering' | 'scanning' | 'analysis' | 'results'
-  | 'anomaly' | 'glitch' | 'morphing' | 'alien' | 'emergency' | 'final' | 'empty';
-
 interface Metric {
   id: string;
   label: string;
-  value: number; // 0–100
-  bodyZone: string; // which body zone lights up
-  color: string;
+  value: number;
 }
 
 interface DiagnosticResult {
@@ -31,44 +27,48 @@ interface DiagnosticResult {
 
 // ── Data ───────────────────────────────────────────────────────────────────
 const METRICS_POOL = [
-  { id: 'anxiety',        label: 'ANXIETY',          bodyZone: 'head',    color: '#e8a020' },
-  { id: 'denial',         label: 'DENIAL',           bodyZone: 'chest',   color: '#c0a060' },
-  { id: 'caffeine',       label: 'CAFFEINE',         bodyZone: 'heart',   color: '#e05020' },
-  { id: 'focus',          label: 'FOCUS',            bodyZone: 'head',    color: '#40c0a0' },
-  { id: 'social_battery', label: 'SOCIAL BATTERY',   bodyZone: 'arms',    color: '#60a0e0' },
-  { id: 'snack_urgency',  label: 'SNACK URGENCY',    bodyZone: 'gut',     color: '#e08030' },
-  { id: 'main_character', label: 'MAIN CHARACTER',   bodyZone: 'full',    color: '#d0b040' },
-  { id: 'spiritual_debt', label: 'SPIRITUAL DEBT',   bodyZone: 'chest',   color: '#9060c0' },
-  { id: 'existential',    label: 'EXISTENTIAL STATIC', bodyZone: 'head',  color: '#40a0c0' },
-  { id: 'regret_cache',   label: 'REGRET CACHE',     bodyZone: 'gut',     color: '#a06040' },
-  { id: 'vibe_integrity', label: 'VIBE INTEGRITY',   bodyZone: 'full',    color: '#60c060' },
-  { id: 'dream_residue',  label: 'DREAM RESIDUE',    bodyZone: 'head',    color: '#8060d0' },
-  { id: 'emotional_wifi', label: 'EMOTIONAL WIFI',   bodyZone: 'chest',   color: '#40b0e0' },
-  { id: 'impulse_ctrl',   label: 'IMPULSE CONTROL',  bodyZone: 'arms',    color: '#e06040' },
-  { id: 'thought_noise',  label: 'THOUGHT NOISE',    bodyZone: 'head',    color: '#a0a0a0' },
+  { id: 'anxiety',        label: 'ANXIETY' },
+  { id: 'denial',         label: 'DENIAL' },
+  { id: 'caffeine',       label: 'CAFFEINE' },
+  { id: 'focus',          label: 'FOCUS' },
+  { id: 'social_battery', label: 'SOCIAL BATTERY' },
+  { id: 'snack_urgency',  label: 'SNACK URGENCY' },
+  { id: 'main_character', label: 'MAIN CHARACTER' },
+  { id: 'spiritual_debt', label: 'SPIRITUAL DEBT' },
+  { id: 'existential',    label: 'EXISTENTIAL STATIC' },
+  { id: 'regret_cache',   label: 'REGRET CACHE' },
+  { id: 'vibe_integrity', label: 'VIBE INTEGRITY' },
+  { id: 'thought_noise',  label: 'THOUGHT NOISE' },
+  { id: 'impulse_ctrl',   label: 'IMPULSE CONTROL' },
+  { id: 'dream_residue',  label: 'DREAM RESIDUE' },
+  { id: 'emotional_wifi', label: 'EMOTIONAL WIFI' },
 ];
 
 const FINAL_REPORTS = [
   'USER IS FUNCTIONAL BUT STRANGELY LIT FROM WITHIN.',
   'SUBJECT CONTAINS 14% WEATHER.',
-  'EMOTIONAL FIRMWARE OUTDATED. UPDATE PENDING.',
+  'EMOTIONAL FIRMWARE OUTDATED.',
   'USER APPEARS NORMAL UNTIL LEFT ALONE WITH A DECISION.',
   'SOUL DETECTED. PLEASE CONFIRM.',
   'BRAIN OPERATING WITH MINIMAL SUPERVISION.',
   'SUBJECT IS MOSTLY WATER AND UNFINISHED TASKS.',
   'REGRET CACHE APPROACHING CAPACITY.',
   'HUMAN DETECTED. CLASSIFICATION: PROBABLY FINE.',
-  'SUBJECT RADIATES MILD EXISTENTIAL WARMTH.',
   'INTERNAL MONOLOGUE LOUDER THAN EXPECTED.',
-  'VIBE INTEGRITY COMPROMISED. SOURCE: UNKNOWN.',
   'PURPOSE NOT FOUND. CONTINUING ANYWAY.',
-  'SUBJECT CONTAINS TRACES OF EARLIER VERSIONS.',
   'THOUGHT NOISE WITHIN ACCEPTABLE PARAMETERS. BARELY.',
-  'MAIN CHARACTER INDEX: ELEVATED. PROCEED WITH CAUTION.',
-  'EMOTIONAL WIFI SIGNAL WEAK. RECONNECTING...',
-  'CAFFEINE DEPENDENCY CONFIRMED. MACHINE APPROVES.',
-  'SPIRITUAL DEBT NOTED. MACHINE DOES NOT JUDGE.',
-  'DREAM RESIDUE DETECTED. ORIGIN: UNCLEAR.',
+];
+
+const ALIEN_FINAL_MESSAGES = [
+  'THEY WERE NEVER HIDING.',
+  'SUBJECT SUCCESSFULLY CONCEALED.',
+  'CLASSIFICATION ERROR CORRECTED.',
+  'HUMAN STATUS REMOVED.',
+  'WE HAVE SEEN THIS BEFORE.',
+  'YOU PASSED THE SCAN.',
+  'WELCOME BACK.',
+  'SIGNAL RECOGNIZED.',
+  'BIOLOGICAL IDENTITY UPDATED.',
 ];
 
 const LOG_MESSAGES = [
@@ -86,10 +86,7 @@ const LOG_MESSAGES = [
   'CHECKING SNACK URGENCY...',
   'CALCULATING MAIN CHARACTER INDEX...',
   'SCANNING CAFFEINE LEVELS...',
-  'DETECTING VIBE INTEGRITY...',
-  'MEASURING EXISTENTIAL STATIC...',
   'RUNNING FINAL ANALYSIS...',
-  'CROSS-REFERENCING HUMAN DATABASE...',
   'COMPILING DIAGNOSTIC REPORT...',
   'ANALYSIS COMPLETE.',
 ];
@@ -111,338 +108,40 @@ function generateDiagnostics(): DiagnosticResult {
   };
 }
 
-// ── Human Body SVG ─────────────────────────────────────────────────────────
-function HumanBody({ activeZones, scanY, scanState }: {
-  activeZones: string[];
-  scanY: number; // 0-100 percent
-  scanState: ScanState;
-}) {
-  const isActive = (zone: string) => activeZones.includes(zone) || activeZones.includes('full');
-  const isScanning = scanState === 'scanning' || scanState === 'analysis';
-
+// ── ASCII bar ──────────────────────────────────────────────────────────────
+function AsciiBar({ value, width = 20 }: { value: number; width?: number }) {
+  const filled = Math.round(value / 100 * width);
+  const empty = width - filled;
   return (
-    <svg
-      viewBox="0 0 200 480"
-      style={{ width: '100%', height: '100%', overflow: 'visible' }}
-      aria-hidden="true"
-    >
-      <defs>
-        <filter id="glow-amber">
-          <feGaussianBlur stdDeviation="3" result="blur" />
-          <feComposite in="SourceGraphic" in2="blur" operator="over" />
-        </filter>
-        <filter id="glow-cyan">
-          <feGaussianBlur stdDeviation="4" result="blur" />
-          <feComposite in="SourceGraphic" in2="blur" operator="over" />
-        </filter>
-        <filter id="glow-green">
-          <feGaussianBlur stdDeviation="2" result="blur" />
-          <feComposite in="SourceGraphic" in2="blur" operator="over" />
-        </filter>
-        <radialGradient id="zone-head" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#e8a020" stopOpacity="0.6" />
-          <stop offset="100%" stopColor="#e8a020" stopOpacity="0" />
-        </radialGradient>
-        <radialGradient id="zone-chest" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#40c0a0" stopOpacity="0.5" />
-          <stop offset="100%" stopColor="#40c0a0" stopOpacity="0" />
-        </radialGradient>
-        <radialGradient id="zone-gut" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#e08030" stopOpacity="0.5" />
-          <stop offset="100%" stopColor="#e08030" stopOpacity="0" />
-        </radialGradient>
-        <radialGradient id="zone-heart" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#e05020" stopOpacity="0.7" />
-          <stop offset="100%" stopColor="#e05020" stopOpacity="0" />
-        </radialGradient>
-        <linearGradient id="scan-beam" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#40e0d0" stopOpacity="0" />
-          <stop offset="45%" stopColor="#40e0d0" stopOpacity="0.6" />
-          <stop offset="50%" stopColor="#80ffff" stopOpacity="0.9" />
-          <stop offset="55%" stopColor="#40e0d0" stopOpacity="0.6" />
-          <stop offset="100%" stopColor="#40e0d0" stopOpacity="0" />
-        </linearGradient>
-        <clipPath id="body-clip">
-          <path d="
-            M100 10
-            C115 10 128 20 132 35
-            L140 35 C148 35 155 42 155 50
-            C155 58 148 65 140 65
-            L138 65 C138 80 145 95 148 110
-            L160 115 C175 120 185 135 185 152
-            L185 260 C185 270 178 278 168 278
-            L168 370 C168 382 160 390 148 390
-            L148 460 C148 472 140 480 128 480
-            L72 480 C60 480 52 472 52 460
-            L52 390 C40 390 32 382 32 370
-            L32 278 C22 278 15 270 15 260
-            L15 152 C15 135 25 120 40 115
-            L52 110 C55 95 62 80 62 65
-            L60 65 C52 65 45 58 45 50
-            C45 42 52 35 60 35
-            L68 35 C72 20 85 10 100 10 Z
-          " />
-        </clipPath>
-      </defs>
-
-      {/* ── Body silhouette ── */}
-      <g clipPath="url(#body-clip)">
-        {/* Base fill */}
-        <rect x="0" y="0" width="200" height="480"
-          fill={scanState === 'idle' ? '#0d0d0a' : '#111108'}
-          opacity="0.95"
-        />
-
-        {/* Internal grid lines — diagnostic mesh */}
-        {scanState !== 'idle' && Array.from({ length: 12 }, (_, i) => (
-          <line key={`h${i}`}
-            x1="0" y1={i * 40} x2="200" y2={i * 40}
-            stroke="#40c060" strokeWidth="0.3" opacity="0.15"
-          />
-        ))}
-        {scanState !== 'idle' && Array.from({ length: 6 }, (_, i) => (
-          <line key={`v${i}`}
-            x1={i * 40} y1="0" x2={i * 40} y2="480"
-            stroke="#40c060" strokeWidth="0.3" opacity="0.15"
-          />
-        ))}
-
-        {/* Zone glow overlays */}
-        {(isActive('head') || isActive('full')) && (
-          <ellipse cx="100" cy="55" rx="45" ry="50"
-            fill="url(#zone-head)" opacity={isActive('head') ? 0.8 : 0.3}
-          />
-        )}
-        {(isActive('chest') || isActive('full')) && (
-          <ellipse cx="100" cy="175" rx="55" ry="60"
-            fill="url(#zone-chest)" opacity={0.7}
-          />
-        )}
-        {(isActive('heart') || isActive('full')) && (
-          <ellipse cx="85" cy="155" rx="20" ry="20"
-            fill="url(#zone-heart)" opacity={0.9}
-          />
-        )}
-        {(isActive('gut') || isActive('full')) && (
-          <ellipse cx="100" cy="255" rx="45" ry="45"
-            fill="url(#zone-gut)" opacity={0.7}
-          />
-        )}
-        {(isActive('arms') || isActive('full')) && (
-          <>
-            <ellipse cx="32" cy="200" rx="18" ry="55"
-              fill="#60a0e0" fillOpacity="0.25"
-            />
-            <ellipse cx="168" cy="200" rx="18" ry="55"
-              fill="#60a0e0" fillOpacity="0.25"
-            />
-          </>
-        )}
-
-        {/* Scan beam */}
-        {isScanning && (
-          <rect
-            x="0"
-            y={scanY * 4.8 - 30}
-            width="200"
-            height="60"
-            fill="url(#scan-beam)"
-          />
-        )}
-      </g>
-
-      {/* ── Body outline ── */}
-      <path d="
-        M100 10
-        C115 10 128 20 132 35
-        L140 35 C148 35 155 42 155 50
-        C155 58 148 65 140 65
-        L138 65 C138 80 145 95 148 110
-        L160 115 C175 120 185 135 185 152
-        L185 260 C185 270 178 278 168 278
-        L168 370 C168 382 160 390 148 390
-        L148 460 C148 472 140 480 128 480
-        L72 480 C60 480 52 472 52 460
-        L52 390 C40 390 32 382 32 370
-        L32 278 C22 278 15 270 15 260
-        L15 152 C15 135 25 120 40 115
-        L52 110 C55 95 62 80 62 65
-        L60 65 C52 65 45 58 45 50
-        C45 42 52 35 60 35
-        L68 35 C72 20 85 10 100 10 Z
-      "
-        fill="none"
-        stroke={scanState === 'idle' ? '#3a3a2a' : '#60c060'}
-        strokeWidth={scanState === 'idle' ? '1' : '1.5'}
-        opacity={scanState === 'idle' ? 0.4 : 0.7}
-        filter={scanState !== 'idle' ? 'url(#glow-green)' : undefined}
-      />
-
-      {/* ── Skeletal structure lines ── */}
-      {scanState !== 'idle' && (
-        <g stroke="#40c0a0" strokeWidth="0.8" opacity="0.35" fill="none">
-          {/* Spine */}
-          <line x1="100" y1="65" x2="100" y2="370" />
-          {/* Ribs */}
-          {[130, 150, 170, 190, 210].map(y => (
-            <g key={y}>
-              <path d={`M100 ${y} C80 ${y-5} 60 ${y+8} 52 ${y+15}`} />
-              <path d={`M100 ${y} C120 ${y-5} 140 ${y+8} 148 ${y+15}`} />
-            </g>
-          ))}
-          {/* Collar bones */}
-          <path d="M100 100 C80 95 65 100 55 112" />
-          <path d="M100 100 C120 95 135 100 145 112" />
-          {/* Pelvis */}
-          <path d="M65 310 C70 330 100 340 130 330 C140 320 140 310 135 310 L65 310 Z" />
-        </g>
-      )}
-
-      {/* ── Target acquisition markers ── */}
-      {scanState === 'analysis' && (
-        <g stroke="#e8a020" strokeWidth="1" fill="none" opacity="0.8">
-          {/* Head target */}
-          <circle cx="100" cy="55" r="30" strokeDasharray="4 3" />
-          <line x1="70" y1="55" x2="60" y2="55" />
-          <line x1="130" y1="55" x2="140" y2="55" />
-          <line x1="100" y1="25" x2="100" y2="15" />
-          <line x1="100" y1="85" x2="100" y2="95" />
-          {/* Chest target */}
-          <circle cx="100" cy="175" r="25" strokeDasharray="3 4" opacity="0.6" />
-          {/* Gut target */}
-          <circle cx="100" cy="255" r="20" strokeDasharray="2 5" opacity="0.5" />
-        </g>
-      )}
-
-      {/* ── Diagnostic node dots ── */}
-      {scanState !== 'idle' && [
-        [100, 55], [85, 155], [100, 175], [100, 255],
-        [32, 200], [168, 200], [100, 330], [75, 430], [125, 430],
-      ].map(([cx, cy], i) => (
-        <circle key={i} cx={cx} cy={cy} r="3"
-          fill={scanState === 'results' ? '#60c060' : '#40c0a0'}
-          opacity={0.6 + Math.sin(i) * 0.3}
-          filter="url(#glow-cyan)"
-        />
-      ))}
-
-      {/* ── Pulse ring on heart ── */}
-      {(isActive('heart') || isActive('full')) && (
-        <circle cx="85" cy="155" r="12"
-          fill="none" stroke="#e05020" strokeWidth="1.5"
-          opacity="0.7" filter="url(#glow-amber)"
-        />
-      )}
-    </svg>
+    <span style={{ fontFamily: 'monospace', letterSpacing: '0' }}>
+      [{'█'.repeat(filled)}{'░'.repeat(empty)}] {String(value).padStart(3)}
+    </span>
   );
 }
 
-// ── Analog Gauge ───────────────────────────────────────────────────────────
-function AnalogGauge({ label, value, color }: { label: string; value: number; color: string }) {
-  const angle = -135 + (value / 100) * 270;
-  const r = 28;
-  const cx = 36, cy = 36;
-
-  return (
-    <div style={{
-      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px',
-    }}>
-      <svg width="72" height="72" viewBox="0 0 72 72">
-        {/* Track */}
-        <circle cx={cx} cy={cy} r={r} fill="none"
-          stroke="rgba(255,255,255,0.06)" strokeWidth="4"
-          strokeDasharray={`${2 * Math.PI * r * 0.75} ${2 * Math.PI * r * 0.25}`}
-          strokeDashoffset={`${2 * Math.PI * r * 0.125}`}
-          strokeLinecap="round"
-          transform={`rotate(-225 ${cx} ${cy})`}
-        />
-        {/* Fill */}
-        <circle cx={cx} cy={cy} r={r} fill="none"
-          stroke={color} strokeWidth="4"
-          strokeDasharray={`${2 * Math.PI * r * 0.75 * value / 100} ${2 * Math.PI * r}`}
-          strokeDashoffset={`${2 * Math.PI * r * 0.125}`}
-          strokeLinecap="round"
-          transform={`rotate(-225 ${cx} ${cy})`}
-          opacity="0.85"
-        />
-        {/* Needle */}
-        <g transform={`rotate(${angle} ${cx} ${cy})`}>
-          <line x1={cx} y1={cy} x2={cx} y2={cy - r + 6}
-            stroke={color} strokeWidth="1.5" strokeLinecap="round" opacity="0.9"
-          />
-        </g>
-        {/* Center dot */}
-        <circle cx={cx} cy={cy} r="3" fill={color} opacity="0.7" />
-        {/* Value */}
-        <text x={cx} y={cy + 14} textAnchor="middle"
-          fill="rgba(255,255,255,0.7)" fontSize="9" fontFamily="'DM Mono', monospace"
-          letterSpacing="0.05em"
-        >
-          {value}
-        </text>
-      </svg>
-      <div style={{
-        fontFamily: "'DM Mono', monospace",
-        fontSize: '7px',
-        letterSpacing: '0.15em',
-        color: 'rgba(255,255,255,0.4)',
-        textTransform: 'uppercase',
-        textAlign: 'center',
-        maxWidth: '72px',
-        lineHeight: 1.2,
-      }}>
-        {label}
-      </div>
-    </div>
-  );
-}
-
-// ── LED Array ──────────────────────────────────────────────────────────────
-function LEDArray({ value, color }: { value: number; color: string }) {
-  const total = 12;
-  const lit = Math.round(value / 100 * total);
-  return (
-    <div style={{ display: 'flex', gap: '2px' }}>
-      {Array.from({ length: total }, (_, i) => (
-        <div key={i} style={{
-          width: 6, height: 14,
-          borderRadius: '1px',
-          background: i < lit ? color : 'rgba(255,255,255,0.06)',
-          boxShadow: i < lit ? `0 0 4px ${color}` : 'none',
-          transition: 'all 0.3s ease',
-        }} />
-      ))}
-    </div>
-  );
-}
-
-// ── System Log ─────────────────────────────────────────────────────────────
+// ── System log ─────────────────────────────────────────────────────────────
 function SystemLog({ lines }: { lines: string[] }) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (ref.current) ref.current.scrollTop = ref.current.scrollHeight;
   }, [lines]);
-
   return (
     <div ref={ref} style={{
-      height: '120px',
+      height: '110px',
       overflowY: 'auto',
-      background: 'rgba(0,0,0,0.4)',
-      border: '1px solid rgba(255,255,255,0.06)',
-      padding: '8px 10px',
-      fontFamily: "'DM Mono', monospace",
-      fontSize: '9px',
-      letterSpacing: '0.12em',
-      color: '#60c060',
-      lineHeight: 1.8,
+      fontFamily: 'monospace',
+      fontSize: 'clamp(9px,0.9vw,11px)',
+      color: '#33ff33',
+      lineHeight: 1.7,
       scrollbarWidth: 'none',
+      padding: '4px 0',
     }}>
       {lines.map((line, i) => (
-        <div key={i} style={{ opacity: i === lines.length - 1 ? 1 : 0.5 + (i / lines.length) * 0.5 }}>
+        <div key={i} style={{ opacity: i === lines.length - 1 ? 1 : 0.45 + (i / lines.length) * 0.4 }}>
           &gt; {line}
         </div>
       ))}
-      <div style={{ display: 'inline-block', width: 6, height: 10, background: '#60c060', animation: 'cursorBlink 0.8s steps(1) infinite' }} />
+      <span style={{ display: 'inline-block', width: 7, height: 12, background: '#33ff33', animation: 'cursorBlink 0.7s steps(1) infinite', verticalAlign: 'middle' }} />
     </div>
   );
 }
@@ -451,33 +150,25 @@ function SystemLog({ lines }: { lines: string[] }) {
 export default function HumanExePage() {
   const [scanState, setScanState] = useState<ScanState>('idle');
   const [scanY, setScanY] = useState(0);
-  const [logLines, setLogLines] = useState<string[]>(['HUMAN.EXE MKII — READY.', 'AWAITING SUBJECT...']);
+  const [logLines, setLogLines] = useState<string[]>(['HUMAN.EXE MKII -- READY.', 'AWAITING SUBJECT...']);
   const [result, setResult] = useState<DiagnosticResult | null>(null);
   const [activeZones, setActiveZones] = useState<string[]>([]);
-  const [blinkState, setBlinkState] = useState(false);
   const [scanProgress, setScanProgress] = useState(0);
   const [morphProgress, setMorphProgress] = useState(0);
   const [finalMessage, setFinalMessage] = useState('');
   const [isRareEvent, setIsRareEvent] = useState(false);
   const scanRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const logRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const stopScanHumRef = useRef<(() => void) | null>(null);
   const morphRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const stopScanHumRef = useRef<(() => void) | null>(null);
   const audio = useHumanExeAudio();
 
-  // Idle blink
-  useEffect(() => {
-    const t = setInterval(() => setBlinkState(b => !b), 800);
-    return () => clearInterval(t);
-  }, []);
-
   const addLog = useCallback((msg: string) => {
-    setLogLines(prev => [...prev.slice(-20), msg]);
+    setLogLines(prev => [...prev.slice(-25), msg]);
   }, []);
 
   const triggerRevealSequence = useCallback(() => {
-    const rare = Math.random() < 0.01;
-    if (rare) {
+    // 1% rare: empty chamber
+    if (Math.random() < 0.01) {
       setIsRareEvent(true);
       setScanState('empty');
       setTimeout(() => addLog('NO HUMAN DETECTED.'), 1200);
@@ -485,35 +176,40 @@ export default function HumanExePage() {
       setTimeout(() => addLog('CONTINUING SCAN...'), 3200);
       return;
     }
+    // Anomaly
     setTimeout(() => { setScanState('anomaly'); addLog('REVIEWING RESULTS...'); addLog('VERIFYING HUMAN STATUS...'); }, 2500);
     setTimeout(() => addLog('ANALYZING BIOLOGICAL SIGNATURE...'), 3400);
     setTimeout(() => addLog('UNKNOWN PATTERN DETECTED'), 4200);
     setTimeout(() => addLog('CROSS-CHECKING DATABASE...'), 4800);
     setTimeout(() => addLog('DATABASE MISMATCH'), 5400);
+    // Glitch
     setTimeout(() => { setScanState('glitch'); addLog('WARNING'); }, 5800);
     setTimeout(() => addLog('WARNING'), 6200);
     setTimeout(() => addLog('WARNING'), 6600);
+    // Morph
     setTimeout(() => {
       setScanState('morphing');
       addLog('UNAUTHORIZED LIFEFORM DETECTED');
       let mp = 0;
       if (morphRef.current) clearInterval(morphRef.current);
       morphRef.current = setInterval(() => {
-        mp += 0.01;
+        mp += 0.012;
         setMorphProgress(Math.min(mp, 1));
         if (mp >= 1) { clearInterval(morphRef.current!); morphRef.current = null; }
       }, 40);
     }, 7000);
-    setTimeout(() => { setScanState('alien'); addLog('SPECIES UNKNOWN'); addLog('HUMAN CLASSIFICATION REVOKED'); }, 11000);
+    // Alien revealed
+    setTimeout(() => { setScanState('alien'); addLog('SPECIES UNKNOWN'); addLog('HUMAN CLASSIFICATION REVOKED'); }, 11200);
+    // Emergency
     setTimeout(() => {
       setScanState('emergency');
       ['DATABASE FAILURE','BIOLOGICAL MISMATCH','UNAUTHORIZED LIFEFORM DETECTED','ORIGIN: UNKNOWN','CONTACT EVENT POSSIBLE','QUARANTINE RECOMMENDED','DO NOT TERMINATE ANALYSIS']
-        .forEach((m, i) => setTimeout(() => addLog(m), i * 400));
+        .forEach((m, i) => setTimeout(() => addLog(m), i * 350));
     }, 12000);
+    // Final message
     setTimeout(() => {
       setScanState('final');
-      const msgs = ['THEY WERE NEVER HIDING.','SUBJECT SUCCESSFULLY CONCEALED.','CLASSIFICATION ERROR CORRECTED.','HUMAN STATUS REMOVED.','WE HAVE SEEN THIS BEFORE.','YOU PASSED THE SCAN.','WELCOME BACK.','SIGNAL RECOGNIZED.','BIOLOGICAL IDENTITY UPDATED.'];
-      const msg = msgs[Math.floor(Math.random() * msgs.length)];
+      const msg = ALIEN_FINAL_MESSAGES[Math.floor(Math.random() * ALIEN_FINAL_MESSAGES.length)];
       setFinalMessage(msg);
       addLog(msg);
     }, 16000);
@@ -521,10 +217,10 @@ export default function HumanExePage() {
   }, [addLog]);
 
   const startScan = useCallback(() => {
-    if (scanState !== 'idle' && scanState !== 'results') return;
-
-    // Stop any previous scan hum
+    const canStart = ['idle', 'results', 'alien', 'final', 'empty'].includes(scanState);
+    if (!canStart) return;
     if (stopScanHumRef.current) { stopScanHumRef.current(); stopScanHumRef.current = null; }
+    if (morphRef.current) { clearInterval(morphRef.current); morphRef.current = null; }
 
     setResult(null);
     setActiveZones([]);
@@ -535,437 +231,295 @@ export default function HumanExePage() {
     setIsRareEvent(false);
     setScanState('powering');
     setLogLines(['BOOTING HUMAN.EXE...', 'CALIBRATING SUBJECT...']);
-
-    // Power-on sound
     audio.powerOn();
 
-    // Power-up sequence
     setTimeout(() => {
       setScanState('scanning');
       addLog('DETECTING HUMAN...');
       addLog('HUMAN DETECTED.');
-
-      // Start continuous scan hum
       stopScanHumRef.current = audio.startScanHum();
 
-      // Scan beam animation
       let y = 0;
       let logIdx = 4;
-      let lastBeepY = -10;
       let lastClickY = -8;
+      let lastBeepY = -15;
       scanRef.current = setInterval(() => {
         y += 1.2;
         setScanY(Math.min(y, 100));
         setScanProgress(Math.min(y, 100));
 
-        // Randomly activate zones during scan
-        if (y % 15 < 1.5) {
-          const zones = ['head', 'chest', 'gut', 'heart', 'arms'];
-          setActiveZones([zones[Math.floor(Math.random() * zones.length)]]);
-        }
-
-        // Relay clicks at zone boundaries
-        if (y - lastClickY > 12 + Math.random() * 8) {
-          audio.relayClick();
-          lastClickY = y;
-        }
-
-        // Diagnostic beeps — varying pitch
-        if (y - lastBeepY > 18 + Math.random() * 12) {
-          audio.beep(440 + Math.random() * 880, 0.06, 0.08);
-          lastBeepY = y;
-        }
-
-        // Add log messages
-        if (y % 8 < 1.2 && logIdx < LOG_MESSAGES.length) {
-          addLog(LOG_MESSAGES[logIdx++]);
-        }
+        if (y - lastClickY > 12 + Math.random() * 8) { audio.relayClick(); lastClickY = y; }
+        if (y - lastBeepY > 18 + Math.random() * 12) { audio.beep(440 + Math.random() * 880, 0.06, 0.08); lastBeepY = y; }
+        if (y % 8 < 1.2 && logIdx < LOG_MESSAGES.length) addLog(LOG_MESSAGES[logIdx++]);
 
         if (y >= 100) {
           clearInterval(scanRef.current!);
-
-          // Stop scan hum
           if (stopScanHumRef.current) { stopScanHumRef.current(); stopScanHumRef.current = null; }
-
           setScanState('analysis');
           addLog('RUNNING FINAL ANALYSIS...');
-          addLog('CROSS-REFERENCING HUMAN DATABASE...');
-
-          // Target lock sounds
           setTimeout(() => audio.targetLock(), 300);
           setTimeout(() => audio.targetLock(), 700);
-          setTimeout(() => audio.relayClick(), 1100);
-
           setTimeout(() => {
             const diag = generateDiagnostics();
             setResult(diag);
-            setActiveZones(diag.metrics.map(m => m.bodyZone));
+            setActiveZones(diag.metrics.map(() => 'full'));
             setScanState('results');
             addLog('ANALYSIS COMPLETE.');
             addLog(diag.finalReport);
-
-            // Scan complete tone
             audio.scanComplete();
-
-            // Trigger reveal sequence after results display
             triggerRevealSequence();
           }, 2200);
         }
       }, 40);
     }, 900);
-  }, [scanState, addLog, audio]);
+  }, [scanState, addLog, audio, triggerRevealSequence]);
 
-  // Cleanup
   useEffect(() => {
     return () => {
       if (scanRef.current) clearInterval(scanRef.current);
-      if (logRef.current) clearInterval(logRef.current);
+      if (morphRef.current) clearInterval(morphRef.current);
+      if (stopScanHumRef.current) stopScanHumRef.current();
     };
   }, []);
 
-  const bg = '#0a0908';
-  const cream = '#e8e0cc';
-  const amber = '#d4900a';
-  const green = '#4ab860';
-  const cyan = '#40b8c0';
+  const G = '#33ff33';
+  const DIM = 'rgba(51,255,51,0.35)';
+  const DIMMER = 'rgba(51,255,51,0.18)';
+  const BG = '#020a02';
+  const FONT = "'Courier New', 'Lucida Console', monospace";
+
+  const isEmergency = ['emergency', 'final'].includes(scanState);
+  const isAlienState = ['alien', 'emergency', 'final'].includes(scanState);
+  const canStart = ['idle', 'results', 'alien', 'final', 'empty'].includes(scanState);
+
+  const statusLabel =
+    scanState === 'idle' ? 'STANDBY' :
+    scanState === 'powering' ? 'POWERING UP' :
+    scanState === 'scanning' ? 'SCANNING' :
+    scanState === 'analysis' ? 'ANALYZING' :
+    scanState === 'results' ? 'COMPLETE' :
+    scanState === 'anomaly' ? 'ANOMALY' :
+    scanState === 'glitch' ? '!!! WARNING !!!' :
+    scanState === 'morphing' ? 'MORPHING' :
+    scanState === 'alien' ? 'UNKNOWN LIFEFORM' :
+    scanState === 'emergency' ? '!!! EMERGENCY !!!' :
+    scanState === 'final' ? 'CLASSIFICATION UPDATED' :
+    scanState === 'empty' ? 'CHAMBER EMPTY' :
+    'UNKNOWN';
 
   return (
     <>
       <HellaRichSEO
         title="HUMAN.EXE — hella.rich"
         description="HUMAN.EXE. Human diagnostic machine. Biological analysis system. NODE_1956."
-        keywords="human scanner, diagnostic machine, hella.rich, HUMAN.EXE, biological analysis, diagnostic system"
+        keywords="human scanner, diagnostic machine, hella.rich, HUMAN.EXE, biological analysis"
       />
       <style>{`
-        @keyframes cursorBlink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
-        @keyframes ledPulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
-        @keyframes scannerHum { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.02); } }
-        @keyframes radarSweep { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes crtFlicker { 0%, 98%, 100% { opacity: 1; } 99% { opacity: 0.85; } }
-        @keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
-        @keyframes resultIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes glitchShake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-3px)} 40%{transform:translateX(3px)} 60%{transform:translateX(-2px)} 80%{transform:translateX(2px)} }
-        @keyframes emergencyPulse { 0%,100%{box-shadow:inset 0 0 0 rgba(224,48,96,0)} 50%{box-shadow:inset 0 0 40px rgba(224,48,96,0.08)} }
-        .human-exe-page { animation: crtFlicker 4s steps(1) infinite; }
-        .human-exe-glitch { animation: glitchShake 0.15s steps(1) infinite, crtFlicker 0.2s steps(1) infinite; }
-        .human-exe-emergency { animation: emergencyPulse 0.8s ease infinite; }
-        .scan-btn:hover { background: rgba(212,144,10,0.18) !important; border-color: rgba(212,144,10,0.7) !important; }
-        .scan-btn:active { transform: scale(0.97); }
+        @keyframes cursorBlink { 0%,49%{opacity:1} 50%,100%{opacity:0} }
+        @keyframes glitchShake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-4px)} 40%{transform:translateX(4px)} 60%{transform:translateX(-2px)} 80%{transform:translateX(2px)} }
+        @keyframes scanline { 0%{background-position:0 0} 100%{background-position:0 100%} }
+        @keyframes resultIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+        .human-exe { font-family: ${FONT}; }
+        .human-exe-glitch { animation: glitchShake 0.12s steps(1) infinite; }
+        .ascii-border { border: 1px solid ${DIM}; }
+        .ascii-border-bright { border: 1px solid ${G}; }
+        .ascii-border-emergency { border: 1px solid ${G}; box-shadow: 0 0 12px rgba(51,255,51,0.15); }
       `}</style>
 
-      <div className={`human-exe-page${scanState === 'glitch' ? ' human-exe-glitch' : ''}${['emergency','final'].includes(scanState) ? ' human-exe-emergency' : ''}`} style={{
-        minHeight: '100vh',
-        background: bg,
-        color: cream,
-        fontFamily: "'DM Mono', monospace",
-        overflowX: 'hidden',
-        position: 'relative',
-      }}>
-        {/* CRT scanlines overlay */}
+      <div
+        className={`human-exe${scanState === 'glitch' ? ' human-exe-glitch' : ''}`}
+        style={{ minHeight: '100vh', background: BG, color: G, overflowX: 'hidden', position: 'relative' }}
+      >
+        {/* CRT scanlines */}
         <div style={{
           position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 100,
-          backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px)',
+          backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.12) 2px, rgba(0,0,0,0.12) 4px)',
         }} />
 
-        {/* Machine header */}
+        {/* ── Header ── */}
         <header style={{
-          padding: 'clamp(56px,8vh,72px) clamp(16px,3vw,32px) clamp(12px,2vh,20px)',
-          borderBottom: `1px solid rgba(212,144,10,0.2)`,
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          background: 'rgba(0,0,0,0.3)',
+          padding: 'clamp(52px,8vh,68px) clamp(12px,2vw,20px) clamp(8px,1.5vh,14px)',
+          borderBottom: `1px solid ${DIM}`,
+          fontFamily: FONT,
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            {/* Power indicator */}
-            <div style={{
-              width: 8, height: 8, borderRadius: '50%',
-              background: scanState === 'idle' ? 'rgba(74,184,96,0.4)' : green,
-              boxShadow: scanState !== 'idle' ? `0 0 8px ${green}` : 'none',
-              animation: scanState === 'idle' ? 'ledPulse 2s ease infinite' : 'none',
-            }} />
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '8px' }}>
             <div>
-              <div style={{ fontSize: 'clamp(10px,1.2vw,13px)', letterSpacing: '0.35em', color: amber, fontWeight: 400 }}>
-                HUMAN.EXE
-              </div>
-              <div style={{ fontSize: '8px', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.3)', marginTop: '2px' }}>
-                HUMAN DIAGNOSTIC MACHINE
-              </div>
+              <div style={{ fontSize: 'clamp(11px,1.3vw,14px)', letterSpacing: '0.3em', color: G }}>HUMAN.EXE</div>
+              <div style={{ fontSize: 'clamp(8px,0.8vw,10px)', color: DIM, letterSpacing: '0.15em' }}>HUMAN DIAGNOSTIC MACHINE</div>
             </div>
-          </div>
-
-          <div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
-            {[
-              ['MODEL', 'HUMAN.EXE MKII'],
-              ['SERIAL', 'HR-1956-HMN'],
-              ['STATUS', scanState === 'idle' ? 'STANDBY' : scanState === 'results' ? 'COMPLETE' : 'ACTIVE'],
-            ].map(([k, v]) => (
-              <div key={k} style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: '7px', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.25)' }}>{k}</div>
-                <div style={{
-                  fontSize: '9px', letterSpacing: '0.15em',
-                  color: k === 'STATUS' && scanState !== 'idle' ? green : 'rgba(255,255,255,0.55)',
-                }}>{v}</div>
-              </div>
-            ))}
+            <div style={{ display: 'flex', gap: '24px', fontSize: 'clamp(8px,0.8vw,9px)', color: DIM, letterSpacing: '0.12em' }}>
+              {[['MODEL','HUMAN.EXE MKII'],['SERIAL','HR-1956-HMN'],['STATUS', statusLabel]].map(([k,v]) => (
+                <div key={k}>
+                  <div style={{ color: DIMMER }}>{k}</div>
+                  <div style={{ color: isEmergency && k === 'STATUS' ? G : DIM }}>{v}</div>
+                </div>
+              ))}
+            </div>
           </div>
         </header>
 
-        {/* Main chamber */}
+        {/* ── Main ── */}
         <main style={{
           display: 'grid',
-          gridTemplateColumns: '1fr clamp(180px,28vw,320px) 1fr',
-          gap: 'clamp(12px,2vw,24px)',
-          padding: 'clamp(16px,2.5vh,28px) clamp(16px,3vw,32px)',
+          gridTemplateColumns: '1fr clamp(160px,30vw,280px) 1fr',
+          gap: 'clamp(8px,1.5vw,16px)',
+          padding: 'clamp(10px,1.5vh,16px) clamp(12px,2vw,20px)',
           minHeight: 'calc(100vh - 120px)',
           alignItems: 'start',
         }}>
 
-          {/* ── Left panel: System log + machine details ── */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            {/* Machine spec plate */}
-            <div style={{
-              border: `1px solid rgba(212,144,10,0.15)`,
-              padding: '14px',
-              background: 'rgba(0,0,0,0.2)',
-            }}>
-              <div style={{ fontSize: '7px', letterSpacing: '0.3em', color: amber, marginBottom: '10px', opacity: 0.7 }}>
-                MACHINE SPECIFICATIONS
-              </div>
+          {/* ── Left panel ── */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontFamily: FONT, fontSize: 'clamp(8px,0.85vw,10px)' }}>
+
+            {/* Machine specs */}
+            <div className="ascii-border" style={{ padding: '10px' }}>
+              <div style={{ color: DIM, marginBottom: '6px', letterSpacing: '0.2em' }}>+-- MACHINE SPECIFICATIONS --+</div>
               {[
                 ['NODE', 'NODE_1956'],
                 ['SCAN MODE', 'HUMAN'],
                 ['CALIBRATION', 'NOMINAL'],
                 ['CERTIFICATION', 'CLASSIFIED'],
                 ['FIRMWARE', 'v4.2.0-BETA'],
-                ['UPTIME', '∞'],
+                ['UPTIME', '...'],
               ].map(([k, v]) => (
-                <div key={k} style={{
-                  display: 'flex', justifyContent: 'space-between',
-                  fontSize: '8px', letterSpacing: '0.12em',
-                  padding: '4px 0',
-                  borderBottom: '1px solid rgba(255,255,255,0.04)',
-                  color: 'rgba(255,255,255,0.45)',
-                }}>
-                  <span style={{ color: 'rgba(255,255,255,0.25)' }}>{k}</span>
-                  <span>{v}</span>
+                <div key={k} style={{ display: 'flex', justifyContent: 'space-between', padding: '2px 0', borderBottom: `1px solid ${DIMMER}`, color: DIM }}>
+                  <span>{k}</span><span style={{ color: G }}>{v}</span>
                 </div>
               ))}
             </div>
 
-            {/* Radar display */}
-            <div style={{
-              border: `1px solid rgba(64,184,192,0.15)`,
-              padding: '14px',
-              background: 'rgba(0,0,0,0.2)',
-              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px',
-            }}>
-              <div style={{ fontSize: '7px', letterSpacing: '0.3em', color: cyan, opacity: 0.7 }}>
-                SIGNAL MONITOR
-              </div>
-              <div style={{ position: 'relative', width: '100px', height: '100px' }}>
-                <svg width="100" height="100" viewBox="0 0 100 100">
-                  {[40, 30, 20, 10].map(r => (
-                    <circle key={r} cx="50" cy="50" r={r}
-                      fill="none" stroke={cyan} strokeWidth="0.5" opacity="0.2"
-                    />
-                  ))}
-                  <line x1="10" y1="50" x2="90" y2="50" stroke={cyan} strokeWidth="0.5" opacity="0.2" />
-                  <line x1="50" y1="10" x2="50" y2="90" stroke={cyan} strokeWidth="0.5" opacity="0.2" />
-                  {scanState !== 'idle' && (
-                    <g style={{ transformOrigin: '50px 50px', animation: 'radarSweep 3s linear infinite' }}>
-                      <path d="M50 50 L50 10" stroke={cyan} strokeWidth="1.5" opacity="0.7" />
-                      <path d="M50 50 L50 10 A40 40 0 0 1 90 50 Z"
-                        fill={cyan} fillOpacity="0.06"
-                      />
-                    </g>
-                  )}
-                  {result && result.metrics.slice(0, 5).map((m, i) => {
-                    const angle = (i / 5) * Math.PI * 2 - Math.PI / 2;
-                    const r = m.value / 100 * 38;
-                    return (
-                      <circle key={m.id}
-                        cx={50 + Math.cos(angle) * r}
-                        cy={50 + Math.sin(angle) * r}
-                        r="3" fill={m.color} opacity="0.8"
-                      />
-                    );
-                  })}
-                </svg>
+            {/* Radar - ASCII style */}
+            <div className="ascii-border" style={{ padding: '10px' }}>
+              <div style={{ color: DIM, marginBottom: '6px', letterSpacing: '0.2em' }}>+-- SIGNAL MONITOR --+</div>
+              <pre style={{ color: DIM, fontSize: 'clamp(7px,0.75vw,9px)', lineHeight: 1.3, margin: 0 }}>
+{`    .  *  .  *  .
+  *  .  |  .  *  .
+  . ---(+)--- .  *
+  *  .  |  .  *  .
+    .  *  .  *  .`}
+              </pre>
+              <div style={{ color: DIMMER, marginTop: '4px' }}>
+                {scanState !== 'idle' ? 'SIGNAL ACTIVE' : 'SIGNAL STANDBY'}
               </div>
             </div>
 
             {/* System log */}
-            <div style={{ border: `1px solid rgba(96,192,96,0.15)`, background: 'rgba(0,0,0,0.2)' }}>
-              <div style={{ padding: '8px 10px 4px', fontSize: '7px', letterSpacing: '0.3em', color: green, opacity: 0.7 }}>
-                SYSTEM LOG
-              </div>
+            <div className="ascii-border" style={{ padding: '10px' }}>
+              <div style={{ color: DIM, marginBottom: '4px', letterSpacing: '0.2em' }}>+-- SYSTEM LOG --+</div>
               <SystemLog lines={logLines} />
             </div>
           </div>
 
           {/* ── Center: Scanner chamber ── */}
-          <div style={{
-            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px',
-          }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {/* Chamber frame */}
-            <div style={{
-              position: 'relative',
-              width: '100%',
-              border: `2px solid rgba(212,144,10,${scanState !== 'idle' ? '0.4' : '0.15'})`,
-              background: 'rgba(0,0,0,0.5)',
-              padding: '12px',
-              transition: 'border-color 0.5s ease',
-              boxShadow: scanState !== 'idle' ? `0 0 20px rgba(212,144,10,0.1), inset 0 0 30px rgba(0,0,0,0.5)` : 'none',
-            }}>
+            <div
+              className={isEmergency ? 'ascii-border-emergency' : 'ascii-border'}
+              style={{
+                position: 'relative',
+                background: '#010601',
+                padding: '8px',
+              }}
+            >
               {/* Corner markers */}
-              {[['0 0', 'top left'], ['0 auto', 'top right'], ['auto 0', 'bottom left'], ['auto auto', 'bottom right']].map(([pos, label]) => (
-                <div key={label} style={{
-                  position: 'absolute',
-                  top: pos.split(' ')[0] === '0' ? '-1px' : 'auto',
-                  bottom: pos.split(' ')[0] === 'auto' ? '-1px' : 'auto',
-                  left: pos.split(' ')[1] === '0' ? '-1px' : 'auto',
-                  right: pos.split(' ')[1] === 'auto' ? '-1px' : 'auto',
-                  width: '12px', height: '12px',
-                  borderTop: pos.split(' ')[0] === '0' ? `2px solid ${amber}` : 'none',
-                  borderBottom: pos.split(' ')[0] === 'auto' ? `2px solid ${amber}` : 'none',
-                  borderLeft: pos.split(' ')[1] === '0' ? `2px solid ${amber}` : 'none',
-                  borderRight: pos.split(' ')[1] === 'auto' ? `2px solid ${amber}` : 'none',
-                }} />
-              ))}
+              <div style={{ position: 'absolute', top: 0, left: 0, color: G, fontSize: '10px', lineHeight: 1, padding: '2px' }}>+</div>
+              <div style={{ position: 'absolute', top: 0, right: 0, color: G, fontSize: '10px', lineHeight: 1, padding: '2px' }}>+</div>
+              <div style={{ position: 'absolute', bottom: 0, left: 0, color: G, fontSize: '10px', lineHeight: 1, padding: '2px' }}>+</div>
+              <div style={{ position: 'absolute', bottom: 0, right: 0, color: G, fontSize: '10px', lineHeight: 1, padding: '2px' }}>+</div>
 
               {/* Subject ID */}
-              <div style={{
-                textAlign: 'center', fontSize: '8px', letterSpacing: '0.2em',
-                color: 'rgba(255,255,255,0.3)', marginBottom: '8px',
-              }}>
+              <div style={{ textAlign: 'center', fontSize: '8px', color: DIM, letterSpacing: '0.2em', marginBottom: '4px', fontFamily: FONT }}>
                 SUBJECT: {result?.subjectId || '---'}
               </div>
 
-              {/* 3D Human scanner */}
-              <div style={{ height: 'clamp(280px,45vw,420px)', position: 'relative' }}>
-                <HumanScanner3D scanState={scanState} scanProgress={scanProgress} activeZones={activeZones} morphProgress={morphProgress} />
-
-                {/* Scan progress bar */}
-                {(scanState === 'scanning') && (
-                  <div style={{
-                    position: 'absolute', bottom: 0, left: 0, right: 0,
-                    height: '2px', background: 'rgba(255,255,255,0.05)',
-                  }}>
-                    <div style={{
-                      height: '100%', background: cyan,
-                      width: `${scanProgress}%`,
-                      transition: 'width 0.1s linear',
-                      boxShadow: `0 0 6px ${cyan}`,
-                    }} />
+              {/* 3D scanner */}
+              <div style={{ height: 'clamp(300px,48vw,440px)', position: 'relative' }}>
+                <HumanScanner3D
+                  scanState={scanState}
+                  scanProgress={scanProgress}
+                  activeZones={activeZones}
+                  morphProgress={morphProgress}
+                />
+                {/* Scan progress */}
+                {scanState === 'scanning' && (
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '2px', background: DIMMER }}>
+                    <div style={{ height: '100%', background: G, width: `${scanProgress}%`, transition: 'width 0.1s linear' }} />
                   </div>
                 )}
               </div>
 
               {/* Scan button */}
-              <div style={{ textAlign: 'center', marginTop: '12px' }}>
+              <div style={{ marginTop: '8px' }}>
                 <button
-                  className="scan-btn"
                   onClick={startScan}
-                  disabled={!['idle','results','alien','final','empty'].includes(scanState)}
+                  disabled={!canStart}
                   style={{
-                    background: ['idle','results','alien','final','empty'].includes(scanState)
-                      ? (scanState === 'empty' ? 'rgba(255,32,64,0.06)' : 'rgba(212,144,10,0.08)') : 'rgba(0,0,0,0.3)',
-                    border: `1px solid rgba(${['alien','final'].includes(scanState) ? '192,64,224' : scanState === 'empty' ? '255,32,64' : '212,144,10'},${['idle','results','alien','final','empty'].includes(scanState) ? '0.5' : '0.2'})`,
-                    color: ['idle','results','alien','final','empty'].includes(scanState)
-                      ? (['alien','final'].includes(scanState) ? '#c040e0' : scanState === 'empty' ? '#ff2040' : amber)
-                      : 'rgba(255,255,255,0.2)',
-                    fontFamily: "'DM Mono', monospace",
-                    fontSize: '10px',
-                    letterSpacing: '0.3em',
-                    padding: '10px 24px',
-                    cursor: ['idle','results','alien','final','empty'].includes(scanState) ? 'pointer' : 'not-allowed',
-                    transition: 'all 0.2s ease',
                     width: '100%',
+                    background: 'none',
+                    border: `1px solid ${canStart ? G : DIM}`,
+                    color: canStart ? G : DIM,
+                    fontFamily: FONT,
+                    fontSize: 'clamp(9px,0.9vw,11px)',
+                    letterSpacing: '0.3em',
+                    padding: '10px',
+                    cursor: canStart ? 'pointer' : 'not-allowed',
+                    transition: 'all 0.15s ease',
                   }}
+                  onMouseEnter={e => { if (canStart) (e.currentTarget as HTMLElement).style.background = 'rgba(51,255,51,0.08)'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'none'; }}
                 >
-                  {scanState === 'idle' ? 'BEGIN SCAN' :
-                   scanState === 'powering' ? 'POWERING UP...' :
-                   scanState === 'scanning' ? `SCANNING ${Math.round(scanProgress)}%` :
-                   scanState === 'analysis' ? 'ANALYZING...' :
-                   scanState === 'anomaly' ? 'REVIEWING...' :
-                   scanState === 'glitch' ? 'WARNING' :
-                   scanState === 'morphing' ? 'MORPHING...' :
-                   scanState === 'emergency' ? 'EMERGENCY' :
-                   scanState === 'empty' ? 'SCAN NEXT SUBJECT' :
-                   ['alien','final'].includes(scanState) ? 'SCAN NEXT SUBJECT' :
-                   'SCAN AGAIN'}
+                  {scanState === 'idle' ? '[ BEGIN SCAN ]' :
+                   scanState === 'powering' ? '[ POWERING UP... ]' :
+                   scanState === 'scanning' ? `[ SCANNING ${Math.round(scanProgress)}% ]` :
+                   scanState === 'analysis' ? '[ ANALYZING... ]' :
+                   scanState === 'anomaly' ? '[ REVIEWING... ]' :
+                   scanState === 'glitch' ? '[ !!! WARNING !!! ]' :
+                   scanState === 'morphing' ? '[ MORPHING... ]' :
+                   scanState === 'emergency' ? '[ !!! EMERGENCY !!! ]' :
+                   scanState === 'empty' ? '[ SCAN NEXT SUBJECT ]' :
+                   isAlienState ? '[ SCAN NEXT SUBJECT ]' :
+                   '[ SCAN AGAIN ]'}
                 </button>
               </div>
             </div>
 
-            {/* Emergency overlay */}
-            {['emergency','final'].includes(scanState) && (
-              <div style={{
-                width: '100%',
-                border: '1px solid rgba(224,48,96,0.5)',
-                padding: '12px 14px',
-                background: 'rgba(224,48,96,0.06)',
-                animation: 'resultIn 0.3s ease',
-              }}>
-                <div style={{ fontSize: '7px', letterSpacing: '0.3em', color: '#e03060', marginBottom: '6px', animation: 'ledPulse 0.5s ease infinite' }}>CRITICAL ALERT</div>
-                <div style={{ fontSize: 'clamp(8px,0.9vw,10px)', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.7)', lineHeight: 1.8 }}>
-                  SPECIES UNKNOWN<br />
-                  BIOLOGICAL MISMATCH CONFIRMED<br />
-                  QUARANTINE RECOMMENDED
-                </div>
+            {/* Emergency alert */}
+            {isEmergency && (
+              <div className="ascii-border-bright" style={{ padding: '10px', fontFamily: FONT, animation: 'resultIn 0.3s ease' }}>
+                <pre style={{ color: G, fontSize: 'clamp(7px,0.75vw,9px)', margin: 0, lineHeight: 1.5 }}>
+{`!!! CRITICAL ALERT !!!
+SPECIES UNKNOWN
+BIOLOGICAL MISMATCH CONFIRMED
+QUARANTINE RECOMMENDED`}
+                </pre>
               </div>
             )}
 
             {/* Final message */}
             {scanState === 'final' && finalMessage && (
-              <div style={{
-                width: '100%',
-                border: '1px solid rgba(192,64,224,0.4)',
-                padding: '14px',
-                background: 'rgba(192,64,224,0.05)',
-                animation: 'resultIn 0.5s ease',
-                textAlign: 'center',
-              }}>
-                <div style={{ fontSize: 'clamp(10px,1.2vw,13px)', letterSpacing: '0.2em', color: '#c040e0', lineHeight: 1.5 }}>
+              <div className="ascii-border-bright" style={{ padding: '12px', fontFamily: FONT, textAlign: 'center', animation: 'resultIn 0.5s ease' }}>
+                <div style={{ fontSize: 'clamp(9px,1vw,12px)', letterSpacing: '0.15em', color: G, lineHeight: 1.6 }}>
                   {finalMessage}
                 </div>
               </div>
             )}
 
-            {/* Rare event: empty chamber */}
+            {/* Rare event */}
             {scanState === 'empty' && (
-              <div style={{
-                width: '100%',
-                border: '1px solid rgba(255,32,64,0.3)',
-                padding: '14px',
-                background: 'rgba(255,32,64,0.04)',
-                animation: 'resultIn 0.5s ease',
-                textAlign: 'center',
-              }}>
-                <div style={{ fontSize: 'clamp(9px,1vw,11px)', letterSpacing: '0.2em', color: '#ff2040', lineHeight: 1.8 }}>
-                  NO HUMAN DETECTED.<br />
-                  <span style={{ opacity: 0.5 }}>CHAMBER IS EMPTY.</span>
-                </div>
+              <div className="ascii-border" style={{ padding: '12px', fontFamily: FONT, textAlign: 'center', animation: 'resultIn 0.5s ease' }}>
+                <pre style={{ color: G, fontSize: 'clamp(8px,0.85vw,10px)', margin: 0, lineHeight: 1.6 }}>
+{`NO HUMAN DETECTED.
+CHAMBER IS EMPTY.
+CONTINUING SCAN...`}
+                </pre>
               </div>
             )}
 
             {/* Final report */}
             {result && scanState === 'results' && (
-              <div style={{
-                width: '100%',
-                border: `1px solid rgba(212,144,10,0.3)`,
-                padding: '14px',
-                background: 'rgba(212,144,10,0.04)',
-                animation: 'resultIn 0.5s ease',
-              }}>
-                <div style={{ fontSize: '7px', letterSpacing: '0.3em', color: amber, opacity: 0.7, marginBottom: '8px' }}>
-                  FINAL DIAGNOSTIC REPORT
-                </div>
-                <div style={{
-                  fontSize: 'clamp(9px,1.1vw,11px)',
-                  letterSpacing: '0.12em',
-                  color: 'rgba(255,255,255,0.8)',
-                  lineHeight: 1.6,
-                }}>
+              <div className="ascii-border" style={{ padding: '10px', fontFamily: FONT, animation: 'resultIn 0.5s ease' }}>
+                <div style={{ color: DIM, fontSize: '8px', letterSpacing: '0.2em', marginBottom: '6px' }}>+-- FINAL DIAGNOSTIC REPORT --+</div>
+                <div style={{ color: G, fontSize: 'clamp(8px,0.85vw,10px)', letterSpacing: '0.1em', lineHeight: 1.6 }}>
                   {result.finalReport}
                 </div>
               </div>
@@ -973,114 +527,57 @@ export default function HumanExePage() {
           </div>
 
           {/* ── Right panel: Metrics ── */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            {/* Gauges */}
-            <div style={{
-              border: `1px solid rgba(255,255,255,0.06)`,
-              padding: '14px',
-              background: 'rgba(0,0,0,0.2)',
-            }}>
-              <div style={{ fontSize: '7px', letterSpacing: '0.3em', color: 'rgba(255,255,255,0.3)', marginBottom: '12px' }}>
-                DIAGNOSTIC METRICS
-              </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontFamily: FONT, fontSize: 'clamp(8px,0.85vw,10px)' }}>
+
+            {/* Diagnostic metrics */}
+            <div className="ascii-border" style={{ padding: '10px' }}>
+              <div style={{ color: DIM, marginBottom: '8px', letterSpacing: '0.2em' }}>+-- DIAGNOSTIC METRICS --+</div>
               {result ? (
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fill, minmax(72px, 1fr))',
-                  gap: '12px',
-                }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   {result.metrics.map((m, i) => (
-                    <div key={m.id} style={{ animation: `resultIn 0.4s ease ${i * 0.06}s both` }}>
-                      <AnalogGauge label={m.label} value={m.value} color={m.color} />
+                    <div key={m.id} style={{ animation: `resultIn 0.3s ease ${i * 0.05}s both` }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', color: DIM, marginBottom: '2px' }}>
+                        <span>{m.label}</span>
+                      </div>
+                      <div style={{ color: G, fontSize: 'clamp(7px,0.75vw,9px)' }}>
+                        <AsciiBar value={m.value} width={16} />
+                      </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fill, minmax(72px, 1fr))',
-                  gap: '12px',
-                  opacity: 0.2,
-                }}>
+                <div style={{ color: DIMMER }}>
                   {Array.from({ length: 6 }, (_, i) => (
-                    <AnalogGauge key={i} label="---" value={0} color="rgba(255,255,255,0.2)" />
+                    <div key={i} style={{ marginBottom: '6px' }}>
+                      <div style={{ color: DIMMER }}>---</div>
+                      <div style={{ color: DIMMER, fontSize: '9px' }}>[░░░░░░░░░░░░░░░░]   0</div>
+                    </div>
                   ))}
                 </div>
               )}
             </div>
 
-            {/* LED arrays for top metrics */}
-            {result && (
-              <div style={{
-                border: `1px solid rgba(255,255,255,0.06)`,
-                padding: '14px',
-                background: 'rgba(0,0,0,0.2)',
-                animation: 'resultIn 0.5s ease 0.3s both',
-              }}>
-                <div style={{ fontSize: '7px', letterSpacing: '0.3em', color: 'rgba(255,255,255,0.3)', marginBottom: '12px' }}>
-                  SIGNAL LEVELS
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  {result.metrics.slice(0, 5).map(m => (
-                    <div key={m.id}>
-                      <div style={{
-                        display: 'flex', justifyContent: 'space-between',
-                        fontSize: '7px', letterSpacing: '0.12em',
-                        color: 'rgba(255,255,255,0.35)', marginBottom: '4px',
-                      }}>
-                        <span>{m.label}</span>
-                        <span style={{ color: m.color }}>{m.value}</span>
-                      </div>
-                      <LEDArray value={m.value} color={m.color} />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Oscilloscope-style waveform */}
-            <div style={{
-              border: `1px solid rgba(64,184,192,0.15)`,
-              padding: '14px',
-              background: 'rgba(0,0,0,0.2)',
-            }}>
-              <div style={{ fontSize: '7px', letterSpacing: '0.3em', color: cyan, opacity: 0.7, marginBottom: '8px' }}>
-                VITAL WAVEFORM
-              </div>
-              <svg width="100%" height="50" viewBox="0 0 200 50" preserveAspectRatio="none">
-                <path
-                  d={scanState === 'idle'
-                    ? 'M0 25 L200 25'
-                    : `M0 25 ${Array.from({ length: 20 }, (_, i) => {
-                        const x = i * 10;
-                        const y = 25 + Math.sin(i * 0.8 + Date.now() * 0.001) * 12 + Math.random() * 4;
-                        return `L${x} ${y}`;
-                      }).join(' ')}`
-                  }
-                  fill="none"
-                  stroke={cyan}
-                  strokeWidth="1.2"
-                  opacity={scanState === 'idle' ? 0.2 : 0.7}
-                />
-              </svg>
+            {/* Vital waveform - ASCII */}
+            <div className="ascii-border" style={{ padding: '10px' }}>
+              <div style={{ color: DIM, marginBottom: '6px', letterSpacing: '0.2em' }}>+-- VITAL WAVEFORM --+</div>
+              <pre style={{ color: DIM, fontSize: 'clamp(7px,0.75vw,9px)', margin: 0, lineHeight: 1.2 }}>
+{scanState === 'idle'
+  ? '_____________________________'
+  : '___/\\___/\\__/\\___/\\___/\\____'}
+              </pre>
             </div>
 
-            {/* Certification plate */}
-            <div style={{
-              border: `1px solid rgba(212,144,10,0.1)`,
-              padding: '10px 14px',
-              background: 'rgba(0,0,0,0.15)',
-              fontSize: '7px',
-              letterSpacing: '0.15em',
-              color: 'rgba(255,255,255,0.2)',
-              lineHeight: 2,
-            }}>
-              <div style={{ color: amber, opacity: 0.5, marginBottom: '4px', letterSpacing: '0.3em' }}>CERTIFICATION</div>
-              HUMAN.EXE MKII DIAGNOSTIC SYSTEM.<br />
-              AUTHORIZED BIOLOGICAL ANALYSIS ONLY.<br />
-              RESULTS ARE FOR INFORMATIONAL PURPOSES.<br />
-              CALIBRATION: NOMINAL.<br />
-              <span style={{ color: amber, opacity: 0.4 }}>© HELLA.RICH / NODE_1956</span>
+            {/* Certification */}
+            <div className="ascii-border" style={{ padding: '10px' }}>
+              <div style={{ color: DIM, marginBottom: '6px', letterSpacing: '0.2em' }}>+-- CERTIFICATION --+</div>
+              <pre style={{ color: DIMMER, fontSize: 'clamp(7px,0.75vw,8px)', margin: 0, lineHeight: 1.6 }}>
+{`HUMAN.EXE MKII
+AUTHORIZED BIOLOGICAL
+ANALYSIS ONLY.
+RESULTS: INFORMATIONAL.
+CALIBRATION: NOMINAL.
+(C) HELLA.RICH / NODE_1956`}
+              </pre>
             </div>
           </div>
         </main>

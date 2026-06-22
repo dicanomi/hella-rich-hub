@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 480" fill="none" stroke="#33ff33" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.85">
+  <!-- CRANIUM - elongated, narrow -->
+  <ellipse cx="100" cy="28" rx="18" ry="26" />
+  <!-- Cranial ridges -->
+  <line x1="82" y1="18" x2="118" y2="18"/>
+  <line x1="82" y1="28" x2="118" y2="28"/>
+  <line x1="82" y1="38" x2="118" y2="38"/>
+  <line x1="92" y1="2" x2="92" y2="54"/>
+  <line x1="100" y1="2" x2="100" y2="54"/>
+  <line x1="108" y1="2" x2="108" y2="54"/>
+  <!-- Cranial ridge ring -->
+  <ellipse cx="100" cy="14" rx="22" ry="6" />
+  <!-- NECK - long, segmented -->
+  <line x1="92" y1="54" x2="90" y2="78"/>
+  <line x1="108" y1="54" x2="110" y2="78"/>
+  <line x1="90" y1="62" x2="110" y2="62"/>
+  <line x1="90" y1="70" x2="110" y2="70"/>
+  <!-- THORAX - ribbed, 8-sided -->
+  <path d="M90 78 L76 82 L60 90 L54 110 L52 140 L56 170 L62 190 L80 200 L120 200 L138 190 L144 170 L148 140 L146 110 L140 90 L124 82 L110 78 Z"/>
+  <!-- Rib rings -->
+  <ellipse cx="100" cy="100" rx="44" ry="8"/>
+  <ellipse cx="100" cy="120" rx="46" ry="8"/>
+  <ellipse cx="100" cy="140" rx="46" ry="8"/>
+  <ellipse cx="100" cy="160" rx="44" ry="8"/>
+  <ellipse cx="100" cy="180" rx="40" ry="7"/>
+  <!-- Thorax vertical segments -->
+  <line x1="76" y1="82" x2="70" y2="200"/>
+  <line x1="88" y1="78" x2="86" y2="200"/>
+  <line x1="100" y1="78" x2="100" y2="200"/>
+  <line x1="112" y1="78" x2="114" y2="200"/>
+  <line x1="124" y1="82" x2="130" y2="200"/>
+  <!-- ABDOMEN - segmented, narrower -->
+  <path d="M80 200 L74 220 L72 250 L76 280 L80 300 L120 300 L124 280 L128 250 L126 220 L120 200 Z"/>
+  <!-- Abdominal segments -->
+  <line x1="74" y1="220" x2="126" y2="220"/>
+  <line x1="72" y1="240" x2="128" y2="240"/>
+  <line x1="72" y1="260" x2="128" y2="260"/>
+  <line x1="74" y1="280" x2="126" y2="280"/>
+  <!-- PELVIS - wider, insectoid -->
+  <path d="M76 300 L60 308 L50 316 L54 324 L80 320 L120 320 L146 324 L150 316 L140 308 L124 300 Z"/>
+  <!-- Hip spurs -->
+  <line x1="50" y1="316" x2="36" y2="310"/>
+  <line x1="150" y1="316" x2="164" y2="310"/>
+  <!-- LEFT ARM - 4 joints, elongated, angled out -->
+  <path d="M60 90 L36 110 L24 150 L18 200 L20 250 L24 280"/>
+  <line x1="36" y1="110" x2="28" y2="110"/>
+  <line x1="24" y1="150" x2="16" y2="150"/>
+  <line x1="18" y1="200" x2="12" y2="200"/>
+  <line x1="20" y1="250" x2="14" y2="250"/>
+  <!-- Left arm grid -->
+  <line x1="46" y1="130" x2="30" y2="130"/>
+  <line x1="34" y1="175" x2="17" y2="175"/>
+  <line x1="22" y1="225" x2="15" y2="225"/>
+  <!-- Left claws - 3 fingers -->
+  <line x1="24" y1="280" x2="16" y2="300"/>
+  <line x1="24" y1="280" x2="24" y2="302"/>
+  <line x1="24" y1="280" x2="32" y2="300"/>
+  <!-- RIGHT ARM -->
+  <path d="M140 90 L164 110 L176 150 L182 200 L180 250 L176 280"/>
+  <line x1="164" y1="110" x2="172" y2="110"/>
+  <line x1="176" y1="150" x2="184" y2="150"/>
+  <line x1="182" y1="200" x2="188" y2="200"/>
+  <line x1="180" y1="250" x2="186" y2="250"/>
+  <!-- Right arm grid -->
+  <line x1="154" y1="130" x2="170" y2="130"/>
+  <line x1="166" y1="175" x2="183" y2="175"/>
+  <line x1="178" y1="225" x2="185" y2="225"/>
+  <!-- Right claws -->
+  <line x1="176" y1="280" x2="184" y2="300"/>
+  <line x1="176" y1="280" x2="176" y2="302"/>
+  <line x1="176" y1="280" x2="168" y2="300"/>
+  <!-- LEFT LEG - digitigrade (backwards knee) -->
+  <path d="M80 320 L76 360 L70 400 L68 440 L72 476"/>
+  <line x1="76" y1="360" x2="68" y2="360"/>
+  <line x1="70" y1="400" x2="62" y2="400"/>
+  <line x1="68" y1="440" x2="60" y2="440"/>
+  <!-- Left leg grid -->
+  <line x1="77" y1="340" x2="69" y2="340"/>
+  <line x1="73" y1="380" x2="65" y2="380"/>
+  <line x1="69" y1="420" x2="61" y2="420"/>
+  <!-- Left foot - 3 toes -->
+  <line x1="72" y1="476" x2="60" y2="480"/>
+  <line x1="72" y1="476" x2="70" y2="480"/>
+  <line x1="72" y1="476" x2="80" y2="478"/>
+  <!-- RIGHT LEG -->
+  <path d="M120 320 L124 360 L130 400 L132 440 L128 476"/>
+  <line x1="124" y1="360" x2="132" y2="360"/>
+  <line x1="130" y1="400" x2="138" y2="400"/>
+  <line x1="132" y1="440" x2="140" y2="440"/>
+  <!-- Right leg grid -->
+  <line x1="123" y1="340" x2="131" y2="340"/>
+  <line x1="127" y1="380" x2="135" y2="380"/>
+  <line x1="131" y1="420" x2="139" y2="420"/>
+  <!-- Right foot -->
+  <line x1="128" y1="476" x2="140" y2="480"/>
+  <line x1="128" y1="476" x2="130" y2="480"/>
+  <line x1="128" y1="476" x2="120" y2="478"/>
+</svg>
