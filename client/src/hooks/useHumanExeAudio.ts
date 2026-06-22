@@ -126,28 +126,28 @@ export function useHumanExeAudio() {
     masterGain.gain.linearRampToValueAtTime(0.5, now + 0.3);
     masterGain.connect(ctx.destination);
 
-    // High-frequency scanner whine
-    const scanOsc = ctx.createOscillator();
-    const scanGain = ctx.createGain();
-    scanOsc.type = 'sawtooth';
-    scanOsc.frequency.value = 4200;
-    scanGain.gain.setValueAtTime(0, now);
-    scanGain.gain.linearRampToValueAtTime(0.018, now + 0.5);
-    scanOsc.connect(scanGain);
-    scanGain.connect(ctx.destination);
+    // Deep sub-bass drone — replaces high-pitch whine
+    const droneOsc = ctx.createOscillator();
+    const droneGain = ctx.createGain();
+    droneOsc.type = 'sine';
+    droneOsc.frequency.value = 28; // very low sub-bass
+    droneGain.gain.setValueAtTime(0, now);
+    droneGain.gain.linearRampToValueAtTime(0.22, now + 1.2);
+    droneOsc.connect(droneGain);
+    droneGain.connect(ctx.destination);
 
     osc1.start(now); osc2.start(now); osc3.start(now);
-    lfo.start(now); scanOsc.start(now);
+    lfo.start(now); droneOsc.start(now);
 
     scanHumRef.current = () => {
       const t = ctx.currentTime;
       masterGain.gain.setValueAtTime(masterGain.gain.value, t);
-      masterGain.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
-      scanGain.gain.setValueAtTime(scanGain.gain.value, t);
-      scanGain.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+      masterGain.gain.exponentialRampToValueAtTime(0.001, t + 0.6);
+      droneGain.gain.setValueAtTime(droneGain.gain.value, t);
+      droneGain.gain.exponentialRampToValueAtTime(0.001, t + 0.6);
       setTimeout(() => {
-        try { osc1.stop(); osc2.stop(); osc3.stop(); lfo.stop(); scanOsc.stop(); } catch {}
-      }, 500);
+        try { osc1.stop(); osc2.stop(); osc3.stop(); lfo.stop(); droneOsc.stop(); } catch {}
+      }, 700);
     };
 
     return scanHumRef.current;

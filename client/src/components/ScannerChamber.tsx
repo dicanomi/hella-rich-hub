@@ -127,32 +127,32 @@ export function ScannerChamber({ scanState, scanProgress, morphProgress }: Scann
         />
       ))}
 
-      {/* ── HUMAN figure ── */}
+      {/* ── HUMAN figure — visible above the scan beam, fades out during morph ── */}
       <div
         className="scanner-figure"
         style={{
           opacity: humanOpacity,
-          transition: isMorphing ? 'opacity 0.3s ease' : 'none',
+          transition: isMorphing ? 'opacity 0.4s ease' : 'none',
           animation: isGlitch ? 'glitchFlicker 0.12s steps(1) infinite' : 'none',
+          // During scan: clip human to only show ABOVE the beam
+          clipPath: isScanning ? `inset(0 0 ${100 - beamY}% 0)` : 'none',
         }}
       >
         <img src="/human-outline.png" alt="HUMAN SUBJECT" />
       </div>
 
-      {/* ── ALIEN figure — revealed below scan beam during scan ── */}
+      {/* ── ALIEN figure — revealed BELOW scan beam, fades in during morph ── */}
       {showAlienLayer && (
         <div
           className="scanner-figure"
           style={{
-            opacity: isAlienState ? alienOpacity
+            opacity: isAlienState ? 1
               : isMorphing ? alienOpacity
-              : 1, // during scan, clipping mask handles visibility
-            transition: isMorphing ? 'opacity 0.3s ease' : 'none',
+              : 1,
+            transition: isMorphing ? 'opacity 0.4s ease' : 'none',
             animation: isEmergency ? 'emergencyPulse 0.7s ease infinite' : 'none',
-            // During scan: clip to only show alien below the beam
-            clipPath: isScanning
-              ? `inset(${beamY}% 0 0 0)`
-              : 'none',
+            // During scan: clip alien to only show BELOW the beam
+            clipPath: isScanning ? `inset(${beamY}% 0 0 0)` : 'none',
           }}
         >
           <img src="/alien-outline.png" alt="UNKNOWN LIFEFORM" />
