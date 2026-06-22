@@ -28,7 +28,7 @@ const OrbPage        = lazy(() => import("./pages/OrbPage"));
 const DeadAirPage    = lazy(() => import("./pages/DeadAirPage"));
 const FourcastPage   = lazy(() => import("./pages/FourcastPage"));
 const RadioPage      = lazy(() => import("./pages/RadioPage"));
-const HumanExePage   = lazy(() => import("./pages/HumanExePage"));
+const HumanExePage   = lazy(() => import("./pages/human-exe/HumanExePage"));
 
 function PageFallback() {
   return (

@@ -9,11 +9,11 @@
  * ACT 5 — CONTACT EVENT: arcade game
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { HellaRichSEO } from '../components/HellaRichSEO';
-import { ScannerChamber } from '../components/ScannerChamber';
-import { ContactEventArcade } from '../components/ContactEventArcade';
-import type { ScanState } from '../components/HumanScanner3D';
-import { useHumanExeAudio } from '../hooks/useHumanExeAudio';
+import { HellaRichSEO } from '../../components/HellaRichSEO';
+import { ScannerChamber } from '../../components/human-exe/ScannerChamber';
+import { ContactEventArcade } from '../../components/human-exe/ContactEventArcade';
+import type { ScanState } from '../../components/human-exe/ScannerChamber';
+import { useHumanExeAudio } from '../../hooks/human-exe/useHumanExeAudio';
 
 // ── Data ───────────────────────────────────────────────────────────────────
 const METRICS = [

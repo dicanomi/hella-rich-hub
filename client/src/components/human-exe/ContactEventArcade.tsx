@@ -11,7 +11,7 @@
  * Lose: enemies reach bottom → SYSTEM COMPROMISED, retry
  */
 import { useEffect, useRef, useCallback, useState } from 'react';
-import { useArcadeAudio } from '../hooks/useArcadeAudio';
+import { useArcadeAudio } from '../../hooks/human-exe/useArcadeAudio';
 
 interface ContactEventArcadeProps {
   onComplete: () => void; // called when player wins

@@ -13,7 +13,8 @@
  *
  * Terminal green only. No rotation. No 3D.
  */
-import type { ScanState } from './HumanScanner3D';
+export type ScanState = 'idle' | 'powering' | 'scanning' | 'analysis' | 'results'
+  | 'anomaly' | 'glitch' | 'morphing' | 'alien' | 'emergency' | 'final' | 'empty';
 
 interface ScannerChamberProps {
   scanState: ScanState;
