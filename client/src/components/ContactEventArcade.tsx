@@ -11,6 +11,7 @@
  * Lose: enemies reach bottom → SYSTEM COMPROMISED, retry
  */
 import { useEffect, useRef, useCallback, useState } from 'react';
+import { useArcadeAudio } from '../hooks/useArcadeAudio';
 
 interface ContactEventArcadeProps {
   onComplete: () => void; // called when player wins
@@ -68,6 +69,8 @@ export function ContactEventArcade({ onComplete, onExit }: ContactEventArcadePro
   const [score, setScore] = useState(0);
   const [lives, setLives] = useState(3);
   const [wave, setWave] = useState(1);
+  const arcadeAudio = useArcadeAudio();
+  const stopAmbientRef = useRef<(() => void) | null>(null);
 
   const initGame = useCallback((canvas: HTMLCanvasElement) => {
     const s = stateRef.current;
@@ -166,6 +169,7 @@ export function ContactEventArcade({ onComplete, onExit }: ContactEventArcadePro
         });
         s.lastShot = time;
         s.canShoot = false;
+        arcadeAudio.shoot();
       }
       if (!s.keys.space) s.canShoot = true;
 
@@ -213,6 +217,7 @@ export function ContactEventArcade({ onComplete, onExit }: ContactEventArcadePro
             b.active = false;
             s.score += 10;
             setScore(s.score);
+            arcadeAudio.explosion();
           }
         });
       });
@@ -224,6 +229,7 @@ export function ContactEventArcade({ onComplete, onExit }: ContactEventArcadePro
           b.active = false;
           s.lives -= 1;
           setLives(s.lives);
+          arcadeAudio.playerHit();
           if (s.lives <= 0) {
             s.phase = 'lose';
             setPhase('lose');
@@ -238,6 +244,8 @@ export function ContactEventArcade({ onComplete, onExit }: ContactEventArcadePro
       if (s.enemies.every(e => !e.alive)) {
         s.phase = 'win';
         setPhase('win');
+        arcadeAudio.waveClear();
+        if (stopAmbientRef.current) { stopAmbientRef.current(); stopAmbientRef.current = null; }
         setTimeout(() => onComplete(), 1500);
         return;
       }
@@ -304,6 +312,10 @@ export function ContactEventArcade({ onComplete, onExit }: ContactEventArcadePro
     if (!canvas || phase !== 'playing') return;
 
     initGame(canvas);
+    arcadeAudio.terminalBoot();
+    setTimeout(() => {
+      stopAmbientRef.current = arcadeAudio.startAmbient();
+    }, 600);
     gameLoop(canvas);
 
     const onKey = (e: KeyboardEvent) => {
@@ -322,6 +334,7 @@ export function ContactEventArcade({ onComplete, onExit }: ContactEventArcadePro
       cancelAnimationFrame(stateRef.current.animId);
       window.removeEventListener('keydown', onKey);
       window.removeEventListener('keyup', onKey);
+      if (stopAmbientRef.current) { stopAmbientRef.current(); stopAmbientRef.current = null; }
     };
   }, [phase, initGame, gameLoop]);
 
