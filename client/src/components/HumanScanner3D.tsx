@@ -191,11 +191,11 @@ function FigurePlane({
   });
 
   // SVG viewBox 200x480, ratio 0.417
-  // Make it 2.0 units tall, 0.83 wide. Center at y=1.0 so feet near y=0, head near y=2
+  // Height 1.4 units, width 0.58. Center at y=0.7 (feet ~0, head ~1.4)
   return (
     <group ref={groupRef} position={[0, 0, 0]}>
-      <mesh material={mat} position={[0, 1.0, 0]}>
-        <planeGeometry args={[0.83, 2.0]} />
+      <mesh material={mat} position={[0, 0.7, 0]}>
+        <planeGeometry args={[0.58, 1.4]} />
       </mesh>
     </group>
   );
@@ -250,7 +250,7 @@ function Scene(props: HumanScanner3DProps) {
 export function HumanScanner3D(props: HumanScanner3DProps) {
   return (
     <Canvas
-      camera={{ position: [0, 0.9, 2.0], fov: 62 }}
+      camera={{ position: [0, 0.7, 1.6], fov: 52 }}
       style={{ width: '100%', height: '100%', background: '#020a02' }}
       gl={{ antialias: true, alpha: false }}
     >
