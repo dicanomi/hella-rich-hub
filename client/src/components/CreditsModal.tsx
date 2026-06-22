@@ -44,7 +44,10 @@ const SECTIONS: Array<{ lines: Array<{ type: string; text?: string }> }> = [
     lines: [
       { type: 'label',    text: 'CREATED WITH' },
       { type: 'item',     text: 'MANUS' },
+      { type: 'item',     text: 'CLAUDE' },
       { type: 'item',     text: 'CHATGPT' },
+      { type: 'item',     text: 'CODEX' },
+      { type: 'item',     text: 'HIGGSFIELD' },
       { type: 'item',     text: 'REACT' },
       { type: 'item',     text: 'GITHUB' },
       { type: 'item',     text: 'CLOUDFLARE' },
@@ -55,6 +58,8 @@ const SECTIONS: Array<{ lines: Array<{ type: string; text?: string }> }> = [
   {
     lines: [
       { type: 'label',    text: 'PRODUCTS' },
+      { type: 'product',  text: 'HELLA_RADIO' },
+      { type: 'product',  text: 'ORB' },
       { type: 'product',  text: 'THE EYE' },
       { type: 'product',  text: 'LOW BATTERY' },
       { type: 'product',  text: 'SPACE DRONE' },

@@ -207,12 +207,13 @@ function AboutModal({ onClose, onOpenCredits }: { onClose: () => void; onOpenCre
           <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 'clamp(8px,0.85vw,10px)', letterSpacing: '0.22em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginBottom: '16px' }}>The products</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {[
+              { title: 'HELLA_RADIO', tagline: 'A late-night signal you tune into.',                           href: '/radio' },
+              { title: 'ORB',         tagline: 'A living object.',                                            href: '/orb' },
               { title: 'THE EYE',     tagline: 'A strange object that notices you.',                          href: '/the-eye' },
               { title: 'LOW BATTERY', tagline: 'The sound you ignore until it becomes your personality.',     href: '/low-battery' },
               { title: 'SPACE DRONE', tagline: 'A drifting machine for doing absolutely nothing.',            href: '/space-drone' },
               { title: 'ÆTHER',       tagline: 'Impossible to sound bad.',                                    href: '/aether' },
               { title: 'DEAD AIR',    tagline: 'Late night radio scanner.',                                   href: '/dead-air' },
-              { title: 'ORB',         tagline: 'A living object.',                                            href: '/orb' },
               { title: 'FOURCAST',    tagline: 'A weather app predicting the end of the world. Politely.',    href: '/fourcast' },
             ].map(p => (
               <Link
