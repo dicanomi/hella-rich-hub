@@ -224,38 +224,41 @@ export function useHumanExeAudio() {
     const ctx = getCtx();
     const now = ctx.currentTime;
 
-    // Transient click — broadband noise burst
-    const bufLen = Math.floor(ctx.sampleRate * 0.012);
-    const buf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
-    const data = buf.getChannelData(0);
-    for (let i = 0; i < bufLen; i++) {
-      data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufLen * 0.15));
-    }
-    const noise = ctx.createBufferSource();
-    const filter = ctx.createBiquadFilter();
-    const gain = ctx.createGain();
-    filter.type = 'bandpass';
-    filter.frequency.value = 2500 + Math.random() * 1000;
-    filter.Q.value = 1.5;
-    gain.gain.value = 0.4;
-    noise.buffer = buf;
-    noise.connect(filter);
-    filter.connect(gain);
-    gain.connect(ctx.destination);
-    noise.start(now);
-
-    // Low thud component
+    // Electric scan zap — high-frequency sawtooth sweep with static burst
+    // Sounds like a scanner beam passing through tissue
     const osc = ctx.createOscillator();
     const oscGain = ctx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(180, now);
-    osc.frequency.exponentialRampToValueAtTime(60, now + 0.04);
-    oscGain.gain.setValueAtTime(0.2, now);
+    osc.type = 'sawtooth';
+    // Rapid descending sweep — electric zap character
+    const baseFreq = 3200 + Math.random() * 1600;
+    osc.frequency.setValueAtTime(baseFreq, now);
+    osc.frequency.exponentialRampToValueAtTime(baseFreq * 0.25, now + 0.055);
+    oscGain.gain.setValueAtTime(0.0, now);
+    oscGain.gain.linearRampToValueAtTime(0.09, now + 0.004);
     oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
     osc.connect(oscGain);
     oscGain.connect(ctx.destination);
     osc.start(now);
-    osc.stop(now + 0.06);
+    osc.stop(now + 0.065);
+
+    // Brief static crackle on top — electrical interference
+    const bufLen = Math.floor(ctx.sampleRate * 0.018);
+    const buf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < bufLen; i++) {
+      data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufLen * 0.25));
+    }
+    const noise = ctx.createBufferSource();
+    const filter = ctx.createBiquadFilter();
+    const noiseGain = ctx.createGain();
+    filter.type = 'highpass';
+    filter.frequency.value = 4000;
+    noiseGain.gain.value = 0.05;
+    noise.buffer = buf;
+    noise.connect(filter);
+    filter.connect(noiseGain);
+    noiseGain.connect(ctx.destination);
+    noise.start(now);
   }, [getCtx]);
 
   // ── Diagnostic beep ────────────────────────────────────────────────────────
