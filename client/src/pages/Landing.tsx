@@ -17,12 +17,12 @@ import { CreditsModal } from '../components/CreditsModal';
 const CARD_THE_EYE    = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-the-eye-v2-e6nZVkwikVb3HXogEWNVcr.webp';
 const CARD_HUMAN_EXE  = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-human-exe-v2-jkapXL5EJDbC76jMomipMG.webp';
 const CARD_LOW_BATTERY = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-low-battery-v2-U2SozegwBi3DGAcs4cqCcq.webp';
-const CARD_SPACE_DRONE = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-space-drone-v2-aszqEoM8xQYCmcdXCXSr5c.webp';
-const CARD_AETHER      = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-aether-v2-Vo6vprnNoFYjftKmKSYAni.webp';
-const CARD_DEAD_AIR    = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-dead-air-v2-h3F8sPAQWVSRnQyy7Rs2Wk.webp';
+const CARD_SPACE_DRONE = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-space-drone-v3-S7XXKv8kQGBXu6JnjjLP9f.webp';
+const CARD_AETHER      = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-aether-v3-AZ9G4xa25LbpFU7sPkmxGo.webp';
+const CARD_DEAD_AIR    = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-dead-air-v3-83hnbeosnmhX2P2GSSA5QC.webp';
 const CARD_ORB         = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-orb-v2-PR2ygqeFy9cjD9WwKtiRXC.webp';
 const CARD_FOURCAST    = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-fourcast-v2-V5pY4RWLUsrMb2rVGycNUb.webp';
-const RADIO_CARD       = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-radio-v2-ZyZwESEgmFMqXQkoUx6iyK.webp';
+const RADIO_CARD       = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-radio-v3-gNqpU6m55HfF88j9qEEcFc.webp';
 
 // ── H1 Typewriter ──────────────────────────────────────────────────────────
 
