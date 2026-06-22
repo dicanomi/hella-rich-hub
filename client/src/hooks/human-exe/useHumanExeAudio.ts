@@ -92,62 +92,109 @@ export function useHumanExeAudio() {
     const ctx = getCtx();
     const now = ctx.currentTime;
 
-    // Main motor hum — 60Hz with harmonics
-    const osc1 = ctx.createOscillator();
-    const osc2 = ctx.createOscillator();
-    const osc3 = ctx.createOscillator();
+    // 432Hz drone — the "healing frequency", naturally calming to humans
+    // Harmonic series: 432 (fundamental), 864 (octave), 216 (sub-octave), 648 (fifth)
     const masterGain = ctx.createGain();
-    const lfo = ctx.createOscillator();
-    const lfoGain = ctx.createGain();
+    const reverb = ctx.createConvolver();
 
-    osc1.type = 'sine';
-    osc1.frequency.value = 60;
-    osc2.type = 'sine';
-    osc2.frequency.value = 120;
-    osc3.type = 'sine';
-    osc3.frequency.value = 180;
-
-    // LFO for subtle wobble
-    lfo.type = 'sine';
-    lfo.frequency.value = 0.3;
-    lfoGain.gain.value = 3;
-    lfo.connect(lfoGain);
-    lfoGain.connect(osc1.frequency);
-
-    const g1 = ctx.createGain(); g1.gain.value = 0.12;
-    const g2 = ctx.createGain(); g2.gain.value = 0.06;
-    const g3 = ctx.createGain(); g3.gain.value = 0.03;
-
-    osc1.connect(g1); g1.connect(masterGain);
-    osc2.connect(g2); g2.connect(masterGain);
-    osc3.connect(g3); g3.connect(masterGain);
-
-    masterGain.gain.setValueAtTime(0, now);
-    masterGain.gain.linearRampToValueAtTime(0.5, now + 0.3);
+    // Simple convolution reverb buffer for warmth
+    const reverbLen = ctx.sampleRate * 1.5;
+    const reverbBuf = ctx.createBuffer(2, reverbLen, ctx.sampleRate);
+    for (let ch = 0; ch < 2; ch++) {
+      const d = reverbBuf.getChannelData(ch);
+      for (let i = 0; i < reverbLen; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (reverbLen * 0.3));
+    }
+    reverb.buffer = reverbBuf;
+    const reverbGain = ctx.createGain();
+    reverbGain.gain.value = 0.18;
+    masterGain.connect(reverb);
+    reverb.connect(reverbGain);
+    reverbGain.connect(ctx.destination);
     masterGain.connect(ctx.destination);
 
-    // Deep sub-bass drone — replaces high-pitch whine
-    const droneOsc = ctx.createOscillator();
-    const droneGain = ctx.createGain();
-    droneOsc.type = 'sine';
-    droneOsc.frequency.value = 28; // very low sub-bass
-    droneGain.gain.setValueAtTime(0, now);
-    droneGain.gain.linearRampToValueAtTime(0.22, now + 1.2);
-    droneOsc.connect(droneGain);
-    droneGain.connect(ctx.destination);
+    // LFO for gentle tremolo
+    const lfo = ctx.createOscillator();
+    const lfoGain = ctx.createGain();
+    lfo.type = 'sine';
+    lfo.frequency.value = 0.15; // very slow, meditative
+    lfoGain.gain.value = 0.04;
+    lfo.connect(lfoGain);
+    lfoGain.connect(masterGain.gain);
 
-    osc1.start(now); osc2.start(now); osc3.start(now);
-    lfo.start(now); droneOsc.start(now);
+    const tones = [
+      { freq: 432,  gain: 0.22 }, // fundamental — 432Hz
+      { freq: 216,  gain: 0.12 }, // sub-octave — deep warmth
+      { freq: 864,  gain: 0.08 }, // octave — clarity
+      { freq: 648,  gain: 0.06 }, // perfect fifth — harmony
+      { freq: 540,  gain: 0.04 }, // major third — warmth
+    ];
+
+    const oscs = tones.map(({ freq, gain }) => {
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      g.gain.value = gain;
+      osc.connect(g);
+      g.connect(masterGain);
+      osc.start(now);
+      return osc;
+    });
+
+    masterGain.gain.setValueAtTime(0, now);
+    masterGain.gain.linearRampToValueAtTime(0.45, now + 2.0); // slow fade in
+    lfo.start(now);
+
+    // Alien click scheduler — random chirps during scan
+    let alienClickRunning = true;
+    const scheduleAlienClick = () => {
+      if (!alienClickRunning) return;
+      const delay = 800 + Math.random() * 2400; // every 0.8–3.2s
+      setTimeout(() => {
+        if (!alienClickRunning) return;
+        // Alien chirp: fast frequency sweep, non-human pattern
+        const c = ctx;
+        const t = c.currentTime;
+        const chirpOsc = c.createOscillator();
+        const chirpGain = c.createGain();
+        // Random alien frequency pattern
+        const baseFreq = 800 + Math.random() * 2400;
+        const endFreq = baseFreq * (0.3 + Math.random() * 1.8);
+        chirpOsc.type = Math.random() > 0.5 ? 'sine' : 'triangle';
+        chirpOsc.frequency.setValueAtTime(baseFreq, t);
+        chirpOsc.frequency.exponentialRampToValueAtTime(endFreq, t + 0.08 + Math.random() * 0.12);
+        chirpGain.gain.setValueAtTime(0.06 + Math.random() * 0.06, t);
+        chirpGain.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+        chirpOsc.connect(chirpGain);
+        chirpGain.connect(ctx.destination);
+        chirpOsc.start(t);
+        chirpOsc.stop(t + 0.18);
+        // Occasionally add a second chirp immediately after (alien double-click)
+        if (Math.random() > 0.65) {
+          const t2 = t + 0.1 + Math.random() * 0.08;
+          const c2 = c.createOscillator();
+          const g2 = c.createGain();
+          c2.type = 'sine';
+          c2.frequency.setValueAtTime(endFreq * (0.5 + Math.random()), t2);
+          c2.frequency.exponentialRampToValueAtTime(endFreq * (0.2 + Math.random() * 2), t2 + 0.06);
+          g2.gain.setValueAtTime(0.04, t2);
+          g2.gain.exponentialRampToValueAtTime(0.001, t2 + 0.1);
+          c2.connect(g2); g2.connect(ctx.destination);
+          c2.start(t2); c2.stop(t2 + 0.12);
+        }
+        scheduleAlienClick();
+      }, delay);
+    };
+    scheduleAlienClick();
 
     scanHumRef.current = () => {
+      alienClickRunning = false;
       const t = ctx.currentTime;
       masterGain.gain.setValueAtTime(masterGain.gain.value, t);
-      masterGain.gain.exponentialRampToValueAtTime(0.001, t + 0.6);
-      droneGain.gain.setValueAtTime(droneGain.gain.value, t);
-      droneGain.gain.exponentialRampToValueAtTime(0.001, t + 0.6);
+      masterGain.gain.exponentialRampToValueAtTime(0.001, t + 1.2); // slow fade out
       setTimeout(() => {
-        try { osc1.stop(); osc2.stop(); osc3.stop(); lfo.stop(); droneOsc.stop(); } catch {}
-      }, 700);
+        try { oscs.forEach(o => o.stop()); lfo.stop(); } catch {}
+      }, 1400);
     };
 
     return scanHumRef.current;
