@@ -9,6 +9,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { HellaRichSEO } from '../components/HellaRichSEO';
 import { HumanScanner3D } from '../components/HumanScanner3D';
+import { useHumanExeAudio } from '../hooks/useHumanExeAudio';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 type ScanState = 'idle' | 'powering' | 'scanning' | 'analysis' | 'results';
@@ -456,6 +457,8 @@ export default function HumanExePage() {
   const [scanProgress, setScanProgress] = useState(0);
   const scanRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const logRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const stopScanHumRef = useRef<(() => void) | null>(null);
+  const audio = useHumanExeAudio();
 
   // Idle blink
   useEffect(() => {
@@ -469,6 +472,10 @@ export default function HumanExePage() {
 
   const startScan = useCallback(() => {
     if (scanState !== 'idle' && scanState !== 'results') return;
+
+    // Stop any previous scan hum
+    if (stopScanHumRef.current) { stopScanHumRef.current(); stopScanHumRef.current = null; }
+
     setResult(null);
     setActiveZones([]);
     setScanProgress(0);
@@ -476,15 +483,23 @@ export default function HumanExePage() {
     setScanState('powering');
     setLogLines(['BOOTING HUMAN.EXE...', 'CALIBRATING SUBJECT...']);
 
+    // Power-on sound
+    audio.powerOn();
+
     // Power-up sequence
     setTimeout(() => {
       setScanState('scanning');
       addLog('DETECTING HUMAN...');
       addLog('HUMAN DETECTED.');
 
+      // Start continuous scan hum
+      stopScanHumRef.current = audio.startScanHum();
+
       // Scan beam animation
       let y = 0;
       let logIdx = 4;
+      let lastBeepY = -10;
+      let lastClickY = -8;
       scanRef.current = setInterval(() => {
         y += 1.2;
         setScanY(Math.min(y, 100));
@@ -496,6 +511,18 @@ export default function HumanExePage() {
           setActiveZones([zones[Math.floor(Math.random() * zones.length)]]);
         }
 
+        // Relay clicks at zone boundaries
+        if (y - lastClickY > 12 + Math.random() * 8) {
+          audio.relayClick();
+          lastClickY = y;
+        }
+
+        // Diagnostic beeps — varying pitch
+        if (y - lastBeepY > 18 + Math.random() * 12) {
+          audio.beep(440 + Math.random() * 880, 0.06, 0.08);
+          lastBeepY = y;
+        }
+
         // Add log messages
         if (y % 8 < 1.2 && logIdx < LOG_MESSAGES.length) {
           addLog(LOG_MESSAGES[logIdx++]);
@@ -503,9 +530,18 @@ export default function HumanExePage() {
 
         if (y >= 100) {
           clearInterval(scanRef.current!);
+
+          // Stop scan hum
+          if (stopScanHumRef.current) { stopScanHumRef.current(); stopScanHumRef.current = null; }
+
           setScanState('analysis');
           addLog('RUNNING FINAL ANALYSIS...');
           addLog('CROSS-REFERENCING HUMAN DATABASE...');
+
+          // Target lock sounds
+          setTimeout(() => audio.targetLock(), 300);
+          setTimeout(() => audio.targetLock(), 700);
+          setTimeout(() => audio.relayClick(), 1100);
 
           setTimeout(() => {
             const diag = generateDiagnostics();
@@ -514,11 +550,14 @@ export default function HumanExePage() {
             setScanState('results');
             addLog('ANALYSIS COMPLETE.');
             addLog(diag.finalReport);
+
+            // Scan complete tone
+            audio.scanComplete();
           }, 2200);
         }
       }, 40);
     }, 900);
-  }, [scanState, addLog]);
+  }, [scanState, addLog, audio]);
 
   // Cleanup
   useEffect(() => {
