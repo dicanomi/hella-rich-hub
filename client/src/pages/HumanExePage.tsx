@@ -14,6 +14,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { HellaRichSEO } from '../components/HellaRichSEO';
 import { ScannerChamber } from '../components/ScannerChamber';
+import { ContactEventArcade } from '../components/ContactEventArcade';
 import type { ScanState } from '../components/HumanScanner3D';
 import { useHumanExeAudio } from '../hooks/useHumanExeAudio';
 
@@ -106,6 +107,7 @@ export default function HumanExePage() {
   const [climaxVisible, setClimaxVisible] = useState(false);
   const [isRare, setIsRare] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [showArcade, setShowArcade] = useState(false);
 
   const scanRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const morphRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -207,6 +209,19 @@ export default function HumanExePage() {
       setStatusMsg('SIGNAL RECOGNIZED');
       setSubStatusMsg('WELCOME BACK');
     }, 32000);
+
+    // ACT 8: Terminal override — trigger arcade
+    setTimeout(() => {
+      setStatusMsg('CONNECTION ESTABLISHED');
+      setSubStatusMsg('UNAUTHORIZED RESPONSE DETECTED');
+    }, 34000);
+    setTimeout(() => {
+      setStatusMsg('INBOUND TRANSMISSION');
+      setSubStatusMsg('TERMINAL OVERRIDE ACTIVE');
+    }, 36000);
+    setTimeout(() => {
+      setShowArcade(true);
+    }, 38000);
 
   }, []);
 
@@ -537,6 +552,19 @@ export default function HumanExePage() {
             </div>
           </div>
         </main>
+
+        {/* ── ARCADE: CONTACT EVENT ── */}
+        {showArcade && (
+          <ContactEventArcade
+            onComplete={() => {
+              setShowArcade(false);
+              setScanState('final');
+              setStatusMsg('CONTACT COMPLETE');
+              setSubStatusMsg('CLASSIFICATION UPDATED — WELCOME BACK');
+            }}
+            onExit={() => setShowArcade(false)}
+          />
+        )}
 
         {/* ── CLIMAX OVERLAY: SUBJECT WAS NEVER HUMAN ── */}
         {climaxVisible && (
