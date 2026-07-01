@@ -37,22 +37,35 @@ export function TradeModal({ mode, quote, ownedShares, cash, onConfirm, onClose,
     setRawInput(inputMode === 'shares' ? String(rounded) : String(Math.floor(rounded * quote.price * 100) / 100));
   }, [isBuy, cash, quote.price, ownedShares, inputMode]);
 
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-      if (e.key === 'Enter' && canExecute) handleConfirm();
-    };
-    window.addEventListener('keydown', onKey);
-    document.body.style.overflow = 'hidden';
-    setTimeout(() => { inputRef.current?.focus(); inputRef.current?.select(); }, 50);
-    return () => { window.removeEventListener('keydown', onKey); document.body.style.overflow = ''; };
-  }, [canExecute]);
-
   function handleConfirm() {
     if (!canExecute) { sound.error(); return; }
     isBuy ? sound.buy() : sound.sell();
     onConfirm(Math.floor(shares * 10000) / 10000);
   }
+
+  // Always-current reference to handleConfirm so the mount-only key listener
+  // below can invoke the latest version without re-subscribing every render.
+  const handleConfirmRef = useRef(handleConfirm);
+  useEffect(() => { handleConfirmRef.current = handleConfirm; });
+
+  // Mount-only setup: lock background scroll, focus the input once, wire Esc/Enter.
+  // No reactive deps — this must NOT re-run while the user types. The previous
+  // version depended on [canExecute] and called input.select() on each re-run,
+  // which re-selected the field after every keystroke and blocked multi-digit entry.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') { onClose(); return; }
+      if (e.key === 'Enter') handleConfirmRef.current();
+    };
+    window.addEventListener('keydown', onKey);
+    document.body.style.overflow = 'hidden';
+    const focusTimer = setTimeout(() => inputRef.current?.focus(), 50);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+      clearTimeout(focusTimer);
+    };
+  }, []);
 
   const accentColor = isBuy ? 'rgba(110,200,130,0.9)' : 'rgba(210,90,90,0.9)';
   const label = isBuy ? 'INCREASE EXPOSURE' : 'REDUCE EXPOSURE';
