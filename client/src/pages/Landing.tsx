@@ -562,6 +562,21 @@ function FeaturedCard({ slug, title, desc, img }: { slug: string; title: string;
   );
 }
 
+// ── FeaturedPlaceholder — blank black card to fill the featured grid's last row ──
+function FeaturedPlaceholder() {
+  return (
+    <div className="hr-featured-placeholder" aria-hidden="true">
+      <span style={{
+        fontFamily: "'DM Mono', monospace",
+        fontSize: 'clamp(9px,0.85vw,11px)',
+        letterSpacing: '0.3em',
+        textTransform: 'uppercase',
+        color: 'rgba(255,255,255,0.12)',
+      }}>◫ &nbsp;MORE SOON</span>
+    </div>
+  );
+}
+
 // ── ArchiveRow — catalog list item (digital archive / OS index feel) ──────────
 function ArchiveRow({ slug, n, title, desc, img }: { slug: string; n: string; title: string; desc: string; img: string }) {
   const [hovered, setHovered] = useState(false);
@@ -874,6 +889,9 @@ export default function Landing() {
             ].map(p => (
               <FeaturedCard key={p.slug} slug={p.slug} title={p.title} desc={p.desc} img={p.img} />
             ))}
+            {/* Blank cards fill the last row so the featured view doesn't look empty at the bottom */}
+            <FeaturedPlaceholder />
+            <FeaturedPlaceholder />
           </div>
           ) : (
           <div role="list" style={{ display: 'flex', flexDirection: 'column', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
