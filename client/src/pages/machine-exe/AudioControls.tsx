@@ -101,7 +101,10 @@ type YTPlayer = { playVideo?: () => void; pauseVideo?: () => void; unMute?: () =
 export function ReferenceSignal() {
   const [open, setOpen] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
-  const [pos, setPos] = useState<{ x: number; y: number }>(() => crtSessionPos ?? { x: -1, y: -1 });
+  const [pos, setPos] = useState<{ x: number; y: number }>(() => crtSessionPos ?? {
+    x: Math.max(12, (typeof window !== 'undefined' ? window.innerWidth : 1200) - CRT_WIDTH - 24),
+    y: Math.max(12, (typeof window !== 'undefined' ? window.innerHeight : 800) - 161 - 96),
+  });
 
   const posRef = useRef(pos);
   const dragRef = useRef<{ on: boolean; offX: number; offY: number }>({ on: false, offX: 0, offY: 0 });
@@ -149,17 +152,10 @@ export function ReferenceSignal() {
   }, []);
 
   const openAndPlay = useCallback(() => {
-    if (posRef.current.x < 0) {
-      const h = frameRef.current?.offsetHeight || Math.round(CRT_WIDTH / 1.617);
-      setPosition({
-        x: Math.max(12, window.innerWidth - CRT_WIDTH - 24),
-        y: Math.max(12, window.innerHeight - h - 96),
-      });
-    }
     setOpen(true);
-    // Runs inside the user's click gesture → the browser permits sound
+    // Runs inside the user's click gesture → the browser permits playback with sound
     try { playerRef.current?.unMute?.(); playerRef.current?.playVideo?.(); } catch {}
-  }, [setPosition]);
+  }, []);
 
   const close = useCallback(() => {
     setOpen(false);
@@ -220,8 +216,7 @@ export function ReferenceSignal() {
         onMouseDown={onDown}
         style={{
           position: 'fixed',
-          left: open && pos.x >= 0 ? pos.x : -99999,
-          top: open && pos.y >= 0 ? pos.y : 0,
+          left: pos.x, top: pos.y,
           width: CRT_WIDTH, zIndex: 9996,
           cursor: 'move', userSelect: 'none',
           opacity: open ? 1 : 0,
