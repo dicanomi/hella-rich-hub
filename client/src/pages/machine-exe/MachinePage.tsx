@@ -203,6 +203,21 @@ export default function MachinePage() {
           cursor: pointer;
           border: none;
         }
+        .mx-header-controls {
+          position: absolute;
+          top: clamp(16px,2.5vh,28px);
+          right: clamp(20px,4vw,48px);
+          display: flex; align-items: center; gap: 12px;
+          flex-wrap: wrap; justify-content: flex-end;
+          z-index: 5;
+        }
+        @media (max-width: 768px) {
+          .mx-header-controls {
+            position: static; top: auto; right: auto;
+            justify-content: center;
+            margin: 0 0 18px;
+          }
+        }
       `}</style>
 
       {showStartup && <MachineSync onComplete={() => setShowStartup(false)} />}
@@ -219,8 +234,8 @@ export default function MachinePage() {
 
         {/* ── Global Header — centered ── */}
         <div style={{ padding: 'clamp(24px,4vh,48px) clamp(20px,4vw,48px) 0', animation: 'mxSectionIn 0.4s ease both', position: 'relative' }}>
-          {/* Status + controls — top right */}
-          <div style={{ position: 'absolute', top: 'clamp(16px,2.5vh,28px)', right: 'clamp(20px,4vw,48px)', display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+          {/* Status + controls — top right on desktop, stacked above the title on mobile */}
+          <div className="mx-header-controls">
             <StatusLabel status={marketStatus} />
             <ReferenceSignal />
             {/* Volume slider — only visible when the Machine synth is on */}
