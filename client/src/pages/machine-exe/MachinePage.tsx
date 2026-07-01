@@ -17,6 +17,7 @@ import { TheMachine, MachineState } from './TheMachine';
 import { MarketPulse } from './MarketPulse';
 import { TerminalBar } from './TerminalBar';
 import { MachineSync, shouldShowSync, resetSync } from './MachineSync';
+import { MachineAudioToggle, ReferenceSignal } from './AudioControls';
 import { SplitFlapText } from './SplitFlapText';
 import { useMarketHealth } from './MarketHealth';
 import { AnimatedNumber, formatCurrency, formatPercent } from './AnimatedNumber';
@@ -53,31 +54,6 @@ function StatusLabel({ status }: { status: MarketStatus }) {
         </span>
       )}
     </div>
-  );
-}
-
-// ── Mute button ──────────────────────────────────────────────────────────────
-function MuteBtn({ muted, onToggle }: { muted: boolean; onToggle: () => void }) {
-  return (
-    <button onClick={onToggle} style={{
-      background: 'none',
-      border: `1px solid ${muted ? 'rgba(244,241,234,0.12)' : 'rgba(255,168,74,0.3)'}`,
-      cursor: 'pointer',
-      padding: '4px 8px', display: 'flex', alignItems: 'center', gap: '5px',
-      fontFamily: "'DM Mono', monospace", fontSize: 'clamp(7px,0.7vw,9px)',
-      letterSpacing: '0.15em',
-      color: muted ? '#8E877B' : '#FFA84A',
-      textTransform: 'uppercase',
-      transition: 'color 0.2s, border-color 0.2s',
-    }}
-      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#F4F1EA'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(244,241,234,0.3)'; }}
-      onMouseLeave={e => {
-        (e.currentTarget as HTMLElement).style.color = muted ? '#8E877B' : '#FFA84A';
-        (e.currentTarget as HTMLElement).style.borderColor = muted ? 'rgba(244,241,234,0.12)' : 'rgba(255,168,74,0.3)';
-      }}
-    >
-      {muted ? 'STANDBY' : 'ENGAGED'}
-    </button>
   );
 }
 
@@ -122,12 +98,31 @@ export default function MachinePage() {
   const machineEngine = getMachineSoundEngine();
   const [activeSymbol, setActiveSymbol] = useState<string | null>(null);
   const [showStartup, setShowStartup] = useState(true); // always show on every visit
-  const [engineVolume, setEngineVolume] = useState(0.7);
+  const [engineVolume, setEngineVolume] = useState(0.3); // start low — gentle on enable
   const [mounted, setMounted] = useState(false);
   const [showMillionaire, setShowMillionaire] = useState(false);
   const [milestoneShown, setMilestoneShown] = useState(false);
 
+  // Background Machine synth: OFF by default, user opts in, preference persisted
+  const [machineOn, setMachineOn] = useState<boolean>(() => {
+    try { return localStorage.getItem('machine_audio_v1') === '1'; } catch { return false; }
+  });
+  const toggleMachine = () => {
+    setMachineOn(prev => {
+      const next = !prev;
+      try { localStorage.setItem('machine_audio_v1', next ? '1' : '0'); } catch {}
+      if (next) machineEngine.enable(); else machineEngine.disable();
+      return next;
+    });
+  };
+
   useEffect(() => { const t = setTimeout(() => setMounted(true), 60); return () => clearTimeout(t); }, []);
+
+  // Once the sync overlay dismisses, honour a stored "on" preference
+  useEffect(() => {
+    if (!showStartup && machineOn) machineEngine.enable();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showStartup]);
 
   const holdingSymbols = Object.keys(portfolio.holdings);
   const { quotes, offline } = useMultipleQuotes(holdingSymbols, 60_000);
@@ -163,12 +158,6 @@ export default function MachinePage() {
     const state = scoreToState(healthData.score);
     machineEngine.setMarketState(state);
   }, [healthData.score]);
-
-  // Sync mute state between old sound hook and machine engine
-  useEffect(() => {
-    if (sound.muted) machineEngine.mute();
-    else machineEngine.unmute();
-  }, [sound.muted]);
 
   // Sync volume
   const handleVolumeChange = (v: number) => {
@@ -233,8 +222,9 @@ export default function MachinePage() {
           {/* Status + controls — top right */}
           <div style={{ position: 'absolute', top: 'clamp(16px,2.5vh,28px)', right: 'clamp(20px,4vw,48px)', display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
             <StatusLabel status={marketStatus} />
-            {/* Volume slider — only visible when sound is engaged */}
-            {!sound.muted && (
+            <ReferenceSignal />
+            {/* Volume slider — only visible when the Machine synth is on */}
+            {machineOn && (
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8E877B" strokeWidth="1.8" strokeLinecap="round">
                   <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
@@ -258,7 +248,7 @@ export default function MachinePage() {
                 />
               </div>
             )}
-            <MuteBtn muted={sound.muted} onToggle={sound.toggleMute} />
+            <MachineAudioToggle on={machineOn} onToggle={toggleMachine} />
           </div>
 
           {/* Centered title + search */}

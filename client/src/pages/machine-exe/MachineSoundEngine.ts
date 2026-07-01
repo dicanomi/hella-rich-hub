@@ -120,8 +120,8 @@ function createPinkNoiseNode(ctx: AudioContext): ScriptProcessorNode {
 export class MachineSoundEngine {
   private ctx: AudioContext | null = null;
   private running = false;
-  private muted = false; // on by default — user clicked ACKNOWLEDGE
-  private volume = 0.7; // 0-1, user-controlled
+  private muted = true; // OFF by default — user opts in via the Machine audio toggle (persisted)
+  private volume = 0.3; // 0-1, user-controlled — start low so the drone is gentle on enable
   private currentState: MachineState = 'functional';
   private currentParams: StateParams = STATE_PARAMS.functional;
 
@@ -177,13 +177,31 @@ export class MachineSoundEngine {
     return this.ctx;
   }
 
-  start() {
+  start(fadeSeconds = 3.0) {
     if (this.running) return;
     const ctx = this.getCtx();
     if (ctx.state === 'suspended') ctx.resume();
     this.running = true;
     this._build();
-    if (!this.muted) this._fadeIn();
+    if (!this.muted) this._fadeIn(fadeSeconds);
+  }
+
+  // Toggle the background Machine synth with a smooth 500ms fade (persisted by caller)
+  enable() {
+    this.muted = false;
+    if (!this.running) { this.start(0.5); return; }
+    if (this.ctx?.state === 'suspended') this.ctx.resume();
+    this._fadeIn(0.5);
+  }
+
+  disable() {
+    this.muted = true;
+    if (this.fadeGain && this.ctx) {
+      const now = this.ctx.currentTime;
+      this.fadeGain.gain.cancelScheduledValues(now);
+      this.fadeGain.gain.setValueAtTime(this.fadeGain.gain.value, now);
+      this.fadeGain.gain.linearRampToValueAtTime(0, now + 0.5);
+    }
   }
 
   stop() {
@@ -407,12 +425,12 @@ export class MachineSoundEngine {
     pulse();
   }
 
-  private _fadeIn() {
+  private _fadeIn(seconds = 3.0) {
     if (!this.fadeGain || !this.ctx) return;
     const now = this.ctx.currentTime;
     this.fadeGain.gain.cancelScheduledValues(now);
     this.fadeGain.gain.setValueAtTime(this.fadeGain.gain.value, now);
-    this.fadeGain.gain.linearRampToValueAtTime(1, now + 3.0);
+    this.fadeGain.gain.linearRampToValueAtTime(1, now + seconds);
   }
 
   private _fadeOut(cb?: () => void) {

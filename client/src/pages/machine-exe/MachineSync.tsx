@@ -124,9 +124,8 @@ export function MachineSync({ onComplete }: MachineSyncProps) {
       setPulseOrigin({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
     }
 
-    // Start sound engine on acknowledge
-    const engine = getMachineSoundEngine();
-    engine.unmute();
+    // Background Machine synth stays OFF by default — user enables it via the
+    // header SOUND toggle (preference persisted). Nothing auto-plays here.
 
     setTimeout(() => {
       setExiting(true);
