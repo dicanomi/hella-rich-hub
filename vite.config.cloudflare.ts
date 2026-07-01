@@ -66,9 +66,6 @@ export default defineConfig({
           if (id.includes("/pages/SpaceDronePage") || id.includes("/lib/droneEngine") || id.includes("/components/DroneKnob") || id.includes("/components/DroneViz") || id.includes("/components/SpaceBackground") || id.includes("/components/PlanetRockModal")) {
             return "product-space-drone";
           }
-          if (id.includes("/pages/market-exe")) {
-            return "product-market-exe";
-          }
         },
       },
     },
