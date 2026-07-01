@@ -29,6 +29,7 @@ const DeadAirPage    = lazy(() => import("./pages/DeadAirPage"));
 const FourcastPage   = lazy(() => import("./pages/FourcastPage"));
 const RadioPage      = lazy(() => import("./pages/RadioPage"));
 const HumanExePage   = lazy(() => import("./pages/human-exe/HumanExePage"));
+const MarketExePage  = lazy(() => import("./pages/market-exe/MarketExePage"));
 
 function PageFallback() {
   return (
@@ -76,6 +77,7 @@ function AppRoutes() {
           <Route path="/fourcast" component={FourcastPage} />
           <Route path="/radio" component={RadioPage} />
           <Route path="/human-exe" component={HumanExePage} />
+          <Route path="/market-exe" component={MarketExePage} />
           <Route component={NotFound} />
         </Switch>
       </Suspense>

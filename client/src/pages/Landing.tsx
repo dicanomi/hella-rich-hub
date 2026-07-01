@@ -23,6 +23,7 @@ const CARD_DEAD_AIR    = 'https://d2xsxph8kpxj0f.cloudfront.net/3105196632922903
 const CARD_ORB         = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-orb-v4-FdVDyW5VeM5NLNJPJJRM6Z.webp';
 const CARD_FOURCAST    = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-fourcast-v4-V6r3AdsUgH2RixiRDueELL.webp';
 const RADIO_CARD       = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-radio-v4-76gepMJyY36Pz5dhQ6sZPg.webp';
+const CARD_MARKET_EXE  = 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663292290338/myNyRjyELWBaKlWl.png';
 
 // ── H1 Typewriter ──────────────────────────────────────────────────────────
 
@@ -218,6 +219,7 @@ function AboutModal({ onClose, onOpenCredits }: { onClose: () => void; onOpenCre
               { title: 'LOW BATTERY', tagline: 'The sound you ignore until it becomes your personality.',     href: '/low-battery' },
               { title: 'FOURCAST',    tagline: 'A weather app predicting the end of the world. Politely.',    href: '/fourcast' },
               { title: 'THE EYE',     tagline: 'A strange object that notices you.',                          href: '/the-eye' },
+              { title: 'MARKET.EXE', tagline: 'Bloomberg Terminal. Abandoned arcade. $100,000 to lose.',       href: '/market-exe' },
             ].map(p => (
               <Link
                 key={p.title}
@@ -284,6 +286,7 @@ function ProjectCard({ slug, title, tagline, image, index, live = true, cta, fea
     slug === 'low-battery' ? "'ArenaGraffiti', 'GraffitiCity', 'Permanent Marker', cursive" :
     slug === 'radio'       ? "'TAY Birdie', 'Space Mono', monospace" :
     slug === 'human-exe'   ? "'Courier New', 'Lucida Console', monospace" :
+    slug === 'market-exe'  ? "'DM Mono', monospace" :
     "'Space Grotesk', sans-serif";
 
   const titleSize =
@@ -482,7 +485,7 @@ const CROSS_AWARENESS: Record<string, string[]> = {
   'fourcast':    ['THE EYE PREDICTED THIS.', 'LOW BATTERY IGNORED THE WARNING.', 'OUTCOME CALCULATED.'],
 };
 
-const PRODUCT_SLUGS = ['orb', 'the-eye', 'low-battery', 'space-drone', 'aether', 'dead-air', 'fourcast'];
+const PRODUCT_SLUGS = ['orb', 'the-eye', 'low-battery', 'space-drone', 'aether', 'dead-air', 'fourcast', 'market-exe'];
 
 // ── Main Landing ───────────────────────────────────────────────────────────
 // ── FeaturedCard — large showcase card (premium curated browsing) ─────────────
@@ -853,6 +856,7 @@ export default function Landing() {
           <ProjectCard slug="low-battery" title="LOW BATTERY" tagline="The sound you ignore until it becomes your personality." cta="Begin Ignoring" image={CARD_LOW_BATTERY} index={7} enterDelay={440} />
           <ProjectCard slug="fourcast"   title="FOURCAST"    tagline="A weather app predicting the end of the world. Politely." cta="Check My Day" image={CARD_FOURCAST}   index={8} enterDelay={500} />
           <ProjectCard slug="the-eye"    title="THE EYE"     tagline="A strange object that notices you." cta="Look" image={CARD_THE_EYE}    index={9} enterDelay={560} />
+          <ProjectCard slug="market-exe" title="MARKET.EXE"  tagline="Bloomberg Terminal. Abandoned arcade. $100,000 to lose." cta="Trade" image={CARD_MARKET_EXE} index={10} enterDelay={620} />
           </>
           ) : view === 'featured' ? (
           <div className="hr-featured-grid">
@@ -866,6 +870,7 @@ export default function Landing() {
               { slug: 'low-battery', title: 'LOW BATTERY', desc: 'The sound you ignore until it becomes your personality.', img: CARD_LOW_BATTERY },
               { slug: 'fourcast',    title: 'FOURCAST',    desc: 'A weather app predicting the end of the world. Politely.', img: CARD_FOURCAST },
               { slug: 'the-eye',     title: 'THE EYE',     desc: 'A strange object that notices you.', img: CARD_THE_EYE },
+              { slug: 'market-exe',  title: 'MARKET.EXE',  desc: 'Bloomberg Terminal discovered in an abandoned arcade. $100,000 to lose.', img: CARD_MARKET_EXE },
             ].map(p => (
               <FeaturedCard key={p.slug} slug={p.slug} title={p.title} desc={p.desc} img={p.img} />
             ))}
@@ -882,6 +887,7 @@ export default function Landing() {
               { slug: 'low-battery', n: '07', title: 'LOW BATTERY', desc: 'The sound you ignore until it becomes your personality.', img: CARD_LOW_BATTERY },
               { slug: 'fourcast',    n: '08', title: 'FOURCAST',    desc: 'A weather app predicting the end of the world. Politely.', img: CARD_FOURCAST },
               { slug: 'the-eye',     n: '09', title: 'THE EYE',     desc: 'A strange object that notices you.', img: CARD_THE_EYE },
+              { slug: 'market-exe',  n: '10', title: 'MARKET.EXE',  desc: 'Bloomberg Terminal discovered in an abandoned arcade. $100,000 to lose.', img: CARD_MARKET_EXE },
             ].map(p => (
               <ArchiveRow key={p.slug} slug={p.slug} n={p.n} title={p.title} desc={p.desc} img={p.img} />
             ))}

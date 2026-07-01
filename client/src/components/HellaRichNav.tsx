@@ -25,6 +25,7 @@ const PROJECTS: NavProject[] = [
   { title: 'LOW BATTERY', slug: '/low-battery' },
   { title: 'FOURCAST', slug: '/fourcast' },
   { title: 'THE EYE', slug: '/the-eye' },
+  { title: 'MARKET.EXE', slug: '/market-exe' },
 ];
 
 export function HellaRichNav() {
