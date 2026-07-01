@@ -26,24 +26,31 @@ const NOISE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' widt
 // Analog broadcast CSS — visual only, applied over the (cross-origin) video
 const FX_CSS = `
 .rs-video{position:relative;overflow:hidden;background:#000;border-radius:6px;}
-.rs-screen{position:absolute;inset:0;overflow:hidden;transform:scale(1.05);animation:rsGrade 6.5s ease-in-out infinite, rsJit 0.18s steps(2) infinite;will-change:filter,transform;}
+.rs-screen{position:absolute;inset:0;overflow:hidden;transform:scale(1.05);will-change:filter,transform;}
 .rs-screen iframe{position:absolute;inset:0;width:100%!important;height:100%!important;border:0;}
 .rs-l{position:absolute;inset:0;pointer-events:none;}
 .rs-tint{background:linear-gradient(rgba(255,168,74,0.10),rgba(70,230,130,0.06));mix-blend-mode:overlay;}
 .rs-glow{background:radial-gradient(ellipse at 50% 42%,rgba(255,190,110,0.14),transparent 68%);mix-blend-mode:screen;}
-.rs-roll{top:0;left:0;right:0;height:220%;background:linear-gradient(to bottom,transparent 0%,rgba(255,255,255,0.05) 44%,rgba(255,255,255,0.12) 50%,rgba(0,0,0,0.12) 53%,transparent 60%);animation:rsRoll 8s linear infinite;}
-.rs-scan{background:repeating-linear-gradient(to bottom,rgba(0,0,0,0) 0,rgba(0,0,0,0) 1px,rgba(0,0,0,0.30) 2px,rgba(0,0,0,0.30) 3px);mix-blend-mode:multiply;animation:rsScan 7s linear infinite;}
-.rs-grain{background-image:url("${NOISE}");background-size:130px 130px;opacity:0.12;mix-blend-mode:overlay;animation:rsGrain 0.5s steps(4) infinite;}
-.rs-scratch{background-image:repeating-linear-gradient(to right,transparent 0,transparent 70px,rgba(255,255,255,0.06) 71px,transparent 72px,transparent 150px);opacity:0.22;animation:rsScratch 6s linear infinite;}
+.rs-roll{top:0;left:0;right:0;height:220%;background:linear-gradient(to bottom,transparent 0%,rgba(255,255,255,0.05) 44%,rgba(255,255,255,0.12) 50%,rgba(0,0,0,0.12) 53%,transparent 60%);}
+.rs-scan{background:repeating-linear-gradient(to bottom,rgba(0,0,0,0) 0,rgba(0,0,0,0) 1px,rgba(0,0,0,0.30) 2px,rgba(0,0,0,0.30) 3px);mix-blend-mode:multiply;}
+.rs-grain{background-image:url("${NOISE}");background-size:130px 130px;opacity:0.12;mix-blend-mode:overlay;}
+.rs-scratch{background-image:repeating-linear-gradient(to right,transparent 0,transparent 70px,rgba(255,255,255,0.06) 71px,transparent 72px,transparent 150px);opacity:0.22;}
 .rs-vig{box-shadow:inset 0 0 34px 10px rgba(0,0,0,0.85);background:radial-gradient(ellipse at center,transparent 52%,rgba(0,0,0,0.55) 100%);border-radius:inherit;}
 .rs-band{left:0;right:0;height:16px;top:-12%;opacity:0;background:linear-gradient(to bottom,transparent,rgba(255,255,255,0.20) 40%,rgba(255,255,255,0.30) 50%,rgba(0,0,0,0.22) 60%,transparent);mix-blend-mode:screen;}
 .rs-flash{background:#fff;opacity:0;mix-blend-mode:screen;}
-.rs-static{background-image:url("${NOISE}");background-size:110px 110px;opacity:0;mix-blend-mode:screen;animation:rsGrain 0.12s steps(4) infinite;}
+.rs-static{background-image:url("${NOISE}");background-size:110px 110px;opacity:0;mix-blend-mode:screen;}
 .rs-loss{background:#050403;opacity:0;}
-.rs-unstable .rs-roll{animation-duration:1.1s;}
-.rs-unstable .rs-screen{animation-duration:5s,0.06s;}
-.rs-glitch .rs-roll{animation-duration:0.5s;}
-.rs-glitch .rs-screen{animation-duration:5s,0.05s;}
+/* Animations run ONLY while the window is open (rs-live) — no CPU cost when closed */
+.rs-live .rs-screen{animation:rsGrade 6.5s ease-in-out infinite, rsJit 0.18s steps(2) infinite;}
+.rs-live .rs-roll{animation:rsRoll 8s linear infinite;}
+.rs-live .rs-scan{animation:rsScan 7s linear infinite;}
+.rs-live .rs-grain{animation:rsGrain 0.5s steps(4) infinite;}
+.rs-live .rs-scratch{animation:rsScratch 6s linear infinite;}
+.rs-live .rs-static{animation:rsGrain 0.12s steps(4) infinite;}
+.rs-live.rs-unstable .rs-roll{animation-duration:1.1s;}
+.rs-live.rs-unstable .rs-screen{animation-duration:5s,0.06s;}
+.rs-live.rs-glitch .rs-roll{animation-duration:0.5s;}
+.rs-live.rs-glitch .rs-screen{animation-duration:5s,0.05s;}
 @keyframes rsRoll{from{transform:translateY(-55%)}to{transform:translateY(0%)}}
 @keyframes rsScan{from{background-position:0 0}to{background-position:0 4px}}
 @keyframes rsGrain{0%{background-position:0 0}25%{background-position:-40px 30px}50%{background-position:60px -20px}75%{background-position:-30px 50px}100%{background-position:20px 20px}}
@@ -354,7 +361,7 @@ export function ReferenceSignal() {
         </div>
 
         {/* Video with analog broadcast FX (visual only) */}
-        <div ref={wrapRef} className="rs-video" style={{ width: '100%', height: VIDEO_HEIGHT }}>
+        <div ref={wrapRef} className={`rs-video${open ? ' rs-live' : ''}`} style={{ width: '100%', height: VIDEO_HEIGHT }}>
           <div ref={screenRef} className="rs-screen" />
           <div className="rs-l rs-tint" />
           <div className="rs-l rs-glow" />
