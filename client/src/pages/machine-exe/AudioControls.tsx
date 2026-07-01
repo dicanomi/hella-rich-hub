@@ -4,16 +4,21 @@
  * 1. MachineAudioToggle — small PLAY/PAUSE control for the background Machine synth.
  *    Default OFF, persisted by the parent, 500ms fade handled by the sound engine.
  *
- * 2. ReferenceSignal — opens a small, minimal modal with the referenced track via
- *    the OFFICIAL YouTube iframe (no autoplay; user presses play; close button).
- *    Nothing is downloaded, ripped, or hidden. If the video blocks embedding we show
- *    "REFERENCE SIGNAL UNAVAILABLE" and fall back to an ORIGINAL, self-contained Web
- *    Audio "reference signal" (dark analog drone / unstable pulse / mechanical
- *    breathing) — inspired by the mood only, no sampled or copied audio.
+ * 2. ReferenceSignal — a tiny floating CRT television that opens when the user clicks
+ *    REFERENCE SIGNAL. The referenced track plays INSIDE the CRT screen via the official
+ *    YouTube IFrame API (autoplay=1, controls=1, playsinline=1), started from the user's
+ *    click so the browser treats it as user-initiated. Draggable, closable, reopens from
+ *    the button, and remembers its position for the session. Nothing is downloaded,
+ *    ripped, hidden, or opened in a new tab. If autoplay is blocked, the video stays
+ *    visible and one click plays it.
  */
 import { useEffect, useRef, useState, useCallback } from 'react';
 
 const REFERENCE_VIDEO_ID = 'e7rU8EVlgC8';
+const CRT_IMG = '/reference-crt.png';
+const CRT_WIDTH = 260; // px — tiny haunted market monitor
+// Screen-glass rectangle as % of the CRT frame image (reference-crt.png, 1792x1108)
+const SCREEN = { top: 12.0, left: 7.0, width: 59.5, height: 74.5 };
 
 // ── 1. Machine synth PLAY/PAUSE toggle ───────────────────────────────────────
 export function MachineAudioToggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
@@ -86,149 +91,63 @@ function loadYouTubeApi(): Promise<unknown> {
   return ytReadyPromise;
 }
 
-// ── Original self-contained "reference signal" synth (fallback) ──────────────
-// Dark analog drone + unstable vibration + slow mechanical breathing. No samples.
-class ReferenceSynth {
-  private ctx: AudioContext | null = null;
-  private master: GainNode | null = null;
-  private nodes: OscillatorNode[] = [];
-  private running = false;
+// Remembered CRT position for the session (module-level — resets on full reload)
+let crtSessionPos: { x: number; y: number } | null = null;
 
-  start() {
-    if (this.running) return;
-    const Ctor = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-    const ctx = new Ctor();
-    this.ctx = ctx;
-    this.running = true;
-
-    const master = ctx.createGain();
-    master.gain.value = 0;
-    master.connect(ctx.destination);
-    this.master = master;
-
-    // Slow mechanical breathing envelope on everything
-    const breathe = ctx.createGain();
-    breathe.gain.value = 0.8;
-    breathe.connect(master);
-    const breatheLFO = ctx.createOscillator();
-    breatheLFO.type = 'sine';
-    breatheLFO.frequency.value = 0.12;
-    const breatheDepth = ctx.createGain();
-    breatheDepth.gain.value = 0.3;
-    breatheLFO.connect(breatheDepth);
-    breatheDepth.connect(breathe.gain);
-
-    // Dark sub drone
-    const sub = ctx.createOscillator();
-    sub.type = 'sine';
-    sub.frequency.value = 41;
-    const subGain = ctx.createGain();
-    subGain.gain.value = 0.5;
-    sub.connect(subGain);
-    subGain.connect(breathe);
-
-    // Detuned saw through a slowly-modulating low-pass (the "machine")
-    const lp = ctx.createBiquadFilter();
-    lp.type = 'lowpass';
-    lp.frequency.value = 210;
-    lp.Q.value = 2.2;
-    const saw = ctx.createOscillator();
-    saw.type = 'sawtooth';
-    saw.frequency.value = 61.5;
-    const sawGain = ctx.createGain();
-    sawGain.gain.value = 0.12;
-    saw.connect(lp);
-    lp.connect(sawGain);
-    sawGain.connect(breathe);
-
-    const filterLFO = ctx.createOscillator();
-    filterLFO.type = 'sine';
-    filterLFO.frequency.value = 0.06;
-    const filterDepth = ctx.createGain();
-    filterDepth.gain.value = 120;
-    filterLFO.connect(filterDepth);
-    filterDepth.connect(lp.frequency);
-
-    // Unstable vibration — fast subtle pitch jitter on the saw
-    const vib = ctx.createOscillator();
-    vib.type = 'sine';
-    vib.frequency.value = 5.5;
-    const vibDepth = ctx.createGain();
-    vibDepth.gain.value = 7;
-    vib.connect(vibDepth);
-    vibDepth.connect(saw.detune);
-
-    const now = ctx.currentTime;
-    [sub, saw, filterLFO, vib, breatheLFO].forEach(o => o.start(now));
-    this.nodes = [sub, saw, filterLFO, vib, breatheLFO];
-
-    master.gain.setValueAtTime(0, now);
-    master.gain.linearRampToValueAtTime(0.2, now + 0.6); // gentle
-  }
-
-  stop() {
-    if (!this.running || !this.ctx || !this.master) { this.running = false; return; }
-    const ctx = this.ctx;
-    const now = ctx.currentTime;
-    this.master.gain.cancelScheduledValues(now);
-    this.master.gain.setValueAtTime(this.master.gain.value, now);
-    this.master.gain.linearRampToValueAtTime(0, now + 0.5);
-    const nodes = this.nodes;
-    setTimeout(() => {
-      nodes.forEach(n => { try { n.stop(); } catch {} try { n.disconnect(); } catch {} });
-      try { ctx.close(); } catch {}
-    }, 700);
-    this.running = false;
-    this.nodes = [];
-  }
-}
-
-// ── 2. Reference Signal button + modal ───────────────────────────────────────
+// ── 2. Reference Signal — tiny floating CRT television ───────────────────────
 export function ReferenceSignal() {
   const [open, setOpen] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
-  const [synthOn, setSynthOn] = useState(false);
-  const playerRef = useRef<{ destroy?: () => void } | null>(null);
-  const mountRef = useRef<HTMLDivElement | null>(null);
-  const synthRef = useRef<ReferenceSynth | null>(null);
+  const [pos, setPos] = useState<{ x: number; y: number }>(() => crtSessionPos ?? { x: -1, y: -1 });
 
-  const stopSynth = useCallback(() => {
-    synthRef.current?.stop();
-    synthRef.current = null;
-    setSynthOn(false);
+  const posRef = useRef(pos);
+  const dragRef = useRef<{ on: boolean; offX: number; offY: number }>({ on: false, offX: 0, offY: 0 });
+  const playerRef = useRef<{ destroy?: () => void } | null>(null);
+  const screenRef = useRef<HTMLDivElement | null>(null);
+  const frameRef = useRef<HTMLDivElement | null>(null);
+
+  const setPosition = useCallback((p: { x: number; y: number }) => {
+    posRef.current = p;
+    crtSessionPos = p;
+    setPos(p);
   }, []);
 
-  const close = useCallback(() => {
-    try { playerRef.current?.destroy?.(); } catch {}
-    playerRef.current = null;
-    stopSynth();
-    setOpen(false);
-  }, [stopSynth]);
+  // Warm the YT API so the click → play path is fast
+  useEffect(() => { loadYouTubeApi(); }, []);
 
-  // Build the YouTube player when the modal opens
+  // Place the CRT (bottom-right) on first open if it has no remembered position
+  useEffect(() => {
+    if (!open) return;
+    if (posRef.current.x < 0) {
+      const h = frameRef.current?.offsetHeight || Math.round(CRT_WIDTH / 1.61);
+      setPosition({
+        x: Math.max(12, window.innerWidth - CRT_WIDTH - 24),
+        y: Math.max(12, window.innerHeight - h - 96),
+      });
+    }
+  }, [open, setPosition]);
+
+  // Build the player (and start playback) when the CRT opens
   useEffect(() => {
     if (!open) return;
     setUnavailable(false);
     let cancelled = false;
-
     loadYouTubeApi().then(YT => {
-      if (cancelled || !mountRef.current) return;
+      if (cancelled || !screenRef.current) return;
       const YTApi = YT as { Player: new (el: HTMLElement, opts: unknown) => { destroy?: () => void } };
       try {
-        // Mount into an imperatively-created child so YT can replace it without
-        // clashing with React's DOM reconciliation.
         const holder = document.createElement('div');
         holder.style.width = '100%';
         holder.style.height = '100%';
-        mountRef.current.appendChild(holder);
+        screenRef.current.appendChild(holder);
         playerRef.current = new YTApi.Player(holder, {
           width: '100%',
           height: '100%',
           videoId: REFERENCE_VIDEO_ID,
-          playerVars: { autoplay: 0, rel: 0, modestbranding: 1, playsinline: 1 },
+          playerVars: { autoplay: 1, controls: 1, playsinline: 1, rel: 0, modestbranding: 1 },
           events: {
+            onReady: (e: { target: { playVideo: () => void } }) => { try { e.target.playVideo(); } catch {} },
             onError: (e: { data: number }) => {
-              // 2 invalid · 5 html5 · 100 not found · 101/150 embedding disabled
               if ([2, 5, 100, 101, 150].includes(e.data)) setUnavailable(true);
             },
           },
@@ -245,28 +164,48 @@ export function ReferenceSignal() {
     };
   }, [open]);
 
-  // Esc to close
+  // Esc closes
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') close(); };
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [open, close]);
+  }, [open]);
 
-  useEffect(() => () => { stopSynth(); }, [stopSynth]);
+  // ── Dragging (grab the CRT frame; the cross-origin video keeps its own controls) ──
+  const onMove = useCallback((e: MouseEvent) => {
+    if (!dragRef.current.on) return;
+    const h = frameRef.current?.offsetHeight || 160;
+    let x = e.clientX - dragRef.current.offX;
+    let y = e.clientY - dragRef.current.offY;
+    x = Math.min(Math.max(8, x), window.innerWidth - CRT_WIDTH - 8);
+    y = Math.min(Math.max(8, y), window.innerHeight - h - 8);
+    setPosition({ x, y });
+  }, [setPosition]);
 
-  const toggleSynth = () => {
-    if (synthOn) { stopSynth(); return; }
-    const s = new ReferenceSynth();
-    synthRef.current = s;
-    s.start();
-    setSynthOn(true);
+  const onUp = useCallback(() => {
+    dragRef.current.on = false;
+    window.removeEventListener('mousemove', onMove);
+    window.removeEventListener('mouseup', onUp);
+  }, [onMove]);
+
+  const onDown = useCallback((e: React.MouseEvent) => {
+    dragRef.current = { on: true, offX: e.clientX - posRef.current.x, offY: e.clientY - posRef.current.y };
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+    e.preventDefault();
+  }, [onMove, onUp]);
+
+  useEffect(() => () => {
+    window.removeEventListener('mousemove', onMove);
+    window.removeEventListener('mouseup', onUp);
+  }, [onMove, onUp]);
+
+  const placed = pos.x >= 0 && pos.y >= 0;
+  const screenBox: React.CSSProperties = {
+    position: 'absolute', top: `${SCREEN.top}%`, left: `${SCREEN.left}%`,
+    width: `${SCREEN.width}%`, height: `${SCREEN.height}%`,
   };
-
-  const ls = (extra?: React.CSSProperties): React.CSSProperties => ({
-    fontFamily: "'DM Mono', monospace", fontSize: 'clamp(7px,0.75vw,9px)',
-    letterSpacing: '0.22em', color: '#8E877B', textTransform: 'uppercase', ...extra,
-  });
 
   return (
     <>
@@ -274,59 +213,47 @@ export function ReferenceSignal() {
 
       {open && (
         <div
+          ref={frameRef}
           role="dialog"
-          aria-label="Reference signal"
+          aria-label="Reference signal — CRT"
+          onMouseDown={onDown}
           style={{
             position: 'fixed',
-            top: 'clamp(60px,10vh,96px)', left: '50%', transform: 'translateX(-50%)',
-            width: 'min(380px, 92vw)', zIndex: 9997,
-            background: '#0a0908', border: '1px solid rgba(244,241,234,0.18)',
-            boxShadow: '0 12px 48px rgba(0,0,0,0.6)',
-            padding: 'clamp(14px,2vw,20px)',
+            left: placed ? pos.x : undefined, top: placed ? pos.y : undefined,
+            right: placed ? undefined : 24, bottom: placed ? undefined : 96,
+            width: CRT_WIDTH, zIndex: 9996,
+            cursor: 'move', userSelect: 'none',
+            filter: 'drop-shadow(0 16px 40px rgba(0,0,0,0.6))',
             animation: 'mxFadeIn 0.2s ease',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-            <span style={ls({ color: '#FFA84A' })}>REFERENCE SIGNAL</span>
-            <button
-              onClick={close}
-              aria-label="Close"
-              style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#8E877B', padding: '2px', lineHeight: 0 }}
-              onMouseEnter={e => ((e.currentTarget as HTMLElement).style.color = '#F4F1EA')}
-              onMouseLeave={e => ((e.currentTarget as HTMLElement).style.color = '#8E877B')}
-            >
-              <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"><line x1="2" y1="2" x2="12" y2="12" /><line x1="12" y1="2" x2="2" y2="12" /></svg>
-            </button>
-          </div>
+          <img src={CRT_IMG} alt="" draggable={false} style={{ display: 'block', width: '100%', height: 'auto', pointerEvents: 'none' }} />
 
-          {!unavailable ? (
-            <>
-              <div style={{ position: 'relative', width: '100%', aspectRatio: '16 / 9', background: '#000', border: '1px solid rgba(244,241,234,0.1)' }}>
-                <div ref={mountRef} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
-              </div>
-              <div style={ls({ marginTop: '10px', color: '#8E877B' })}>PRESS PLAY · EXTERNAL SIGNAL</div>
-            </>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <div style={ls({ color: 'rgba(210,90,90,0.9)', fontSize: 'clamp(9px,0.9vw,11px)' })}>REFERENCE SIGNAL UNAVAILABLE</div>
-              <div style={ls({ color: '#8E877B', letterSpacing: '0.16em', lineHeight: 1.6 })}>
-                External embed blocked. Play the machine's own reference signal instead.
-              </div>
-              <button
-                onClick={toggleSynth}
-                style={{
-                  alignSelf: 'flex-start', background: 'none',
-                  border: `1px solid ${synthOn ? 'rgba(255,168,74,0.5)' : 'rgba(244,241,234,0.2)'}`,
-                  color: synthOn ? '#FFA84A' : '#F4F1EA', cursor: 'pointer',
-                  fontFamily: "'DM Mono', monospace", fontSize: 'clamp(8px,0.85vw,10px)',
-                  letterSpacing: '0.22em', textTransform: 'uppercase', padding: '10px 18px',
-                  transition: 'color 0.2s, border-color 0.2s',
-                }}
-              >
-                {synthOn ? '■ STOP SIGNAL' : '▶ PLAY SYNTH SIGNAL'}
-              </button>
+          {/* Screen glass — the video lives here */}
+          <div ref={screenRef} style={{ ...screenBox, background: '#000', overflow: 'hidden' }} />
+
+          {unavailable && (
+            <div style={{ ...screenBox, display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '6px', background: '#000' }}>
+              <span style={{ fontFamily: "'DM Mono', monospace", fontSize: '8px', letterSpacing: '0.16em', color: 'rgba(210,90,90,0.9)', textTransform: 'uppercase' }}>
+                REFERENCE SIGNAL UNAVAILABLE
+              </span>
             </div>
           )}
+
+          {/* Close */}
+          <button
+            onMouseDown={e => e.stopPropagation()}
+            onClick={() => setOpen(false)}
+            aria-label="Close"
+            style={{
+              position: 'absolute', top: '2%', right: '1.5%',
+              width: 18, height: 18, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: 'rgba(0,0,0,0.55)', border: '1px solid rgba(244,241,234,0.25)', borderRadius: '50%',
+              cursor: 'pointer', color: '#F4F1EA', padding: 0, lineHeight: 0,
+            }}
+          >
+            <svg width="8" height="8" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"><line x1="2" y1="2" x2="12" y2="12" /><line x1="12" y1="2" x2="2" y2="12" /></svg>
+          </button>
         </div>
       )}
     </>
