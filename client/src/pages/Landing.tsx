@@ -571,7 +571,7 @@ function FeaturedPlaceholder() {
         fontSize: 'clamp(9px,0.85vw,11px)',
         letterSpacing: '0.3em',
         textTransform: 'uppercase',
-        color: 'rgba(255,255,255,0.12)',
+        color: 'rgba(255,255,255,0.30)',
       }}>◫ &nbsp;MORE SOON</span>
     </div>
   );

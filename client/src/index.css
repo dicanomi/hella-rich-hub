@@ -164,11 +164,9 @@
   align-items: center;
   justify-content: center;
   min-height: 180px;
-  border: 1px solid rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
   border-radius: 3px;
-  background:
-    linear-gradient(rgba(255,255,255,0.012), rgba(255,255,255,0.012)),
-    #0a0908;
+  background: rgba(255,255,255,0.02);
 }
 /* Only fill the row in the 3-across desktop layout; hide for 2-across and 1-across */
 @media (max-width: 960px) {
