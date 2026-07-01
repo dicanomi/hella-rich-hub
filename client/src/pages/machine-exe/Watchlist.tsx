@@ -172,11 +172,11 @@ export function Watchlist({ onSelect, activeSymbol }: WatchlistProps) {
               <span style={{
                 fontFamily: "'DM Mono', monospace",
                 fontSize: 'clamp(10px,1vw,12px)',
-                color: '#B8B2A7',
+                color: q?.price > 0 ? '#B8B2A7' : '#8E877B',
                 letterSpacing: '-0.01em',
                 whiteSpace: 'nowrap',
               }}>
-                {q ? formatCurrency(q.price) : '—'}
+                {q?.price > 0 ? formatCurrency(q.price) : q?.previousClose ? formatCurrency(q.previousClose) : '—'}
               </span>
 
               {/* % change */}

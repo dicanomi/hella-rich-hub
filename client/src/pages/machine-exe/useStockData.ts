@@ -156,7 +156,14 @@ async function fetchQuoteFresh(sym: string): Promise<StockQuote> {
     c: number; d: number; dp: number; h: number; l: number; o: number; pc: number; t: number;
   };
 
-  if (!q.c || q.c === 0) throw new Error(`No price data for ${sym}`);
+  // When market is closed, c=0 but pc (previous close) is always available
+  // Use previous close as the price so we never show dashes
+  const price = (q.c && q.c > 0) ? q.c : (q.pc && q.pc > 0) ? q.pc : 0;
+  if (price === 0) throw new Error(`No price data for ${sym}`);
+
+  const isUsingPrevClose = (!q.c || q.c === 0) && q.pc > 0;
+  const change = isUsingPrevClose ? 0 : (q.d ?? 0);
+  const changePercent = isUsingPrevClose ? 0 : (q.dp ?? 0);
 
   // Get name from cache or use symbol (don't block on profile fetch)
   const cachedProfile = profileCache.get(sym);
@@ -165,12 +172,12 @@ async function fetchQuoteFresh(sym: string): Promise<StockQuote> {
   const data: StockQuote = {
     symbol: sym,
     name,
-    price: q.c,
-    change: q.d ?? 0,
-    changePercent: q.dp ?? 0,
-    open: q.o,
-    high: q.h,
-    low: q.l,
+    price,
+    change,
+    changePercent,
+    open: q.o || q.pc,
+    high: q.h || q.pc,
+    low: q.l || q.pc,
     previousClose: q.pc,
     lastUpdated: Date.now(),
   };
@@ -386,10 +393,12 @@ export function useMultipleQuotes(symbols: string[], intervalMs = 30_000) {
         anySuccess = true;
       } catch { /* keep stale */ }
     }
-    if (anySuccess || Object.keys(map).length > 0) {
+    // Always update with whatever we have — never blank out existing data
+    if (Object.keys(map).length > 0) {
       setQuotes({ ...map });
       setOffline(false);
-    } else {
+    } else if (!anySuccess && Object.keys(quotes).length === 0) {
+      // Only show offline if we have absolutely no data at all
       setOffline(true);
     }
   }, [symbols.join(',')]);

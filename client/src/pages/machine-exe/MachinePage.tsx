@@ -27,12 +27,12 @@ import { SearchBar } from './SearchBar';
 
 // ── Market status label ──────────────────────────────────────────────────────
 function StatusLabel({ status }: { status: MarketStatus }) {
-  const label = status.offline ? 'FEED OFFLINE'
+  const label = status.offline && status.lastUpdated === 0 ? 'FEED OFFLINE'
     : status.session === 'regular' ? 'MARKET OPEN'
     : status.session === 'pre-market' ? 'PRE-MARKET'
     : status.session === 'after-hours' ? 'AFTER HOURS'
     : 'MARKET CLOSED';
-  const color = status.offline ? 'rgba(210,90,90,0.8)'
+  const color = (status.offline && status.lastUpdated === 0) ? 'rgba(210,90,90,0.8)'
     : status.isOpen ? 'rgba(110,200,130,0.8)'
     : '#8E877B';
   const lastUpdate = status.lastUpdated

@@ -42,79 +42,61 @@ export function MachineSync({ onComplete }: MachineSyncProps) {
     let cancelled = false;
 
     const run = async () => {
-      // Step 0: Boot (5%) — instant
-      advanceTo(5, 'SEARCHING FOR THE MACHINE...');
+      // Step 0: Boot (10%) — instant
+      advanceTo(10, 'SEARCHING FOR THE MACHINE...');
 
-      // Step 1: Market connection (20%)
-      advanceTo(6, 'CONNECTING TO MARKET FEEDS...');
+      // Step 1: Market feed connection (25%)
+      advanceTo(11, 'CONNECTING TO MARKET FEEDS...');
       try {
         await fetchMarketStatus();
         if (cancelled) return;
-        advanceTo(20, 'VERIFYING MARKET SIGNAL...');
+        advanceTo(25, 'MARKET FEED CONNECTED');
         setShowProgress(true);
       } catch {
         if (cancelled) return;
-        advanceTo(20, 'VERIFYING MARKET SIGNAL...');
+        // Continue even if market status fails — quotes may still work
+        advanceTo(25, 'CONNECTING TO MARKET FEEDS...');
         setShowProgress(true);
       }
 
-      // Step 2: Market indexes — SPY, QQQ, DIA, IWM (35%)
-      advanceTo(21, 'DOWNLOADING MARKET SNAPSHOTS...');
-      const indexSymbols = ['SPY', 'QQQ', 'DIA', 'IWM'];
-      for (let i = 0; i < indexSymbols.length; i++) {
-        try { await fetchQuote(indexSymbols[i]); } catch { /* use cache */ }
+      // Step 2: PRIMARY QUOTES — all visible stocks loaded before anything else (45%)
+      // This is the critical step. App should not show until these are done.
+      advanceTo(26, 'DOWNLOADING MARKET SNAPSHOTS...');
+      const primarySymbols = ['SPY', 'QQQ', 'DIA', 'IWM', 'AAPL', 'NVDA', 'MSFT', 'TSLA', 'AMZN', 'META', 'VIXY'];
+      for (let i = 0; i < primarySymbols.length; i++) {
+        try { await fetchQuote(primarySymbols[i]); } catch { /* use prev close fallback */ }
         if (cancelled) return;
-        advanceTo(21 + Math.round(((i + 1) / indexSymbols.length) * 14), 'DOWNLOADING MARKET SNAPSHOTS...');
+        advanceTo(26 + Math.round(((i + 1) / primarySymbols.length) * 19), 'DOWNLOADING MARKET SNAPSHOTS...');
       }
 
-      // Step 3: Observation Deck — AAPL, NVDA, MSFT, TSLA (50%)
-      advanceTo(36, 'LOADING OBSERVATION DECK...');
-      const watchSymbols = ['AAPL', 'NVDA', 'MSFT', 'TSLA'];
-      for (let i = 0; i < watchSymbols.length; i++) {
-        try { await fetchQuote(watchSymbols[i]); } catch { /* use cache */ }
-        if (cancelled) return;
-        advanceTo(36 + Math.round(((i + 1) / watchSymbols.length) * 14), 'LOADING OBSERVATION DECK...');
-      }
-
-      // Step 4: Portfolio (60%) — local, instant
-      advanceTo(51, 'RESTORING YOUR POSITION...');
-      await delay(120);
+      // Step 3: Observation Deck populated (60%)
+      advanceTo(46, 'LOADING OBSERVATION DECK...');
+      await delay(80); // quotes already fetched above
       if (cancelled) return;
-      advanceTo(60, 'RESTORING YOUR POSITION...');
+      advanceTo(60, 'OBSERVATION DECK POPULATED');
 
-      // Step 5: Leaderboard (70%) — local, instant
-      advanceTo(61, 'CALIBRATING THE MACHINE...');
+      // Step 4: Ticker populated (75%)
+      advanceTo(61, 'POPULATING MARKET TICKER...');
+      await delay(60);
+      if (cancelled) return;
+      advanceTo(75, 'TICKER POPULATED');
+
+      // Step 5: Machine engine init (85%)
+      advanceTo(76, 'INITIALIZING MACHINE ENGINE...');
+      engine.start();
       await delay(100);
       if (cancelled) return;
-      advanceTo(70, 'CALIBRATING THE MACHINE...');
+      advanceTo(85, 'MACHINE ENGINE INITIALIZED');
 
-      // Step 6: Machine engine (80%)
-      advanceTo(71, 'INITIALIZING MACHINE ENGINE...');
-      engine.start(); // starts silently (muted by default)
-      await delay(150);
-      if (cancelled) return;
-      advanceTo(80, 'MACHINE ENGINE INITIALIZED');
-
-      // Step 7: Market core — AMZN, META (90%)
-      advanceTo(81, 'INITIALIZING MARKET CORE...');
-      try { await fetchQuote('AMZN'); } catch {}
-      if (cancelled) return;
-      advanceTo(86, 'INITIALIZING MARKET CORE...');
-      try { await fetchQuote('META'); } catch {}
-      if (cancelled) return;
-      advanceTo(90, 'MARKET CORE INITIALIZED');
-
-      // Step 8: Audio + preferences (95%)
-      advanceTo(91, 'AUDIO ENGINE READY');
-      await delay(100);
-      if (cancelled) return;
-      advanceTo(95, 'RESTORING USER PREFERENCES...');
+      // Step 6: Machine score calculated (90%)
+      advanceTo(86, 'CALCULATING MACHINE SCORE...');
       await delay(80);
       if (cancelled) return;
+      advanceTo(90, 'MACHINE SCORE CALCULATED');
 
-      // Step 9: Interface ready (100%)
-      advanceTo(96, 'INTERFACE READY');
-      await delay(120);
+      // Step 7: Interface ready (100%)
+      advanceTo(91, 'RESTORING YOUR POSITION...');
+      await delay(80);
       if (cancelled) return;
       advanceTo(100, 'SYNCHRONIZATION COMPLETE.');
 
