@@ -6,11 +6,12 @@
  *
  * 2. ReferenceSignal — a tiny floating CRT television that opens when the user clicks
  *    REFERENCE SIGNAL. The referenced track plays INSIDE the CRT screen via the official
- *    YouTube IFrame API (autoplay=1, controls=1, playsinline=1), started from the user's
- *    click so the browser treats it as user-initiated. Draggable, closable, reopens from
+ *    YouTube IFrame API (controls=1, playsinline=1). The player is pre-created on mount
+ *    so playback can be started from WITHIN the user's click gesture (unMute + playVideo),
+ *    which is what lets the browser play it WITH SOUND. Draggable, closable, reopens from
  *    the button, and remembers its position for the session. Nothing is downloaded,
- *    ripped, hidden, or opened in a new tab. If autoplay is blocked, the video stays
- *    visible and one click plays it.
+ *    ripped, hidden, or opened in a new tab. If the browser still blocks it, the video
+ *    stays visible and one click plays it.
  */
 import { useEffect, useRef, useState, useCallback } from 'react';
 
@@ -94,6 +95,8 @@ function loadYouTubeApi(): Promise<unknown> {
 // Remembered CRT position for the session (module-level — resets on full reload)
 let crtSessionPos: { x: number; y: number } | null = null;
 
+type YTPlayer = { playVideo?: () => void; pauseVideo?: () => void; unMute?: () => void; setVolume?: (v: number) => void; destroy?: () => void };
+
 // ── 2. Reference Signal — tiny floating CRT television ───────────────────────
 export function ReferenceSignal() {
   const [open, setOpen] = useState(false);
@@ -102,39 +105,22 @@ export function ReferenceSignal() {
 
   const posRef = useRef(pos);
   const dragRef = useRef<{ on: boolean; offX: number; offY: number }>({ on: false, offX: 0, offY: 0 });
-  const playerRef = useRef<{ destroy?: () => void } | null>(null);
+  const playerRef = useRef<YTPlayer | null>(null);
   const screenRef = useRef<HTMLDivElement | null>(null);
   const frameRef = useRef<HTMLDivElement | null>(null);
 
   const setPosition = useCallback((p: { x: number; y: number }) => {
-    posRef.current = p;
-    crtSessionPos = p;
-    setPos(p);
+    posRef.current = p; crtSessionPos = p; setPos(p);
   }, []);
 
-  // Warm the YT API so the click → play path is fast
-  useEffect(() => { loadYouTubeApi(); }, []);
-
-  // Place the CRT (bottom-right) on first open if it has no remembered position
+  // Create the player ONCE up-front (cued, not playing) so that playback can be
+  // triggered from within the click gesture — the only way the browser lets a
+  // cross-origin YouTube embed start WITH SOUND.
   useEffect(() => {
-    if (!open) return;
-    if (posRef.current.x < 0) {
-      const h = frameRef.current?.offsetHeight || Math.round(CRT_WIDTH / 1.61);
-      setPosition({
-        x: Math.max(12, window.innerWidth - CRT_WIDTH - 24),
-        y: Math.max(12, window.innerHeight - h - 96),
-      });
-    }
-  }, [open, setPosition]);
-
-  // Build the player (and start playback) when the CRT opens
-  useEffect(() => {
-    if (!open) return;
-    setUnavailable(false);
     let cancelled = false;
     loadYouTubeApi().then(YT => {
-      if (cancelled || !screenRef.current) return;
-      const YTApi = YT as { Player: new (el: HTMLElement, opts: unknown) => { destroy?: () => void } };
+      if (cancelled || !screenRef.current || playerRef.current) return;
+      const YTApi = YT as { Player: new (el: HTMLElement, opts: unknown) => YTPlayer };
       try {
         const holder = document.createElement('div');
         holder.style.width = '100%';
@@ -144,9 +130,8 @@ export function ReferenceSignal() {
           width: '100%',
           height: '100%',
           videoId: REFERENCE_VIDEO_ID,
-          playerVars: { autoplay: 1, controls: 1, playsinline: 1, rel: 0, modestbranding: 1 },
+          playerVars: { autoplay: 0, controls: 1, playsinline: 1, rel: 0, modestbranding: 1 },
           events: {
-            onReady: (e: { target: { playVideo: () => void } }) => { try { e.target.playVideo(); } catch {} },
             onError: (e: { data: number }) => {
               if ([2, 5, 100, 101, 150].includes(e.data)) setUnavailable(true);
             },
@@ -156,21 +141,38 @@ export function ReferenceSignal() {
         setUnavailable(true);
       }
     }).catch(() => setUnavailable(true));
-
     return () => {
       cancelled = true;
       try { playerRef.current?.destroy?.(); } catch {}
       playerRef.current = null;
     };
-  }, [open]);
+  }, []);
+
+  const openAndPlay = useCallback(() => {
+    if (posRef.current.x < 0) {
+      const h = frameRef.current?.offsetHeight || Math.round(CRT_WIDTH / 1.617);
+      setPosition({
+        x: Math.max(12, window.innerWidth - CRT_WIDTH - 24),
+        y: Math.max(12, window.innerHeight - h - 96),
+      });
+    }
+    setOpen(true);
+    // Runs inside the user's click gesture → the browser permits sound
+    try { playerRef.current?.unMute?.(); playerRef.current?.playVideo?.(); } catch {}
+  }, [setPosition]);
+
+  const close = useCallback(() => {
+    setOpen(false);
+    try { playerRef.current?.pauseVideo?.(); } catch {}
+  }, []);
 
   // Esc closes
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') close(); };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [open]);
+  }, [open, close]);
 
   // ── Dragging (grab the CRT frame; the cross-origin video keeps its own controls) ──
   const onMove = useCallback((e: MouseEvent) => {
@@ -201,7 +203,6 @@ export function ReferenceSignal() {
     window.removeEventListener('mouseup', onUp);
   }, [onMove, onUp]);
 
-  const placed = pos.x >= 0 && pos.y >= 0;
   const screenBox: React.CSSProperties = {
     position: 'absolute', top: `${SCREEN.top}%`, left: `${SCREEN.left}%`,
     width: `${SCREEN.width}%`, height: `${SCREEN.height}%`,
@@ -209,41 +210,43 @@ export function ReferenceSignal() {
 
   return (
     <>
-      <SignalButton label="REFERENCE SIGNAL" active={open} onClick={() => setOpen(true)} />
+      <SignalButton label="REFERENCE SIGNAL" active={open} onClick={openAndPlay} />
 
-      {open && (
-        <div
-          ref={frameRef}
-          role="dialog"
-          aria-label="Reference signal — CRT"
-          onMouseDown={onDown}
-          style={{
-            position: 'fixed',
-            left: placed ? pos.x : undefined, top: placed ? pos.y : undefined,
-            right: placed ? undefined : 24, bottom: placed ? undefined : 96,
-            width: CRT_WIDTH, zIndex: 9996,
-            cursor: 'move', userSelect: 'none',
-            filter: 'drop-shadow(0 16px 40px rgba(0,0,0,0.6))',
-            animation: 'mxFadeIn 0.2s ease',
-          }}
-        >
-          <img src={CRT_IMG} alt="" draggable={false} style={{ display: 'block', width: '100%', height: 'auto', pointerEvents: 'none' }} />
+      {/* The CRT stays mounted so the player is pre-loaded; visibility toggles on open */}
+      <div
+        ref={frameRef}
+        role="dialog"
+        aria-label="Reference signal — CRT"
+        onMouseDown={onDown}
+        style={{
+          position: 'fixed',
+          left: open && pos.x >= 0 ? pos.x : -99999,
+          top: open && pos.y >= 0 ? pos.y : 0,
+          width: CRT_WIDTH, zIndex: 9996,
+          cursor: 'move', userSelect: 'none',
+          opacity: open ? 1 : 0,
+          pointerEvents: open ? 'auto' : 'none',
+          filter: 'drop-shadow(0 16px 40px rgba(0,0,0,0.6))',
+          transition: 'opacity 0.2s ease',
+        }}
+      >
+        <img src={CRT_IMG} alt="" draggable={false} style={{ display: 'block', width: '100%', height: 'auto', pointerEvents: 'none' }} />
 
-          {/* Screen glass — the video lives here */}
-          <div ref={screenRef} style={{ ...screenBox, background: '#000', overflow: 'hidden' }} />
+        {/* Screen glass — the video lives here */}
+        <div ref={screenRef} style={{ ...screenBox, background: '#000', overflow: 'hidden', borderRadius: 6 }} />
 
-          {unavailable && (
-            <div style={{ ...screenBox, display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '6px', background: '#000' }}>
-              <span style={{ fontFamily: "'DM Mono', monospace", fontSize: '8px', letterSpacing: '0.16em', color: 'rgba(210,90,90,0.9)', textTransform: 'uppercase' }}>
-                REFERENCE SIGNAL UNAVAILABLE
-              </span>
-            </div>
-          )}
+        {unavailable && (
+          <div style={{ ...screenBox, display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '6px', background: '#000' }}>
+            <span style={{ fontFamily: "'DM Mono', monospace", fontSize: '8px', letterSpacing: '0.16em', color: 'rgba(210,90,90,0.9)', textTransform: 'uppercase' }}>
+              REFERENCE SIGNAL UNAVAILABLE
+            </span>
+          </div>
+        )}
 
-          {/* Close */}
+        {open && (
           <button
             onMouseDown={e => e.stopPropagation()}
-            onClick={() => setOpen(false)}
+            onClick={close}
             aria-label="Close"
             style={{
               position: 'absolute', top: '2%', right: '1.5%',
@@ -254,8 +257,8 @@ export function ReferenceSignal() {
           >
             <svg width="8" height="8" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"><line x1="2" y1="2" x2="12" y2="12" /><line x1="12" y1="2" x2="2" y2="12" /></svg>
           </button>
-        </div>
-      )}
+        )}
+      </div>
     </>
   );
 }
