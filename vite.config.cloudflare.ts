@@ -24,6 +24,7 @@ export default defineConfig({
     },
   },
   root: path.resolve(import.meta.dirname, "client"),
+  envDir: path.resolve(import.meta.dirname),
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
@@ -32,7 +33,7 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           // Core vendor splits
-          if (id.includes("node_modules/react") || id.includes("node_modules/react-dom")) {
+          if (id.includes("node_modules/react") || id.includes("node_modules/react-dom") || id.includes("node_modules/recharts") || id.includes("node_modules/d3-")) {
             return "vendor-react";
           }
           if (id.includes("node_modules/framer-motion")) {
@@ -65,6 +66,9 @@ export default defineConfig({
           }
           if (id.includes("/pages/SpaceDronePage") || id.includes("/lib/droneEngine") || id.includes("/components/DroneKnob") || id.includes("/components/DroneViz") || id.includes("/components/SpaceBackground") || id.includes("/components/PlanetRockModal")) {
             return "product-space-drone";
+          }
+          if (id.includes("/pages/machine-exe")) {
+            return "product-machine-exe";
           }
         },
       },
