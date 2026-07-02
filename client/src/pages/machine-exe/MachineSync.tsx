@@ -15,6 +15,7 @@
 import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import { fetchQuote, fetchMarketStatus } from './useStockData';
 import { getMachineSoundEngine } from './MachineSoundEngine';
+import { SplitFlapText } from './SplitFlapText';
 
 // No localStorage — runs every visit
 export function shouldShowSync(): boolean { return true; }
@@ -197,17 +198,9 @@ export function MachineSync({ onComplete }: MachineSyncProps) {
       {/* Main content */}
       <div style={{ position: 'relative', zIndex: 2, width: 'min(560px, 88vw)', textAlign: 'center' }}>
 
-        {/* Title */}
-        <div style={{
-          fontFamily: "'Share Tech Mono', 'DM Mono', 'Courier New', monospace",
-          fontSize: 'clamp(16px,2.5vw,32px)',
-          fontWeight: 400,
-          letterSpacing: '0.1em',
-          color: '#F4F1EA',
-          textTransform: 'uppercase',
-          marginBottom: 'clamp(28px,4.5vh,48px)',
-        }}>
-          THE_MACHINE.EXE
+        {/* Title — same animated split-flap logo as the product page (resolves at 100%) */}
+        <div style={{ marginBottom: 'clamp(28px,4.5vh,48px)', display: 'flex', justifyContent: 'center' }}>
+          <SplitFlapText settle={progress >= 100} />
         </div>
 
         {/* Status label */}

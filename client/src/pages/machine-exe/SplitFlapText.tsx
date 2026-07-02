@@ -30,11 +30,12 @@ function randomChar(): string {
   return CHARSET[Math.floor(Math.random() * CHARSET.length)];
 }
 
-export function SplitFlapText() {
+export function SplitFlapText({ settle = false }: { settle?: boolean } = {}) {
   const [chars, setChars] = useState<CharState[]>(
     TARGET.split('').map(c => ({ display: c === ' ' ? ' ' : randomChar(), settled: false }))
   );
   const phaseRef = useRef<'resolving' | 'holding' | 'scrambling'>('resolving');
+  const stoppedRef = useRef(false); // when true: resolve once and hold, no re-scramble
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   const clearTimers = () => {
@@ -84,7 +85,7 @@ export function SplitFlapText() {
     const totalResolveTime = (letters.length - 1) * CHAR_STAGGER_MS + CHAR_CYCLES * CYCLE_INTERVAL_MS + 80;
     addTimer(() => {
       phaseRef.current = 'holding';
-      addTimer(() => scramble(), HOLD_MS);
+      if (!stoppedRef.current) addTimer(() => scramble(), HOLD_MS);
     }, totalResolveTime);
   };
 
@@ -114,6 +115,16 @@ export function SplitFlapText() {
     addTimer(() => resolve(), 400);
     return () => clearTimers();
   }, []);
+
+  // When told to settle (e.g. loading hits 100%), resolve once and hold — the
+  // logo lands cleanly on THE_MACHINE.EXE and never re-scrambles.
+  useEffect(() => {
+    if (!settle) return;
+    stoppedRef.current = true;
+    clearTimers();
+    resolve();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [settle]);
 
   return (
     <>
