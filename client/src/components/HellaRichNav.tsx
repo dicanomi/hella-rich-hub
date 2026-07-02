@@ -15,8 +15,10 @@ interface NavProject {
   current?: boolean;
 }
 
+// Order matches the homepage product list exactly
 const PROJECTS: NavProject[] = [
   { title: 'RADIO', slug: '/radio' },
+  { title: 'THE_MACHINE.EXE', slug: '/machine-exe' },
   { title: 'HUMAN.EXE', slug: '/human-exe' },
   { title: 'ORB', slug: '/orb' },
   { title: 'DEAD AIR', slug: '/dead-air' },
@@ -25,7 +27,6 @@ const PROJECTS: NavProject[] = [
   { title: 'LOW BATTERY', slug: '/low-battery' },
   { title: 'FOURCAST', slug: '/fourcast' },
   { title: 'THE EYE', slug: '/the-eye' },
-  { title: 'THE_MACHINE.EXE', slug: '/machine-exe' },
 ];
 
 export function HellaRichNav() {

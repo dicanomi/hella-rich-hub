@@ -198,9 +198,9 @@ export function MachineSync({ onComplete }: MachineSyncProps) {
       {/* Main content */}
       <div style={{ position: 'relative', zIndex: 2, width: 'min(560px, 88vw)', textAlign: 'center' }}>
 
-        {/* Title — same animated split-flap logo as the product page (resolves at 100%) */}
+        {/* Title — same animated split-flap logo as the product page (keeps looping, no pause) */}
         <div style={{ marginBottom: 'clamp(28px,4.5vh,48px)', display: 'flex', justifyContent: 'center' }}>
-          <SplitFlapText settle={progress >= 100} />
+          <SplitFlapText />
         </div>
 
         {/* Status label */}
