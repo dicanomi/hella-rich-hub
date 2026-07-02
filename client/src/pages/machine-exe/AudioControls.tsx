@@ -4,30 +4,29 @@
  * 1. MachineAudioToggle — small PLAY/PAUSE control for the background Machine synth.
  *    Default OFF, persisted by the parent, 500ms fade handled by the sound engine.
  *
- * 2. ReferenceSignal — a small floating YouTube video that opens when the user clicks
- *    REFERENCE SIGNAL. No TV shell — just the video in a minimal draggable panel with a
- *    thin drag bar and a clear close button, floating above every layer on the page.
- *    The player is pre-created on mount so playback starts from WITHIN the click gesture
- *    (unMute + playVideo), which is what lets the browser play it WITH SOUND. Draggable,
- *    closable, reopens from the button, remembers its position for the session. Nothing
- *    is downloaded, ripped, hidden, or opened in a new tab.
+ * 2. ReferenceSignal — a small floating "intercepted broadcast" video window. Rendered
+ *    through a portal to document.body so it always sits above every app layer. Header
+ *    drag (pointer events, mouse + touch), clamped inside the viewport with 24px padding,
+ *    responsive sizing, resize re-clamping, and sessionStorage position memory. The video
+ *    keeps its analog visual overlay (pointer-events: none) and plays with sound — the
+ *    player is pre-created so playback starts inside the click gesture. Audio untouched.
  */
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 
 const REFERENCE_VIDEO_ID = 'e7rU8EVlgC8';
-const VIDEO_WIDTH = 300;                                  // px — small
-const VIDEO_HEIGHT = Math.round((VIDEO_WIDTH * 9) / 16);  // 16:9
-const HANDLE_H = 26;                                      // drag bar height
-const PANEL_H = HANDLE_H + VIDEO_HEIGHT;
+const HEADER_H = 28;   // drag bar height (px)
+const PAD = 24;        // min visible padding from every viewport edge (px)
+const POS_KEY = 'refsig_pos_v1';
 
 // Analog-noise texture (SVG turbulence) reused for grain + static bursts
 const NOISE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='rn'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23rn)'/%3E%3C/svg%3E";
 
 // Analog broadcast CSS — visual only, applied over the (cross-origin) video
 const FX_CSS = `
-.rs-video{position:relative;overflow:hidden;background:#000;border-radius:6px;}
+.refsig-video{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background:#000;border-radius:4px;}
+.refsig-video iframe{position:absolute;inset:0;width:100%!important;height:100%!important;border:0;}
 .rs-screen{position:absolute;inset:0;overflow:hidden;transform:scale(1.05);will-change:filter,transform;}
-.rs-screen iframe{position:absolute;inset:0;width:100%!important;height:100%!important;border:0;}
 .rs-l{position:absolute;inset:0;pointer-events:none;}
 .rs-tint{background:linear-gradient(rgba(255,168,74,0.10),rgba(70,230,130,0.06));mix-blend-mode:overlay;}
 .rs-glow{background:radial-gradient(ellipse at 50% 42%,rgba(255,190,110,0.14),transparent 68%);mix-blend-mode:screen;}
@@ -40,7 +39,6 @@ const FX_CSS = `
 .rs-flash{background:#fff;opacity:0;mix-blend-mode:screen;}
 .rs-static{background-image:url("${NOISE}");background-size:110px 110px;opacity:0;mix-blend-mode:screen;}
 .rs-loss{background:#050403;opacity:0;}
-/* Animations run ONLY while the window is open (rs-live) — no CPU cost when closed */
 .rs-live .rs-screen{animation:rsGrade 6.5s ease-in-out infinite, rsJit 0.18s steps(2) infinite;}
 .rs-live .rs-roll{animation:rsRoll 8s linear infinite;}
 .rs-live .rs-scan{animation:rsScan 7s linear infinite;}
@@ -130,39 +128,71 @@ function loadYouTubeApi(): Promise<unknown> {
   return ytReadyPromise;
 }
 
-// Remembered position for the session (module-level — resets on full reload)
-let refSessionPos: { x: number; y: number } | null = null;
+// ── Geometry helpers ─────────────────────────────────────────────────────────
+type Size = { vw: number; vh: number; w: number; h: number };
+type XY = { x: number; y: number };
 
-type YTPlayer = { playVideo?: () => void; pauseVideo?: () => void; unMute?: () => void; setVolume?: (v: number) => void; destroy?: () => void };
+function widthForViewport(vw: number): number {
+  if (vw < 640) return Math.min(vw - 32, 320);           // mobile
+  if (vw < 1024) return Math.max(220, Math.min(320, vw * 0.32)); // tablet
+  return Math.max(220, Math.min(360, vw * 0.24));        // desktop
+}
+function measure(): Size {
+  const vw = window.innerWidth, vh = window.innerHeight;
+  const w = Math.round(widthForViewport(vw));
+  const h = Math.round(HEADER_H + (w * 9) / 16);
+  return { vw, vh, w, h };
+}
+function clampXY(x: number, y: number, s: Size): XY {
+  const maxX = Math.max(PAD, s.vw - s.w - PAD);
+  const maxY = Math.max(PAD, s.vh - s.h - PAD);
+  return { x: Math.min(Math.max(PAD, x), maxX), y: Math.min(Math.max(PAD, y), maxY) };
+}
+function defaultPos(s: Size): XY {
+  // desktop/tablet: bottom 72, right 32 · mobile (<640): centered, bottom 72
+  const x = s.vw < 640 ? Math.round((s.vw - s.w) / 2) : (s.vw - s.w - 32);
+  const y = s.vh - s.h - 72;
+  return clampXY(x, y, s);
+}
+function isVisible(p: XY, s: Size): boolean {
+  return p.x >= PAD && p.y >= PAD && p.x <= s.vw - s.w - PAD && p.y <= s.vh - s.h - PAD;
+}
+function loadSaved(): XY | null {
+  try { const r = sessionStorage.getItem(POS_KEY); return r ? JSON.parse(r) : null; } catch { return null; }
+}
+function saveSaved(p: XY) { try { sessionStorage.setItem(POS_KEY, JSON.stringify(p)); } catch {} }
 
-// ── 2. Reference Signal — small floating draggable video ─────────────────────
+type YTPlayer = { playVideo?: () => void; pauseVideo?: () => void; unMute?: () => void; destroy?: () => void };
+
+// ── 2. Reference Signal — floating broadcast window (portal) ─────────────────
 export function ReferenceSignal() {
+  const hasDoc = typeof document !== 'undefined';
   const [open, setOpen] = useState(false);
+  const [dragging, setDragging] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
-  const [pos, setPos] = useState<{ x: number; y: number }>(() => refSessionPos ?? {
-    x: Math.max(12, (typeof window !== 'undefined' ? window.innerWidth : 1200) - VIDEO_WIDTH - 24),
-    y: Math.max(12, (typeof window !== 'undefined' ? window.innerHeight : 800) - PANEL_H - 80),
+  const [size, setSize] = useState<Size>(() => (hasDoc ? measure() : { vw: 1200, vh: 800, w: 320, h: 208 }));
+  const [pos, setPos] = useState<XY>(() => {
+    if (!hasDoc) return { x: 800, y: 500 };
+    const s = measure();
+    const saved = loadSaved();
+    return saved && isVisible(saved, s) ? saved : defaultPos(s);
   });
 
+  const sizeRef = useRef(size);
   const posRef = useRef(pos);
-  const dragRef = useRef<{ on: boolean; offX: number; offY: number }>({ on: false, offX: 0, offY: 0 });
+  const openRef = useRef(false);
+  const dragRef = useRef<{ on: boolean; id: number; sx: number; sy: number; ox: number; oy: number }>({ on: false, id: -1, sx: 0, sy: 0, ox: 0, oy: 0 });
   const playerRef = useRef<YTPlayer | null>(null);
   const screenRef = useRef<HTMLDivElement | null>(null);
-  const frameRef = useRef<HTMLDivElement | null>(null);
   const wrapRef = useRef<HTMLDivElement | null>(null);
-  const staticRef = useRef<HTMLDivElement | null>(null);
-  const lossRef = useRef<HTMLDivElement | null>(null);
-  const bandRef = useRef<HTMLDivElement | null>(null);
-  const flashRef = useRef<HTMLDivElement | null>(null);
-  const openRef = useRef(false);
 
-  const setPosition = useCallback((p: { x: number; y: number }) => {
-    posRef.current = p; refSessionPos = p; setPos(p);
-  }, []);
+  const setSizeR = useCallback((s: Size) => { sizeRef.current = s; setSize(s); }, []);
+  const setPosR = useCallback((p: XY) => { posRef.current = p; setPos(p); }, []);
 
-  // Create the player ONCE up-front (cued, not playing) so playback can be triggered
-  // from within the click gesture — the only way a cross-origin YouTube embed starts
-  // WITH SOUND. Kept on-screen but invisible until open so it isn't throttled.
+  useEffect(() => { openRef.current = open; }, [open]);
+
+  // Pre-create the player (cued) so playback can be started from within the click
+  // gesture — required for a cross-origin YouTube embed to play WITH SOUND.
   useEffect(() => {
     let cancelled = false;
     loadYouTubeApi().then(YT => {
@@ -170,54 +200,46 @@ export function ReferenceSignal() {
       const YTApi = YT as { Player: new (el: HTMLElement, opts: unknown) => YTPlayer };
       try {
         const holder = document.createElement('div');
-        holder.style.width = '100%';
-        holder.style.height = '100%';
+        holder.style.width = '100%'; holder.style.height = '100%';
         screenRef.current.appendChild(holder);
         playerRef.current = new YTApi.Player(holder, {
-          width: '100%',
-          height: '100%',
-          videoId: REFERENCE_VIDEO_ID,
+          width: '100%', height: '100%', videoId: REFERENCE_VIDEO_ID,
           playerVars: { autoplay: 0, controls: 1, playsinline: 1, rel: 0, modestbranding: 1 },
-          events: {
-            onError: (e: { data: number }) => {
-              if ([2, 5, 100, 101, 150].includes(e.data)) setUnavailable(true);
-            },
-          },
+          events: { onError: (e: { data: number }) => { if ([2, 5, 100, 101, 150].includes(e.data)) setUnavailable(true); } },
         });
-      } catch {
-        setUnavailable(true);
-      }
+      } catch { setUnavailable(true); }
     }).catch(() => setUnavailable(true));
-    return () => {
-      cancelled = true;
-      try { playerRef.current?.destroy?.(); } catch {}
-      playerRef.current = null;
-    };
+    return () => { cancelled = true; try { playerRef.current?.destroy?.(); } catch {} playerRef.current = null; };
   }, []);
 
-  useEffect(() => { openRef.current = open; }, [open]);
+  // Keep the window inside the viewport on resize; fall back to default if it can't fit
+  useEffect(() => {
+    const onResize = () => {
+      const s = measure();
+      setSizeR(s);
+      const cur = posRef.current;
+      setPosR(isVisible(cur, s) ? clampXY(cur.x, cur.y, s) : defaultPos(s));
+    };
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, [setSizeR, setPosR]);
 
-  const clampPos = (p: { x: number; y: number }) => ({
-    x: Math.min(Math.max(6, p.x), (window.innerWidth || 1200) - VIDEO_WIDTH - 6),
-    y: Math.min(Math.max(6, p.y), (window.innerHeight || 800) - PANEL_H - 6),
-  });
-
-  const openPlayer = useCallback(() => {
-    setPosition(clampPos(posRef.current)); // guarantee it opens fully on-screen
+  const openWin = useCallback(() => {
+    const s = measure();
+    setSizeR(s);
+    const saved = loadSaved();
+    setPosR(saved && isVisible(saved, s) ? saved : defaultPos(s));
     setOpen(true);
-    // Runs inside the user's click gesture → the browser permits playback with sound
+    // Inside the click gesture → the browser permits playback with sound
     try { playerRef.current?.unMute?.(); playerRef.current?.playVideo?.(); } catch {}
-  }, [setPosition]);
+  }, [setPosR, setSizeR]);
 
   const close = useCallback(() => {
     setOpen(false);
     try { playerRef.current?.pauseVideo?.(); } catch {}
   }, []);
 
-  // The header REFERENCE SIGNAL button toggles the window open ↔ closed
-  const toggle = useCallback(() => {
-    if (openRef.current) close(); else openPlayer();
-  }, [close, openPlayer]);
+  const toggle = useCallback(() => { if (openRef.current) close(); else openWin(); }, [close, openWin]);
 
   // Esc closes
   useEffect(() => {
@@ -227,10 +249,34 @@ export function ReferenceSignal() {
     return () => window.removeEventListener('keydown', onKey);
   }, [open, close]);
 
+  // ── Header drag (pointer events → mouse + touch); video area stays interactive ──
+  const onPointerDown = (e: React.PointerEvent) => {
+    if (e.button && e.button !== 0) return;
+    try { (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId); } catch {}
+    dragRef.current = { on: true, id: e.pointerId, sx: e.clientX, sy: e.clientY, ox: posRef.current.x, oy: posRef.current.y };
+    setDragging(true);
+    e.preventDefault();
+  };
+  const onPointerMove = (e: React.PointerEvent) => {
+    const d = dragRef.current;
+    if (!d.on || e.pointerId !== d.id) return;
+    setPosR(clampXY(d.ox + (e.clientX - d.sx), d.oy + (e.clientY - d.sy), sizeRef.current));
+  };
+  const onPointerUp = (e: React.PointerEvent) => {
+    const d = dragRef.current;
+    if (!d.on) return;
+    d.on = false; setDragging(false); saveSaved(posRef.current);
+    try { (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId); } catch {}
+  };
+
   // ── Analog broadcast FX — visual only; the YouTube audio is never touched ──
   useEffect(() => {
     if (!open) return;
     const wrap = wrapRef.current;
+    const staticEl = wrap?.querySelector('.rs-static') as HTMLElement | null;
+    const lossEl = wrap?.querySelector('.rs-loss') as HTMLElement | null;
+    const bandEl = wrap?.querySelector('.rs-band') as HTMLElement | null;
+    const flashEl = wrap?.querySelector('.rs-flash') as HTMLElement | null;
     const timers: ReturnType<typeof setTimeout>[] = [];
     const push = (id: ReturnType<typeof setTimeout>) => timers.push(id);
     const pulse = (el: HTMLElement | null, peak: number, ms: number) => {
@@ -238,18 +284,18 @@ export function ReferenceSignal() {
       el.style.transition = 'none'; el.style.opacity = String(peak);
       requestAnimationFrame(() => { el.style.transition = `opacity ${ms}ms ease`; el.style.opacity = '0'; });
     };
-    const burst = (p: number, ms: number) => pulse(staticRef.current, p, ms);
-    const flash = (p: number, ms: number) => pulse(flashRef.current, p, ms);
+    const burst = (p: number, ms: number) => pulse(staticEl, p, ms);
+    const flash = (p: number, ms: number) => pulse(flashEl, p, ms);
     const sweepBand = () => {
-      const band = bandRef.current; if (!band) return;
-      band.style.transition = 'none'; band.style.top = '-12%'; band.style.opacity = '0.55';
-      requestAnimationFrame(() => { band.style.transition = 'top 0.45s linear, opacity 0.45s ease'; band.style.top = '100%'; band.style.opacity = '0'; });
+      if (!bandEl) return;
+      bandEl.style.transition = 'none'; bandEl.style.top = '-12%'; bandEl.style.opacity = '0.55';
+      requestAnimationFrame(() => { bandEl.style.transition = 'top 0.45s linear, opacity 0.45s ease'; bandEl.style.top = '100%'; bandEl.style.opacity = '0'; });
     };
     const signalLoss = () => {
-      const loss = lossRef.current; if (!loss) return;
-      const ms = 100 + Math.random() * 200; // 100–300ms complete signal loss
-      loss.style.transition = 'none'; loss.style.opacity = '1';
-      push(setTimeout(() => { loss.style.transition = 'opacity 0.1s ease'; loss.style.opacity = '0'; burst(0.9, 300); }, ms));
+      if (!lossEl) return;
+      const ms = 100 + Math.random() * 200;
+      lossEl.style.transition = 'none'; lossEl.style.opacity = '1';
+      push(setTimeout(() => { lossEl.style.transition = 'opacity 0.1s ease'; lossEl.style.opacity = '0'; burst(0.9, 300); }, ms));
     };
     function disturb() {
       wrap?.classList.add('rs-glitch');
@@ -262,130 +308,95 @@ export function ReferenceSignal() {
       else { sweepBand(); burst(0.4, 180); }
       schedule();
     }
-    function schedule() { push(setTimeout(disturb, 15000 + Math.random() * 15000)); } // every 15–30s
+    function schedule() { push(setTimeout(disturb, 15000 + Math.random() * 15000)); }
 
-    // Opening lock-in (~2s): heavy interference settling into a stable picture
-    const stat = staticRef.current;
-    if (stat) { stat.style.transition = 'none'; stat.style.opacity = '0.85'; }
+    wrap?.classList.add('rs-live');
+    if (staticEl) { staticEl.style.transition = 'none'; staticEl.style.opacity = '0.85'; }
     wrap?.classList.add('rs-unstable');
-    requestAnimationFrame(() => { if (stat) { stat.style.transition = 'opacity 1.9s ease'; stat.style.opacity = '0'; } });
+    requestAnimationFrame(() => { if (staticEl) { staticEl.style.transition = 'opacity 1.9s ease'; staticEl.style.opacity = '0'; } });
     push(setTimeout(() => wrap?.classList.remove('rs-unstable'), 2000));
     sweepBand();
     schedule();
 
     return () => {
       timers.forEach(clearTimeout);
-      wrap?.classList.remove('rs-unstable', 'rs-glitch');
-      [staticRef, lossRef, bandRef, flashRef].forEach(ref => { if (ref.current) ref.current.style.opacity = '0'; });
+      wrap?.classList.remove('rs-live', 'rs-unstable', 'rs-glitch');
+      [staticEl, lossEl, bandEl, flashEl].forEach(el => { if (el) el.style.opacity = '0'; });
     };
   }, [open]);
 
-  // ── Dragging (via the top bar; the cross-origin video keeps its own controls) ──
-  const onMove = useCallback((e: MouseEvent) => {
-    if (!dragRef.current.on) return;
-    const h = frameRef.current?.offsetHeight || PANEL_H;
-    let x = e.clientX - dragRef.current.offX;
-    let y = e.clientY - dragRef.current.offY;
-    x = Math.min(Math.max(6, x), window.innerWidth - VIDEO_WIDTH - 6);
-    y = Math.min(Math.max(6, y), window.innerHeight - h - 6);
-    setPosition({ x, y });
-  }, [setPosition]);
-
-  const onUp = useCallback(() => {
-    dragRef.current.on = false;
-    window.removeEventListener('mousemove', onMove);
-    window.removeEventListener('mouseup', onUp);
-  }, [onMove]);
-
-  const onDown = useCallback((e: React.MouseEvent) => {
-    dragRef.current = { on: true, offX: e.clientX - posRef.current.x, offY: e.clientY - posRef.current.y };
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('mouseup', onUp);
-    e.preventDefault();
-  }, [onMove, onUp]);
-
-  useEffect(() => () => {
-    window.removeEventListener('mousemove', onMove);
-    window.removeEventListener('mouseup', onUp);
-  }, [onMove, onUp]);
-
-  return (
-    <>
-      <style>{FX_CSS}</style>
-      <SignalButton label="REFERENCE SIGNAL" active={open} onClick={toggle} />
-
-      {/* Small floating video — stays mounted (player pre-loaded); visibility toggles on open */}
+  const win = (
+    <div
+      role="dialog"
+      aria-label="Reference signal"
+      style={{
+        position: 'fixed', left: pos.x, top: pos.y, width: size.w, zIndex: 99999,
+        opacity: open ? 1 : 0, pointerEvents: open ? 'auto' : 'none',
+        background: '#000', border: '1px solid rgba(244,241,234,0.18)',
+        boxShadow: '0 16px 48px rgba(0,0,0,0.7)', userSelect: 'none',
+        transition: dragging ? 'none' : 'opacity 0.18s ease',
+      }}
+    >
+      {/* Header — the drag handle */}
       <div
-        ref={frameRef}
-        role="dialog"
-        aria-label="Reference signal"
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}
         style={{
-          position: 'fixed',
-          left: pos.x, top: pos.y,
-          width: VIDEO_WIDTH,
-          zIndex: 2147483000, // above every layer on the page
-          opacity: open ? 1 : 0,
-          pointerEvents: open ? 'auto' : 'none',
-          userSelect: 'none',
-          background: '#000',
-          border: '1px solid rgba(244,241,234,0.18)',
-          boxShadow: '0 16px 48px rgba(0,0,0,0.7)',
-          transition: 'opacity 0.18s ease',
+          height: HEADER_H, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '0 5px 0 9px', background: '#0a0908', borderBottom: '1px solid rgba(244,241,234,0.12)',
+          cursor: dragging ? 'grabbing' : 'grab', touchAction: 'none',
         }}
       >
-        {/* Drag bar (always visible so the window can always be closed) */}
-        <div
-          onMouseDown={onDown}
+        <span style={{ fontFamily: "'DM Mono', monospace", fontSize: '8px', letterSpacing: '0.22em', color: '#8E877B', textTransform: 'uppercase', pointerEvents: 'none' }}>
+          REFERENCE SIGNAL
+        </span>
+        <button
+          onPointerDown={e => e.stopPropagation()}
+          onClick={close}
+          aria-label="Close"
           style={{
-            height: HANDLE_H, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            padding: '0 5px 0 9px', background: '#0a0908',
-            borderBottom: '1px solid rgba(244,241,234,0.12)', cursor: 'move',
+            width: 30, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center',
+            background: 'none', border: 'none', cursor: 'pointer', color: '#B8B2A7', padding: 0, lineHeight: 0,
           }}
+          onMouseEnter={e => ((e.currentTarget as HTMLElement).style.color = '#F4F1EA')}
+          onMouseLeave={e => ((e.currentTarget as HTMLElement).style.color = '#B8B2A7')}
         >
-          <span style={{ fontFamily: "'DM Mono', monospace", fontSize: '8px', letterSpacing: '0.22em', color: '#8E877B', textTransform: 'uppercase' }}>
-            REFERENCE SIGNAL
-          </span>
-          <button
-            onMouseDown={e => e.stopPropagation()}
-            onClick={close}
-            aria-label="Close"
-            style={{
-              width: 30, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: 'none', border: 'none', cursor: 'pointer', color: '#B8B2A7', padding: 0, lineHeight: 0,
-            }}
-            onMouseEnter={e => ((e.currentTarget as HTMLElement).style.color = '#F4F1EA')}
-            onMouseLeave={e => ((e.currentTarget as HTMLElement).style.color = '#B8B2A7')}
-          >
-            <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="3.5" y1="3.5" x2="12.5" y2="12.5" /><line x1="12.5" y1="3.5" x2="3.5" y2="12.5" /></svg>
-          </button>
-        </div>
+          <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="3.5" y1="3.5" x2="12.5" y2="12.5" /><line x1="12.5" y1="3.5" x2="3.5" y2="12.5" /></svg>
+        </button>
+      </div>
 
-        {/* Video with analog broadcast FX (visual only) */}
-        <div ref={wrapRef} className={`rs-video${open ? ' rs-live' : ''}`} style={{ width: '100%', height: VIDEO_HEIGHT }}>
-          <div ref={screenRef} className="rs-screen" />
-          <div className="rs-l rs-tint" />
-          <div className="rs-l rs-glow" />
-          <div className="rs-l rs-roll" />
-          <div className="rs-l rs-scan" />
-          <div className="rs-l rs-grain" />
-          <div className="rs-l rs-scratch" />
-          <div ref={bandRef} className="rs-l rs-band" />
-          <div ref={flashRef} className="rs-l rs-flash" />
-          <div ref={staticRef} className="rs-l rs-static" />
-          <div ref={lossRef} className="rs-l rs-loss" />
-          <div className="rs-l rs-vig" />
-          {/* Transparent drag layer so the whole video can be dragged */}
-          <div onMouseDown={onDown} style={{ position: 'absolute', inset: 0, cursor: 'move' }} />
-        </div>
-
+      {/* Video container — 16:9, holds the iframe + analog overlay (overlay never blocks input) */}
+      <div ref={wrapRef} className="refsig-video">
+        <div ref={screenRef} className="rs-screen" />
+        <div className="rs-l rs-tint" />
+        <div className="rs-l rs-glow" />
+        <div className="rs-l rs-roll" />
+        <div className="rs-l rs-scan" />
+        <div className="rs-l rs-grain" />
+        <div className="rs-l rs-scratch" />
+        <div className="rs-l rs-band" />
+        <div className="rs-l rs-flash" />
+        <div className="rs-l rs-static" />
+        <div className="rs-l rs-loss" />
+        <div className="rs-l rs-vig" />
         {unavailable && (
-          <div style={{ position: 'absolute', left: 0, right: 0, top: HANDLE_H, height: VIDEO_HEIGHT, display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '6px', background: '#000' }}>
+          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '6px', background: '#000' }}>
             <span style={{ fontFamily: "'DM Mono', monospace", fontSize: '9px', letterSpacing: '0.16em', color: 'rgba(210,90,90,0.9)', textTransform: 'uppercase' }}>
               REFERENCE SIGNAL UNAVAILABLE
             </span>
           </div>
         )}
       </div>
+    </div>
+  );
+
+  return (
+    <>
+      <style>{FX_CSS}</style>
+      <SignalButton label="REFERENCE SIGNAL" active={open} onClick={toggle} />
+      {hasDoc && createPortal(win, document.body)}
     </>
   );
 }
