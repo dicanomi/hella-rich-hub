@@ -24,6 +24,7 @@ const CARD_ORB         = 'https://d2xsxph8kpxj0f.cloudfront.net/3105196632922903
 const CARD_FOURCAST    = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-fourcast-v4-V6r3AdsUgH2RixiRDueELL.webp';
 const RADIO_CARD       = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-radio-v4-76gepMJyY36Pz5dhQ6sZPg.webp';
 const CARD_MARKET_EXE  = 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663292290338/irIwNEoiIgpyRjrD.png';
+const CARD_SF_FIELD_GUIDE = 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663292290338/WSWhmdTbnhZZYtnf.jpg';
 
 // ── H1 Typewriter ──────────────────────────────────────────────────────────
 
@@ -210,6 +211,7 @@ function AboutModal({ onClose, onOpenCredits }: { onClose: () => void; onOpenCre
           <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 'clamp(8px,0.85vw,10px)', letterSpacing: '0.22em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginBottom: '16px' }}>The products</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {[
+              { title: 'SF_FIELD_GUIDE', tagline: 'An urban field guide to San Francisco. Stay aware. Stay kind.', href: '/sf-field-guide' },
               { title: 'HELLA_RADIO', tagline: 'A late-night signal you tune into.',                           href: '/radio' },
               { title: 'THE_MACHINE.EXE', tagline: 'The market is the setting. Human psychology is the subject.',  href: '/machine-exe' },
               { title: 'HUMAN.EXE',   tagline: 'A biological diagnostic machine that discovers more than it was designed to find.', href: '/human-exe' },
@@ -287,6 +289,7 @@ function ProjectCard({ slug, title, tagline, image, index, live = true, cta, fea
     slug === 'radio'       ? "'TAY Birdie', 'Space Mono', monospace" :
     slug === 'human-exe'   ? "'Courier New', 'Lucida Console', monospace" :
     slug === 'machine-exe' ? "'Share Tech Mono', 'DM Mono', 'Courier New', monospace" :
+    slug === 'sf-field-guide' ? "'IBM Plex Sans Condensed', 'Arial Narrow', sans-serif" :
     "'Space Grotesk', sans-serif";
 
   const titleSize =
@@ -485,7 +488,7 @@ const CROSS_AWARENESS: Record<string, string[]> = {
   'fourcast':    ['THE EYE PREDICTED THIS.', 'LOW BATTERY IGNORED THE WARNING.', 'OUTCOME CALCULATED.'],
 };
 
-const PRODUCT_SLUGS = ['orb', 'the-eye', 'low-battery', 'space-drone', 'aether', 'dead-air', 'fourcast', 'machine-exe'];
+const PRODUCT_SLUGS = ['sf-field-guide', 'orb', 'the-eye', 'low-battery', 'space-drone', 'aether', 'dead-air', 'fourcast', 'machine-exe'];
 
 // ── Main Landing ───────────────────────────────────────────────────────────
 // ── FeaturedCard — large showcase card (premium curated browsing) ─────────────
@@ -862,6 +865,7 @@ export default function Landing() {
         }}>
           {view === 'gallery' ? (
           <>
+          <ProjectCard slug="sf-field-guide" title="SF FIELD GUIDE" tagline="An urban field guide to San Francisco. Civic data. Printed atlas feel." cta="Open Guide" image={CARD_SF_FIELD_GUIDE} index={0} enterDelay={40} />
           <ProjectCard slug="radio"      title="HELLA_RADIO" tagline="A late-night signal you tune into." cta="Tune In" image={RADIO_CARD}       index={1} enterDelay={80} />
           <ProjectCard slug="machine-exe" title="THE_MACHINE.EXE"  tagline="The market is the setting. Human psychology is the subject." cta="Trade" image={CARD_MARKET_EXE} index={2} enterDelay={140} />
           <ProjectCard slug="human-exe"  title="HUMAN.EXE"   tagline="Human Diagnostic Machine" cta="ENTER" image={CARD_HUMAN_EXE}  index={3} enterDelay={200} />
@@ -876,6 +880,7 @@ export default function Landing() {
           ) : view === 'featured' ? (
           <div className="hr-featured-grid">
             {[
+              { slug: 'sf-field-guide', title: 'SF FIELD GUIDE', desc: 'An urban field guide to San Francisco. Civic data. Printed atlas feel.', img: CARD_SF_FIELD_GUIDE },
               { slug: 'radio',       title: 'HELLA_RADIO', desc: 'A late-night signal you tune into.', img: RADIO_CARD },
               { slug: 'machine-exe',  title: 'THE_MACHINE.EXE',  desc: 'The market is the setting. Human psychology is the subject.', img: CARD_MARKET_EXE },
               { slug: 'human-exe',   title: 'HUMAN.EXE',   desc: 'Human Diagnostic Machine. The machine discovers more than it was designed to find.', img: CARD_HUMAN_EXE },
@@ -896,6 +901,7 @@ export default function Landing() {
           ) : (
           <div role="list" style={{ display: 'flex', flexDirection: 'column', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
             {[
+              { slug: 'sf-field-guide', n: '00', title: 'SF FIELD GUIDE', desc: 'An urban field guide to San Francisco. Civic data. Printed atlas feel.', img: CARD_SF_FIELD_GUIDE },
               { slug: 'radio',       n: '01', title: 'HELLA_RADIO', desc: 'A late-night signal you tune into.', img: RADIO_CARD },
               { slug: 'machine-exe',  n: '02', title: 'THE_MACHINE.EXE',  desc: 'The market is the setting. Human psychology is the subject.', img: CARD_MARKET_EXE },
               { slug: 'human-exe',   n: '03', title: 'HUMAN.EXE',   desc: 'Human Diagnostic Machine. The machine discovers more than it was designed to find.', img: CARD_HUMAN_EXE },

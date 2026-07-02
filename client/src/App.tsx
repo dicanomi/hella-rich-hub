@@ -30,6 +30,7 @@ const FourcastPage   = lazy(() => import("./pages/FourcastPage"));
 const RadioPage      = lazy(() => import("./pages/RadioPage"));
 const HumanExePage   = lazy(() => import("./pages/human-exe/HumanExePage"));
 const MarketExePage  = lazy(() => import("./pages/machine-exe/MachinePage"));
+const SFFieldGuidePage = lazy(() => import("./pages/SFFieldGuidePage"));
 
 function PageFallback() {
   return (
@@ -78,6 +79,7 @@ function AppRoutes() {
           <Route path="/radio" component={RadioPage} />
           <Route path="/human-exe" component={HumanExePage} />
           <Route path="/machine-exe" component={MarketExePage} />
+          <Route path="/sf-field-guide" component={SFFieldGuidePage} />
           <Route component={NotFound} />
         </Switch>
       </Suspense>
