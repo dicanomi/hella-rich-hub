@@ -211,6 +211,7 @@ function AboutModal({ onClose, onOpenCredits }: { onClose: () => void; onOpenCre
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {[
               { title: 'HELLA_RADIO', tagline: 'A late-night signal you tune into.',                           href: '/radio' },
+              { title: 'THE_MACHINE.EXE', tagline: 'The market is the setting. Human psychology is the subject.',  href: '/machine-exe' },
               { title: 'HUMAN.EXE',   tagline: 'A biological diagnostic machine that discovers more than it was designed to find.', href: '/human-exe' },
               { title: 'ORB',         tagline: 'A living object.',                                            href: '/orb' },
               { title: 'DEAD AIR',    tagline: 'Late night radio scanner.',                                   href: '/dead-air' },
@@ -219,7 +220,6 @@ function AboutModal({ onClose, onOpenCredits }: { onClose: () => void; onOpenCre
               { title: 'LOW BATTERY', tagline: 'The sound you ignore until it becomes your personality.',     href: '/low-battery' },
               { title: 'FOURCAST',    tagline: 'A weather app predicting the end of the world. Politely.',    href: '/fourcast' },
               { title: 'THE EYE',     tagline: 'A strange object that notices you.',                          href: '/the-eye' },
-              { title: 'THE_MACHINE.EXE', tagline: 'The market is the setting. Human psychology is the subject.',  href: '/machine-exe' },
             ].map(p => (
               <Link
                 key={p.title}

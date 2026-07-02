@@ -59,6 +59,7 @@ const SECTIONS: Array<{ lines: Array<{ type: string; text?: string }> }> = [
     lines: [
       { type: 'label',    text: 'PRODUCTS' },
       { type: 'product',  text: 'HELLA_RADIO' },
+      { type: 'product',  text: 'THE_MACHINE.EXE' },
       { type: 'product',  text: 'HUMAN.EXE' },
       { type: 'product',  text: 'ORB' },
       { type: 'product',  text: 'DEAD AIR' },
