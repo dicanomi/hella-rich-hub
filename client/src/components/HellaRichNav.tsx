@@ -17,7 +17,6 @@ interface NavProject {
 
 // Order matches the homepage product list exactly
 const PROJECTS: NavProject[] = [
-  { title: 'SF FIELD GUIDE', slug: '/sf-field-guide' },
   { title: 'RADIO', slug: '/radio' },
   { title: 'THE_MACHINE.EXE', slug: '/machine-exe' },
   { title: 'HUMAN.EXE', slug: '/human-exe' },
