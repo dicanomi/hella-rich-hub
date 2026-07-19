@@ -281,9 +281,21 @@ export function IntroSplash({ onComplete }: IntroSplashProps) {
 export function shouldShowIntro(): boolean {
   if (typeof window === 'undefined') return false;
   if (window.location.pathname !== '/') return false;
-  return sessionStorage.getItem(SESSION_KEY) !== 'true';
+  try {
+    return sessionStorage.getItem(SESSION_KEY) !== 'true';
+  } catch {
+    // Storage blocked (iOS Private Browsing / "Block All Cookies"). Show the
+    // intro; we just can't persist that it was seen.
+    return true;
+  }
 }
 
 export function markIntroSeen(): void {
-  sessionStorage.setItem(SESSION_KEY, 'true');
+  try {
+    sessionStorage.setItem(SESSION_KEY, 'true');
+  } catch {
+    // Storage blocked (iOS Private Browsing / "Block All Cookies"). Ignore so
+    // the caller can still dismiss the splash. Without this, the thrown error
+    // aborts the dismiss and the boot screen stays on screen forever.
+  }
 }
