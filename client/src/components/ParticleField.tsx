@@ -33,9 +33,16 @@ export function ParticleField() {
     typeof window !== 'undefined'
       ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
       : false;
+  // Safari Private Browsing applies anti-fingerprinting protections to canvas.
+  // The field is purely decorative, so mobile starts without it and paints the
+  // hub immediately; desktop retains the existing animated background.
+  const mobile =
+    typeof window !== 'undefined'
+      ? window.matchMedia('(max-width: 767px)').matches
+      : false;
 
   useEffect(() => {
-    if (reducedMotion) return;
+    if (reducedMotion || mobile) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -108,9 +115,9 @@ export function ParticleField() {
       window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', onMouse);
     };
-  }, [reducedMotion]);
+  }, [reducedMotion, mobile]);
 
-  if (reducedMotion) return null;
+  if (reducedMotion || mobile) return null;
 
   return (
     <canvas

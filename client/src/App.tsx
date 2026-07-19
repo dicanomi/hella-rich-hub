@@ -15,13 +15,15 @@ import { HellaRichNav } from "./components/HellaRichNav";
 import { IntroSplash, shouldShowIntro, markIntroSeen } from "./components/IntroSplash";
 import { ThemeProvider } from "./contexts/ThemeContext";
 
-// Critical path — loaded eagerly
+// Only the hub and 404 page are on the initial route graph. Every product
+// loads on demand so mobile can paint the hub without evaluating unrelated
+// animation, audio, canvas, or WebGL code.
 import Landing from "./pages/Landing";
-import TheEyePage from "./pages/TheEyePage";
-import LowBatteryPage from "./pages/LowBatteryPage";
 import NotFound from "./pages/NotFound";
 
-// Heavy products — lazy loaded
+// Product experiences — lazy loaded on demand
+const TheEyePage     = lazy(() => import("./pages/TheEyePage"));
+const LowBatteryPage = lazy(() => import("./pages/LowBatteryPage"));
 const SpaceDronePage = lazy(() => import("./pages/SpaceDronePage"));
 const AetherPage     = lazy(() => import("./pages/AetherPage"));
 const OrbPage        = lazy(() => import("./pages/OrbPage"));
@@ -55,7 +57,15 @@ function PageFallback() {
 const ROUTER_BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 function AppRoutes() {
-  const [introActive, setIntroActive] = useState(() => shouldShowIntro());
+  // Mobile must show the hub immediately. Besides eliminating the perceived
+  // delay, this avoids invoking the session-storage-backed intro path in
+  // Safari Private Browsing. Desktop keeps the existing once-per-session intro.
+  const [introActive, setIntroActive] = useState(() => {
+    if (typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches) {
+      return false;
+    }
+    return shouldShowIntro();
+  });
 
   const handleIntroComplete = () => {
     markIntroSeen();

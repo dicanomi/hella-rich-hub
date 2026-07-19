@@ -1,15 +1,27 @@
+import { useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
 
-createRoot(document.getElementById("root")!).render(<App />);
+function BootLayerRemover() {
+  // Run only after React has committed the application tree. This preserves the
+  // WebKit overlay workaround without exposing a blank document while the app
+  // module is delayed or fails before it can render.
+  useEffect(() => {
+    document.getElementById("hr-boot")?.remove();
+  }, []);
 
-// Remove the static boot overlay (#hr-boot, the "> SYSTEM MESSAGE" screen) once
-// React has mounted. The CSS rule `#root:not(:empty) ~ #hr-boot { display:none }`
-// in index.html relies on WebKit re-evaluating a :not(:empty) sibling selector
-// after the DOM changes, which iOS Safari does NOT do reliably — leaving the
-// boot screen stuck on top of the loaded app on every iOS browser. Removing it
-// imperatively does not depend on that invalidation and works everywhere.
-requestAnimationFrame(() => {
-  document.getElementById("hr-boot")?.remove();
-});
+  return null;
+}
+
+const root = document.getElementById("root");
+if (!root) {
+  throw new Error("The application root is missing.");
+}
+
+createRoot(root).render(
+  <>
+    <BootLayerRemover />
+    <App />
+  </>
+);

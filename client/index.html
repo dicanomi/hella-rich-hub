@@ -216,27 +216,16 @@
         color: rgba(0,255,70,0.45);
       }
       #root:not(:empty) ~ #hr-boot { display: none; }
+      /* Mobile bypasses the splash completely. The React hub is allowed to paint
+         immediately, while desktop retains the existing intro sequence. */
+      @media (max-width: 767px) {
+        #hr-boot { display: none; }
+      }
     </style>
   </head>
   <body>
     <div id="root"></div>
     <div id="hr-boot" aria-hidden="true"><span class="hr-boot-label">&gt; SYSTEM MESSAGE</span></div>
-    <script>
-      /* Safety net — runs as a plain (non-module) script so it executes even if
-         the app bundle fails to load. The CSS rule that hides #hr-boot
-         (#root:not(:empty) ~ #hr-boot) is not reliably re-evaluated on some
-         mobile browsers, which left this boot cover stuck on screen. Force-remove
-         it after a few seconds no matter what, so the site can never freeze on
-         the boot screen again. Normal loads remove it far sooner from main.tsx. */
-      setTimeout(function () {
-        var b = document.getElementById('hr-boot');
-        if (b && b.parentNode) b.parentNode.removeChild(b);
-      }, 5000);
-    </script>
     <script type="module" src="/src/main.tsx"></script>
-    <script
-      defer
-      src="%VITE_ANALYTICS_ENDPOINT%/umami"
-      data-website-id="%VITE_ANALYTICS_WEBSITE_ID%"></script>
   </body>
 </html>
