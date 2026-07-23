@@ -1260,6 +1260,7 @@ class Component extends DCLogic {
 <!-- hella-presence -->
 <script>
 (function(){
+  if (new URLSearchParams(location.search).has('hub')) return;
   var path = location.pathname;
   var base = path.replace(/radio\/?(index\.html)?$/, '');
   if (base.slice(-1) !== '/') base += '/';

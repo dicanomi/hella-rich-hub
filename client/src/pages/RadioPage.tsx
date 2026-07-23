@@ -3,14 +3,12 @@
  *
  * The radio experience is a self-contained app (custom <x-dc> runtime + Web Audio
  * + canvas) served as static files from /radio/ and mounted in an isolated
- * full-bleed iframe. The global nav is rendered inside the radio app itself
- * (injected in /radio/index.html) so it is always visible over the black UI and
- * links back out to the hub via target="_top".
+ * full-bleed iframe. Global navigation comes from the shared React shell.
  */
 import { useEffect } from 'react';
 
 export default function RadioPage() {
-  const src = `${import.meta.env.BASE_URL}radio/index.html`;
+  const src = `${import.meta.env.BASE_URL}radio/index.html?hub=1`;
 
   useEffect(() => {
     const prev = document.body.style.background;

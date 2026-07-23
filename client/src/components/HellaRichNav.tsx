@@ -51,8 +51,7 @@ export function HellaRichNav() {
 
   // Early return AFTER all hooks
   const isLanding = location === '/';
-  const isRadio = location === '/radio' || location.startsWith('/radio/');
-  if (isLanding || isRadio) return null;
+  if (isLanding) return null;
 
   const currentProject = PROJECTS.find(p => location.startsWith(p.slug));
 
