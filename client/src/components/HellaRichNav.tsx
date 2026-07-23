@@ -17,9 +17,9 @@ interface NavProject {
 
 // Order matches the homepage product list exactly
 const PROJECTS: NavProject[] = [
+  { title: 'HAPPY HUMAN', slug: '/happy-human' },
   { title: 'RADIO', slug: '/radio' },
   { title: 'THE_MACHINE.EXE', slug: '/machine-exe' },
-  { title: 'HAPPY HUMAN', slug: '/happy-human' },
   { title: 'HUMAN.EXE', slug: '/human-exe' },
   { title: 'ORB', slug: '/orb' },
   { title: 'DEAD AIR', slug: '/dead-air' },

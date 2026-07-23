@@ -211,9 +211,9 @@ function AboutModal({ onClose, onOpenCredits }: { onClose: () => void; onOpenCre
           <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 'clamp(8px,0.85vw,10px)', letterSpacing: '0.22em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginBottom: '16px' }}>The products</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {[
+              { title: 'HAPPY HUMAN', tagline: 'A labor archive for jobs that were already politely deleted.', href: '/happy-human' },
               { title: 'HELLA_RADIO', tagline: 'A late-night signal you tune into.',                           href: '/radio' },
               { title: 'THE_MACHINE.EXE', tagline: 'The market is the setting. Human psychology is the subject.',  href: '/machine-exe' },
-              { title: 'HAPPY HUMAN', tagline: 'A labor archive for jobs that were already politely deleted.', href: '/happy-human' },
               { title: 'HUMAN.EXE',   tagline: 'A biological diagnostic machine that discovers more than it was designed to find.', href: '/human-exe' },
               { title: 'ORB',         tagline: 'A living object.',                                            href: '/orb' },
               { title: 'DEAD AIR',    tagline: 'Late night radio scanner.',                                   href: '/dead-air' },
@@ -499,7 +499,7 @@ const CROSS_AWARENESS: Record<string, string[]> = {
   'happy-human': ['HUMAN.EXE FILED AN APPEAL.', 'THE_MACHINE.EXE APPROVED THE LAYOFF.', 'FOURCAST PREDICTED THIS.'],
 };
 
-const PRODUCT_SLUGS = ['orb', 'the-eye', 'low-battery', 'space-drone', 'aether', 'dead-air', 'fourcast', 'machine-exe', 'happy-human'];
+const PRODUCT_SLUGS = ['happy-human', 'orb', 'the-eye', 'low-battery', 'space-drone', 'aether', 'dead-air', 'fourcast', 'machine-exe'];
 
 // ── Main Landing ───────────────────────────────────────────────────────────
 // ── FeaturedCard — large showcase card (premium curated browsing) ─────────────
@@ -881,9 +881,9 @@ export default function Landing() {
         }}>
           {view === 'gallery' ? (
           <>
-          <ProjectCard slug="radio"      title="HELLA_RADIO" tagline="A late-night signal you tune into." cta="Tune In" image={RADIO_CARD}       index={1} enterDelay={80} />
-          <ProjectCard slug="machine-exe" title="THE_MACHINE.EXE"  tagline="The market is the setting. Human psychology is the subject." cta="Trade" image={CARD_MARKET_EXE} index={2} enterDelay={140} />
-          <ProjectCard slug="happy-human" title="HAPPY HUMAN" tagline="A labor archive for jobs that were already politely deleted." cta="Apply" image={CARD_HAPPY_HUMAN} index={3} enterDelay={200} />
+          <ProjectCard slug="happy-human" title="HAPPY HUMAN" tagline="A labor archive for jobs that were already politely deleted." cta="Apply" image={CARD_HAPPY_HUMAN} index={1} enterDelay={80} />
+          <ProjectCard slug="radio"      title="HELLA_RADIO" tagline="A late-night signal you tune into." cta="Tune In" image={RADIO_CARD}       index={2} enterDelay={140} />
+          <ProjectCard slug="machine-exe" title="THE_MACHINE.EXE"  tagline="The market is the setting. Human psychology is the subject." cta="Trade" image={CARD_MARKET_EXE} index={3} enterDelay={200} />
           <ProjectCard slug="human-exe"  title="HUMAN.EXE"   tagline="Human Diagnostic Machine" cta="ENTER" image={CARD_HUMAN_EXE}  index={4} enterDelay={260} />
           <ProjectCard slug="orb"        title="ORB"         tagline="A living object." cta="Touch It" image={CARD_ORB}          index={5} enterDelay={320} />
           <ProjectCard slug="dead-air"   title="DEAD AIR"    tagline="Late night radio scanner." cta="Tune In" image={CARD_DEAD_AIR}   index={6} enterDelay={380} />
@@ -896,9 +896,9 @@ export default function Landing() {
           ) : view === 'featured' ? (
           <div className="hr-featured-grid">
             {[
+              { slug: 'happy-human', title: 'HAPPY HUMAN', desc: 'A labor archive for jobs that were already politely deleted.', img: CARD_HAPPY_HUMAN },
               { slug: 'radio',       title: 'HELLA_RADIO', desc: 'A late-night signal you tune into.', img: RADIO_CARD },
               { slug: 'machine-exe',  title: 'THE_MACHINE.EXE',  desc: 'The market is the setting. Human psychology is the subject.', img: CARD_MARKET_EXE },
-              { slug: 'happy-human', title: 'HAPPY HUMAN', desc: 'A labor archive for jobs that were already politely deleted.', img: CARD_HAPPY_HUMAN },
               { slug: 'human-exe',   title: 'HUMAN.EXE',   desc: 'Human Diagnostic Machine. The machine discovers more than it was designed to find.', img: CARD_HUMAN_EXE },
               { slug: 'orb',         title: 'ORB',         desc: 'A living object. Seven moods rendered as sound and color.', img: CARD_ORB },
               { slug: 'dead-air',    title: 'DEAD AIR',    desc: 'Lost transmissions and impossible frequencies.', img: CARD_DEAD_AIR },
@@ -912,14 +912,13 @@ export default function Landing() {
             ))}
             {/* Blank cards fill the last row so the featured view doesn't look empty at the bottom */}
             <FeaturedPlaceholder />
-            <FeaturedPlaceholder />
           </div>
           ) : (
           <div role="list" style={{ display: 'flex', flexDirection: 'column', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
             {[
-              { slug: 'radio',       n: '01', title: 'HELLA_RADIO', desc: 'A late-night signal you tune into.', img: RADIO_CARD },
-              { slug: 'machine-exe',  n: '02', title: 'THE_MACHINE.EXE',  desc: 'The market is the setting. Human psychology is the subject.', img: CARD_MARKET_EXE },
-              { slug: 'happy-human', n: '03', title: 'HAPPY HUMAN', desc: 'A labor archive for jobs that were already politely deleted.', img: CARD_HAPPY_HUMAN },
+              { slug: 'happy-human', n: '01', title: 'HAPPY HUMAN', desc: 'A labor archive for jobs that were already politely deleted.', img: CARD_HAPPY_HUMAN },
+              { slug: 'radio',       n: '02', title: 'HELLA_RADIO', desc: 'A late-night signal you tune into.', img: RADIO_CARD },
+              { slug: 'machine-exe',  n: '03', title: 'THE_MACHINE.EXE',  desc: 'The market is the setting. Human psychology is the subject.', img: CARD_MARKET_EXE },
               { slug: 'human-exe',   n: '04', title: 'HUMAN.EXE',   desc: 'Human Diagnostic Machine. The machine discovers more than it was designed to find.', img: CARD_HUMAN_EXE },
               { slug: 'orb',         n: '05', title: 'ORB',         desc: 'A living object. Seven moods rendered as sound and color.', img: CARD_ORB },
               { slug: 'dead-air',    n: '06', title: 'DEAD AIR',    desc: 'Lost transmissions and impossible frequencies.', img: CARD_DEAD_AIR },
