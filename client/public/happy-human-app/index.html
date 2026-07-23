@@ -3169,10 +3169,35 @@
 
         const geometry = new THREE.BufferGeometry();
         geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+        const lineOpacity = 0.17 + line / lineCount * 0.28;
+
+        const redMaterial = new THREE.LineBasicMaterial({
+          color: 0xff2448,
+          transparent: true,
+          opacity: lineOpacity * 0.72,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false
+        });
+        const redWire = new THREE.Line(geometry, redMaterial);
+        redWire.position.set(-0.055, 0.008, -0.025);
+        sculpture.add(redWire);
+
+        const cyanMaterial = new THREE.LineBasicMaterial({
+          color: 0x00e5ff,
+          transparent: true,
+          opacity: lineOpacity * 0.68,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false
+        });
+        const cyanWire = new THREE.Line(geometry, cyanMaterial);
+        cyanWire.position.set(0.055, -0.008, 0.025);
+        sculpture.add(cyanWire);
+
         const material = new THREE.LineBasicMaterial({
           color: 0xcfd6e1,
           transparent: true,
-          opacity: 0.17 + line / lineCount * 0.28
+          opacity: lineOpacity * 0.74,
+          depthWrite: false
         });
         const wire = new THREE.Line(geometry, material);
         sculpture.add(wire);
