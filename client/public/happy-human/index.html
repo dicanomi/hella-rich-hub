@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HAPPY HUMAN - hella.rich</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap");
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; background: #030805; overflow: hidden; }
+
+    .hr-nav {
+      position: fixed;
+      top: clamp(24px, 2.35vh, 27px);
+      left: clamp(24px, 1.45vw, 28px);
+      z-index: 9000;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-family: "DM Mono", monospace;
+    }
+
+    .hr-back {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      height: 35px;
+      padding: 0 13px;
+      background: rgba(3,8,5,0.7);
+      border: 1px solid rgba(207,214,225,0.13);
+      border-radius: 3px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      text-decoration: none;
+      color: rgba(207,214,225,0.58);
+      transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+    }
+
+    .hr-back:hover,
+    .hr-switcher:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.18);
+      color: rgba(255,255,255,0.75);
+    }
+
+    .hr-back-label {
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      line-height: 1;
+      user-select: none;
+    }
+
+    .hr-switcher {
+      width: 33px;
+      height: 33px;
+      border-radius: 3px;
+      background: rgba(3,8,5,0.7);
+      border: 1px solid rgba(207,214,225,0.13);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      color: rgba(207,214,225,0.58);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+
+    .hr-switcher[aria-expanded="true"] {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.18);
+    }
+
+    .hr-dropdown {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      min-width: 170px;
+      background: rgba(8,8,6,0.94);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 3px;
+      padding: 4px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+
+    .hr-dropdown[hidden] { display: none; }
+
+    .hr-dropdown-label {
+      padding: 5px 8px 4px;
+      font-size: clamp(7px, 0.75vw, 8px);
+      letter-spacing: 0.22em;
+      color: rgba(255,255,255,0.22);
+      text-transform: uppercase;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      margin-bottom: 3px;
+      font-family: "DM Mono", monospace;
+    }
+
+    .hr-project-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 8px;
+      border-radius: 2px;
+      text-decoration: none;
+      transition: background 0.12s ease;
+      cursor: pointer;
+      font-family: "DM Mono", monospace;
+    }
+
+    .hr-project-item:hover,
+    .hr-project-item.current { background: rgba(255,255,255,0.06); }
+
+    .hr-project-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: rgba(80,200,120,0.7);
+      flex-shrink: 0;
+    }
+
+    .hr-project-title {
+      font-size: clamp(8px, 0.9vw, 10px);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      line-height: 1;
+    }
+
+    .hr-project-item.current .hr-project-title { color: rgba(255,255,255,0.88); }
+
+    .hh-frame {
+      position: fixed;
+      top: clamp(78px, 8.2vh, 84px);
+      right: 0;
+      bottom: 0;
+      left: 0;
+      width: 100vw;
+      height: calc(100dvh - clamp(78px, 8.2vh, 84px));
+      border: 0;
+      background: #101010;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <nav class="hr-nav" aria-label="hella.rich navigation">
+    <a href="/" class="hr-back" aria-label="Back to hella.rich">
+      <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true">
+        <path d="M6 1L1 4L6 7M1 4H11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="hr-back-label">hella.rich</span>
+    </a>
+    <div style="position:relative">
+      <button class="hr-switcher" type="button" aria-label="Switch product" aria-expanded="false" aria-controls="hr-products">
+        <svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+          <path d="M1 2H13M1 5H13M1 8H13" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <div class="hr-dropdown" id="hr-products" role="menu" hidden>
+        <div class="hr-dropdown-label">Products</div>
+        <a class="hr-project-item current" href="/happy-human" role="menuitem"><span class="hr-project-dot"></span><span class="hr-project-title">HAPPY HUMAN</span></a>
+        <a class="hr-project-item" href="/radio" role="menuitem"><span class="hr-project-dot"></span><span class="hr-project-title">RADIO</span></a>
+        <a class="hr-project-item" href="/machine-exe" role="menuitem"><span class="hr-project-dot"></span><span class="hr-project-title">THE_MACHINE.EXE</span></a>
+        <a class="hr-project-item" href="/human-exe" role="menuitem"><span class="hr-project-dot"></span><span class="hr-project-title">HUMAN.EXE</span></a>
+        <a class="hr-project-item" href="/orb" role="menuitem"><span class="hr-project-dot"></span><span class="hr-project-title">ORB</span></a>
+        <a class="hr-project-item" href="/dead-air" role="menuitem"><span class="hr-project-dot"></span><span class="hr-project-title">DEAD AIR</span></a>
+        <a class="hr-project-item" href="/aether" role="menuitem"><span class="hr-project-dot"></span><span class="hr-project-title">ÆTHER</span></a>
+        <a class="hr-project-item" href="/space-drone" role="menuitem"><span class="hr-project-dot"></span><span class="hr-project-title">SPACE DRONE</span></a>
+        <a class="hr-project-item" href="/low-battery" role="menuitem"><span class="hr-project-dot"></span><span class="hr-project-title">LOW BATTERY</span></a>
+        <a class="hr-project-item" href="/fourcast" role="menuitem"><span class="hr-project-dot"></span><span class="hr-project-title">FOURCAST</span></a>
+        <a class="hr-project-item" href="/the-eye" role="menuitem"><span class="hr-project-dot"></span><span class="hr-project-title">THE EYE</span></a>
+      </div>
+    </div>
+  </nav>
+  <iframe class="hh-frame" title="HAPPY HUMAN" src="/happy-human-app/index.html?hub=1"></iframe>
+  <script>
+    const switcher = document.querySelector(".hr-switcher");
+    const dropdown = document.querySelector(".hr-dropdown");
+    switcher.addEventListener("click", () => {
+      const nextOpen = dropdown.hasAttribute("hidden");
+      dropdown.toggleAttribute("hidden", !nextOpen);
+      switcher.setAttribute("aria-expanded", String(nextOpen));
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        dropdown.setAttribute("hidden", "");
+        switcher.setAttribute("aria-expanded", "false");
+      }
+    });
+    document.addEventListener("mousedown", (event) => {
+      if (!event.target.closest(".hr-nav")) {
+        dropdown.setAttribute("hidden", "");
+        switcher.setAttribute("aria-expanded", "false");
+      }
+    });
+  </script>
+</body>
+</html>
