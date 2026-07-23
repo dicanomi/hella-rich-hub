@@ -728,7 +728,7 @@ export default function Landing() {
         }
         @font-face {
           font-family: 'TAY Hells';
-          src: url('${import.meta.env.BASE_URL}happy-human/TAYHellsAngles.woff2') format('woff2');
+          src: url('${import.meta.env.BASE_URL}happy-human-app/TAYHellsAngles.woff2') format('woff2');
           font-display: swap;
         }
         .modal-close-btn {

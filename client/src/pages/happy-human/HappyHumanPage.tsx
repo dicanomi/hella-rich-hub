@@ -1,6 +1,6 @@
 import { HellaRichSEO } from "../../components/HellaRichSEO";
 
-const happyHumanUrl = `${import.meta.env.BASE_URL}happy-human/index.html?hub=1`;
+const happyHumanUrl = `${import.meta.env.BASE_URL}happy-human-app/index.html?hub=1`;
 const navOffset = "clamp(78px, 8.2vh, 84px)";
 const navBackground = "#030805";
 
