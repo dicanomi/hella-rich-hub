@@ -9,6 +9,34 @@ Keep entries short and factual. This file is context, not a diary.
 
 ---
 
+## 2026-07-23 13:02 — Codex — Happy Human wrapper color and overlay top spacing aligned
+
+**Did:**
+- Matched the Happy Human navigation wrapper and iframe fallback to the app background color `#0d0d0d`.
+- Aligned the alert, human-check, retraining, and complaint overlay top edges with the main embedded screen.
+- Ran the production build and verified the live route before and after refresh.
+
+**Current state:**
+- The update is live on GitHub `main` in commit `9dd9b13`.
+- Cloudflare Pages serves matching wrapper, iframe, and app backgrounds at `https://hella.rich/happy-human/`.
+- All four overlay screens compute to the same top edge as the main screen in hub mode.
+
+**Next steps:**
+- [x] Push the Happy Human framing update to GitHub `main`.
+- [x] Verify colors, overlay positions, and refresh behavior on Cloudflare Pages.
+
+**Decisions / rationale:**
+- Hub-embedded overlays remove only the top inset; side and bottom spacing remain unchanged.
+- Standalone Happy Human keeps its original symmetric page inset.
+
+**Watch out for:**
+- The direct `/happy-human/` route can resolve through the static refresh fallback, so both wrapper implementations must remain visually synchronized.
+
+**Credentials/access needed (pointers only, never actual secrets):**
+- Use the authenticated GitHub Desktop push route if shell Git credentials are unavailable.
+
+---
+
 ## 2026-07-23 12:23 — Codex — Homepage product views renamed and Grid made default
 
 **Did:**
