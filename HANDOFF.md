@@ -34,6 +34,37 @@ Keep entries short and factual. This file is context, not a diary.
 
 ---
 
+## 2026-07-23 12:08 — Codex — Happy Human timing, audio, and landing effects ready for production
+
+**Did:**
+- Accelerated and synchronized the job-card, REPLACED stamp, progress line, and morphing sculpture transitions.
+- Ensured the initial job displays the REPLACED stamp before the first transition.
+- Added optional corrupted-assistant voice fragments, a visible volume slider when sound is on, and an overriding FEAR alert voice with a smooth transition bed.
+- Made the SOUND label uppercase and added the red/cyan anaglyph effect to the landing HAPPY HUMAN logo.
+- Ran the Cloudflare production build successfully.
+
+**Current state:**
+- Happy Human changes are approved for deployment to GitHub `main` and Cloudflare Pages.
+- Local review URL: `http://127.0.0.1:3000/happy-human/`.
+
+**Next steps:**
+- [ ] Push the production commit to GitHub `main`.
+- [ ] Verify Cloudflare Pages serves the new commit at `https://hella.rich/happy-human/`.
+
+**Decisions / rationale:**
+- Alert speech cancels the ambient assistant voice so FEAR ALERT always takes priority.
+- The volume control appears only while sound is enabled.
+- The landing logo uses the same crimson/cyan channel colors as the morphing sculpture.
+
+**Watch out for:**
+- Browser speech voices vary by operating system; volume, rate, and pitch are intentionally normalized in the page.
+- Cloudflare Pages deploys automatically from GitHub `main`.
+
+**Credentials/access needed (pointers only, never actual secrets):**
+- Use the authenticated GitHub Desktop push route if shell Git credentials are unavailable.
+
+---
+
 ## 2026-07-23 10:14 — Codex — Radio uses shared global nav locally, deploy blocked by GitHub/Cloudflare auth
 
 **Did:**

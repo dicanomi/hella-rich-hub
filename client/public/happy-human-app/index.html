@@ -28,7 +28,7 @@
       --line-strong: rgba(207, 214, 225, 0.28);
       --panel: rgba(27, 28, 30, 0.72);
       --stamp-red: #d84b4b;
-      --job-cycle: 6200ms;
+      --job-cycle: 4600ms;
       --page-space: clamp(8px, min(1.8vw, 2.4vh), 28px);
       --section-space: clamp(10px, min(2.7vw, 2.6vh), 42px);
       --panel-space: clamp(20px, min(5.2vw, 4.8vh), 72px);
@@ -206,6 +206,29 @@
     .sound[aria-pressed="true"] .sound-dot {
       background: var(--apres-ski);
       border-color: var(--apres-ski);
+    }
+
+    .sound-volume {
+      display: inline-flex;
+      align-items: center;
+      width: clamp(56px, 5.2vw, 74px);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(-4px);
+      transition: opacity 220ms ease, transform 220ms ease;
+    }
+
+    .sound-volume.is-visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(0);
+    }
+
+    .sound-volume input {
+      width: 100%;
+      height: 18px;
+      accent-color: var(--apres-ski);
+      cursor: pointer;
     }
 
     main {
@@ -461,6 +484,9 @@
       height: 100%;
       background: var(--apres-ski);
       transform-origin: left;
+    }
+
+    .progress span.is-running {
       animation: progress var(--job-cycle) linear infinite;
     }
 
@@ -733,7 +759,7 @@
     }
 
     .app.alerting .progress span {
-      animation: none;
+      animation-play-state: paused;
     }
 
     .human-check {
@@ -1338,6 +1364,9 @@
       font-size: clamp(40px, min(7.4vw, 11vh), 108px);
       font-weight: 400;
       line-height: 0.94;
+      text-shadow:
+        -0.055em 0.008em 0 rgba(255, 36, 72, 0.72),
+        0.055em -0.008em 0 rgba(0, 229, 255, 0.68);
     }
 
     .intro-title-letter {
@@ -1628,6 +1657,10 @@
         height: 1px;
         overflow: hidden;
         clip: rect(0 0 0 0);
+      }
+
+      .sound-volume {
+        width: clamp(48px, 13vw, 58px);
       }
 
       .report-trigger {
@@ -1935,8 +1968,11 @@
           <button class="report-trigger" id="report-trigger" type="button">Report Agent</button>
           <button class="sound" type="button" aria-pressed="false" aria-label="Toggle sound">
             <span class="sound-dot" aria-hidden="true"></span>
-            <span class="sound-label">Sound Off</span>
+            <span class="sound-label">SOUND OFF</span>
           </button>
+          <label class="sound-volume" aria-label="Sound volume">
+            <input class="sound-volume-input" type="range" min="0" max="100" value="65" />
+          </label>
         </div>
       </header>
 
@@ -2179,14 +2215,22 @@
       complaintReturn: document.querySelector("#complaint-return"),
       reportTrigger: document.querySelector("#report-trigger"),
       archivePanel: document.querySelector(".archive-panel"),
+      jobProgress: document.querySelector(".progress span"),
       soundButton: document.querySelector(".sound"),
-      soundLabel: document.querySelector(".sound-label")
+      soundLabel: document.querySelector(".sound-label"),
+      soundVolume: document.querySelector(".sound-volume"),
+      soundVolumeInput: document.querySelector(".sound-volume-input")
     };
 
     let modeIndex = 0;
     let jobIndex = 0;
     let audioContext;
     let soundOn = false;
+    let soundVolume = 0.65;
+    let helpfulAudioTimer;
+    let helpfulSpeech;
+    let alertSpeech;
+    let alertSpeechTimer;
     let jobTransitioning = false;
     let replacementTimer;
     let jobCycleTimer;
@@ -2206,8 +2250,14 @@
     let experienceStarted = false;
     let introTitleTimer;
     let introTitleAnimations = [];
-    const JOB_CYCLE_MS = 6200;
-    const REPLACEMENT_DELAY_MS = 900;
+    const JOB_CYCLE_MS = 4600;
+    const REPLACEMENT_DELAY_MS = 650;
+    const helpfulAudioFragments = [
+      "thank you for participating",
+      "remain professionally calm",
+      "your relevance is being considered",
+      "please continue being human"
+    ];
     const reduceJobMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const affectedFormatter = new Intl.NumberFormat("en-US");
     let affectedCount = 1n;
@@ -2328,6 +2378,12 @@
       }, REPLACEMENT_DELAY_MS);
     }
 
+    function restartJobProgress() {
+      elements.jobProgress.classList.remove("is-running");
+      void elements.jobProgress.offsetWidth;
+      elements.jobProgress.classList.add("is-running");
+    }
+
     function randomBetween(minimum, maximum) {
       return minimum + Math.random() * (maximum - minimum);
     }
@@ -2379,6 +2435,7 @@
       elements.app.classList.add("alerting");
       pop(880, 0.045, "square");
       window.setTimeout(() => pop(640, 0.034, "triangle"), 90);
+      playFearAlertVoice();
 
       queueTimer(escapeSequenceTimers, () => {
         elements.escapeAlert.classList.add("is-active");
@@ -2397,12 +2454,14 @@
       queueTimer(escapeSequenceTimers, () => {
         elements.escapeAlert.classList.add("is-leaving");
         elements.app.classList.remove("alerting");
+        cancelAlertAudio();
       }, 5350);
 
       queueTimer(escapeSequenceTimers, () => {
         elements.escapeAlert.classList.remove("is-active", "is-leaving", "is-settling");
         elements.escapeAlert.setAttribute("aria-hidden", "true");
         escapeActive = false;
+        scheduleHelpfulAudio(true);
         scheduleEscapeAlert(false);
       }, 6000);
     }
@@ -2413,6 +2472,7 @@
       elements.escapeAlert.classList.remove("is-active", "is-settling");
       elements.escapeAlert.classList.add("is-leaving");
       elements.app.classList.remove("alerting");
+      cancelAlertAudio();
 
       if (!escapeAdvanced) {
         escapeAdvanced = true;
@@ -2424,6 +2484,7 @@
         elements.escapeAlert.classList.remove("is-leaving");
         elements.escapeAlert.setAttribute("aria-hidden", "true");
         escapeActive = false;
+        scheduleHelpfulAudio(true);
         scheduleEscapeAlert(false);
       }, 680);
     }
@@ -2635,6 +2696,7 @@
 
       jobTransitioning = true;
       cancelReplacementSchedule();
+      restartJobProgress();
       const nextIndex = (jobIndex + 1) % jobs.length;
       const job = jobs[nextIndex];
 
@@ -2644,29 +2706,26 @@
         elements.jobTitle.textContent = job.title;
         elements.jobStatus.textContent = job.status;
         elements.jobNote.textContent = job.note;
+        window.dispatchEvent(new CustomEvent("humanity:job-change", {
+          detail: { index: jobIndex }
+        }));
       };
 
       if (reduceJobMotion) {
         hideReplacementStamp();
         renderJob();
-        window.dispatchEvent(new CustomEvent("humanity:job-change", {
-          detail: { index: jobIndex }
-        }));
         scheduleReplacementStamp();
         jobTransitioning = false;
         return;
       }
 
       fadeReplacementStamp();
-      window.dispatchEvent(new CustomEvent("humanity:job-change", {
-        detail: { index: nextIndex }
-      }));
 
       window.setTimeout(() => {
         elements.archivePanel.classList.add("processing");
         elements.jobCard.classList.add("is-leaving");
         pop(280, 0.026, "sine");
-      }, 260);
+      }, 160);
 
       window.setTimeout(() => {
         hideReplacementStamp();
@@ -2681,11 +2740,11 @@
             scheduleReplacementStamp();
           });
         });
-      }, 560);
+      }, 420);
 
       window.setTimeout(() => {
         jobTransitioning = false;
-      }, 1040);
+      }, 760);
     }
 
     function ensureAudio() {
@@ -2711,7 +2770,7 @@
       filter.type = "highpass";
       filter.frequency.setValueAtTime(620, now);
       gain.gain.setValueAtTime(0.0001, now);
-      gain.gain.exponentialRampToValueAtTime(gainValue, now + 0.008);
+      gain.gain.exponentialRampToValueAtTime(gainValue * soundVolume, now + 0.008);
       gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.075);
 
       osc.connect(filter);
@@ -2721,18 +2780,219 @@
       osc.stop(now + 0.085);
     }
 
+    function cancelHelpfulAudio() {
+      window.clearTimeout(helpfulAudioTimer);
+      if (helpfulSpeech && "speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
+      helpfulSpeech = null;
+    }
+
+    function cancelVoiceAudio() {
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
+      helpfulSpeech = null;
+      alertSpeech = null;
+    }
+
+    function cancelAlertAudio() {
+      window.clearTimeout(alertSpeechTimer);
+      if (alertSpeech && "speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
+      alertSpeech = null;
+    }
+
+    function selectHelpfulVoice() {
+      if (!("speechSynthesis" in window)) return null;
+      const voices = window.speechSynthesis.getVoices();
+      return voices.find((voice) => /english|us|uk/i.test(voice.lang) && /female|samantha|victoria|google/i.test(voice.name)) ||
+        voices.find((voice) => /en/i.test(voice.lang)) ||
+        null;
+    }
+
+    function playWhisperBed(duration = 1.7) {
+      if (!soundOn) return;
+      ensureAudio();
+      const now = audioContext.currentTime;
+      const sampleRate = audioContext.sampleRate;
+      const buffer = audioContext.createBuffer(1, Math.ceil(sampleRate * duration), sampleRate);
+      const data = buffer.getChannelData(0);
+
+      for (let index = 0; index < data.length; index += 1) {
+        data[index] = (Math.random() * 2 - 1) * 0.42;
+      }
+
+      const noise = audioContext.createBufferSource();
+      const breathFilter = audioContext.createBiquadFilter();
+      const formantFilter = audioContext.createBiquadFilter();
+      const tremolo = audioContext.createOscillator();
+      const tremoloGain = audioContext.createGain();
+      const gain = audioContext.createGain();
+
+      breathFilter.type = "bandpass";
+      breathFilter.frequency.setValueAtTime(980, now);
+      breathFilter.Q.setValueAtTime(0.7, now);
+      formantFilter.type = "bandpass";
+      formantFilter.frequency.setValueAtTime(randomBetween(1320, 1820), now);
+      formantFilter.Q.setValueAtTime(8, now);
+      tremolo.type = "sine";
+      tremolo.frequency.setValueAtTime(randomBetween(7, 11), now);
+      tremoloGain.gain.setValueAtTime(0.010, now);
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.linearRampToValueAtTime(0.045 * soundVolume, now + 0.18);
+      gain.gain.linearRampToValueAtTime(0.030 * soundVolume, now + duration - 0.28);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+      noise.buffer = buffer;
+      tremolo.connect(tremoloGain);
+      tremoloGain.connect(gain.gain);
+      noise.connect(breathFilter);
+      breathFilter.connect(formantFilter);
+      formantFilter.connect(gain);
+      gain.connect(audioContext.destination);
+      noise.start(now);
+      tremolo.start(now);
+      noise.stop(now + duration);
+      tremolo.stop(now + duration);
+    }
+
+    function playAlertBed(duration = 2.2) {
+      if (!soundOn) return;
+      ensureAudio();
+      const now = audioContext.currentTime;
+      const drone = audioContext.createOscillator();
+      const pulse = audioContext.createOscillator();
+      const droneFilter = audioContext.createBiquadFilter();
+      const pulseGain = audioContext.createGain();
+      const gain = audioContext.createGain();
+
+      drone.type = "sawtooth";
+      drone.frequency.setValueAtTime(74, now);
+      drone.frequency.linearRampToValueAtTime(58, now + duration);
+      pulse.type = "square";
+      pulse.frequency.setValueAtTime(7.5, now);
+      droneFilter.type = "lowpass";
+      droneFilter.frequency.setValueAtTime(360, now);
+      droneFilter.frequency.linearRampToValueAtTime(920, now + 0.34);
+      pulseGain.gain.setValueAtTime(0.018 * soundVolume, now);
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.linearRampToValueAtTime(0.034 * soundVolume, now + 0.26);
+      gain.gain.linearRampToValueAtTime(0.025 * soundVolume, now + duration - 0.34);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+      pulse.connect(pulseGain);
+      pulseGain.connect(gain.gain);
+      drone.connect(droneFilter);
+      droneFilter.connect(gain);
+      gain.connect(audioContext.destination);
+      drone.start(now);
+      pulse.start(now);
+      drone.stop(now + duration);
+      pulse.stop(now + duration);
+    }
+
+    function playFearAlertVoice() {
+      if (!soundOn || !experienceStarted || document.hidden) return;
+      cancelHelpfulAudio();
+      cancelVoiceAudio();
+      playAlertBed();
+      pop(980, 0.034, "square");
+      window.setTimeout(() => pop(520, 0.026, "triangle"), 130);
+
+      if (!("speechSynthesis" in window)) return;
+
+      const utterance = new SpeechSynthesisUtterance("FEAR, FEAR, FEAR ALERT");
+      utterance.volume = Math.min(1, 0.58 * soundVolume);
+      utterance.rate = 0.72;
+      utterance.pitch = 0.24;
+      utterance.voice = selectHelpfulVoice();
+      alertSpeech = utterance;
+      utterance.onend = () => {
+        alertSpeech = null;
+      };
+      utterance.onerror = () => {
+        alertSpeech = null;
+      };
+      alertSpeechTimer = window.setTimeout(() => {
+        if (soundOn && experienceStarted && !document.hidden && alertSpeech === utterance) {
+          window.speechSynthesis.speak(utterance);
+        }
+      }, 260);
+    }
+
+    function playHelpfulAudioFragment() {
+      if (!soundOn || !experienceStarted || document.hidden || escapeActive) {
+        scheduleHelpfulAudio();
+        return;
+      }
+
+      const fragment = helpfulAudioFragments[Math.floor(Math.random() * helpfulAudioFragments.length)];
+      playWhisperBed(randomBetween(1.35, 1.9));
+      pop(randomBetween(1020, 1240), 0.012, "sine");
+      window.setTimeout(() => pop(randomBetween(170, 230), 0.012, "triangle"), 160);
+
+      if ("speechSynthesis" in window) {
+        const utterance = new SpeechSynthesisUtterance(fragment);
+        utterance.volume = Math.min(1, 0.34 * soundVolume);
+        utterance.rate = randomBetween(0.54, 0.68);
+        utterance.pitch = randomBetween(0.18, 0.34);
+        utterance.voice = selectHelpfulVoice();
+        helpfulSpeech = utterance;
+        utterance.onend = () => {
+          helpfulSpeech = null;
+        };
+        utterance.onerror = () => {
+          helpfulSpeech = null;
+        };
+        window.setTimeout(() => {
+          if (soundOn && experienceStarted && !document.hidden && helpfulSpeech === utterance) {
+            window.speechSynthesis.speak(utterance);
+          }
+        }, 240);
+      }
+
+      scheduleHelpfulAudio();
+    }
+
+    function scheduleHelpfulAudio(initial = false) {
+      window.clearTimeout(helpfulAudioTimer);
+      if (!soundOn || !experienceStarted || document.hidden || escapeActive) return;
+      const delay = initial ? randomBetween(4800, 7600) : randomBetween(11200, 18500);
+      helpfulAudioTimer = window.setTimeout(playHelpfulAudioFragment, delay);
+    }
+
+    function setSoundVolume(value) {
+      soundVolume = Math.max(0, Math.min(1, Number(value) / 100));
+    }
+
+    function updateSoundControls() {
+      elements.soundButton.setAttribute("aria-pressed", String(soundOn));
+      elements.soundLabel.textContent = soundOn ? "SOUND OFF" : "SOUND ON";
+      elements.soundVolume.classList.toggle("is-visible", soundOn);
+      elements.soundVolume.setAttribute("aria-hidden", String(!soundOn));
+      elements.soundVolumeInput.tabIndex = soundOn ? 0 : -1;
+    }
+
     function toggleSound() {
       soundOn = !soundOn;
-      elements.soundButton.setAttribute("aria-pressed", String(soundOn));
-      elements.soundLabel.textContent = soundOn ? "Sound Off" : "Sound On";
+      updateSoundControls();
       if (soundOn) {
         ensureAudio();
         pop(640, 0.05, "triangle");
         window.setTimeout(() => pop(360, 0.034, "square"), 70);
+        scheduleHelpfulAudio(true);
+      } else {
+        cancelHelpfulAudio();
+        cancelAlertAudio();
       }
     }
 
     elements.soundButton.addEventListener("click", toggleSound);
+    elements.soundVolumeInput.addEventListener("input", (event) => {
+      setSoundVolume(event.target.value);
+    });
 
     function prepareIntroTitle() {
       const letters = Array.from(elements.introTitle.textContent);
@@ -2812,8 +3072,7 @@
       });
       soundOn = true;
       ensureAudio();
-      elements.soundButton.setAttribute("aria-pressed", "true");
-      elements.soundLabel.textContent = "Sound Off";
+      updateSoundControls();
       elements.app.classList.add("entering-archive");
       window.dispatchEvent(new CustomEvent("humanity:experience-start"));
       pop(520, 0.052, "triangle");
@@ -2832,13 +3091,26 @@
       window.setTimeout(() => {
         affectedLastTime = performance.now();
         window.requestAnimationFrame(animateAffectedCounter);
+        scheduleReplacementStamp();
+        restartJobProgress();
         scheduleNextJobCycle();
+        scheduleHelpfulAudio(true);
         scheduleEscapeAlert(true);
         scheduleHumanCheck();
       }, 920);
     }
 
     elements.enterExperience.addEventListener("click", startExperience);
+    setSoundVolume(elements.soundVolumeInput.value);
+    updateSoundControls();
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        cancelHelpfulAudio();
+        cancelAlertAudio();
+      } else {
+        scheduleHelpfulAudio(true);
+      }
+    });
     elements.panicTrigger.addEventListener("click", openPanicPanel);
     elements.denyPanic.addEventListener("click", denyPanic);
     elements.escapeAlert.addEventListener("click", dismissEscapeAlert);
@@ -3310,7 +3582,7 @@
 
         lastRenderTime = now;
         const elapsed = (now - start) / 1000;
-        const ease = prefersReducedMotion ? 1 : 0.045;
+        const ease = prefersReducedMotion ? 1 : 0.065;
         const desiredStrength = pointerInside && !prefersReducedMotion ? 1 : 0;
 
         if (pointerInside) {
