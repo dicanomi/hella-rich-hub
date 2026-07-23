@@ -44,12 +44,13 @@ Keep entries short and factual. This file is context, not a diary.
 - Ran the Cloudflare production build successfully.
 
 **Current state:**
-- Happy Human changes are approved for deployment to GitHub `main` and Cloudflare Pages.
+- Happy Human changes are live on GitHub `main` in commit `174d31d`.
+- Cloudflare Pages is serving the updated app at `https://hella.rich/happy-human/`.
 - Local review URL: `http://127.0.0.1:3000/happy-human/`.
 
 **Next steps:**
-- [ ] Push the production commit to GitHub `main`.
-- [ ] Verify Cloudflare Pages serves the new commit at `https://hella.rich/happy-human/`.
+- [x] Push the production commit to GitHub `main`.
+- [x] Verify Cloudflare Pages serves the new commit at `https://hella.rich/happy-human/`.
 
 **Decisions / rationale:**
 - Alert speech cancels the ambient assistant voice so FEAR ALERT always takes priority.
