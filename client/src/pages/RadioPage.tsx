@@ -10,6 +10,16 @@ import { useEffect } from 'react';
 export default function RadioPage() {
   const src = `${import.meta.env.BASE_URL}radio/index.html?hub=1`;
 
+  const hideEmbeddedNav = (frame: HTMLIFrameElement) => {
+    const frameDocument = frame.contentDocument;
+    if (!frameDocument || frameDocument.getElementById('hella-radio-embedded-nav-hide')) return;
+
+    const style = frameDocument.createElement('style');
+    style.id = 'hella-radio-embedded-nav-hide';
+    style.textContent = '#hrNav{display:none!important}';
+    frameDocument.head.appendChild(style);
+  };
+
   useEffect(() => {
     const prev = document.body.style.background;
     document.body.style.background = '#000';
@@ -22,6 +32,7 @@ export default function RadioPage() {
         src={src}
         title="HELLA_RADIO"
         allow="autoplay"
+        onLoad={(event) => hideEmbeddedNav(event.currentTarget)}
         style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none', display: 'block' }}
       />
     </div>
