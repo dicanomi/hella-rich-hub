@@ -683,18 +683,18 @@ export default function Landing() {
   const [creditsOpen, setCreditsOpen] = useState(false);
   const [awarenessMsg, setAwarenessMsg] = useState<{slug: string; text: string} | null>(null);
 
-  // ── View mode: 'gallery' (cards) | 'archive' (catalog list) ──
-  const [view, setView] = useState<'gallery' | 'featured' | 'archive'>('gallery');
+  // ── View mode: 'featured' (grid) | 'gallery' (stacked cards) | 'archive' (list) ──
+  const [view, setView] = useState<'gallery' | 'featured' | 'archive'>('featured');
   const [viewSwapping, setViewSwapping] = useState(false);
   useEffect(() => {
     try {
-      const saved = localStorage.getItem('hella_view');
+      const saved = localStorage.getItem('hella_view_v2');
       if (saved === 'archive' || saved === 'gallery' || saved === 'featured') setView(saved);
     } catch (e) { /* ignore */ }
   }, []);
   const switchView = (next: 'gallery' | 'featured' | 'archive') => {
     if (next === view) return;
-    try { localStorage.setItem('hella_view', next); } catch (e) {}
+    try { localStorage.setItem('hella_view_v2', next); } catch (e) {}
     const reduce = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduce) { setView(next); return; }
     setViewSwapping(true);
@@ -830,7 +830,7 @@ export default function Landing() {
 
         </div>
 
-        {/* ── View toggle: GALLERY / ARCHIVE ── */}
+        {/* ── View toggle: GRID / STACKED / LIST ── */}
         <div style={{
           padding: '0 clamp(24px,5vw,72px)',
           display: 'flex', justifyContent: 'flex-end', marginBottom: 'clamp(14px,1.6vw,22px)',
@@ -840,7 +840,7 @@ export default function Landing() {
             border: '1px solid rgba(255,255,255,0.12)', borderRadius: '2px',
             padding: '2px', background: 'rgba(255,255,255,0.02)',
           }}>
-            {([['gallery','▦','GALLERY'],['featured','◫','FEATURED'],['archive','☰','ARCHIVE']] as const).map(([mode, glyph, label]) => {
+            {([['featured','▦','GRID'],['gallery','◫','STACKED'],['archive','☰','LIST']] as const).map(([mode, glyph, label]) => {
               const active = view === mode;
               return (
                 <button
@@ -870,7 +870,7 @@ export default function Landing() {
           </div>
         </div>
 
-        {/* ── Products: GALLERY (cards) or ARCHIVE (catalog) ── */}
+        {/* ── Products: GRID, STACKED cards, or LIST ── */}
         <main style={{
           padding: '0 clamp(24px,5vw,72px) clamp(64px,10vh,100px)',
           display: 'flex',
