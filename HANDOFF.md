@@ -9,6 +9,35 @@ Keep entries short and factual. This file is context, not a diary.
 
 ---
 
+## 2026-07-23 12:23 — Codex — Homepage product views renamed and Grid made default
+
+**Did:**
+- Renamed the homepage product display controls to Grid, Stacked, and List.
+- Made the former Featured grid the default homepage display.
+- Migrated the saved browser preference key so old selections do not override the new default.
+- Ran the production build and verified the live homepage in a clean browser session.
+
+**Current state:**
+- The update is live on GitHub `main` in commit `1f32adc`.
+- Cloudflare Pages is serving Grid as the default at `https://hella.rich/`.
+- Local review URL: `http://127.0.0.1:3000/`.
+
+**Next steps:**
+- [x] Push the homepage view update to GitHub `main`.
+- [x] Verify the new default and labels on Cloudflare Pages.
+
+**Decisions / rationale:**
+- Featured maps to Grid, Gallery maps to Stacked, and Archive maps to List.
+- The controls are ordered Grid, Stacked, List to match their visual density.
+
+**Watch out for:**
+- New view selections persist under `hella_view_v2`; the old `hella_view` value is intentionally ignored.
+
+**Credentials/access needed (pointers only, never actual secrets):**
+- Use the authenticated GitHub Desktop push route if shell Git credentials are unavailable.
+
+---
+
 ## Template for a new entry (copy this block, fill it in, paste above the rest)
 
 ### [YYYY-MM-DD HH:MM] — [Tool/model name] — [one-line summary]
