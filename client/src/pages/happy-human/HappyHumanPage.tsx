@@ -1,7 +1,10 @@
 import { HellaRichSEO } from "../../components/HellaRichSEO";
 
 const happyHumanUrl = `${import.meta.env.BASE_URL}happy-human/index.html`;
-const navOffset = "clamp(86px, 10vh, 118px)";
+const navPad = "clamp(14px, 2.2vh, 22px)";
+const navHeight = "clamp(30px, 4vh, 36px)";
+const navOffset = `calc(${navPad} * 2 + ${navHeight})`;
+const navBackground = "#111110";
 
 export default function HappyHumanPage() {
   return (
@@ -10,6 +13,18 @@ export default function HappyHumanPage() {
         title="HAPPY HUMAN — hella.rich"
         description="HAPPY HUMAN. A satirical labor archive for jobs that were already politely deleted."
         keywords="HAPPY HUMAN, hella.rich, AI satire, labor archive, job loss archive"
+      />
+      <div
+        aria-hidden="true"
+        style={{
+          position: "fixed",
+          top: 0,
+          right: 0,
+          left: 0,
+          height: navOffset,
+          background: navBackground,
+          pointerEvents: "none",
+        }}
       />
       <iframe
         title="HAPPY HUMAN"
