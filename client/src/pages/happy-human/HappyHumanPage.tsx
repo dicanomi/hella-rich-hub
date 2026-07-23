@@ -1,10 +1,8 @@
 import { HellaRichSEO } from "../../components/HellaRichSEO";
 
 const happyHumanUrl = `${import.meta.env.BASE_URL}happy-human/index.html?hub=1`;
-const navPad = "clamp(14px, 2.2vh, 22px)";
-const navHeight = "clamp(30px, 4vh, 36px)";
-const navOffset = `calc(${navPad} * 2 + ${navHeight})`;
-const navBackground = "#111110";
+const navOffset = "clamp(78px, 8.2vh, 84px)";
+const navBackground = "#030805";
 
 export default function HappyHumanPage() {
   return (
@@ -49,7 +47,7 @@ export default function HappyHumanPage() {
           width: "100vw",
           height: `calc(100dvh - ${navOffset})`,
           border: 0,
-          background: "#0d0d0d",
+          background: "#101010",
           zIndex: 1,
         }}
       />
