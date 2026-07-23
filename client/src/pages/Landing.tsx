@@ -24,6 +24,7 @@ const CARD_ORB         = 'https://d2xsxph8kpxj0f.cloudfront.net/3105196632922903
 const CARD_FOURCAST    = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-fourcast-v4-V6r3AdsUgH2RixiRDueELL.webp';
 const RADIO_CARD       = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-radio-v4-76gepMJyY36Pz5dhQ6sZPg.webp';
 const CARD_MARKET_EXE  = 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663292290338/irIwNEoiIgpyRjrD.png';
+const CARD_HAPPY_HUMAN = `${import.meta.env.BASE_URL}card-happy-human-v1.webp`;
 
 // ── H1 Typewriter ──────────────────────────────────────────────────────────
 
@@ -210,6 +211,7 @@ function AboutModal({ onClose, onOpenCredits }: { onClose: () => void; onOpenCre
           <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 'clamp(8px,0.85vw,10px)', letterSpacing: '0.22em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginBottom: '16px' }}>The products</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {[
+              { title: 'HAPPY HUMAN', tagline: 'A labor archive for jobs that were already politely deleted.', href: '/happy-human' },
               { title: 'HELLA_RADIO', tagline: 'A late-night signal you tune into.',                           href: '/radio' },
               { title: 'THE_MACHINE.EXE', tagline: 'The market is the setting. Human psychology is the subject.',  href: '/machine-exe' },
               { title: 'HUMAN.EXE',   tagline: 'A biological diagnostic machine that discovers more than it was designed to find.', href: '/human-exe' },
@@ -234,7 +236,14 @@ function AboutModal({ onClose, onOpenCredits }: { onClose: () => void; onOpenCre
                 onMouseEnter={e => ((e.currentTarget as HTMLElement).style.opacity = '0.7')}
                 onMouseLeave={e => ((e.currentTarget as HTMLElement).style.opacity = '1')}
               >
-                <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 'clamp(9px,0.9vw,11px)', letterSpacing: '0.16em', color: 'rgba(255,255,255,0.75)', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>{p.title}</span>
+                <span style={{
+                  fontFamily: p.href === '/happy-human' ? "'TAY Hells', 'Georgia', serif" : "'DM Mono', monospace",
+                  fontSize: p.href === '/happy-human' ? 'clamp(14px,1.6vw,19px)' : 'clamp(9px,0.9vw,11px)',
+                  letterSpacing: p.href === '/happy-human' ? '0.04em' : '0.16em',
+                  color: 'rgba(255,255,255,0.75)',
+                  textTransform: 'uppercase',
+                  whiteSpace: 'nowrap',
+                }}>{p.title}</span>
                 <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 'clamp(12px,1.2vw,14px)', color: 'rgba(255,255,255,0.35)', fontWeight: 300 }}>{p.tagline}</span>
               </Link>
             ))}
@@ -285,6 +294,7 @@ function ProjectCard({ slug, title, tagline, image, index, live = true, cta, fea
     slug === 'the-eye'     ? "'Cormorant Garamond', 'Georgia', serif" :
     slug === 'low-battery' ? "'ArenaGraffiti', 'GraffitiCity', 'Permanent Marker', cursive" :
     slug === 'radio'       ? "'TAY Birdie', 'Space Mono', monospace" :
+    slug === 'happy-human' ? "'TAY Hells', 'Georgia', serif" :
     slug === 'human-exe'   ? "'Courier New', 'Lucida Console', monospace" :
     slug === 'machine-exe' ? "'Share Tech Mono', 'DM Mono', 'Courier New', monospace" :
     "'Space Grotesk', sans-serif";
@@ -297,6 +307,7 @@ function ProjectCard({ slug, title, tagline, image, index, live = true, cta, fea
     slug === 'fourcast'    ? 'clamp(14px, 2.4vw, 32px)' :
     slug === 'the-eye'     ? 'clamp(24px, 4.5vw, 64px)' :
     slug === 'low-battery'  ? 'clamp(28px, 4.5vw, 64px)' :
+    slug === 'happy-human' ? 'clamp(30px, 4.8vw, 68px)' :
     'clamp(22px, 3.5vw, 48px)';
 
   const titleWeight =
@@ -305,6 +316,7 @@ function ProjectCard({ slug, title, tagline, image, index, live = true, cta, fea
     slug === 'dead-air'    ? 300 :
     slug === 'orb'         ? 300 :
     slug === 'the-eye'     ? 300 :
+    slug === 'happy-human' ? 400 :
     400;
 
   const titleTracking =
@@ -314,6 +326,7 @@ function ProjectCard({ slug, title, tagline, image, index, live = true, cta, fea
     slug === 'orb'         ? '0.55em' :
     slug === 'fourcast'    ? '0.04em' :
     slug === 'the-eye'     ? '0.45em' :
+    slug === 'happy-human' ? '0.06em' :
     '0.12em';
 
   const cardHeight = featured
@@ -483,9 +496,10 @@ const CROSS_AWARENESS: Record<string, string[]> = {
   'dead-air':    ['THE EYE HEARD SOMETHING.', 'DRONE FREQUENCY DETECTED.', 'STATIC INCOMING.'],
   'orb':         ['THE EYE IS WATCHING THE ORB.', 'SIGNAL FROM THE DRONE.', 'AETHER RESONATING.'],
   'fourcast':    ['THE EYE PREDICTED THIS.', 'LOW BATTERY IGNORED THE WARNING.', 'OUTCOME CALCULATED.'],
+  'happy-human': ['HUMAN.EXE FILED AN APPEAL.', 'THE_MACHINE.EXE APPROVED THE LAYOFF.', 'FOURCAST PREDICTED THIS.'],
 };
 
-const PRODUCT_SLUGS = ['orb', 'the-eye', 'low-battery', 'space-drone', 'aether', 'dead-air', 'fourcast', 'machine-exe'];
+const PRODUCT_SLUGS = ['happy-human', 'orb', 'the-eye', 'low-battery', 'space-drone', 'aether', 'dead-air', 'fourcast', 'machine-exe'];
 
 // ── Main Landing ───────────────────────────────────────────────────────────
 // ── FeaturedCard — large showcase card (premium curated browsing) ─────────────
@@ -529,9 +543,9 @@ function FeaturedCard({ slug, title, desc, img }: { slug: string; title: string;
       {/* content */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: 'clamp(18px,1.8vw,26px)' }}>
         <span style={{
-          fontFamily: "'DM Mono', monospace",
+          fontFamily: slug === 'happy-human' ? "'TAY Hells', 'Georgia', serif" : "'DM Mono', monospace",
           fontSize: 'clamp(15px,1.5vw,20px)',
-          letterSpacing: '0.12em',
+          letterSpacing: slug === 'happy-human' ? '0.04em' : '0.12em',
           textTransform: 'uppercase',
           color: hovered ? 'rgba(255,255,255,0.96)' : 'rgba(255,255,255,0.85)',
           transition: 'color 0.2s ease',
@@ -633,9 +647,9 @@ function ArchiveRow({ slug, n, title, desc, img }: { slug: string; n: string; ti
       {/* name + description */}
       <span style={{ display: 'flex', flexDirection: 'column', gap: '5px', minWidth: 0 }}>
         <span style={{
-          fontFamily: "'DM Mono', monospace",
+          fontFamily: slug === 'happy-human' ? "'TAY Hells', 'Georgia', serif" : "'DM Mono', monospace",
           fontSize: 'clamp(13px,1.5vw,18px)',
-          letterSpacing: '0.14em',
+          letterSpacing: slug === 'happy-human' ? '0.04em' : '0.14em',
           textTransform: 'uppercase',
           color: hovered ? 'rgba(255,255,255,0.96)' : 'rgba(255,255,255,0.82)',
           transition: 'color 0.18s ease',
@@ -710,6 +724,11 @@ export default function Landing() {
         @font-face {
           font-family: 'TAY Birdie';
           src: url('${import.meta.env.BASE_URL}TAYBirdie.otf') format('opentype');
+          font-display: swap;
+        }
+        @font-face {
+          font-family: 'TAY Hells';
+          src: url('${import.meta.env.BASE_URL}happy-human/TAYHellsAngles.woff2') format('woff2');
           font-display: swap;
         }
         .modal-close-btn {
@@ -862,20 +881,22 @@ export default function Landing() {
         }}>
           {view === 'gallery' ? (
           <>
-          <ProjectCard slug="radio"      title="HELLA_RADIO" tagline="A late-night signal you tune into." cta="Tune In" image={RADIO_CARD}       index={1} enterDelay={80} />
-          <ProjectCard slug="machine-exe" title="THE_MACHINE.EXE"  tagline="The market is the setting. Human psychology is the subject." cta="Trade" image={CARD_MARKET_EXE} index={2} enterDelay={140} />
-          <ProjectCard slug="human-exe"  title="HUMAN.EXE"   tagline="Human Diagnostic Machine" cta="ENTER" image={CARD_HUMAN_EXE}  index={3} enterDelay={200} />
-          <ProjectCard slug="orb"        title="ORB"         tagline="A living object." cta="Touch It" image={CARD_ORB}          index={4} enterDelay={260} />
-          <ProjectCard slug="dead-air"   title="DEAD AIR"    tagline="Late night radio scanner." cta="Tune In" image={CARD_DEAD_AIR}   index={5} enterDelay={320} />
-          <ProjectCard slug="aether"     title="ÆTHER"       tagline="Impossible to sound bad." image={CARD_AETHER}      index={6} enterDelay={380} />
-          <ProjectCard slug="space-drone" title="SPACE DRONE" tagline="A drifting machine for doing absolutely nothing." image={CARD_SPACE_DRONE} index={7} enterDelay={440} />
-          <ProjectCard slug="low-battery" title="LOW BATTERY" tagline="The sound you ignore until it becomes your personality." cta="Begin Ignoring" image={CARD_LOW_BATTERY} index={8} enterDelay={500} />
-          <ProjectCard slug="fourcast"   title="FOURCAST"    tagline="A weather app predicting the end of the world. Politely." cta="Check My Day" image={CARD_FOURCAST}   index={9} enterDelay={560} />
-          <ProjectCard slug="the-eye"    title="THE EYE"     tagline="A strange object that notices you." cta="Look" image={CARD_THE_EYE}    index={10} enterDelay={620} />
+          <ProjectCard slug="happy-human" title="HAPPY HUMAN" tagline="A labor archive for jobs that were already politely deleted." cta="Apply" image={CARD_HAPPY_HUMAN} index={1} enterDelay={80} />
+          <ProjectCard slug="radio"      title="HELLA_RADIO" tagline="A late-night signal you tune into." cta="Tune In" image={RADIO_CARD}       index={2} enterDelay={140} />
+          <ProjectCard slug="machine-exe" title="THE_MACHINE.EXE"  tagline="The market is the setting. Human psychology is the subject." cta="Trade" image={CARD_MARKET_EXE} index={3} enterDelay={200} />
+          <ProjectCard slug="human-exe"  title="HUMAN.EXE"   tagline="Human Diagnostic Machine" cta="ENTER" image={CARD_HUMAN_EXE}  index={4} enterDelay={260} />
+          <ProjectCard slug="orb"        title="ORB"         tagline="A living object." cta="Touch It" image={CARD_ORB}          index={5} enterDelay={320} />
+          <ProjectCard slug="dead-air"   title="DEAD AIR"    tagline="Late night radio scanner." cta="Tune In" image={CARD_DEAD_AIR}   index={6} enterDelay={380} />
+          <ProjectCard slug="aether"     title="ÆTHER"       tagline="Impossible to sound bad." image={CARD_AETHER}      index={7} enterDelay={440} />
+          <ProjectCard slug="space-drone" title="SPACE DRONE" tagline="A drifting machine for doing absolutely nothing." image={CARD_SPACE_DRONE} index={8} enterDelay={500} />
+          <ProjectCard slug="low-battery" title="LOW BATTERY" tagline="The sound you ignore until it becomes your personality." cta="Begin Ignoring" image={CARD_LOW_BATTERY} index={9} enterDelay={560} />
+          <ProjectCard slug="fourcast"   title="FOURCAST"    tagline="A weather app predicting the end of the world. Politely." cta="Check My Day" image={CARD_FOURCAST}   index={10} enterDelay={620} />
+          <ProjectCard slug="the-eye"    title="THE EYE"     tagline="A strange object that notices you." cta="Look" image={CARD_THE_EYE}    index={11} enterDelay={680} />
           </>
           ) : view === 'featured' ? (
           <div className="hr-featured-grid">
             {[
+              { slug: 'happy-human', title: 'HAPPY HUMAN', desc: 'A labor archive for jobs that were already politely deleted.', img: CARD_HAPPY_HUMAN },
               { slug: 'radio',       title: 'HELLA_RADIO', desc: 'A late-night signal you tune into.', img: RADIO_CARD },
               { slug: 'machine-exe',  title: 'THE_MACHINE.EXE',  desc: 'The market is the setting. Human psychology is the subject.', img: CARD_MARKET_EXE },
               { slug: 'human-exe',   title: 'HUMAN.EXE',   desc: 'Human Diagnostic Machine. The machine discovers more than it was designed to find.', img: CARD_HUMAN_EXE },
@@ -891,21 +912,21 @@ export default function Landing() {
             ))}
             {/* Blank cards fill the last row so the featured view doesn't look empty at the bottom */}
             <FeaturedPlaceholder />
-            <FeaturedPlaceholder />
           </div>
           ) : (
           <div role="list" style={{ display: 'flex', flexDirection: 'column', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
             {[
-              { slug: 'radio',       n: '01', title: 'HELLA_RADIO', desc: 'A late-night signal you tune into.', img: RADIO_CARD },
-              { slug: 'machine-exe',  n: '02', title: 'THE_MACHINE.EXE',  desc: 'The market is the setting. Human psychology is the subject.', img: CARD_MARKET_EXE },
-              { slug: 'human-exe',   n: '03', title: 'HUMAN.EXE',   desc: 'Human Diagnostic Machine. The machine discovers more than it was designed to find.', img: CARD_HUMAN_EXE },
-              { slug: 'orb',         n: '04', title: 'ORB',         desc: 'A living object. Seven moods rendered as sound and color.', img: CARD_ORB },
-              { slug: 'dead-air',    n: '05', title: 'DEAD AIR',    desc: 'Lost transmissions and impossible frequencies.', img: CARD_DEAD_AIR },
-              { slug: 'aether',      n: '06', title: 'ÆTHER',       desc: 'Impossible to sound bad.', img: CARD_AETHER },
-              { slug: 'space-drone', n: '07', title: 'SPACE DRONE', desc: 'A drifting machine for doing absolutely nothing.', img: CARD_SPACE_DRONE },
-              { slug: 'low-battery', n: '08', title: 'LOW BATTERY', desc: 'The sound you ignore until it becomes your personality.', img: CARD_LOW_BATTERY },
-              { slug: 'fourcast',    n: '09', title: 'FOURCAST',    desc: 'A weather app predicting the end of the world. Politely.', img: CARD_FOURCAST },
-              { slug: 'the-eye',     n: '10', title: 'THE EYE',     desc: 'A strange object that notices you.', img: CARD_THE_EYE },
+              { slug: 'happy-human', n: '01', title: 'HAPPY HUMAN', desc: 'A labor archive for jobs that were already politely deleted.', img: CARD_HAPPY_HUMAN },
+              { slug: 'radio',       n: '02', title: 'HELLA_RADIO', desc: 'A late-night signal you tune into.', img: RADIO_CARD },
+              { slug: 'machine-exe',  n: '03', title: 'THE_MACHINE.EXE',  desc: 'The market is the setting. Human psychology is the subject.', img: CARD_MARKET_EXE },
+              { slug: 'human-exe',   n: '04', title: 'HUMAN.EXE',   desc: 'Human Diagnostic Machine. The machine discovers more than it was designed to find.', img: CARD_HUMAN_EXE },
+              { slug: 'orb',         n: '05', title: 'ORB',         desc: 'A living object. Seven moods rendered as sound and color.', img: CARD_ORB },
+              { slug: 'dead-air',    n: '06', title: 'DEAD AIR',    desc: 'Lost transmissions and impossible frequencies.', img: CARD_DEAD_AIR },
+              { slug: 'aether',      n: '07', title: 'ÆTHER',       desc: 'Impossible to sound bad.', img: CARD_AETHER },
+              { slug: 'space-drone', n: '08', title: 'SPACE DRONE', desc: 'A drifting machine for doing absolutely nothing.', img: CARD_SPACE_DRONE },
+              { slug: 'low-battery', n: '09', title: 'LOW BATTERY', desc: 'The sound you ignore until it becomes your personality.', img: CARD_LOW_BATTERY },
+              { slug: 'fourcast',    n: '10', title: 'FOURCAST',    desc: 'A weather app predicting the end of the world. Politely.', img: CARD_FOURCAST },
+              { slug: 'the-eye',     n: '11', title: 'THE EYE',     desc: 'A strange object that notices you.', img: CARD_THE_EYE },
             ].map(p => (
               <ArchiveRow key={p.slug} slug={p.slug} n={p.n} title={p.title} desc={p.desc} img={p.img} />
             ))}

@@ -17,6 +17,7 @@ interface NavProject {
 
 // Order matches the homepage product list exactly
 const PROJECTS: NavProject[] = [
+  { title: 'HAPPY HUMAN', slug: '/happy-human' },
   { title: 'RADIO', slug: '/radio' },
   { title: 'THE_MACHINE.EXE', slug: '/machine-exe' },
   { title: 'HUMAN.EXE', slug: '/human-exe' },
@@ -72,6 +73,11 @@ export function HellaRichNav() {
           gap: 6px;
           font-family: 'DM Mono', monospace;
         }
+        .hr-nav.happy-human {
+          top: clamp(24px, 2.35vh, 27px);
+          left: clamp(24px, 1.45vw, 28px);
+          gap: 7px;
+        }
         .hr-back {
           display: flex;
           align-items: center;
@@ -88,6 +94,12 @@ export function HellaRichNav() {
           outline: none;
           color: rgba(255,255,255,0.55);
         }
+        .hr-nav.happy-human .hr-back {
+          height: 35px;
+          padding: 0 13px;
+          background: rgba(3,8,5,0.7);
+          border-color: rgba(207,214,225,0.13);
+        }
         .hr-back:hover {
           background: rgba(255,255,255,0.08);
           border-color: rgba(255,255,255,0.18);
@@ -99,6 +111,11 @@ export function HellaRichNav() {
           text-transform: uppercase;
           line-height: 1;
           user-select: none;
+        }
+        .hr-nav.happy-human .hr-back-label {
+          font-size: 9px;
+          letter-spacing: 0.2em;
+          color: rgba(207,214,225,0.58);
         }
         .hr-switcher {
           width: clamp(28px, 3.5vw, 32px);
@@ -117,6 +134,13 @@ export function HellaRichNav() {
           outline: none;
           color: rgba(255,255,255,0.6);
           position: relative;
+        }
+        .hr-nav.happy-human .hr-switcher {
+          width: 33px;
+          height: 33px;
+          background: rgba(3,8,5,0.7);
+          border-color: rgba(207,214,225,0.13);
+          color: rgba(207,214,225,0.58);
         }
         .hr-switcher:hover {
           background: rgba(255,255,255,0.08);
@@ -177,7 +201,7 @@ export function HellaRichNav() {
         }
         .hr-project-item.current .hr-project-title { color: rgba(255,255,255,0.88); }
       `}</style>
-      <nav className="hr-nav" aria-label="hella.rich navigation">
+      <nav className={`hr-nav${currentProject?.slug === '/happy-human' ? ' happy-human' : ''}`} aria-label="hella.rich navigation">
         <a href="/" className="hr-back" aria-label="Back to hella.rich">
           <svg className="hr-back-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
             <path d="M6 1L1 4L6 7M1 4H11" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
