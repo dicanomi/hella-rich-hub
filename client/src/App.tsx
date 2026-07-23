@@ -87,7 +87,9 @@ function AppRoutes() {
           <Route path="/dead-air" component={DeadAirPage} />
           <Route path="/fourcast" component={FourcastPage} />
           <Route path="/radio" component={RadioPage} />
+          <Route path="/radio/" component={RadioPage} />
           <Route path="/happy-human" component={HappyHumanPage} />
+          <Route path="/happy-human/" component={HappyHumanPage} />
           <Route path="/human-exe" component={HumanExePage} />
           <Route path="/machine-exe" component={MarketExePage} />
           <Route component={NotFound} />
