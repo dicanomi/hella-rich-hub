@@ -68,6 +68,14 @@
       background: var(--black-wash);
     }
 
+    html.hub-embed .app {
+      padding-top: 0;
+    }
+
+    html.hub-embed .shell {
+      min-height: calc(100svh - var(--page-space));
+    }
+
     .shell {
       display: grid;
       grid-template-rows: auto 1fr auto;
@@ -1807,6 +1815,11 @@
       }
     }
   </style>
+  <script>
+    if (new URLSearchParams(window.location.search).has("hub")) {
+      document.documentElement.classList.add("hub-embed");
+    }
+  </script>
 </head>
 <body>
   <div class="app awaiting-entry">

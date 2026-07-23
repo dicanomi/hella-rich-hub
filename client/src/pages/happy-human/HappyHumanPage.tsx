@@ -1,6 +1,6 @@
 import { HellaRichSEO } from "../../components/HellaRichSEO";
 
-const happyHumanUrl = `${import.meta.env.BASE_URL}happy-human/index.html`;
+const happyHumanUrl = `${import.meta.env.BASE_URL}happy-human/index.html?hub=1`;
 const navPad = "clamp(14px, 2.2vh, 22px)";
 const navHeight = "clamp(30px, 4vh, 36px)";
 const navOffset = `calc(${navPad} * 2 + ${navHeight})`;
@@ -18,12 +18,23 @@ export default function HappyHumanPage() {
         aria-hidden="true"
         style={{
           position: "fixed",
+          inset: 0,
+          background: navBackground,
+          pointerEvents: "none",
+          zIndex: 0,
+        }}
+      />
+      <div
+        aria-hidden="true"
+        style={{
+          position: "fixed",
           top: 0,
           right: 0,
           left: 0,
           height: navOffset,
           background: navBackground,
           pointerEvents: "none",
+          zIndex: 1,
         }}
       />
       <iframe
@@ -39,6 +50,7 @@ export default function HappyHumanPage() {
           height: `calc(100dvh - ${navOffset})`,
           border: 0,
           background: "#0d0d0d",
+          zIndex: 1,
         }}
       />
     </>
