@@ -2,7 +2,7 @@ import { HellaRichSEO } from "../../components/HellaRichSEO";
 
 const happyHumanUrl = `${import.meta.env.BASE_URL}happy-human-app/index.html?hub=1`;
 const navOffset = "clamp(78px, 8.2vh, 84px)";
-const navBackground = "#030805";
+const navBackground = "#0d0d0d";
 
 export default function HappyHumanPage() {
   return (
@@ -47,7 +47,7 @@ export default function HappyHumanPage() {
           width: "100vw",
           height: `calc(100dvh - ${navOffset})`,
           border: 0,
-          background: "#101010",
+          background: navBackground,
           zIndex: 1,
         }}
       />

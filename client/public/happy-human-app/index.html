@@ -76,6 +76,10 @@
       min-height: calc(100svh - var(--page-space));
     }
 
+    html.hub-embed :is(.escape-alert, .human-check, .panic-panel, .complaint-panel) {
+      top: 0;
+    }
+
     .shell {
       display: grid;
       grid-template-rows: auto 1fr auto;
