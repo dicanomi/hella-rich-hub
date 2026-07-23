@@ -30,6 +30,7 @@ const OrbPage        = lazy(() => import("./pages/OrbPage"));
 const DeadAirPage    = lazy(() => import("./pages/DeadAirPage"));
 const FourcastPage   = lazy(() => import("./pages/FourcastPage"));
 const RadioPage      = lazy(() => import("./pages/RadioPage"));
+const HappyHumanPage = lazy(() => import("./pages/happy-human/HappyHumanPage"));
 const HumanExePage   = lazy(() => import("./pages/human-exe/HumanExePage"));
 const MarketExePage  = lazy(() => import("./pages/machine-exe/MachinePage"));
 
@@ -86,6 +87,7 @@ function AppRoutes() {
           <Route path="/dead-air" component={DeadAirPage} />
           <Route path="/fourcast" component={FourcastPage} />
           <Route path="/radio" component={RadioPage} />
+          <Route path="/happy-human" component={HappyHumanPage} />
           <Route path="/human-exe" component={HumanExePage} />
           <Route path="/machine-exe" component={MarketExePage} />
           <Route component={NotFound} />

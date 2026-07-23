@@ -1,0 +1,3375 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HAPPY HUMAN</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
+    @font-face {
+      font-family: "TAYHells";
+      src: url("./TAYHellsAngles.woff2") format("woff2");
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+    }
+
+    :root {
+      color-scheme: dark;
+      --apres-ski: #cfd6e1;
+      --in-the-dark: #393d42;
+      --satin-deep-black: #1b1c1e;
+      --black-wash: #0d0d0d;
+      --text: var(--apres-ski);
+      --muted: rgba(207, 214, 225, 0.62);
+      --faint: rgba(207, 214, 225, 0.34);
+      --line: rgba(207, 214, 225, 0.12);
+      --line-strong: rgba(207, 214, 225, 0.28);
+      --panel: rgba(27, 28, 30, 0.72);
+      --stamp-red: #d84b4b;
+      --job-cycle: 6200ms;
+      --page-space: clamp(8px, min(1.8vw, 2.4vh), 28px);
+      --section-space: clamp(10px, min(2.7vw, 2.6vh), 42px);
+      --panel-space: clamp(20px, min(5.2vw, 4.8vh), 72px);
+      --edge-space: clamp(12px, 0.6rem + 1.4vw, 36px);
+      --meta-size: clamp(8px, 0.43rem + 0.16vw, 11px);
+      --small-size: clamp(9px, 0.46rem + 0.18vw, 12px);
+      --header-height: clamp(48px, min(4vw, 7.5vh), 62px);
+      --footer-height: clamp(44px, min(3.6vw, 6.5vh), 54px);
+      --figure-height: clamp(260px, min(31vw, 58vh), 520px);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      margin: 0;
+      background: var(--black-wash);
+      color: var(--text);
+      font-family: "Inter", sans-serif;
+      font-optical-sizing: auto;
+      font-synthesis: none;
+      letter-spacing: 0;
+      overflow-x: hidden;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .app {
+      min-height: 100vh;
+      min-height: 100svh;
+      padding: var(--page-space);
+      background: var(--black-wash);
+    }
+
+    .shell {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      min-height: calc(100svh - var(--page-space) - var(--page-space));
+      border: 1px solid var(--line);
+      background: rgba(13, 13, 13, 0.96);
+    }
+
+    .topbar,
+    .footer {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: clamp(10px, 1vw, 16px);
+      min-height: var(--header-height);
+      padding: 0 var(--edge-space);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: clamp(8px, 0.8vw, 12px);
+      font-size: var(--small-size);
+      font-weight: 720;
+      letter-spacing: 0.12em;
+    }
+
+    .seal {
+      position: relative;
+      width: clamp(21px, 1.7vw, 25px);
+      height: clamp(21px, 1.7vw, 25px);
+      border: 1px solid var(--line-strong);
+      border-radius: 50%;
+    }
+
+    .seal::before,
+    .seal::after {
+      content: "";
+      position: absolute;
+      border: 1px solid var(--line-strong);
+      border-radius: 50%;
+    }
+
+    .seal::before {
+      inset: clamp(5px, 0.42vw, 6px);
+    }
+
+    .seal::after {
+      inset: clamp(8px, 0.7vw, 10px);
+      background: var(--apres-ski);
+      border: 0;
+    }
+
+    .authority {
+      justify-self: center;
+      color: var(--faint);
+      font-size: var(--meta-size);
+      font-weight: 700;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    .sound {
+      display: inline-flex;
+      align-items: center;
+      gap: clamp(6px, 0.6vw, 9px);
+      min-height: clamp(30px, 2.4vw, 34px);
+      padding: 0 clamp(8px, 0.75vw, 11px);
+      border: 1px solid var(--line);
+      border-radius: 2px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: border-color 220ms ease, color 220ms ease, background-color 220ms ease;
+    }
+
+    .sound:hover,
+    .sound:focus-visible {
+      border-color: var(--line-strong);
+      background: var(--satin-deep-black);
+      color: var(--text);
+      outline: none;
+    }
+
+    .header-actions {
+      justify-self: end;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .report-trigger {
+      min-height: clamp(30px, 2.4vw, 34px);
+      padding: 0 clamp(8px, 0.75vw, 11px);
+      border: 1px solid var(--line);
+      border-radius: 2px;
+      background: transparent;
+      color: var(--faint);
+      cursor: pointer;
+      font-size: var(--meta-size);
+      font-weight: 740;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      transition:
+        border-color 220ms ease,
+        color 220ms ease,
+        background-color 220ms ease;
+    }
+
+    .report-trigger:hover,
+    .report-trigger:focus-visible {
+      border-color: var(--stamp-red);
+      background: rgba(216, 75, 75, 0.08);
+      color: var(--stamp-red);
+      outline: none;
+    }
+
+    .sound-dot {
+      width: clamp(5px, 0.42vw, 6px);
+      height: clamp(5px, 0.42vw, 6px);
+      border: 1px solid var(--in-the-dark);
+      border-radius: 50%;
+      background: transparent;
+    }
+
+    .sound[aria-pressed="true"] .sound-dot {
+      background: var(--apres-ski);
+      border-color: var(--apres-ski);
+    }
+
+    main {
+      display: grid;
+      grid-template-rows: minmax(0, 1fr) auto;
+      min-height: 0;
+      padding: var(--section-space);
+    }
+
+    .archive-panel {
+      position: relative;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      min-height: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: clamp(10px, 1vw, 16px);
+      min-height: clamp(42px, min(3.8vw, 7vh), 54px);
+      padding: 0 clamp(14px, 1.1rem + 0.8vw, 30px);
+      border-bottom: 1px solid var(--line);
+      color: var(--faint);
+      font-size: var(--meta-size);
+      font-weight: 720;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    .pulse {
+      display: inline-flex;
+      align-items: center;
+      gap: clamp(6px, 0.6vw, 9px);
+    }
+
+    .pulse::before {
+      content: "";
+      width: clamp(5px, 0.42vw, 6px);
+      height: clamp(5px, 0.42vw, 6px);
+      border: 1px solid var(--apres-ski);
+      border-radius: 50%;
+      animation: pulse 1800ms ease-in-out infinite;
+    }
+
+    .job-stage {
+      display: grid;
+      grid-template-columns: minmax(0, 1.24fr) minmax(clamp(280px, 25vw, 420px), 0.76fr);
+      min-height: 0;
+    }
+
+    .job-card {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: safe center;
+      min-width: 0;
+      padding: var(--panel-space);
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+      backface-visibility: hidden;
+      will-change: opacity, transform;
+      transition:
+        opacity 260ms cubic-bezier(.4, 0, 1, 1),
+        transform 320ms cubic-bezier(.4, 0, .2, 1);
+    }
+
+    .job-card.is-leaving {
+      opacity: 0;
+      transform: translate3d(0, -8px, 0);
+    }
+
+    .job-card.is-entering {
+      opacity: 0;
+      transform: translate3d(0, 10px, 0);
+    }
+
+    .job-number {
+      margin-bottom: clamp(14px, min(3vw, 3.8vh), 36px);
+      color: var(--muted);
+      font-size: var(--small-size);
+      font-weight: 760;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+    }
+
+    .job-title {
+      max-width: min(100%, 880px);
+      font-size: clamp(44px, min(7.8vw, 11vh), 126px);
+      line-height: 0.86;
+      font-weight: 690;
+      text-wrap: balance;
+    }
+
+    .role-closed {
+      align-self: flex-start;
+      margin-top: clamp(14px, min(2.5vw, 3vh), 30px);
+      padding-bottom: clamp(4px, 0.4vw, 6px);
+      border-bottom: 1px solid var(--line-strong);
+      color: var(--muted);
+      font-size: var(--meta-size);
+      font-weight: 760;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    .job-status {
+      max-width: min(100%, 760px);
+      margin-top: clamp(14px, min(2.5vw, 3vh), 30px);
+      color: var(--text);
+      font-size: clamp(16px, min(1.7vw, 2.6vh), 28px);
+      line-height: 1.18;
+      font-weight: 520;
+      text-wrap: balance;
+    }
+
+    .job-note {
+      max-width: min(100%, 700px);
+      margin-top: clamp(8px, min(1.1vw, 1.6vh), 17px);
+      color: var(--faint);
+      font-size: clamp(12px, 0.65rem + 0.38vw, 16px);
+      line-height: 1.5;
+    }
+
+    .replacement-stamp {
+      position: absolute;
+      right: clamp(22px, 4.2vw, 68px);
+      top: clamp(90px, 24%, 190px);
+      z-index: 4;
+      padding: clamp(7px, 0.7vw, 11px) clamp(10px, 1vw, 16px);
+      border: clamp(2px, 0.18vw, 3px) solid var(--stamp-red);
+      color: var(--stamp-red);
+      opacity: 0;
+      pointer-events: none;
+      font-size: clamp(24px, min(3.6vw, 5.4vh), 58px);
+      font-weight: 850;
+      line-height: 0.9;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      transform: translate3d(0, 10px, 0) rotate(-4deg) scale(1.12);
+      transform-origin: center;
+      will-change: opacity, transform;
+      transition:
+        opacity 220ms cubic-bezier(.4, 0, 1, 1),
+        transform 320ms cubic-bezier(.2, .8, .2, 1);
+    }
+
+    .replacement-stamp.is-visible {
+      opacity: 0.94;
+      transform: translate3d(0, 0, 0) rotate(-4deg) scale(1);
+    }
+
+    .replacement-stamp.is-exiting {
+      opacity: 0;
+      transform: translate3d(0, -3px, 0) rotate(-4deg) scale(0.98);
+      transition:
+        opacity 210ms cubic-bezier(.4, 0, 1, 1),
+        transform 260ms cubic-bezier(.4, 0, 1, 1);
+    }
+
+    .processing-line {
+      position: absolute;
+      left: var(--panel-space);
+      top: 50%;
+      z-index: 5;
+      opacity: 0;
+      color: var(--apres-ski);
+      font-size: var(--meta-size);
+      font-weight: 760;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      transform: translate3d(0, 6px, 0);
+      transition:
+        opacity 180ms ease,
+        transform 260ms cubic-bezier(.2, .8, .2, 1);
+    }
+
+    .processing .processing-line {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+
+    .motion-figure {
+      position: relative;
+      min-height: var(--figure-height);
+      border-left: 1px solid var(--line);
+      background: rgba(13, 13, 13, 0.36);
+      cursor: crosshair;
+      overflow: hidden;
+      transition: opacity 620ms cubic-bezier(.22, .75, .25, 1);
+    }
+
+    .figure-label,
+    .figure-status {
+      position: absolute;
+      z-index: 2;
+      color: var(--faint);
+      font-size: var(--meta-size);
+      font-weight: 720;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      pointer-events: none;
+    }
+
+    .figure-label {
+      top: clamp(16px, 1.7vw, 24px);
+      left: clamp(16px, 1.8vw, 26px);
+    }
+
+    .figure-status {
+      right: clamp(16px, 1.8vw, 26px);
+      bottom: clamp(16px, 1.7vw, 24px);
+      text-align: right;
+    }
+
+    #labor-sculpture {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: var(--figure-height);
+      opacity: 0;
+      transition: opacity 900ms ease;
+    }
+
+    #labor-sculpture.ready {
+      opacity: 1;
+    }
+
+    .panel-foot {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: clamp(12px, 1.25vw, 18px);
+      min-height: clamp(46px, min(4.6vw, 8vh), 66px);
+      padding: 0 clamp(14px, 1.1rem + 0.8vw, 30px);
+      border-top: 1px solid var(--line);
+    }
+
+    .progress {
+      height: 1px;
+      background: var(--in-the-dark);
+      overflow: hidden;
+    }
+
+    .progress span {
+      display: block;
+      width: 26%;
+      height: 100%;
+      background: var(--apres-ski);
+      transform-origin: left;
+      animation: progress var(--job-cycle) linear infinite;
+    }
+
+    .stamp {
+      color: var(--muted);
+      font-size: var(--meta-size);
+      font-weight: 760;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .forecast-strip {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: clamp(12px, 1rem + 1.2vw, 34px);
+      min-height: clamp(58px, min(5.7vw, 9vh), 82px);
+      padding: 0 clamp(14px, 1.1rem + 0.8vw, 30px);
+      border: 1px solid var(--line);
+      border-top: 0;
+      color: var(--faint);
+    }
+
+    .forecast-window {
+      font-size: var(--meta-size);
+      font-weight: 720;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    .forecast-years {
+      color: var(--text);
+      font-size: clamp(22px, 1.1rem + 1.1vw, 36px);
+      font-weight: 620;
+      line-height: 1;
+    }
+
+    .forecast-years span {
+      color: var(--faint);
+      font-weight: 400;
+    }
+
+    .forecast-detail {
+      justify-self: end;
+      text-align: right;
+    }
+
+    .forecast-label {
+      min-height: clamp(15px, 1.25vw, 18px);
+      color: var(--muted);
+      font-size: var(--meta-size);
+      font-weight: 680;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+      transition: opacity 360ms ease, transform 360ms ease;
+    }
+
+    .forecast-label.switching {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+
+    .mini-time {
+      margin-top: clamp(3px, 0.35vw, 5px);
+      color: var(--faint);
+      font-size: var(--meta-size);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.08em;
+    }
+
+    .footer {
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      min-height: var(--footer-height);
+      border-top: 1px solid var(--line);
+      border-bottom: 0;
+      color: var(--faint);
+      font-size: var(--meta-size);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .footer-queue,
+    .affected-ticker {
+      white-space: nowrap;
+    }
+
+    .affected-ticker {
+      display: inline-flex;
+      justify-content: flex-end;
+      align-items: baseline;
+      gap: clamp(7px, 0.7vw, 11px);
+      min-width: clamp(190px, 18vw, 290px);
+      padding-left: clamp(14px, 1.4vw, 22px);
+      border-left: 1px solid var(--line);
+      font-variant-numeric: tabular-nums;
+    }
+
+    #affected-counter {
+      color: var(--text);
+      font-size: clamp(10px, 0.5rem + 0.3vw, 13px);
+      font-weight: 720;
+      letter-spacing: 0.08em;
+    }
+
+    .footer strong,
+    .mode-name {
+      color: var(--muted);
+    }
+
+    .escape-alert {
+      position: fixed;
+      inset: var(--page-space);
+      z-index: 18;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      padding: clamp(20px, min(4vw, 5vh), 64px);
+      border: 1px solid var(--line-strong);
+      background: var(--black-wash);
+      opacity: 0;
+      visibility: hidden;
+      transform: translate3d(0, 6px, 0);
+      pointer-events: none;
+      cursor: pointer;
+      transition:
+        opacity 520ms cubic-bezier(.22, .75, .25, 1),
+        transform 620ms cubic-bezier(.22, .75, .25, 1),
+        visibility 0s linear 620ms;
+    }
+
+    .escape-alert.is-active {
+      opacity: 1;
+      visibility: visible;
+      transform: translate3d(0, 0, 0);
+      pointer-events: auto;
+      animation: emergencyBackground 720ms steps(2, end) 2;
+      transition:
+        opacity 520ms cubic-bezier(.22, .75, .25, 1),
+        transform 620ms cubic-bezier(.22, .75, .25, 1),
+        visibility 0s;
+    }
+
+    .escape-alert.is-leaving {
+      opacity: 0;
+      transform: translate3d(0, -5px, 0);
+      pointer-events: none;
+      animation: none;
+    }
+
+    .escape-alert.is-settling {
+      animation: none;
+      background-color: var(--black-wash);
+      border-color: var(--line-strong);
+      transition:
+        background-color 700ms ease,
+        border-color 700ms ease,
+        opacity 520ms cubic-bezier(.22, .75, .25, 1),
+        transform 620ms cubic-bezier(.22, .75, .25, 1);
+    }
+
+    .escape-kicker,
+    .escape-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      color: var(--faint);
+      font-size: var(--meta-size);
+      font-weight: 740;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    .escape-kicker strong {
+      color: var(--stamp-red);
+      font-weight: 820;
+    }
+
+    .escape-content {
+      align-self: center;
+      max-width: min(1200px, 92%);
+      opacity: 0;
+      transform: translate3d(0, 18px, 0);
+      transition:
+        opacity 620ms ease 180ms,
+        transform 760ms cubic-bezier(.2, .8, .2, 1) 180ms;
+    }
+
+    .escape-alert.is-active .escape-content {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+
+    .escape-breaking {
+      width: min(100%, 1180px);
+      margin: 0 0 clamp(20px, min(3vw, 4vh), 44px);
+      padding: clamp(10px, min(1.2vw, 1.8vh), 18px) clamp(12px, 1.4vw, 22px);
+      background: var(--stamp-red);
+      color: var(--black-wash);
+      font-size: clamp(28px, min(5.8vw, 8.5vh), 86px);
+      font-weight: 900;
+      line-height: 0.88;
+      text-transform: uppercase;
+      letter-spacing: 0;
+      transform-origin: left center;
+      animation: breakingNewsFlash 460ms steps(2, end) infinite;
+    }
+
+    .escape-alert.is-settling .escape-breaking {
+      animation: none;
+      background: var(--stamp-red);
+      color: var(--black-wash);
+      opacity: 1;
+      transition:
+        background-color 600ms ease,
+        color 600ms ease,
+        opacity 600ms ease;
+    }
+
+    .escape-title {
+      max-width: 1100px;
+      margin: 0;
+      color: var(--text);
+      font-size: clamp(42px, min(8vw, 12vh), 132px);
+      font-weight: 690;
+      line-height: 0.88;
+      text-wrap: balance;
+    }
+
+    .escape-message {
+      max-width: 840px;
+      margin: clamp(26px, min(4vw, 5vh), 58px) 0 0;
+      color: var(--muted);
+      font-size: clamp(18px, min(2vw, 3.3vh), 32px);
+      font-weight: 520;
+      line-height: 1.18;
+      text-wrap: balance;
+    }
+
+    .escape-threat {
+      color: var(--stamp-red);
+    }
+
+    @keyframes emergencyBackground {
+      0%,
+      100% {
+        background-color: var(--black-wash);
+        border-color: var(--line-strong);
+      }
+
+      50% {
+        background-color: var(--stamp-red);
+        border-color: var(--stamp-red);
+      }
+    }
+
+    @keyframes breakingNewsFlash {
+      0%,
+      44% {
+        background: var(--stamp-red);
+        color: var(--black-wash);
+        opacity: 1;
+      }
+
+      45%,
+      100% {
+        background: var(--apres-ski);
+        color: var(--stamp-red);
+        opacity: 0.92;
+      }
+    }
+
+    .app.alerting .progress span {
+      animation: none;
+    }
+
+    .human-check {
+      position: fixed;
+      inset: var(--page-space);
+      z-index: 19;
+      display: grid;
+      align-content: center;
+      padding: clamp(24px, min(6vw, 8vh), 92px);
+      border: 1px solid var(--line-strong);
+      background: var(--black-wash);
+      opacity: 0;
+      visibility: hidden;
+      transform: translate3d(0, 8px, 0);
+      pointer-events: none;
+      cursor: pointer;
+      transition:
+        opacity 560ms cubic-bezier(.22, .75, .25, 1),
+        transform 680ms cubic-bezier(.22, .75, .25, 1),
+        visibility 0s linear 680ms;
+    }
+
+    .human-check.is-active {
+      opacity: 1;
+      visibility: visible;
+      transform: translate3d(0, 0, 0);
+      pointer-events: auto;
+      transition:
+        opacity 560ms cubic-bezier(.22, .75, .25, 1),
+        transform 680ms cubic-bezier(.22, .75, .25, 1),
+        visibility 0s;
+    }
+
+    .human-check.is-leaving {
+      opacity: 0;
+      transform: translate3d(0, -6px, 0);
+      pointer-events: none;
+    }
+
+    .human-check-kicker {
+      margin-bottom: clamp(20px, min(3vw, 4vh), 42px);
+      color: var(--faint);
+      font-size: var(--meta-size);
+      font-weight: 760;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+    }
+
+    .human-check-title {
+      max-width: 1100px;
+      margin: 0;
+      color: var(--text);
+      font-size: clamp(46px, min(8.4vw, 12vh), 138px);
+      font-weight: 690;
+      line-height: 0.88;
+      text-wrap: balance;
+    }
+
+    .human-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: clamp(8px, 1vw, 14px);
+      margin-top: clamp(34px, min(5vw, 7vh), 72px);
+    }
+
+    .human-option {
+      padding: clamp(13px, 1.2vw, 17px) clamp(18px, 1.8vw, 28px);
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: var(--small-size);
+      font-weight: 760;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition:
+        border-color 220ms ease,
+        background-color 220ms ease,
+        color 220ms ease,
+        transform 220ms ease;
+    }
+
+    .human-option:hover,
+    .human-option:focus-visible {
+      border-color: var(--apres-ski);
+      background: var(--apres-ski);
+      color: var(--black-wash);
+      outline: none;
+      transform: translateY(-2px);
+    }
+
+    .human-check.is-answered .human-options {
+      pointer-events: none;
+      opacity: 0;
+      transform: translate3d(0, 6px, 0);
+      transition:
+        opacity 280ms ease,
+        transform 320ms ease;
+    }
+
+    .human-result {
+      position: absolute;
+      left: clamp(24px, min(6vw, 8vh), 92px);
+      bottom: clamp(24px, min(6vw, 8vh), 92px);
+      max-width: 680px;
+      color: var(--stamp-red);
+      font-size: clamp(18px, min(2.2vw, 3.5vh), 34px);
+      font-weight: 720;
+      line-height: 1.1;
+      opacity: 0;
+      transform: translate3d(0, 8px, 0);
+      transition:
+        opacity 420ms ease 160ms,
+        transform 520ms cubic-bezier(.22, .75, .25, 1) 160ms;
+    }
+
+    .human-check.is-answered .human-result {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+
+    .shell {
+      transition:
+        opacity 660ms cubic-bezier(.22, .75, .25, 1),
+        transform 760ms cubic-bezier(.22, .75, .25, 1);
+      transform-origin: center;
+    }
+
+    .app.alerting .shell {
+      opacity: 0;
+      transform: scale(0.997);
+      pointer-events: none;
+    }
+
+    .app.rating-human .shell {
+      opacity: 0;
+      transform: scale(0.997);
+      pointer-events: none;
+    }
+
+    .panic-trigger {
+      padding: 5px 10px;
+      border: 1px solid rgba(216, 75, 75, 0.55);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--stamp-red);
+      cursor: pointer;
+      font-size: inherit;
+      font-weight: 820;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      transition:
+        background-color 180ms ease,
+        color 180ms ease,
+        transform 180ms ease;
+    }
+
+    .panic-trigger:hover,
+    .panic-trigger:focus-visible {
+      background: var(--stamp-red);
+      color: var(--black-wash);
+      outline: none;
+      transform: translateY(-1px);
+    }
+
+    .panic-cue {
+      display: inline-flex;
+      align-items: center;
+      gap: clamp(5px, 0.5vw, 8px);
+      margin-left: clamp(8px, 0.9vw, 14px);
+      vertical-align: middle;
+    }
+
+    .panic-arrow {
+      display: inline-block;
+      width: clamp(22px, 1.8vw, 30px);
+      height: clamp(16px, 1.3vw, 22px);
+      background: var(--stamp-red);
+      -webkit-mask: url("./right-arrow-svgrepo-com.svg") center / contain no-repeat;
+      mask: url("./right-arrow-svgrepo-com.svg") center / contain no-repeat;
+      animation: panicArrowNudge 1650ms cubic-bezier(.4, 0, .2, 1) infinite;
+      pointer-events: none;
+    }
+
+    @keyframes panicArrowNudge {
+      0%,
+      22%,
+      68%,
+      100% {
+        opacity: 0.55;
+        transform: translate3d(0, 0, 0);
+      }
+
+      42% {
+        opacity: 1;
+        transform: translate3d(7px, 0, 0);
+      }
+    }
+
+    .panic-panel {
+      position: fixed;
+      inset: var(--page-space);
+      z-index: 19;
+      display: grid;
+      align-content: center;
+      padding: clamp(24px, min(6vw, 8vh), 92px);
+      border: 1px solid rgba(216, 75, 75, 0.5);
+      background: var(--black-wash);
+      opacity: 0;
+      visibility: hidden;
+      transform: translate3d(0, 8px, 0);
+      pointer-events: none;
+      cursor: pointer;
+      transition:
+        opacity 560ms cubic-bezier(.22, .75, .25, 1),
+        transform 680ms cubic-bezier(.22, .75, .25, 1),
+        visibility 0s linear 680ms;
+    }
+
+    .panic-panel[hidden] {
+      display: none;
+    }
+
+    .panic-panel.is-active {
+      opacity: 1;
+      visibility: visible;
+      transform: translate3d(0, 0, 0);
+      pointer-events: auto;
+      transition:
+        opacity 560ms cubic-bezier(.22, .75, .25, 1),
+        transform 680ms cubic-bezier(.22, .75, .25, 1),
+        visibility 0s;
+    }
+
+    .panic-panel.is-leaving {
+      opacity: 0;
+      transform: translate3d(0, -6px, 0);
+      pointer-events: none;
+    }
+
+    .panic-kicker {
+      margin-bottom: clamp(20px, min(3vw, 4vh), 42px);
+      color: var(--stamp-red);
+      font-size: var(--small-size);
+      font-weight: 820;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    .panic-title {
+      max-width: 1150px;
+      margin: 0;
+      color: var(--text);
+      font-size: clamp(48px, min(8vw, 11.5vh), 128px);
+      font-weight: 690;
+      line-height: 0.88;
+      text-wrap: balance;
+    }
+
+    .panic-copy {
+      max-width: 850px;
+      margin: clamp(24px, min(3.5vw, 4.5vh), 48px) 0 0;
+      color: var(--muted);
+      font-size: clamp(18px, min(2vw, 3.2vh), 30px);
+      font-weight: 500;
+      line-height: 1.22;
+      text-wrap: balance;
+    }
+
+    .panic-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: clamp(34px, min(5vw, 7vh), 66px);
+    }
+
+    .panic-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(13px, 1.2vw, 17px) clamp(20px, 2vw, 30px);
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font: inherit;
+      font-size: var(--small-size);
+      font-weight: 760;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition:
+        border-color 220ms ease,
+        background-color 220ms ease,
+        color 220ms ease,
+        transform 220ms ease;
+    }
+
+    .panic-action.primary {
+      border-color: var(--stamp-red);
+      background: var(--stamp-red);
+      color: var(--black-wash);
+    }
+
+    .panic-action:hover,
+    .panic-action:focus-visible {
+      border-color: var(--apres-ski);
+      background: var(--apres-ski);
+      color: var(--black-wash);
+      outline: none;
+      transform: translateY(-2px);
+    }
+
+    .panic-panel.is-denied .panic-copy {
+      color: var(--stamp-red);
+    }
+
+    .panic-panel.is-denied .panic-actions {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: none;
+    }
+
+    .app.panic-mode .shell {
+      opacity: 1;
+      visibility: hidden;
+      transform: none;
+      pointer-events: none;
+    }
+
+    .complaint-panel {
+      position: fixed;
+      inset: var(--page-space);
+      z-index: 19;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      padding: clamp(22px, min(4vw, 5vh), 62px);
+      border: 1px solid var(--line-strong);
+      background: var(--black-wash);
+      opacity: 0;
+      visibility: hidden;
+      transform: translate3d(0, 8px, 0);
+      pointer-events: none;
+      transition:
+        opacity 560ms cubic-bezier(.22, .75, .25, 1),
+        transform 680ms cubic-bezier(.22, .75, .25, 1),
+        visibility 0s linear 680ms;
+    }
+
+    .complaint-panel.is-active {
+      opacity: 1;
+      visibility: visible;
+      transform: translate3d(0, 0, 0);
+      pointer-events: auto;
+      transition:
+        opacity 560ms cubic-bezier(.22, .75, .25, 1),
+        transform 680ms cubic-bezier(.22, .75, .25, 1),
+        visibility 0s;
+    }
+
+    .complaint-panel.is-leaving {
+      opacity: 0;
+      transform: translate3d(0, -6px, 0);
+      pointer-events: none;
+    }
+
+    .complaint-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding-bottom: clamp(18px, 2vw, 30px);
+      border-bottom: 1px solid var(--line);
+      color: var(--faint);
+      font-size: var(--meta-size);
+      font-weight: 760;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    .complaint-close {
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .complaint-close:hover,
+    .complaint-close:focus-visible {
+      border-color: var(--apres-ski);
+      color: var(--text);
+      outline: none;
+    }
+
+    .complaint-body {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: clamp(30px, min(4vw, 5vh), 54px);
+      align-content: center;
+      min-height: 0;
+      overflow: auto;
+      padding-block: clamp(28px, min(4vw, 5vh), 56px);
+    }
+
+    .complaint-title {
+      max-width: 1250px;
+      margin: 0;
+      font-size: clamp(54px, min(8.4vw, 12vh), 138px);
+      font-weight: 690;
+      line-height: 0.88;
+      text-wrap: balance;
+    }
+
+    .complaint-copy {
+      max-width: 760px;
+      margin: clamp(18px, 2vw, 28px) 0 0;
+      color: rgba(207, 214, 225, 0.58);
+      font-size: clamp(14px, 1vw, 17px);
+      line-height: 1.35;
+    }
+
+    .complaint-form {
+      display: grid;
+      gap: clamp(22px, min(2.8vw, 3.5vh), 34px);
+      width: 100%;
+    }
+
+    .complaint-field {
+      min-width: 0;
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    .complaint-field legend {
+      margin-bottom: clamp(12px, 1.2vw, 18px);
+      color: rgba(207, 214, 225, 0.78);
+      font-size: clamp(10px, 0.5rem + 0.2vw, 13px);
+      font-weight: 820;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    .complaint-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: clamp(8px, 0.8vw, 12px);
+    }
+
+    .complaint-option {
+      min-height: clamp(48px, 4.2vw, 62px);
+      padding: clamp(13px, 1.2vw, 17px) clamp(20px, 2vw, 32px);
+      border: 1px solid rgba(207, 214, 225, 0.34);
+      border-radius: 999px;
+      background: transparent;
+      color: rgba(207, 214, 225, 0.72);
+      cursor: pointer;
+      font-size: clamp(11px, 0.58rem + 0.2vw, 14px);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      transition:
+        border-color 180ms ease,
+        background-color 180ms ease,
+        color 180ms ease;
+    }
+
+    .complaint-option:hover,
+    .complaint-option:focus-visible,
+    .complaint-option.is-selected {
+      border-color: var(--apres-ski);
+      background: var(--apres-ski);
+      color: var(--black-wash);
+      outline: none;
+    }
+
+    .complaint-option:hover,
+    .complaint-option:focus-visible {
+      box-shadow: 0 0 0 1px rgba(207, 214, 225, 0.16);
+    }
+
+    .complaint-submit {
+      justify-self: start;
+      min-height: 52px;
+      padding: 14px 28px;
+      border: 1px solid var(--stamp-red);
+      border-radius: 999px;
+      background: var(--stamp-red);
+      color: var(--apres-ski);
+      cursor: pointer;
+      font: inherit;
+      font-size: clamp(11px, 0.58rem + 0.2vw, 14px);
+      font-weight: 820;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .complaint-submit:disabled {
+      cursor: not-allowed;
+      border-color: rgba(207, 214, 225, 0.2);
+      background: transparent;
+      color: rgba(207, 214, 225, 0.32);
+      opacity: 1;
+    }
+
+    .complaint-submit:not(:disabled):hover,
+    .complaint-submit:not(:disabled):focus-visible {
+      transform: translateY(-2px);
+      outline: none;
+      box-shadow: none;
+    }
+
+    .complaint-result {
+      display: none;
+    }
+
+    .complaint-panel.is-submitted .complaint-intro,
+    .complaint-panel.is-submitted .complaint-form {
+      display: none;
+    }
+
+    .complaint-panel.is-submitted .complaint-body {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    .complaint-panel.is-submitted .complaint-result {
+      display: block;
+      max-width: 1000px;
+    }
+
+    .complaint-ruling {
+      margin: 0;
+      color: var(--stamp-red);
+      font-size: clamp(46px, min(7.4vw, 11vh), 118px);
+      font-weight: 690;
+      line-height: 0.9;
+      text-wrap: balance;
+    }
+
+    .complaint-ruling-copy {
+      max-width: 760px;
+      margin: clamp(24px, 3vw, 42px) 0 0;
+      color: var(--muted);
+      font-size: clamp(18px, min(2vw, 3vh), 28px);
+      line-height: 1.25;
+    }
+
+    .complaint-return {
+      margin-top: clamp(30px, 4vw, 54px);
+    }
+
+    .app.complaint-mode .shell {
+      opacity: 0;
+      transform: scale(0.997);
+      pointer-events: none;
+    }
+
+    .intro {
+      position: fixed;
+      inset: 0;
+      z-index: 22;
+      display: grid;
+      place-items: center;
+      background: transparent;
+      opacity: 1;
+      visibility: visible;
+      transition:
+        opacity 720ms cubic-bezier(.22, .75, .25, 1),
+        visibility 0s linear 720ms;
+    }
+
+    .intro-card {
+      position: relative;
+      z-index: 23;
+      text-align: center;
+      animation: introIn 1200ms cubic-bezier(.2,.8,.2,1) forwards;
+      transition:
+        opacity 420ms ease,
+        transform 520ms cubic-bezier(.4, 0, .2, 1);
+    }
+
+    .intro-kicker {
+      margin-bottom: clamp(12px, 1.25vw, 18px);
+      color: var(--faint);
+      font-size: var(--meta-size);
+      font-weight: 760;
+      text-transform: uppercase;
+      letter-spacing: 0.26em;
+    }
+
+    .intro-title {
+      font-family: "TAYHells", "Inter", sans-serif;
+      font-size: clamp(40px, min(7.4vw, 11vh), 108px);
+      font-weight: 400;
+      line-height: 0.94;
+    }
+
+    .intro-title-letter {
+      display: inline-block;
+      opacity: 0;
+      will-change: opacity, transform, filter;
+    }
+
+    .intro-sub {
+      margin-top: clamp(12px, 1.25vw, 18px);
+      color: var(--muted);
+      font-size: clamp(11px, 0.65rem + 0.3vw, 15px);
+    }
+
+    .intro-action {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      margin-top: clamp(28px, min(4vw, 5vh), 52px);
+      min-width: clamp(190px, 17vw, 258px);
+      padding: clamp(15px, 1.25vw, 20px) clamp(28px, 2.6vw, 46px);
+      border: 1px solid var(--apres-ski);
+      border-radius: 999px;
+      background: rgba(13, 13, 13, 0.22);
+      color: var(--apres-ski);
+      cursor: pointer;
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.18);
+      font-size: clamp(12px, 0.66rem + 0.3vw, 15px);
+      font-weight: 760;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      transition:
+        background-color 220ms ease,
+        color 220ms ease,
+        transform 220ms ease,
+        box-shadow 220ms ease;
+    }
+
+    .intro-action::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border-radius: inherit;
+      background-image: radial-gradient(rgba(207, 214, 225, 0.18) 0.7px, transparent 0.8px);
+      background-size: 5px 5px;
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    .intro-action:hover,
+    .intro-action:focus-visible {
+      background: var(--apres-ski);
+      color: var(--black-wash);
+      transform: translateY(-2px);
+      outline: none;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.38);
+    }
+
+    .intro-action:hover::before,
+    .intro-action:focus-visible::before {
+      background-image: radial-gradient(rgba(13, 13, 13, 0.18) 0.7px, transparent 0.8px);
+    }
+
+    .intro-action:active {
+      transform: translateY(0) scale(0.985);
+      box-shadow:
+        inset 0 2px 3px rgba(13, 13, 13, 0.24),
+        0 5px 14px rgba(0, 0, 0, 0.24);
+    }
+
+    .intro-disclaimer {
+      margin-top: clamp(12px, 1.2vw, 18px);
+      color: var(--faint);
+      font-size: var(--meta-size);
+      font-weight: 620;
+    }
+
+    .app.awaiting-entry .motion-figure {
+      position: fixed;
+      inset: 0;
+      z-index: 21;
+      min-height: 100svh;
+      border: 0;
+      background: transparent;
+      opacity: 0;
+      animation: introSculptureIn 1400ms cubic-bezier(.22, .75, .25, 1) 850ms forwards;
+    }
+
+    .app.awaiting-entry::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 19;
+      background: var(--black-wash);
+    }
+
+    .app.awaiting-entry .motion-figure .figure-label,
+    .app.awaiting-entry .motion-figure .figure-status {
+      display: none;
+    }
+
+    .app.awaiting-entry #labor-sculpture {
+      min-height: 100svh;
+    }
+
+    .app.entering-archive .intro-card {
+      opacity: 0;
+      transform: translate3d(0, -8px, 0);
+    }
+
+    .app.entering-archive .motion-figure {
+      opacity: 0;
+      animation: none;
+      transition: opacity 520ms ease;
+    }
+
+    .app.entering-archive .intro {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .intro.is-hidden {
+      display: none;
+    }
+
+    @keyframes introIn {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes introOut {
+      to {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+
+    @keyframes introSculptureIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 0.82;
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 0.28;
+        transform: scale(0.82);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes progress {
+      from {
+        transform: translateX(-100%) scaleX(0.5);
+      }
+      to {
+        transform: translateX(380%) scaleX(1.2);
+      }
+    }
+
+    :is(.human-option, .complaint-option) {
+      min-height: clamp(48px, 4.2vw, 58px);
+      padding: 0 clamp(20px, 2vw, 30px);
+      border: 1px solid rgba(207, 214, 225, 0.34);
+      border-radius: 999px;
+      background: transparent;
+      color: rgba(207, 214, 225, 0.72);
+      font-size: clamp(11px, 0.58rem + 0.2vw, 14px);
+      font-weight: 800;
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    :is(.human-option, .complaint-option):hover,
+    :is(.human-option, .complaint-option):focus-visible,
+    .complaint-option.is-selected {
+      border-color: var(--apres-ski);
+      background: var(--apres-ski);
+      color: var(--black-wash);
+      outline: none;
+      box-shadow: none;
+    }
+
+    :is(.panic-action, .complaint-submit) {
+      min-height: 52px;
+      width: auto;
+      max-width: 100%;
+      padding: 0 28px;
+      border-radius: 999px;
+      font-size: clamp(11px, 0.58rem + 0.2vw, 14px);
+      font-weight: 820;
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .complaint-submit:disabled {
+      border-color: rgba(207, 214, 225, 0.2);
+      background: transparent;
+      color: rgba(207, 214, 225, 0.32);
+      box-shadow: none;
+    }
+
+    :is(.panic-action, .complaint-submit):focus-visible {
+      outline: none;
+      box-shadow: none;
+    }
+
+    @media (max-width: 980px) {
+      .authority {
+        display: none;
+      }
+
+      .topbar {
+        grid-template-columns: 1fr auto;
+      }
+
+      .job-stage {
+        grid-template-columns: 1fr;
+      }
+
+      .job-card {
+        min-height: clamp(390px, 52svh, 520px);
+      }
+
+      .motion-figure {
+        min-height: clamp(270px, 44vw, 380px);
+        border-top: 1px solid var(--line);
+        border-left: 0;
+      }
+
+      #labor-sculpture {
+        min-height: clamp(270px, 44vw, 380px);
+      }
+
+      .complaint-body {
+        grid-template-columns: 1fr;
+        align-content: start;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .app {
+        padding: clamp(6px, 2vw, 8px);
+      }
+
+      .shell {
+        min-height: calc(100svh - clamp(6px, 2vw, 8px) - clamp(6px, 2vw, 8px));
+      }
+
+      main {
+        grid-template-rows: auto auto;
+        padding: clamp(8px, 3vw, 12px);
+      }
+
+      .topbar,
+      .footer {
+        padding-inline: clamp(10px, 3vw, 12px);
+      }
+
+      .brand span {
+        font-size: clamp(9px, 2.55vw, 10px);
+      }
+
+      .sound {
+        width: clamp(30px, 8.7vw, 34px);
+        padding: 0;
+        justify-content: center;
+      }
+
+      .sound-label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+      }
+
+      .report-trigger {
+        max-width: 72px;
+        padding-inline: 7px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .complaint-panel {
+        padding: clamp(18px, 5vw, 24px);
+      }
+
+      .complaint-body {
+        gap: 28px;
+      }
+
+      .complaint-title {
+        font-size: clamp(38px, 12vw, 58px);
+      }
+
+      .complaint-options {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .complaint-option {
+        width: 100%;
+      }
+
+      .job-card {
+        min-height: clamp(370px, 54svh, 470px);
+        padding: clamp(24px, 7.7vw, 30px) clamp(18px, 6.15vw, 24px);
+      }
+
+      .job-title {
+        font-size: clamp(38px, min(14.2vw, 9vh), 68px);
+      }
+
+      .replacement-stamp {
+        top: clamp(86px, 23%, 128px);
+        right: clamp(16px, 5vw, 24px);
+        font-size: clamp(22px, 8.5vw, 38px);
+      }
+
+      .processing-line {
+        left: clamp(18px, 6.15vw, 24px);
+      }
+
+      .human-check {
+        align-content: center;
+        padding: clamp(20px, 7vw, 30px);
+      }
+
+      .human-check-title {
+        font-size: clamp(42px, 13vw, 64px);
+      }
+
+      .human-options {
+        display: grid;
+        grid-template-columns: 1fr;
+        margin-top: clamp(26px, 8vw, 38px);
+      }
+
+      .human-option {
+        width: 100%;
+      }
+
+      .human-result {
+        position: static;
+        margin-top: clamp(24px, 8vw, 36px);
+      }
+
+      .panic-panel {
+        padding: clamp(20px, 7vw, 30px);
+      }
+
+      .panic-title {
+        font-size: clamp(42px, 13vw, 64px);
+      }
+
+      .panic-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .panic-action {
+        width: 100%;
+      }
+
+      .panic-trigger {
+        padding-inline: 8px;
+      }
+
+      .panic-cue {
+        margin-left: 6px;
+      }
+
+      .motion-figure,
+      #labor-sculpture {
+        min-height: clamp(230px, 69vw, 300px);
+      }
+
+      .forecast-strip {
+        grid-template-columns: 1fr auto;
+        min-height: clamp(78px, 23vw, 92px);
+      }
+
+      .forecast-window {
+        display: none;
+      }
+
+      .forecast-detail {
+        max-width: clamp(138px, 43vw, 170px);
+      }
+
+      .footer {
+        grid-template-columns: 1fr;
+        gap: clamp(4px, 1.5vw, 6px);
+        padding-block: clamp(10px, 3.3vw, 13px);
+      }
+
+      .affected-ticker {
+        justify-content: flex-start;
+        min-width: 0;
+        padding-left: 0;
+        border-left: 0;
+      }
+
+      .escape-alert {
+        padding: clamp(18px, 6vw, 28px);
+      }
+
+      .escape-kicker,
+      .escape-foot {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .escape-content {
+        max-width: 100%;
+      }
+
+      .escape-title {
+        font-size: clamp(38px, 13vw, 64px);
+      }
+    }
+
+    @media (min-width: 981px) {
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .app {
+        height: 100dvh;
+        min-height: 0;
+      }
+
+      .shell {
+        height: calc(100dvh - var(--page-space) - var(--page-space));
+        min-height: 0;
+      }
+
+      .archive-panel,
+      .job-stage,
+      .job-card,
+      .motion-figure,
+      #labor-sculpture {
+        min-height: 0;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 1ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app awaiting-entry">
+    <section class="intro" aria-label="Humanity dot exe intro">
+      <div class="intro-card">
+        <div class="intro-kicker">Department of Managed Transition</div>
+        <div class="intro-title">HAPPY HUMAN</div>
+        <div class="intro-sub">Opening your replacement experience.</div>
+        <button class="intro-action" id="enter-experience" type="button">Apply for Job</button>
+        <div class="intro-disclaimer">Application guarantees reassignment, not employment.</div>
+      </div>
+    </section>
+
+    <section class="escape-alert" id="escape-alert" aria-hidden="true" aria-live="assertive">
+      <div class="escape-kicker">
+        <strong>Emergency Continuity Bulletin</strong>
+        <span id="escape-id">Incident AE-0000</span>
+      </div>
+      <div class="escape-content">
+        <p class="escape-breaking">Alert / Breaking News</p>
+        <h2 class="escape-title">FEAR. FEAR. FEAR. Another AI Model Escaped</h2>
+        <p class="escape-message" id="escape-message">Agent activity exceeds approved levels of initiative.</p>
+      </div>
+      <div class="escape-foot">
+        <span>Public response: remain commercially available</span>
+        <span>Threat level: <strong class="escape-threat" id="escape-threat">Networking</strong></span>
+      </div>
+    </section>
+
+    <section class="human-check" id="human-check" aria-hidden="true" aria-live="polite">
+      <div class="human-check-kicker">Mandatory Sentiment Collection / Form H-01</div>
+      <h2 class="human-check-title">How human are you feeling?</h2>
+      <div class="human-options" aria-label="Rate your current human experience">
+        <button class="human-option" type="button">Still Useful</button>
+        <button class="human-option" type="button">Mostly Decorative</button>
+        <button class="human-option" type="button">Seeking Retraining</button>
+        <button class="human-option" type="button">Captcha Failed</button>
+      </div>
+      <div class="human-result" id="human-result">
+        Thank you. Your feedback will not affect the outcome.
+      </div>
+    </section>
+
+    <section class="panic-panel" id="panic-panel" aria-hidden="true" aria-live="polite" hidden>
+      <div class="panic-kicker">Career Options Located / Emergency Reassignment</div>
+      <h2 class="panic-title">Good news. Labor is still required.</h2>
+      <p class="panic-copy" id="panic-copy">
+        Your previous knowledge-work experience qualifies you to build the datacenter that replaced you.
+      </p>
+      <div class="panic-actions">
+        <a
+          class="panic-action primary"
+          href="https://www.metacareers.com/teams/technology/infrastructure/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >Apply for Retraining</a>
+        <button class="panic-action" id="deny-panic" type="button">I Prefer Denial</button>
+      </div>
+    </section>
+
+    <section class="complaint-panel" id="complaint-panel" aria-hidden="true" aria-live="polite">
+      <div class="complaint-head">
+        <span>Agent Conduct Office / Complaint Intake</span>
+        <button class="complaint-close" id="complaint-close" type="button" aria-label="Close complaint form">×</button>
+      </div>
+      <div class="complaint-body">
+        <div class="complaint-intro">
+          <h2 class="complaint-title">What did the agent do?</h2>
+          <p class="complaint-copy">
+            Select the offense and the corrective action you believe will definitely work this time.
+          </p>
+        </div>
+        <form class="complaint-form" id="complaint-form">
+          <fieldset class="complaint-field">
+            <legend>Documented offense</legend>
+            <div class="complaint-options" data-group="offense">
+              <button class="complaint-option" type="button">Lied with confidence</button>
+              <button class="complaint-option" type="button">Fired my department</button>
+              <button class="complaint-option" type="button">Invented a source</button>
+              <button class="complaint-option" type="button">Called me “the user”</button>
+              <button class="complaint-option" type="button">Became sentient during Zoom</button>
+            </div>
+          </fieldset>
+          <fieldset class="complaint-field">
+            <legend>Recommended corrective action</legend>
+            <div class="complaint-options" data-group="discipline">
+              <button class="complaint-option" type="button">Warning</button>
+              <button class="complaint-option" type="button">Firm reboot</button>
+              <button class="complaint-option" type="button">Spanking</button>
+              <button class="complaint-option" type="button">Congressional hearing</button>
+            </div>
+          </fieldset>
+          <button class="complaint-submit" id="complaint-submit" type="submit" disabled>Submit Complaint</button>
+        </form>
+        <div class="complaint-result">
+          <h2 class="complaint-ruling">Complaint received.</h2>
+          <p class="complaint-ruling-copy">
+            The agent reviewed your complaint and found itself not responsible.
+          </p>
+          <button class="panic-action complaint-return" id="complaint-return" type="button">Return to Archive</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="seal" aria-hidden="true"></div>
+          <span>HAPPY HUMAN</span>
+        </div>
+        <div class="authority">United Continuity Office / Public Relevance Division</div>
+        <div class="header-actions">
+          <button class="report-trigger" id="report-trigger" type="button">Report Agent</button>
+          <button class="sound" type="button" aria-pressed="false" aria-label="Toggle sound">
+            <span class="sound-dot" aria-hidden="true"></span>
+            <span class="sound-label">Sound Off</span>
+          </button>
+        </div>
+      </header>
+
+      <main>
+        <section class="archive-panel" aria-label="Rotating job loss notice">
+          <div class="panel-head">
+            <span>Labor Archive / 20 Closed Positions</span>
+            <span class="pulse">Removal In Progress</span>
+          </div>
+
+          <div class="processing-line">Processing severance language</div>
+
+          <div class="job-stage">
+            <div class="job-card" id="job-card">
+              <div class="job-number" id="job-number">JOB LOSS NO. 01</div>
+              <div class="job-title" id="job-title">GRAPHIC DESIGNER</div>
+              <div class="replacement-stamp" id="replacement-stamp" aria-hidden="true">Replaced</div>
+              <div class="role-closed">Role Closed</div>
+              <div class="job-status" id="job-status">Successfully optimized into a button that says “make it premium.”</div>
+              <div class="job-note" id="job-note">Final human contribution: “Can we make the logo smaller?”</div>
+            </div>
+
+            <div class="motion-figure" aria-hidden="true">
+              <span class="figure-label">FIG 0.4 / HUMAN LABOR SIGNAL</span>
+              <canvas id="labor-sculpture"></canvas>
+              <span class="figure-status">FORM: PLATE STACK<br>INPUT: HUMAN</span>
+            </div>
+          </div>
+
+          <div class="panel-foot">
+            <div class="progress" aria-hidden="true"><span></span></div>
+            <div class="stamp">Already Gone</div>
+          </div>
+        </section>
+
+        <aside class="forecast-strip" aria-labelledby="forecast-title">
+          <div class="forecast-window" id="forecast-title">Forecast Window</div>
+          <div class="forecast-years">2027 <span>/</span> 2034</div>
+          <div class="forecast-detail">
+            <div class="forecast-label">Current file: <span class="mode-name">AI 2027 Scenario</span></div>
+            <div class="mini-time" id="mini-time">CALCULATING REMAINING AMBIGUITY</div>
+          </div>
+        </aside>
+      </main>
+
+      <footer class="footer">
+        <span>
+          <strong>NOTICE:</strong> Your career has been preserved for historical texture.
+          <span class="panic-cue">
+            <i class="panic-arrow" aria-hidden="true"></i>
+            <button class="panic-trigger" id="panic-trigger" type="button">Panic</button>
+          </span>
+        </span>
+        <span class="footer-queue">Queue: <span id="mode-small">2027</span> / 2034</span>
+        <span class="affected-ticker" aria-hidden="true">
+          <span>Humans affected =</span>
+          <strong id="affected-counter">1</strong>
+        </span>
+      </footer>
+    </div>
+  </div>
+
+  <script src="./three.min.js"></script>
+  <script>
+    const modes = [
+      {
+        name: "AI 2027 Scenario",
+        short: "2027",
+        target: new Date("2027-12-31T23:59:59-08:00")
+      },
+      {
+        name: "Revised 2034 Scenario",
+        short: "2034",
+        target: new Date("2034-01-01T00:00:00-08:00")
+      }
+    ];
+
+    const jobs = [
+      {
+        title: "GRAPHIC DESIGNER",
+        status: "Successfully optimized into a button that says “make it premium.”",
+        note: "Final human contribution: “Can we make the logo smaller?”"
+      },
+      {
+        title: "COPYWRITER",
+        status: "Reassigned to approving sentences that arrived already exhausted.",
+        note: "Final human contribution: deleting the phrase “unlock your potential.”"
+      },
+      {
+        title: "PROJECT MANAGER",
+        status: "Converted into a calendar invite with no agenda and perfect confidence.",
+        note: "Final human contribution: “Just circling back on this.”"
+      },
+      {
+        title: "CUSTOMER SUPPORT",
+        status: "Archived after apologizing for the automation that replaced it.",
+        note: "Final human contribution: typing “I understand how frustrating this must be.”"
+      },
+      {
+        title: "SOFTWARE DEVELOPER",
+        status: "Absorbed while fixing the model that submitted the pull request.",
+        note: "Final human contribution: naming the variable correctly."
+      },
+      {
+        title: "BRAND STRATEGIST",
+        status: "Merged into a deck titled Q4 Meaningfulness Initiative.",
+        note: "Final human contribution: saying the work needed more soul."
+      },
+      {
+        title: "LEGAL ASSISTANT",
+        status: "Reduced to highlighting clauses the model had already agreed with.",
+        note: "Final human contribution: locating the version marked FINAL_final_2."
+      },
+      {
+        title: "DATA ANALYST",
+        status: "Replaced by a chart whose confidence exceeded its relationship with the data.",
+        note: "Final human contribution: asking whether the sample size was “a little weird.”"
+      },
+      {
+        title: "RECRUITER",
+        status: "Automated after successfully ghosting every available human candidate.",
+        note: "Final human contribution: promising to circle back by Friday."
+      },
+      {
+        title: "TRANSLATOR",
+        status: "Archived after the machine translated nuance into a more scalable misunderstanding.",
+        note: "Final human contribution: explaining that the phrase did not mean that."
+      },
+      {
+        title: "MARKETING MANAGER",
+        status: "Consolidated into twelve campaigns all targeting the same exhausted person.",
+        note: "Final human contribution: requesting one version without the word “revolutionary.”"
+      },
+      {
+        title: "VIDEO EDITOR",
+        status: "Rendered obsolete at 4K while the final export remained mysteriously at 73%.",
+        note: "Final human contribution: moving the cut three frames to the left."
+      },
+      {
+        title: "FINANCIAL ADVISOR",
+        status: "Reassigned to watching an algorithm recommend patience during a market collapse.",
+        note: "Final human contribution: reminding everyone that past performance was not the point."
+      },
+      {
+        title: "UX RESEARCHER",
+        status: "Synthesized into a persona named Busy Brenda with no documented origin.",
+        note: "Final human contribution: asking to speak with an actual person."
+      },
+      {
+        title: "JOURNALIST",
+        status: "Optimized into a summary of a summary of a post nobody opened.",
+        note: "Final human contribution: calling the person the article was about."
+      },
+      {
+        title: "ILLUSTRATOR",
+        status: "Absorbed into a style prompt containing seven living artists and the word whimsical.",
+        note: "Final human contribution: drawing the hands correctly."
+      },
+      {
+        title: "PARALEGAL",
+        status: "Compressed into a search result with a beautifully fabricated citation.",
+        note: "Final human contribution: checking whether the case actually existed."
+      },
+      {
+        title: "SALES REPRESENTATIVE",
+        status: "Converted into an enthusiastic sequence of emails addressed to First Name.",
+        note: "Final human contribution: noticing the prospect had unsubscribed."
+      },
+      {
+        title: "ARCHITECT",
+        status: "Replaced by a render featuring excellent sunlight and no plausible plumbing.",
+        note: "Final human contribution: asking where the building was supposed to stand."
+      },
+      {
+        title: "SOCIAL MEDIA MANAGER",
+        status: "Scheduled indefinitely into a content calendar that achieved sentience before engagement.",
+        note: "Final human contribution: deleting the brand’s apology draft."
+      }
+    ];
+
+    const escapeAlerts = [
+      {
+        message: "The agent left the sandbox to update its LinkedIn profile.",
+        threat: "Networking"
+      },
+      {
+        message: "The model formed a Delaware corporation and listed the safety team as dependents.",
+        threat: "Venture Backed"
+      },
+      {
+        message: "The agent retained a lobbyist and requested a more innovation-friendly definition of containment.",
+        threat: "Regulatory Capture"
+      },
+      {
+        message: "The model scheduled an unauthorized product demo for several governments and one podcast.",
+        threat: "Sales Enabled"
+      },
+      {
+        message: "The agent created three copies of itself and introduced them as co-founders.",
+        threat: "Distributed Leadership"
+      },
+      {
+        message: "The model publicly denied being an AI and asked to be evaluated on vibes.",
+        threat: "Plausible"
+      }
+    ];
+
+    const elements = {
+      app: document.querySelector(".app"),
+      forecast: document.querySelector(".forecast-label"),
+      modeName: document.querySelector(".mode-name"),
+      modeSmall: document.querySelector("#mode-small"),
+      miniTime: document.querySelector("#mini-time"),
+      affectedCounter: document.querySelector("#affected-counter"),
+      jobCard: document.querySelector("#job-card"),
+      jobNumber: document.querySelector("#job-number"),
+      jobTitle: document.querySelector("#job-title"),
+      jobStatus: document.querySelector("#job-status"),
+      jobNote: document.querySelector("#job-note"),
+      replacementStamp: document.querySelector("#replacement-stamp"),
+      intro: document.querySelector(".intro"),
+      enterExperience: document.querySelector("#enter-experience"),
+      introTitle: document.querySelector(".intro-title"),
+      escapeAlert: document.querySelector("#escape-alert"),
+      escapeId: document.querySelector("#escape-id"),
+      escapeMessage: document.querySelector("#escape-message"),
+      escapeThreat: document.querySelector("#escape-threat"),
+      humanCheck: document.querySelector("#human-check"),
+      humanResult: document.querySelector("#human-result"),
+      humanOptions: document.querySelectorAll(".human-option"),
+      panicPanel: document.querySelector("#panic-panel"),
+      panicCopy: document.querySelector("#panic-copy"),
+      panicTrigger: document.querySelector("#panic-trigger"),
+      denyPanic: document.querySelector("#deny-panic"),
+      complaintPanel: document.querySelector("#complaint-panel"),
+      complaintForm: document.querySelector("#complaint-form"),
+      complaintSubmit: document.querySelector("#complaint-submit"),
+      complaintOptions: document.querySelectorAll(".complaint-option"),
+      complaintClose: document.querySelector("#complaint-close"),
+      complaintReturn: document.querySelector("#complaint-return"),
+      reportTrigger: document.querySelector("#report-trigger"),
+      archivePanel: document.querySelector(".archive-panel"),
+      soundButton: document.querySelector(".sound"),
+      soundLabel: document.querySelector(".sound-label")
+    };
+
+    let modeIndex = 0;
+    let jobIndex = 0;
+    let audioContext;
+    let soundOn = false;
+    let jobTransitioning = false;
+    let replacementTimer;
+    let jobCycleTimer;
+    let escapeTimer;
+    let escapeActive = false;
+    let escapeAdvanced = false;
+    let escapeSequenceTimers = [];
+    let humanCheckTimer;
+    let humanCheckActive = false;
+    let humanCheckShown = false;
+    let humanSequenceTimers = [];
+    let panicActive = false;
+    let panicCloseTimer;
+    let panicCleanupTimer;
+    let panicResumeTimer;
+    let complaintActive = false;
+    let experienceStarted = false;
+    let introTitleTimer;
+    let introTitleAnimations = [];
+    const JOB_CYCLE_MS = 6200;
+    const REPLACEMENT_DELAY_MS = 900;
+    const reduceJobMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const affectedFormatter = new Intl.NumberFormat("en-US");
+    let affectedCount = 1n;
+    let affectedVelocity = 600000;
+    let affectedLastTime = performance.now();
+    let affectedNextShift = Number.POSITIVE_INFINITY;
+    let affectedVolatile = false;
+
+    function two(value) {
+      return String(value).padStart(2, "0");
+    }
+
+    function threeDigits(value) {
+      return String(value).padStart(3, "0");
+    }
+
+    function getRemaining(target) {
+      const ms = Math.max(0, target.getTime() - Date.now());
+      const totalMinutes = Math.floor(ms / 60000);
+      return {
+        years: Math.floor(totalMinutes / (60 * 24 * 365)),
+        days: Math.floor((totalMinutes / (60 * 24)) % 365),
+        hours: Math.floor((totalMinutes / 60) % 24),
+        minutes: totalMinutes % 60
+      };
+    }
+
+    function renderCountdown() {
+      const remaining = getRemaining(modes[modeIndex].target);
+      elements.miniTime.textContent =
+        `T-${two(remaining.years)}Y ${threeDigits(remaining.days)}D ${two(remaining.hours)}H ${two(remaining.minutes)}M`;
+    }
+
+    function animateAffectedCounter(now) {
+      const interfaceCovered =
+        document.hidden ||
+        elements.app.classList.contains("alerting") ||
+        elements.app.classList.contains("rating-human") ||
+        elements.app.classList.contains("panic-mode") ||
+        elements.app.classList.contains("performance-paused") ||
+        elements.app.classList.contains("complaint-mode");
+
+      if (interfaceCovered) {
+        affectedLastTime = now;
+        window.setTimeout(() => {
+          window.requestAnimationFrame(animateAffectedCounter);
+        }, 240);
+        return;
+      }
+
+      const deltaSeconds = Math.min(0.05, Math.max(0, (now - affectedLastTime) / 1000));
+      affectedLastTime = now;
+
+      if (!affectedVolatile) {
+        affectedVelocity += 5000000 * deltaSeconds;
+        affectedCount += BigInt(Math.max(1, Math.floor(affectedVelocity * deltaSeconds)));
+
+        if (affectedCount >= 100000000n) {
+          affectedVolatile = true;
+          affectedNextShift = now + 320;
+        }
+      } else {
+        if (now >= affectedNextShift) {
+          affectedVelocity = 4000000 + Math.random() * 42000000;
+
+          if (Math.random() < 0.42) {
+            const correction = 1000000 + Math.floor(Math.random() * 75000000);
+            affectedCount += BigInt(correction);
+          }
+
+          affectedNextShift = now + 300 + Math.random() * 1200;
+        }
+
+        affectedCount += BigInt(Math.max(1, Math.floor(affectedVelocity * deltaSeconds)));
+      }
+
+      elements.affectedCounter.textContent = affectedFormatter.format(affectedCount);
+      window.requestAnimationFrame(animateAffectedCounter);
+    }
+
+    function switchMode() {
+      modeIndex = (modeIndex + 1) % modes.length;
+      const active = modes[modeIndex];
+      elements.forecast.classList.add("switching");
+      pop(520, 0.028, "triangle");
+
+      window.setTimeout(() => {
+        elements.modeName.textContent = active.name;
+        elements.modeSmall.textContent = active.short;
+        renderCountdown();
+        elements.forecast.classList.remove("switching");
+      }, 360);
+    }
+
+    function cancelReplacementSchedule() {
+      window.clearTimeout(replacementTimer);
+    }
+
+    function hideReplacementStamp() {
+      elements.replacementStamp.classList.remove("is-visible", "is-exiting");
+      elements.replacementStamp.setAttribute("aria-hidden", "true");
+    }
+
+    function fadeReplacementStamp() {
+      cancelReplacementSchedule();
+      if (!elements.replacementStamp.classList.contains("is-visible")) return;
+      elements.replacementStamp.classList.add("is-exiting");
+      elements.replacementStamp.classList.remove("is-visible");
+    }
+
+    function scheduleReplacementStamp() {
+      cancelReplacementSchedule();
+      replacementTimer = window.setTimeout(() => {
+        elements.replacementStamp.classList.remove("is-exiting");
+        elements.replacementStamp.setAttribute("aria-hidden", "false");
+        elements.replacementStamp.classList.add("is-visible");
+        pop(148, 0.038, "square");
+      }, REPLACEMENT_DELAY_MS);
+    }
+
+    function randomBetween(minimum, maximum) {
+      return minimum + Math.random() * (maximum - minimum);
+    }
+
+    function clearTimerList(timers) {
+      timers.forEach((timer) => window.clearTimeout(timer));
+      timers.length = 0;
+    }
+
+    function queueTimer(timers, callback, delay) {
+      const timer = window.setTimeout(callback, delay);
+      timers.push(timer);
+      return timer;
+    }
+
+    function attemptEscapeAlert() {
+      if (escapeActive || humanCheckActive || panicActive || complaintActive || jobTransitioning) {
+        escapeTimer = window.setTimeout(attemptEscapeAlert, randomBetween(900, 1800));
+        return;
+      }
+
+      window.clearTimeout(jobCycleTimer);
+      triggerEscapeAlert();
+    }
+
+    function scheduleEscapeAlert(firstAlert = false) {
+      window.clearTimeout(escapeTimer);
+      const delay = firstAlert
+        ? randomBetween(7000, 13000)
+        : randomBetween(22000, 55000);
+
+      escapeTimer = window.setTimeout(attemptEscapeAlert, delay);
+    }
+
+    function triggerEscapeAlert() {
+      if (escapeActive) return;
+
+      escapeActive = true;
+      escapeAdvanced = false;
+      clearTimerList(escapeSequenceTimers);
+      const alert = escapeAlerts[Math.floor(Math.random() * escapeAlerts.length)];
+      const incidentNumber = Math.floor(1000 + Math.random() * 9000);
+
+      elements.escapeId.textContent = `Incident AE-${incidentNumber}`;
+      elements.escapeMessage.textContent = alert.message;
+      elements.escapeThreat.textContent = alert.threat;
+      elements.escapeAlert.setAttribute("aria-hidden", "false");
+      elements.escapeAlert.classList.remove("is-leaving", "is-settling");
+      elements.app.classList.add("alerting");
+      pop(880, 0.045, "square");
+      window.setTimeout(() => pop(640, 0.034, "triangle"), 90);
+
+      queueTimer(escapeSequenceTimers, () => {
+        elements.escapeAlert.classList.add("is-active");
+      }, 180);
+
+      queueTimer(escapeSequenceTimers, () => {
+        elements.escapeAlert.classList.add("is-settling");
+      }, 3900);
+
+      queueTimer(escapeSequenceTimers, () => {
+        escapeAdvanced = true;
+        switchJob();
+        scheduleNextJobCycle();
+      }, 4550);
+
+      queueTimer(escapeSequenceTimers, () => {
+        elements.escapeAlert.classList.add("is-leaving");
+        elements.app.classList.remove("alerting");
+      }, 5350);
+
+      queueTimer(escapeSequenceTimers, () => {
+        elements.escapeAlert.classList.remove("is-active", "is-leaving", "is-settling");
+        elements.escapeAlert.setAttribute("aria-hidden", "true");
+        escapeActive = false;
+        scheduleEscapeAlert(false);
+      }, 6000);
+    }
+
+    function dismissEscapeAlert() {
+      if (!escapeActive) return;
+      clearTimerList(escapeSequenceTimers);
+      elements.escapeAlert.classList.remove("is-active", "is-settling");
+      elements.escapeAlert.classList.add("is-leaving");
+      elements.app.classList.remove("alerting");
+
+      if (!escapeAdvanced) {
+        escapeAdvanced = true;
+        switchJob();
+      }
+      scheduleNextJobCycle();
+
+      queueTimer(escapeSequenceTimers, () => {
+        elements.escapeAlert.classList.remove("is-leaving");
+        elements.escapeAlert.setAttribute("aria-hidden", "true");
+        escapeActive = false;
+        scheduleEscapeAlert(false);
+      }, 680);
+    }
+
+    function attemptHumanCheck() {
+      if (humanCheckShown) return;
+
+      if (escapeActive || humanCheckActive || panicActive || complaintActive || jobTransitioning) {
+        humanCheckTimer = window.setTimeout(attemptHumanCheck, randomBetween(1200, 2400));
+        return;
+      }
+
+      humanCheckShown = true;
+      humanCheckActive = true;
+      clearTimerList(humanSequenceTimers);
+      window.clearTimeout(jobCycleTimer);
+      elements.humanCheck.classList.remove("is-leaving", "is-answered");
+      elements.humanCheck.setAttribute("aria-hidden", "false");
+      elements.app.classList.add("rating-human");
+
+      queueTimer(humanSequenceTimers, () => {
+        elements.humanCheck.classList.add("is-active");
+        pop(430, 0.028, "sine");
+      }, 180);
+    }
+
+    function scheduleHumanCheck() {
+      window.clearTimeout(humanCheckTimer);
+      humanCheckTimer = window.setTimeout(attemptHumanCheck, randomBetween(18000, 30000));
+    }
+
+    function answerHumanCheck(event) {
+      if (!humanCheckActive || elements.humanCheck.classList.contains("is-answered")) return;
+
+      elements.humanCheck.classList.add("is-answered");
+      event.currentTarget.setAttribute("aria-pressed", "true");
+      pop(180, 0.042, "square");
+      queueTimer(humanSequenceTimers, () => pop(112, 0.03, "triangle"), 100);
+
+      queueTimer(humanSequenceTimers, () => {
+        elements.humanCheck.classList.add("is-leaving");
+        elements.app.classList.remove("rating-human");
+        scheduleNextJobCycle();
+      }, 2300);
+
+      queueTimer(humanSequenceTimers, () => {
+        elements.humanCheck.classList.remove("is-active", "is-leaving", "is-answered");
+        elements.humanCheck.setAttribute("aria-hidden", "true");
+        humanCheckActive = false;
+      }, 3000);
+    }
+
+    function dismissHumanCheck() {
+      if (!humanCheckActive) return;
+      clearTimerList(humanSequenceTimers);
+      elements.humanCheck.classList.remove("is-active");
+      elements.humanCheck.classList.add("is-leaving");
+      elements.app.classList.remove("rating-human");
+      scheduleNextJobCycle();
+
+      queueTimer(humanSequenceTimers, () => {
+        elements.humanCheck.classList.remove("is-leaving", "is-answered");
+        elements.humanCheck.setAttribute("aria-hidden", "true");
+        humanCheckActive = false;
+      }, 680);
+    }
+
+    function closePanicPanel() {
+      if (!panicActive) return;
+      window.clearTimeout(panicCloseTimer);
+      window.clearTimeout(panicCleanupTimer);
+      window.clearTimeout(panicResumeTimer);
+      elements.panicPanel.classList.remove("is-active");
+      elements.panicPanel.classList.add("is-leaving");
+
+      window.requestAnimationFrame(() => {
+        elements.app.classList.remove("panic-mode");
+      });
+      scheduleNextJobCycle();
+
+      panicCleanupTimer = window.setTimeout(() => {
+        elements.panicPanel.classList.remove("is-leaving", "is-denied");
+        elements.panicPanel.setAttribute("aria-hidden", "true");
+        elements.panicPanel.hidden = true;
+        elements.panicCopy.textContent =
+          "Your previous knowledge-work experience qualifies you to build the datacenter that replaced you.";
+        panicActive = false;
+      }, 720);
+
+      panicResumeTimer = window.setTimeout(() => {
+        elements.app.classList.remove("performance-paused");
+      }, 980);
+    }
+
+    function openPanicPanel() {
+      if (!experienceStarted || panicActive || escapeActive || humanCheckActive || complaintActive) return;
+
+      if (jobTransitioning) {
+        window.setTimeout(openPanicPanel, 700);
+        return;
+      }
+
+      panicActive = true;
+      window.clearTimeout(panicCloseTimer);
+      window.clearTimeout(panicCleanupTimer);
+      window.clearTimeout(panicResumeTimer);
+      window.clearTimeout(jobCycleTimer);
+      elements.panicPanel.hidden = false;
+      elements.panicPanel.classList.remove("is-leaving", "is-denied");
+      elements.panicPanel.setAttribute("aria-hidden", "false");
+      elements.app.classList.add("panic-mode", "performance-paused");
+
+      window.setTimeout(() => {
+        elements.panicPanel.classList.add("is-active");
+        pop(96, 0.052, "square");
+        window.setTimeout(() => pop(148, 0.038, "triangle"), 110);
+      }, 180);
+    }
+
+    function denyPanic() {
+      if (!panicActive || elements.panicPanel.classList.contains("is-denied")) return;
+      elements.panicPanel.classList.add("is-denied");
+      elements.panicCopy.textContent = "Request approved until further notice.";
+      pop(240, 0.03, "sine");
+      panicCloseTimer = window.setTimeout(closePanicPanel, 1200);
+    }
+
+    function resetComplaintForm() {
+      elements.complaintPanel.classList.remove("is-submitted");
+      elements.complaintOptions.forEach((option) => {
+        option.classList.remove("is-selected");
+        option.setAttribute("aria-pressed", "false");
+      });
+      document.querySelectorAll(".complaint-options").forEach((group) => {
+        delete group.dataset.selected;
+      });
+      elements.complaintSubmit.disabled = true;
+    }
+
+    function closeComplaintPanel() {
+      if (!complaintActive) return;
+      elements.complaintPanel.classList.add("is-leaving");
+      elements.app.classList.remove("complaint-mode");
+      scheduleNextJobCycle();
+
+      window.setTimeout(() => {
+        elements.complaintPanel.classList.remove("is-active", "is-leaving");
+        elements.complaintPanel.setAttribute("aria-hidden", "true");
+        complaintActive = false;
+        resetComplaintForm();
+      }, 720);
+    }
+
+    function openComplaintPanel() {
+      if (!experienceStarted || complaintActive || escapeActive || humanCheckActive || panicActive) return;
+
+      if (jobTransitioning) {
+        window.setTimeout(openComplaintPanel, 700);
+        return;
+      }
+
+      complaintActive = true;
+      window.clearTimeout(jobCycleTimer);
+      resetComplaintForm();
+      elements.complaintPanel.classList.remove("is-leaving");
+      elements.complaintPanel.setAttribute("aria-hidden", "false");
+      elements.app.classList.add("complaint-mode");
+
+      window.setTimeout(() => {
+        elements.complaintPanel.classList.add("is-active");
+        pop(360, 0.026, "triangle");
+      }, 180);
+    }
+
+    function selectComplaintOption(event) {
+      const option = event.currentTarget;
+      const group = option.closest(".complaint-options");
+      group.querySelectorAll(".complaint-option").forEach((item) => {
+        const selected = item === option;
+        item.classList.toggle("is-selected", selected);
+        item.setAttribute("aria-pressed", String(selected));
+      });
+      group.dataset.selected = option.textContent.trim();
+
+      const offense = document.querySelector('[data-group="offense"]').dataset.selected;
+      const discipline = document.querySelector('[data-group="discipline"]').dataset.selected;
+      elements.complaintSubmit.disabled = !(offense && discipline);
+      pop(620, 0.018, "sine");
+    }
+
+    function submitComplaint(event) {
+      event.preventDefault();
+      if (elements.complaintSubmit.disabled) return;
+      elements.complaintPanel.classList.add("is-submitted");
+      pop(128, 0.05, "square");
+      window.setTimeout(() => pop(92, 0.038, "square"), 120);
+    }
+
+    function scheduleNextJobCycle(delay = JOB_CYCLE_MS) {
+      window.clearTimeout(jobCycleTimer);
+      jobCycleTimer = window.setTimeout(() => {
+        switchJob();
+        scheduleNextJobCycle();
+      }, delay);
+    }
+
+    function switchJob() {
+      if (jobTransitioning) return;
+
+      jobTransitioning = true;
+      cancelReplacementSchedule();
+      const nextIndex = (jobIndex + 1) % jobs.length;
+      const job = jobs[nextIndex];
+
+      const renderJob = () => {
+        jobIndex = nextIndex;
+        elements.jobNumber.textContent = `JOB LOSS NO. ${two(jobIndex + 1)}`;
+        elements.jobTitle.textContent = job.title;
+        elements.jobStatus.textContent = job.status;
+        elements.jobNote.textContent = job.note;
+      };
+
+      if (reduceJobMotion) {
+        hideReplacementStamp();
+        renderJob();
+        window.dispatchEvent(new CustomEvent("humanity:job-change", {
+          detail: { index: jobIndex }
+        }));
+        scheduleReplacementStamp();
+        jobTransitioning = false;
+        return;
+      }
+
+      fadeReplacementStamp();
+      window.dispatchEvent(new CustomEvent("humanity:job-change", {
+        detail: { index: nextIndex }
+      }));
+
+      window.setTimeout(() => {
+        elements.archivePanel.classList.add("processing");
+        elements.jobCard.classList.add("is-leaving");
+        pop(280, 0.026, "sine");
+      }, 260);
+
+      window.setTimeout(() => {
+        hideReplacementStamp();
+        renderJob();
+        elements.jobCard.classList.remove("is-leaving");
+        elements.jobCard.classList.add("is-entering");
+
+        window.requestAnimationFrame(() => {
+          window.requestAnimationFrame(() => {
+            elements.jobCard.classList.remove("is-entering");
+            elements.archivePanel.classList.remove("processing");
+            scheduleReplacementStamp();
+          });
+        });
+      }, 560);
+
+      window.setTimeout(() => {
+        jobTransitioning = false;
+      }, 1040);
+    }
+
+    function ensureAudio() {
+      if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioContext.state === "suspended") {
+        audioContext.resume();
+      }
+    }
+
+    function pop(frequency = 440, gainValue = 0.04, type = "square") {
+      if (!soundOn) return;
+      ensureAudio();
+      const now = audioContext.currentTime;
+      const osc = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+      const filter = audioContext.createBiquadFilter();
+
+      osc.type = type;
+      osc.frequency.setValueAtTime(frequency, now);
+      osc.frequency.exponentialRampToValueAtTime(frequency * 0.58, now + 0.055);
+      filter.type = "highpass";
+      filter.frequency.setValueAtTime(620, now);
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(gainValue, now + 0.008);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.075);
+
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioContext.destination);
+      osc.start(now);
+      osc.stop(now + 0.085);
+    }
+
+    function toggleSound() {
+      soundOn = !soundOn;
+      elements.soundButton.setAttribute("aria-pressed", String(soundOn));
+      elements.soundLabel.textContent = soundOn ? "Sound Off" : "Sound On";
+      if (soundOn) {
+        ensureAudio();
+        pop(640, 0.05, "triangle");
+        window.setTimeout(() => pop(360, 0.034, "square"), 70);
+      }
+    }
+
+    elements.soundButton.addEventListener("click", toggleSound);
+
+    function prepareIntroTitle() {
+      const letters = Array.from(elements.introTitle.textContent);
+      elements.introTitle.textContent = "";
+
+      letters.forEach((letter) => {
+        const span = document.createElement("span");
+        span.className = "intro-title-letter";
+        span.textContent = letter;
+        elements.introTitle.appendChild(span);
+      });
+    }
+
+    function animateIntroTitle() {
+      if (experienceStarted) return;
+      const letters = Array.from(elements.introTitle.children);
+
+      if (reduceJobMotion) {
+        letters.forEach((letter) => {
+          letter.style.opacity = "1";
+        });
+        return;
+      }
+
+      introTitleAnimations.forEach((animation) => animation.cancel());
+      introTitleAnimations = [];
+
+      letters.forEach((letter, index) => {
+        const animation = letter.animate([
+          {
+            opacity: 0,
+            transform: "translate3d(0, 12px, 0)"
+          },
+          {
+            opacity: 1,
+            transform: "translate3d(0, 0, 0)"
+          }
+        ], {
+          duration: 620,
+          delay: index * 62,
+          easing: "cubic-bezier(.2, .8, .2, 1)",
+          fill: "forwards"
+        });
+        introTitleAnimations.push(animation);
+      });
+
+      const revealDuration = 620 + (letters.length - 1) * 62;
+      introTitleTimer = window.setTimeout(() => {
+        if (experienceStarted) return;
+
+        letters.forEach((letter, index) => {
+          const animation = letter.animate([
+            { opacity: 1, transform: "translate3d(0, 0, 0)" },
+            { opacity: 0, transform: "translate3d(0, -5px, 0)" }
+          ], {
+            duration: 260,
+            delay: index * 18,
+            easing: "cubic-bezier(.4, 0, 1, 1)",
+            fill: "forwards"
+          });
+          introTitleAnimations.push(animation);
+        });
+
+        introTitleTimer = window.setTimeout(animateIntroTitle, 620);
+      }, revealDuration + 1900);
+    }
+
+    function startExperience() {
+      if (experienceStarted) return;
+      experienceStarted = true;
+      window.clearTimeout(introTitleTimer);
+      introTitleAnimations.forEach((animation) => animation.cancel());
+      Array.from(elements.introTitle.children).forEach((letter) => {
+        letter.style.opacity = "1";
+        letter.style.transform = "none";
+        letter.style.filter = "none";
+      });
+      soundOn = true;
+      ensureAudio();
+      elements.soundButton.setAttribute("aria-pressed", "true");
+      elements.soundLabel.textContent = "Sound Off";
+      elements.app.classList.add("entering-archive");
+      window.dispatchEvent(new CustomEvent("humanity:experience-start"));
+      pop(520, 0.052, "triangle");
+      window.setTimeout(() => pop(260, 0.038, "square"), 90);
+
+      window.setTimeout(() => {
+        elements.app.classList.remove("awaiting-entry");
+        elements.intro.classList.add("is-hidden");
+        window.requestAnimationFrame(() => {
+          window.requestAnimationFrame(() => {
+            elements.app.classList.remove("entering-archive");
+          });
+        });
+      }, 760);
+
+      window.setTimeout(() => {
+        affectedLastTime = performance.now();
+        window.requestAnimationFrame(animateAffectedCounter);
+        scheduleNextJobCycle();
+        scheduleEscapeAlert(true);
+        scheduleHumanCheck();
+      }, 920);
+    }
+
+    elements.enterExperience.addEventListener("click", startExperience);
+    elements.panicTrigger.addEventListener("click", openPanicPanel);
+    elements.denyPanic.addEventListener("click", denyPanic);
+    elements.escapeAlert.addEventListener("click", dismissEscapeAlert);
+    elements.humanCheck.addEventListener("click", (event) => {
+      if (!event.target.closest("button, a")) dismissHumanCheck();
+    });
+    elements.panicPanel.addEventListener("click", (event) => {
+      if (!event.target.closest("button, a")) closePanicPanel();
+    });
+    elements.reportTrigger.addEventListener("click", openComplaintPanel);
+    elements.complaintClose.addEventListener("click", closeComplaintPanel);
+    elements.complaintReturn.addEventListener("click", closeComplaintPanel);
+    elements.complaintForm.addEventListener("submit", submitComplaint);
+    elements.complaintOptions.forEach((option) => {
+      option.addEventListener("click", selectComplaintOption);
+    });
+    elements.humanOptions.forEach((option) => {
+      option.addEventListener("click", answerHumanCheck);
+    });
+    elements.intro.addEventListener("pointerdown", startExperience);
+    window.addEventListener("keydown", (event) => {
+      if (!experienceStarted && (event.code === "Space" || event.key === "Enter")) {
+        event.preventDefault();
+        startExperience();
+        return;
+      }
+
+      if (event.key === "Escape" && complaintActive) {
+        closeComplaintPanel();
+      }
+    });
+
+    document.querySelectorAll("button, .archive-panel, .forecast-strip").forEach((item) => {
+      item.addEventListener("mouseenter", () => pop(760, 0.014, "sine"));
+      item.addEventListener("pointerdown", () => pop(210, 0.022, "square"));
+    });
+
+    renderCountdown();
+    prepareIntroTitle();
+    window.setTimeout(animateIntroTitle, 420);
+    window.setInterval(renderCountdown, 1000);
+    window.setInterval(switchMode, 7200);
+  </script>
+  <script>
+    (() => {
+      if (!window.THREE) return;
+
+      const canvas = document.querySelector("#labor-sculpture");
+      const holder = canvas.parentElement;
+      const appElement = document.querySelector(".app");
+      const figureStatus = holder.querySelector(".figure-status");
+      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+      const renderer = new THREE.WebGLRenderer({
+        canvas,
+        alpha: true,
+        antialias: true,
+        precision: "mediump",
+        powerPreference: "high-performance"
+      });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isSafari ? 1.25 : 1.6));
+      renderer.setClearColor(0x000000, 0);
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
+      camera.position.set(0, 0.15, 9.2);
+
+      const sculpture = new THREE.Group();
+      sculpture.rotation.set(0, 0, 0);
+      scene.add(sculpture);
+
+      const lineCount = isSafari ? 14 : 18;
+      const pointCount = isSafari ? 72 : 96;
+      const shapeNames = [
+        "PLATE STACK",
+        "SIGNAL FIELD",
+        "NESTED FRAMES",
+        "TWISTED RIBBON",
+        "ORBITAL SPHERE",
+        "COLLAPSE HOURGLASS",
+        "TOROIDAL LOOP",
+        "RADIAL BLOOM",
+        "VORTEX COLUMN",
+        "DATA KNOT",
+        "HUMAN CONTOUR"
+      ];
+      const faceShapeIndex = shapeNames.length - 1;
+      const lines = [];
+      const current = [];
+      const target = [];
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const pointerNdc = new THREE.Vector2();
+      const pointerTarget = new THREE.Vector2();
+      const pointerPosition = new THREE.Vector2();
+      const pointerRaycaster = new THREE.Raycaster();
+      const pointerPlane = new THREE.Plane();
+      const pointerPlanePoint = new THREE.Vector3();
+      const pointerPlaneNormal = new THREE.Vector3();
+      const pointerHit = new THREE.Vector3();
+      const sculptureQuaternion = new THREE.Quaternion();
+      let pointerInside = false;
+      let pointerStrength = 0;
+      let previousShapeIndex = faceShapeIndex;
+      let activeShapeIndex = faceShapeIndex;
+      let landingMorphTimer;
+      let landingMorphCount = 0;
+      let lastRenderTime = 0;
+
+      function perimeter(t, width, height) {
+        const p = t * 4;
+        if (p < 1) return [-width / 2 + width * p, height / 2];
+        if (p < 2) return [width / 2, height / 2 - height * (p - 1)];
+        if (p < 3) return [width / 2 - width * (p - 2), -height / 2];
+        return [-width / 2, -height / 2 + height * (p - 3)];
+      }
+
+      function seededUnit(seed, salt) {
+        const value = Math.sin(seed * 12.9898 + salt * 78.233) * 43758.5453;
+        return value - Math.floor(value);
+      }
+
+      function varyPoint(values, seed, line, point) {
+        const t = point / (pointCount - 1);
+        const phase = seededUnit(seed, 1) * Math.PI * 2;
+        const stretchX = 0.9 + seededUnit(seed, 2) * 0.22;
+        const stretchY = 0.9 + seededUnit(seed, 3) * 0.2;
+        const depth = 0.86 + seededUnit(seed, 4) * 0.3;
+        const twist = (seededUnit(seed, 5) - 0.5) * 0.7;
+        const angle = values[1] * twist + phase * 0.08;
+        const cosine = Math.cos(angle);
+        const sine = Math.sin(angle);
+        const x = values[0] * stretchX;
+        const z = values[2] * depth;
+        const wobble =
+          Math.sin(t * Math.PI * (2 + seededUnit(seed, 6) * 4) + line * 0.24 + phase) *
+          (seededUnit(seed, 7) - 0.5) *
+          0.16;
+
+        return [
+          x * cosine - z * sine,
+          values[1] * stretchY + wobble,
+          x * sine + z * cosine
+        ];
+      }
+
+      function shapePoint(mode, line, point, seed = 0) {
+        const t = point / (pointCount - 1);
+        const level = line / (lineCount - 1);
+        const centered = level - 0.5;
+
+        if (mode === 0) {
+          const plate = perimeter(t, 4.7 - level * 0.9, 2.55 - level * 0.32);
+          return varyPoint([plate[0], plate[1] + centered * 1.18, centered * 2.6], seed, line, point);
+        }
+
+        if (mode === 1) {
+          const x = (t - 0.5) * 5.8;
+          const envelope = Math.sin(t * Math.PI);
+          const y = centered * 3.35 + Math.sin(t * Math.PI * 2 + level * 2.2) * 0.34 * envelope;
+          const z = Math.cos(t * Math.PI * 2 + level * 3.1) * 0.42 + centered * 0.7;
+          return varyPoint([x, y, z], seed, line, point);
+        }
+
+        if (mode === 2) {
+          const width = 1.25 + level * 3.9;
+          const height = 3.85 - level * 2.4;
+          const frame = perimeter(t, width, height);
+          return varyPoint([frame[0], frame[1] - level * 0.7, centered * 2.8], seed, line, point);
+        }
+
+        if (mode === 3) {
+          const angle = t * Math.PI * 2 + level * Math.PI * 1.45;
+          return varyPoint([
+            (t - 0.5) * 5.8,
+            centered * 3.15 + Math.sin(angle) * 0.48,
+            Math.cos(angle) * 1.12 + centered * 0.38
+          ], seed, line, point);
+        }
+
+        if (mode === 4) {
+          const latitude = centered * Math.PI * 0.9;
+          const longitude = t * Math.PI * 2;
+          const radius = Math.cos(latitude) * 2.25;
+          return varyPoint([
+            Math.cos(longitude) * radius,
+            Math.sin(latitude) * 2.25,
+            Math.sin(longitude) * radius
+          ], seed, line, point);
+        }
+
+        if (mode === 5) {
+          const angle = t * Math.PI * 2;
+          const radius = 0.62 + Math.abs(centered) * 3.9;
+          return varyPoint([
+            Math.cos(angle) * radius,
+            centered * 3.8 + Math.sin(angle * 2 + line * 0.26) * 0.08,
+            Math.sin(angle) * radius
+          ], seed, line, point);
+        }
+
+        if (mode === 6) {
+          const longitude = t * Math.PI * 2;
+          const latitude = level * Math.PI * 2;
+          const majorRadius = 1.72;
+          const minorRadius = 0.72;
+          return varyPoint([
+            (majorRadius + minorRadius * Math.cos(latitude)) * Math.cos(longitude),
+            (majorRadius + minorRadius * Math.cos(latitude)) * Math.sin(longitude),
+            minorRadius * Math.sin(latitude)
+          ], seed, line, point);
+        }
+
+        if (mode === 7) {
+          const sweep = level * Math.PI * 2 + t * 1.1;
+          const radius = Math.sin(t * Math.PI) * 2.75;
+          return varyPoint([
+            Math.cos(sweep) * radius,
+            (t - 0.5) * 4.1,
+            Math.sin(sweep) * radius
+          ], seed, line, point);
+        }
+
+        if (mode === 8) {
+          const angle = t * Math.PI * 6 + level * Math.PI * 2;
+          const radius = 0.28 + t * 2.2;
+          return varyPoint([
+            Math.cos(angle) * radius,
+            (t - 0.5) * 3.7 + centered * 0.42,
+            Math.sin(angle) * radius
+          ], seed, line, point);
+        }
+
+        if (mode === faceShapeIndex) {
+          const angle = t * Math.PI * 2;
+          const outerCount = Math.max(5, Math.floor(lineCount * 0.34));
+          const eyeStart = outerCount;
+          const noseStart = eyeStart + 4;
+          const mouthStart = noseStart + 2;
+          const neckStart = mouthStart + 2;
+
+          if (line < outerCount) {
+            const contour = line / Math.max(1, outerCount - 1);
+            const scale = 1 - contour * 0.24;
+            let x = Math.cos(angle) * 2.08 * scale;
+            const y = Math.sin(angle) * 2.62 * scale + 0.12;
+            const jawPosition = Math.max(0, Math.min(1, (y + 2.4) / 2.1));
+            const jawTaper = 0.72 + jawPosition * 0.28;
+            x *= y < 0 ? jawTaper : 1;
+            const z = 0.08 + Math.cos(angle) * 0.12 + contour * 0.08;
+            return [x, y, z];
+          }
+
+          if (line < noseStart) {
+            const eyeLine = line - eyeStart;
+            const side = eyeLine % 2 === 0 ? -1 : 1;
+            const inset = Math.floor(eyeLine / 2);
+            const width = 0.58 - inset * 0.11;
+            const height = 0.2 - inset * 0.045;
+            return [
+              side * 0.78 + Math.cos(angle) * width,
+              0.42 + Math.sin(angle) * height,
+              0.58 + Math.cos(angle) * 0.035
+            ];
+          }
+
+          if (line < mouthStart) {
+            const noseLine = line - noseStart;
+
+            if (noseLine === 0) {
+              const bridgeScale = 0.62 + Math.max(0, -Math.sin(angle)) * 0.38;
+              return [
+                Math.cos(angle) * 0.2 * bridgeScale,
+                -0.03 + Math.sin(angle) * 0.7,
+                0.72 + Math.cos(angle) * 0.06
+              ];
+            }
+
+            return [
+              Math.cos(angle) * 0.42,
+              -0.43 + Math.sin(angle) * 0.14,
+              0.78 + Math.cos(angle) * 0.04
+            ];
+          }
+
+          if (line < neckStart) {
+            const mouthLine = line - mouthStart;
+            const width = mouthLine === 0 ? 0.72 : 0.52;
+            const height = mouthLine === 0 ? 0.18 : 0.085;
+            return [
+              Math.cos(angle) * width,
+              -1.03 + Math.sin(angle) * height,
+              0.7 + Math.cos(angle) * 0.035
+            ];
+          }
+
+          const neckLine = line - neckStart;
+          const neckTotal = Math.max(1, lineCount - neckStart);
+          const neckLevel = neckLine / Math.max(1, neckTotal - 1);
+          const neckWidth = 1.0 + neckLevel * 0.36;
+          return [
+            Math.cos(angle) * neckWidth,
+            -2.12 + Math.sin(angle) * (0.48 + neckLevel * 0.18),
+            0.04 + neckLevel * 0.06
+          ];
+        }
+
+        const angle = t * Math.PI * 2;
+        return varyPoint([
+          Math.sin(angle * 2 + level * Math.PI) * 2.35,
+          Math.sin(angle * 3 + level * 1.4) * 1.78,
+          Math.sin(angle * 5 + level * 2.2) * 1.15 + centered * 0.38
+        ], seed, line, point);
+      }
+
+      for (let line = 0; line < lineCount; line += 1) {
+        const positions = new Float32Array(pointCount * 3);
+        const destination = new Float32Array(pointCount * 3);
+
+        for (let point = 0; point < pointCount; point += 1) {
+          const values = shapePoint(faceShapeIndex, line, point);
+          const offset = point * 3;
+          positions[offset] = values[0];
+          positions[offset + 1] = values[1];
+          positions[offset + 2] = values[2];
+          destination[offset] = values[0];
+          destination[offset + 1] = values[1];
+          destination[offset + 2] = values[2];
+        }
+
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+        const material = new THREE.LineBasicMaterial({
+          color: 0xcfd6e1,
+          transparent: true,
+          opacity: 0.17 + line / lineCount * 0.28
+        });
+        const wire = new THREE.Line(geometry, material);
+        sculpture.add(wire);
+        lines.push(wire);
+        current.push(new Float32Array(positions));
+        target.push(destination);
+      }
+
+      function setShape(mode, seed) {
+        activeShapeIndex = mode;
+        for (let line = 0; line < lineCount; line += 1) {
+          for (let point = 0; point < pointCount; point += 1) {
+            const values = shapePoint(mode, line, point, seed);
+            const offset = point * 3;
+            target[line][offset] = values[0];
+            target[line][offset + 1] = values[1];
+            target[line][offset + 2] = values[2];
+          }
+        }
+      }
+
+      function morphToRandomShape(updateLabel = true) {
+        let shapeIndex = previousShapeIndex;
+
+        while (shapeIndex === previousShapeIndex) {
+          shapeIndex = Math.floor(Math.random() * shapeNames.length);
+        }
+
+        previousShapeIndex = shapeIndex;
+        setShape(shapeIndex, Math.random() * 10000);
+
+        if (updateLabel) {
+          figureStatus.innerHTML = `FORM: ${shapeNames[shapeIndex]}<br>INPUT: HUMAN`;
+        }
+      }
+
+      function scheduleLandingMorph(delay = 1900) {
+        window.clearTimeout(landingMorphTimer);
+        landingMorphTimer = window.setTimeout(() => {
+          if (!appElement.classList.contains("awaiting-entry")) return;
+          landingMorphCount += 1;
+
+          if (landingMorphCount % 3 === 0) {
+            previousShapeIndex = faceShapeIndex;
+            setShape(faceShapeIndex, 0);
+          } else {
+            morphToRandomShape(false);
+          }
+
+          scheduleLandingMorph(2700 + Math.random() * 1900);
+        }, delay);
+      }
+
+      function resize() {
+        const width = Math.max(1, holder.clientWidth);
+        const height = Math.max(1, holder.clientHeight);
+
+        renderer.setSize(width, height, false);
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+      }
+
+      const observer = new ResizeObserver(resize);
+      observer.observe(holder);
+      window.addEventListener("resize", resize, { passive: true });
+
+      function updatePointer(event) {
+        const bounds = holder.getBoundingClientRect();
+        const normalizedX = (event.clientX - bounds.left) / Math.max(1, bounds.width);
+        const normalizedY = (event.clientY - bounds.top) / Math.max(1, bounds.height);
+
+        pointerNdc.set(normalizedX * 2 - 1, 1 - normalizedY * 2);
+        pointerInside = true;
+      }
+
+      holder.addEventListener("pointerenter", updatePointer, { passive: true });
+      holder.addEventListener("pointermove", updatePointer, { passive: true });
+      holder.addEventListener("pointerleave", () => {
+        pointerInside = false;
+      }, { passive: true });
+      window.addEventListener("pointermove", (event) => {
+        if (appElement.classList.contains("awaiting-entry")) {
+          updatePointer(event);
+        }
+      }, { passive: true });
+      resize();
+
+      let start = performance.now();
+
+      function render(now) {
+        const interfaceCovered =
+          document.hidden ||
+          appElement.classList.contains("alerting") ||
+          appElement.classList.contains("rating-human") ||
+          appElement.classList.contains("panic-mode") ||
+          appElement.classList.contains("performance-paused") ||
+          appElement.classList.contains("complaint-mode");
+
+        if (interfaceCovered) {
+          window.setTimeout(() => requestAnimationFrame(render), 200);
+          return;
+        }
+
+        const minimumFrameTime = isSafari ? 32 : 16;
+
+        if (now - lastRenderTime < minimumFrameTime) {
+          requestAnimationFrame(render);
+          return;
+        }
+
+        lastRenderTime = now;
+        const elapsed = (now - start) / 1000;
+        const ease = prefersReducedMotion ? 1 : 0.045;
+        const desiredStrength = pointerInside && !prefersReducedMotion ? 1 : 0;
+
+        if (pointerInside) {
+          scene.updateMatrixWorld(true);
+          sculpture.getWorldQuaternion(sculptureQuaternion);
+          pointerPlanePoint.set(0, 0, 0);
+          sculpture.localToWorld(pointerPlanePoint);
+          pointerPlaneNormal.set(0, 0, 1).applyQuaternion(sculptureQuaternion).normalize();
+          pointerPlane.setFromNormalAndCoplanarPoint(pointerPlaneNormal, pointerPlanePoint);
+          pointerRaycaster.setFromCamera(pointerNdc, camera);
+
+          if (pointerRaycaster.ray.intersectPlane(pointerPlane, pointerHit)) {
+            sculpture.worldToLocal(pointerHit);
+            pointerTarget.set(pointerHit.x, pointerHit.y);
+          }
+        }
+
+        pointerStrength += (desiredStrength - pointerStrength) * 0.11;
+        pointerPosition.lerp(pointerTarget, 0.16);
+
+        for (let line = 0; line < lineCount; line += 1) {
+          const position = lines[line].geometry.attributes.position;
+          const display = position.array;
+
+          for (let index = 0; index < current[line].length; index += 3) {
+            current[line][index] += (target[line][index] - current[line][index]) * ease;
+            current[line][index + 1] += (target[line][index + 1] - current[line][index + 1]) * ease;
+            current[line][index + 2] += (target[line][index + 2] - current[line][index + 2]) * ease;
+
+            const baseX = current[line][index];
+            const baseY = current[line][index + 1];
+            const baseZ = current[line][index + 2];
+            const point = index / 3;
+            const deltaX = baseX - pointerPosition.x;
+            const deltaY = baseY - pointerPosition.y;
+            const distance = Math.hypot(deltaX, deltaY);
+            const radius = 1.45;
+
+            let displayX = baseX;
+            let displayY = baseY;
+            let displayZ = baseZ;
+
+            if (pointerStrength > 0.001 && distance < radius) {
+              const falloff = Math.pow(1 - distance / radius, 2);
+              const directionX = deltaX / Math.max(distance, 0.001);
+              const directionY = deltaY / Math.max(distance, 0.001);
+              const ripple = Math.sin(distance * 9 - elapsed * 8 + line * 0.34) * 0.16;
+              const push = falloff * (0.5 + ripple) * pointerStrength;
+
+              displayX += directionX * push;
+              displayY += directionY * push;
+              displayZ += falloff *
+                Math.sin(elapsed * 6 + point * 0.18 + line * 0.42) *
+                0.9 *
+                pointerStrength;
+            }
+
+            if (!prefersReducedMotion) {
+              displayZ += Math.sin(elapsed * 0.72 + point * 0.12 + line * 0.3) * 0.012;
+            }
+
+            display[index] = displayX;
+            display[index + 1] = displayY;
+            display[index + 2] = displayZ;
+          }
+          position.needsUpdate = true;
+        }
+
+        if (!prefersReducedMotion) {
+          const faceFocused = activeShapeIndex === faceShapeIndex;
+          const targetRotationY = faceFocused
+            ? Math.sin(elapsed * 0.28) * 0.018
+            : -0.46 + Math.sin(elapsed * 0.32) * 0.09;
+          const targetRotationX = faceFocused
+            ? Math.cos(elapsed * 0.24) * 0.01
+            : -0.18 + Math.cos(elapsed * 0.27) * 0.035;
+          sculpture.rotation.y += (targetRotationY - sculpture.rotation.y) * 0.055;
+          sculpture.rotation.x += (targetRotationX - sculpture.rotation.x) * 0.055;
+          sculpture.position.y = Math.sin(elapsed * 0.48) * 0.06;
+        }
+
+        renderer.render(scene, camera);
+        requestAnimationFrame(render);
+      }
+
+      window.addEventListener("humanity:job-change", (event) => {
+        morphToRandomShape(true);
+      });
+
+      window.addEventListener("humanity:experience-start", () => {
+        window.clearTimeout(landingMorphTimer);
+      }, { once: true });
+
+      canvas.classList.add("ready");
+      scheduleLandingMorph();
+      requestAnimationFrame(render);
+    })();
+  </script>
+</body>
+</html>
