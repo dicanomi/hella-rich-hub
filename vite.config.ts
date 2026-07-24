@@ -2,6 +2,8 @@ import { jsxLocPlugin } from "@builder.io/vite-plugin-jsx-loc";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import fs from "node:fs";
+import type { ServerResponse } from "node:http";
+import https from "node:https";
 import path from "node:path";
 import { defineConfig, type Plugin, type ViteDevServer } from "vite";
 import { vitePluginManusRuntime } from "vite-plugin-manus-runtime";
@@ -203,7 +205,102 @@ function vitePluginStorageProxy(): Plugin {
   };
 }
 
-const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector(), vitePluginStorageProxy()];
+function vitePluginRadioStreamProxy(): Plugin {
+  const allowedHosts = [
+    "ice.somafm.com",
+    "ice1.somafm.com",
+    "ice2.somafm.com",
+    "stream-relay-geo.ntslive.net",
+    "dublab.out.airtime.pro",
+    "thelot.out.airtime.pro",
+    "icecast.radiofrance.fr",
+    "hoer-stream.out.airtime.pro",
+    "kioskradio.out.airtime.pro",
+    "radioalhara.out.airtime.pro",
+    "radioraheem.out.airtime.pro",
+  ];
+
+  const pipeStream = (target: URL, res: ServerResponse, redirects = 0) => {
+    const request = https.get(
+      target,
+      {
+        headers: {
+          "User-Agent": "HELLA_RADIO local Safari analyzer",
+          "Icy-MetaData": "0",
+        },
+      },
+      (upstream) => {
+        const location = upstream.headers.location;
+        if (
+          location &&
+          [301, 302, 303, 307, 308].includes(upstream.statusCode || 0) &&
+          redirects < 4
+        ) {
+          upstream.resume();
+          const nextUrl = new URL(location, target);
+          if (!allowedHosts.includes(nextUrl.hostname)) {
+            res.writeHead(403, { "Content-Type": "text/plain" });
+            res.end("Stream host not allowed");
+            return;
+          }
+          pipeStream(nextUrl, res, redirects + 1);
+          return;
+        }
+
+        if (!upstream.statusCode || upstream.statusCode >= 400) {
+          res.writeHead(502, { "Content-Type": "text/plain" });
+          res.end("Stream unavailable");
+          upstream.resume();
+          return;
+        }
+
+        res.writeHead(200, {
+          "Content-Type": upstream.headers["content-type"] || "audio/mpeg",
+          "Cache-Control": "no-store",
+          "Access-Control-Allow-Origin": "*",
+          "X-Content-Type-Options": "nosniff",
+        });
+        upstream.pipe(res);
+      },
+    );
+
+    request.on("error", () => {
+      if (!res.headersSent) res.writeHead(502, { "Content-Type": "text/plain" });
+      res.end("Stream proxy error");
+    });
+    res.on("close", () => request.destroy());
+  };
+
+  return {
+    name: "radio-stream-proxy",
+    configureServer(server: ViteDevServer) {
+      server.middlewares.use("/__radio_stream", (req, res) => {
+        try {
+          const requestUrl = new URL(req.url || "", "http://localhost");
+          const raw = requestUrl.searchParams.get("url");
+          if (!raw) {
+            res.writeHead(400, { "Content-Type": "text/plain" });
+            res.end("Missing stream URL");
+            return;
+          }
+
+          const target = new URL(raw);
+          if (target.protocol !== "https:" || !allowedHosts.includes(target.hostname)) {
+            res.writeHead(403, { "Content-Type": "text/plain" });
+            res.end("Stream host not allowed");
+            return;
+          }
+          pipeStream(target, res);
+        } catch {
+          res.writeHead(400, { "Content-Type": "text/plain" });
+          res.end("Bad stream URL");
+        }
+      });
+    },
+  };
+}
+
+const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector(), vitePluginStorageProxy(), vitePluginRadioStreamProxy()];
 
 export default defineConfig({
   plugins,

@@ -72,6 +72,12 @@ export function HellaRichNav() {
           gap: 6px;
           font-family: 'DM Mono', monospace;
         }
+        .hr-nav-dismiss {
+          position: fixed;
+          inset: 0;
+          z-index: 8999;
+          background: transparent;
+        }
         .hr-nav.happy-human {
           top: clamp(24px, 2.35vh, 27px);
           left: clamp(24px, 1.45vw, 28px);
@@ -150,6 +156,26 @@ export function HellaRichNav() {
           background: rgba(255,255,255,0.1);
           border-color: rgba(255,255,255,0.18);
         }
+        .hr-nav.radio .hr-back,
+        .hr-nav.radio .hr-switcher {
+          background: #f8fafb;
+          border-color: #aeb9c1;
+          color: #52616c;
+          backdrop-filter: none;
+          -webkit-backdrop-filter: none;
+          box-shadow: 0 3px 7px rgba(82,97,108,0.10), inset 0 1px 0 #ffffff;
+        }
+        .hr-nav.radio .hr-back:hover,
+        .hr-nav.radio .hr-switcher:hover {
+          background: #edf2f5;
+          border-color: #8e9ca6;
+          color: #3f4d57;
+        }
+        .hr-nav.radio .hr-switcher[aria-expanded="true"] {
+          background: #e4eaee;
+          border-color: #8e9ca6;
+          color: #3f4d57;
+        }
         .hr-dropdown {
           position: absolute;
           top: calc(100% + 6px);
@@ -199,8 +225,33 @@ export function HellaRichNav() {
           line-height: 1;
         }
         .hr-project-item.current .hr-project-title { color: rgba(255,255,255,0.88); }
+        .hr-nav.radio .hr-dropdown {
+          background: rgba(248,250,251,0.97);
+          border-color: #aeb9c1;
+          box-shadow: 0 10px 28px rgba(82,97,108,0.18);
+        }
+        .hr-nav.radio .hr-dropdown-label {
+          color: #87949e;
+          border-bottom-color: #dce3e8;
+        }
+        .hr-nav.radio .hr-project-item:hover { background: #edf2f5; }
+        .hr-nav.radio .hr-project-item.current { background: #e4eaee; }
+        .hr-nav.radio .hr-project-dot { background: #aeb9c1; }
+        .hr-nav.radio .hr-project-dot.live { background: #51a967; }
+        .hr-nav.radio .hr-project-title { color: #687781; }
+        .hr-nav.radio .hr-project-item.current .hr-project-title { color: #3f4d57; }
       `}</style>
-      <nav className={`hr-nav${currentProject?.slug === '/happy-human' ? ' happy-human' : ''}`} aria-label="hella.rich navigation">
+      {open && (
+        <div
+          className="hr-nav-dismiss"
+          aria-hidden="true"
+          onPointerDown={() => setOpen(false)}
+        />
+      )}
+      <nav
+        className={`hr-nav${currentProject?.slug === '/happy-human' ? ' happy-human' : ''}${location.startsWith('/radio') ? ' radio' : ''}`}
+        aria-label="hella.rich navigation"
+      >
         <a href="/" className="hr-back" aria-label="Back to hella.rich">
           <svg className="hr-back-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
             <path d="M6 1L1 4L6 7M1 4H11" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>

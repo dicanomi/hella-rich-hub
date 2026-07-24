@@ -46,819 +46,7 @@
     .hr-page{ gap:clamp(8px,1.6vh,16px) !important; }
   }
   /* never let the page scroll sideways on any device */
-  html,body{ max-width:100%; overflow-x:clip; }
-  .hr-page{ display:none !important; }
-
-  :root{
-    --rt-surface:#edf2f5;
-    --rt-surface-hi:#f8fafb;
-    --rt-line:#cad3da;
-    --rt-line-soft:#dce3e8;
-    --rt-ink:#52616c;
-    --rt-muted:#87949e;
-    --rt-red:#f04f49;
-    --rt-green:#51cf38;
-    --rt-screen:#dfe4cc;
-    --rt-page-top:clamp(4.25rem,min(5.5vw,8.5vh),5.75rem);
-    --rt-page-x:clamp(1rem,min(3.4vw,4.5vh),3.75rem);
-    --rt-page-bottom:clamp(1rem,min(2vw,3vh),2rem);
-    --rt-column-gap:clamp(1.25rem,min(3vw,4vh),4rem);
-    --rt-row-gap:clamp(.7rem,min(1.4vw,1.8vh),1.25rem);
-    --rt-dial-size:clamp(18rem,min(38vw,62svh),38rem);
-    --rt-station-height:clamp(24rem,min(40vw,67svh),38rem);
-    --rt-orbit-height:clamp(15rem,min(27vw,43svh),27rem);
-    --rt-spectrum-height:clamp(5.5rem,min(10vw,11vh),9rem);
-  }
-  html,body{
-    height:auto !important;
-    min-height:100%;
-    overflow-x:clip;
-    overflow-y:auto !important;
-    background:var(--rt-surface);
-    color:var(--rt-ink);
-  }
-  body{ overflow-y:visible !important; }
-  .sc-host,.sc-host-parent{
-    height:auto !important;
-    min-height:100svh !important;
-    overflow:visible !important;
-  }
-  button,input{ font:inherit; }
-  button{ color:inherit; }
-  .rt-shell{
-    min-height:100vh;
-    min-height:100svh;
-    width:100%;
-    overflow-x:clip;
-    background:var(--rt-surface);
-    padding:
-      max(var(--rt-page-top),env(safe-area-inset-top))
-      max(var(--rt-page-x),env(safe-area-inset-right))
-      max(var(--rt-page-bottom),env(safe-area-inset-bottom))
-      max(var(--rt-page-x),env(safe-area-inset-left));
-    font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
-    position:relative;
-    -webkit-user-select:none;
-    user-select:none;
-    container:radio-shell / inline-size;
-  }
-  .rt-shell::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    pointer-events:none;
-    border:1px solid rgba(255,255,255,.72);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.9), inset 0 -1px 0 rgba(141,158,169,.14);
-  }
-  .rt-grid{
-    width:min(100%,112rem);
-    margin:0 auto;
-    display:grid;
-    grid-template-columns:minmax(18rem,1.3fr) minmax(15rem,.72fr) minmax(18rem,1fr);
-    grid-template-areas:
-      "ticker ticker ticker"
-      "dial stations visual";
-    align-items:flex-start;
-    column-gap:var(--rt-column-gap);
-    row-gap:var(--rt-row-gap);
-  }
-  .rt-dial-column,.rt-station-column,.rt-visual-column{ min-width:0; }
-  .rt-dial-column{
-    grid-area:dial;
-    align-self:flex-start;
-  }
-  .rt-station-column{ grid-area:stations; }
-  .rt-visual-column{ grid-area:visual; }
-  .rt-dial{
-    width:min(100%,var(--rt-dial-size));
-    aspect-ratio:1;
-    margin-inline:auto;
-    position:relative;
-    border-radius:50%;
-    container-type:inline-size;
-    background:var(--rt-surface) url("./assets/tuner-ring-v3.jpg") center/cover no-repeat;
-    box-shadow:0 .7rem 1.6rem rgba(85,105,117,.08), inset 0 1px 0 #fff;
-    cursor:default;
-    touch-action:none;
-    user-select:none;
-    outline:none;
-  }
-  .rt-dial:focus-visible{ box-shadow:0 0 0 3px var(--rt-red),0 1.25rem 2.75rem rgba(85,105,117,.14); }
-  .rt-dial-hand{
-    position:absolute;
-    inset:4%;
-    border-radius:50%;
-    will-change:transform;
-    pointer-events:none;
-  }
-  .rt-needle{
-    position:absolute;
-    top:5.5%;
-    left:50%;
-    width:2px;
-    height:20%;
-    background:var(--rt-red);
-    box-shadow:0 0 4px rgba(240,79,73,.35);
-    transform:translateX(-50%);
-  }
-  .rt-needle-cap{
-    position:absolute;
-    top:3%;
-    left:50%;
-    width:clamp(.75rem,1.5vw,1.15rem);
-    aspect-ratio:1;
-    border-radius:50%;
-    border:2px solid var(--rt-red);
-    background:var(--rt-surface-hi);
-    box-shadow:0 0 0 3px rgba(132,148,159,.3);
-    transform:translateX(-50%);
-  }
-  .rt-screen{
-    position:absolute;
-    inset:28%;
-    border-radius:50%;
-    background:var(--rt-screen);
-    border:clamp(.45rem,1vw,.75rem) solid #f8fafb;
-    box-shadow:
-      0 .8rem 1.3rem rgba(87,105,115,.2),
-      inset 0 .15rem .65rem rgba(66,76,64,.22),
-      0 0 0 1px rgba(137,150,157,.28);
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    gap:clamp(.15rem,1.8cqw,.4rem);
-    padding:clamp(.55rem,1.2vw,1rem);
-    overflow:hidden;
-  }
-  .rt-station-name{
-    width:88%;
-    max-width:88%;
-    overflow:hidden;
-    white-space:nowrap;
-    text-overflow:ellipsis;
-    font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-size:clamp(.5rem,.75vw,.75rem);
-    font-weight:600;
-    line-height:1.05;
-    letter-spacing:.05em;
-    color:#4d5a5a;
-  }
-  .rt-frequency{
-    width:100%;
-    font-size:clamp(2rem,3.8vw,3.75rem);
-    font-weight:400;
-    line-height:.88;
-    letter-spacing:0;
-    color:#495657;
-    font-variant-numeric:tabular-nums;
-    white-space:nowrap;
-  }
-  .rt-band{
-    margin:0;
-    font-size:clamp(.625rem,.9vw,.8125rem);
-    line-height:1;
-    font-weight:700;
-    letter-spacing:.12em;
-  }
-  .rt-air{
-    min-height:1rem;
-    margin:0;
-    display:flex;
-    align-items:center;
-    gap:.35rem;
-    font-size:clamp(.5rem,.7vw,.625rem);
-    line-height:1;
-    letter-spacing:.09em;
-    color:#68746f;
-  }
-  .rt-air-dot{
-    width:.42rem;
-    aspect-ratio:1;
-    border-radius:50%;
-    background:var(--rt-green);
-    box-shadow:0 0 .45rem rgba(81,207,56,.65);
-  }
-  .rt-scale-label{
-    position:absolute;
-    top:50%;
-    left:50%;
-    min-width:2.2rem;
-    text-align:center;
-    font-size:clamp(.65rem,1.2vw,.9rem);
-    font-weight:500;
-    letter-spacing:.04em;
-    color:#5d6a74;
-    font-variant-numeric:tabular-nums;
-    appearance:none;
-    border:0;
-    padding:.3rem;
-    background:transparent;
-    cursor:pointer;
-    pointer-events:auto;
-    transform:
-      translate(-50%,-50%)
-      rotate(var(--rt-angle))
-      translateY(-43.5cqw)
-      rotate(var(--rt-counter));
-  }
-  .rt-scale-label:hover,.rt-scale-label:focus-visible{ color:var(--rt-red); }
-  .rt-scale-label:focus-visible{ outline:1px solid var(--rt-red); outline-offset:1px; border-radius:50%; }
-  .rt-stations{
-    height:var(--rt-station-height);
-    overflow-x:hidden;
-    overflow-y:auto;
-    padding-block:clamp(.85rem,1.4vw,1.2rem);
-    scrollbar-width:none;
-    scroll-behavior:smooth;
-    overscroll-behavior:contain;
-    -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 clamp(1rem,2vw,1.5rem),#000 calc(100% - clamp(1rem,2vw,1.5rem)),transparent 100%);
-    mask-image:linear-gradient(to bottom,transparent 0,#000 clamp(1rem,2vw,1.5rem),#000 calc(100% - clamp(1rem,2vw,1.5rem)),transparent 100%);
-  }
-  .rt-stations::-webkit-scrollbar{ width:0; height:0; display:none; }
-  .rt-station{
-    width:100%;
-    min-height:clamp(2.35rem,4.2vw,3.35rem);
-    padding:0 clamp(.35rem,.8vw,.75rem);
-    border:0;
-    border-bottom:1px solid var(--rt-line-soft);
-    background:transparent;
-    display:grid;
-    grid-template-columns:auto 4.7rem minmax(0,1fr) .2rem;
-    align-items:center;
-    gap:clamp(.5rem,1vw,.9rem);
-    cursor:pointer;
-    transition:color .2s ease,background .2s ease,transform .28s ease;
-  }
-  .rt-station.is-sweeping.is-forward{
-    animation:rt-station-roll-forward .18s cubic-bezier(.22,.75,.32,1) both;
-  }
-  .rt-station.is-sweeping.is-backward{
-    animation:rt-station-roll-backward .18s cubic-bezier(.22,.75,.32,1) both;
-  }
-  @keyframes rt-station-roll-forward{
-    from{ opacity:.5; transform:translateY(-22%) scale(.985); }
-    to{ opacity:1; transform:translateY(0) scale(1); }
-  }
-  @keyframes rt-station-roll-backward{
-    from{ opacity:.5; transform:translateY(22%) scale(.985); }
-    to{ opacity:1; transform:translateY(0) scale(1); }
-  }
-  .rt-station:hover{ background:rgba(255,255,255,.48); color:#3f4b54; }
-  .rt-station-dot{
-    width:.85rem;
-    aspect-ratio:1;
-    border-radius:50%;
-    border:1px solid #aab6be;
-    box-shadow:inset 0 1px 2px rgba(97,111,120,.18);
-    transition:background .12s ease,border .12s ease,box-shadow .12s ease;
-  }
-  .rt-station.is-active .rt-station-dot{
-    border:3px solid var(--surface-hi,#f8fafb);
-    background:#6c7c87;
-    box-shadow:0 0 0 1px #9aa7b0;
-  }
-  .rt-station-freq{
-    font-size:clamp(.8rem,1.25vw,1rem);
-    font-weight:500;
-    letter-spacing:.05em;
-    font-variant-numeric:tabular-nums;
-  }
-  .rt-station-title{
-    overflow:hidden;
-    white-space:nowrap;
-    text-overflow:ellipsis;
-    font-size:clamp(.58rem,.75vw,.7rem);
-    letter-spacing:.1em;
-    color:var(--rt-muted);
-    text-transform:uppercase;
-    text-align:left;
-  }
-  .rt-station-mark{ height:1.55rem; background:transparent; transition:background .12s ease; }
-  .rt-station.is-active{ color:#3e4a53; font-weight:700; }
-  .rt-station.is-active .rt-station-mark{ background:var(--rt-red); }
-  .rt-visual-column{
-    align-self:start;
-    display:flex;
-    flex-direction:column;
-    gap:clamp(.75rem,1.4vh,1.15rem);
-  }
-  .rt-orbit{
-    height:var(--rt-orbit-height);
-    min-height:0;
-    position:relative;
-    display:grid;
-    place-items:center;
-  }
-  .rt-orbit-canvas{
-    width:100%;
-    height:100%;
-    display:block;
-    cursor:grab;
-    touch-action:none;
-  }
-  .rt-orbit-canvas:active{ cursor:grabbing; }
-  .rt-spectrum{
-    height:var(--rt-spectrum-height);
-    display:flex;
-    flex-direction:column;
-    justify-content:flex-end;
-  }
-  .rt-spectrum-title{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-bottom:.55rem;
-    color:var(--rt-muted);
-    font-size:clamp(.55rem,.7vw,.68rem);
-    font-weight:600;
-    letter-spacing:.13em;
-    text-transform:uppercase;
-  }
-  .rt-spectrum-canvas{
-    width:100%;
-    height:clamp(4rem,8vw,6.75rem);
-    display:block;
-    cursor:ew-resize;
-    touch-action:none;
-  }
-  .rt-transport{
-    width:100%;
-    margin-top:clamp(.8rem,1.6vh,1.25rem);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:clamp(.8rem,2.2vw,1.7rem);
-  }
-  .rt-control{
-    width:clamp(2.8rem,min(6vw,7vh),4.5rem);
-    aspect-ratio:1;
-    border-radius:50%;
-    border:1px solid #c2ccd3;
-    background:var(--rt-surface);
-    display:grid;
-    place-items:center;
-    cursor:pointer;
-    box-shadow:0 .35rem .55rem rgba(91,109,120,.16),inset 0 1px 0 #fff;
-    transition:transform .14s ease,box-shadow .14s ease;
-  }
-  .rt-control:hover{ transform:translateY(-1px); box-shadow:0 .48rem .7rem rgba(91,109,120,.18),inset 0 1px 0 #fff; }
-  .rt-control:active{ transform:translateY(1px); box-shadow:0 .16rem .25rem rgba(91,109,120,.16),inset 0 1px 0 #fff; }
-  .rt-control:focus-visible{ outline:2px solid var(--rt-red); outline-offset:3px; }
-  .rt-control-main{ width:clamp(4rem,min(8.5vw,10vh),6.6rem); }
-  .rt-icon{ width:42%; height:42%; stroke:#586772; stroke-width:1.7; fill:none; }
-  .rt-volume{
-    width:100%;
-    min-width:0;
-    display:grid;
-    grid-template-columns:auto minmax(8rem,1fr);
-    align-items:center;
-    gap:clamp(.65rem,1.5vw,1.2rem);
-  }
-  .rt-volume-copy{
-    font-size:clamp(.62rem,.8vw,.74rem);
-    font-weight:600;
-    letter-spacing:.12em;
-    color:#697781;
-  }
-  input[type=range].rt-volume-range{
-    width:100%;
-    height:2rem;
-    appearance:none;
-    background:transparent;
-    cursor:pointer;
-  }
-  input[type=range].rt-volume-range::-webkit-slider-runnable-track{ height:2px; background:#73828c; }
-  input[type=range].rt-volume-range::-webkit-slider-thumb{
-    appearance:none;
-    width:clamp(1.8rem,3vw,2.5rem);
-    aspect-ratio:1;
-    margin-top:calc(clamp(1.8rem,3vw,2.5rem) / -2 + 1px);
-    border-radius:50%;
-    border:1px solid #d3dce1;
-    background:var(--rt-surface-hi);
-    box-shadow:0 .25rem .5rem rgba(83,100,111,.2),inset 0 1px 0 #fff;
-  }
-  input[type=range].rt-volume-range::-moz-range-track{ height:2px; background:#73828c; }
-  input[type=range].rt-volume-range::-moz-range-thumb{
-    width:clamp(1.8rem,3vw,2.5rem);
-    aspect-ratio:1;
-    border-radius:50%;
-    border:1px solid #d3dce1;
-    background:var(--rt-surface-hi);
-  }
-  .rt-volume-icon{ width:1.25rem; height:1.25rem; stroke:#72808a; fill:none; stroke-width:1.6; }
-  .rt-ticker{
-    grid-area:ticker;
-    overflow:hidden;
-    padding:clamp(.55rem,1.1vh,.75rem) 0;
-    border-top:1px solid var(--rt-line-soft);
-    border-bottom:1px solid var(--rt-line-soft);
-    color:#8a969f;
-    font-family:"TAY Birdie","Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-size:clamp(.58rem,.75vw,.72rem);
-    letter-spacing:.11em;
-    white-space:nowrap;
-    cursor:grab;
-  }
-  .rt-ticker-track{ display:flex; width:max-content; will-change:transform; touch-action:pan-y; user-select:none; }
-  .rt-ticker a{ color:inherit; text-decoration:none; padding-right:3.25rem; }
-
-  @container radio-shell (max-width:919px){
-    .rt-shell{
-      --rt-dial-size:clamp(20rem,min(44cqi,47svh),31rem);
-      --rt-station-height:clamp(26rem,min(56cqi,52svh),37rem);
-      --rt-orbit-height:clamp(12rem,min(20cqi,25svh),14rem);
-      --rt-spectrum-height:clamp(5.5rem,min(11cqi,13svh),7.5rem);
-    }
-    .rt-grid{
-      grid-template-columns:minmax(18rem,1.15fr) minmax(16rem,.85fr);
-      grid-template-areas:
-        "ticker ticker"
-        "dial stations"
-        "visual visual";
-      column-gap:clamp(1.25rem,min(3.4cqi,3vh),2.5rem);
-      row-gap:clamp(.7rem,min(1.5cqi,1.6vh),1rem);
-    }
-    .rt-visual-column{
-      width:100%;
-      display:grid;
-      grid-template-columns:minmax(0,1.55fr) minmax(16rem,.75fr);
-      grid-template-areas:
-        "orbit spectrum"
-        "orbit volume";
-      align-items:end;
-      column-gap:clamp(1.5rem,4cqi,3rem);
-      row-gap:clamp(.65rem,1.2cqi,.9rem);
-      padding-top:0;
-    }
-    .rt-orbit{ grid-area:orbit; }
-    .rt-spectrum{
-      grid-area:spectrum;
-    }
-    .rt-volume{ grid-area:volume; }
-  }
-
-  @media (max-aspect-ratio:1/1){
-    @container radio-shell (min-width:920px) and (max-width:1399px){
-      .rt-shell{
-        --rt-dial-size:clamp(22rem,min(44cqi,47svh),31rem);
-        --rt-station-height:clamp(28rem,min(56cqi,52svh),37rem);
-        --rt-orbit-height:clamp(18rem,min(44cqi,36svh),30rem);
-        --rt-spectrum-height:clamp(6rem,min(12cqi,13svh),8rem);
-      }
-      .rt-grid{
-        grid-template-columns:minmax(18rem,1.15fr) minmax(16rem,.85fr);
-        grid-template-areas:
-          "ticker ticker"
-          "dial stations"
-          "visual visual";
-        column-gap:clamp(1.25rem,min(3.4cqi,3vh),2.5rem);
-        row-gap:clamp(.7rem,min(1.5cqi,1.6vh),1rem);
-      }
-      .rt-visual-column{
-        width:100%;
-        display:grid;
-        grid-template-columns:minmax(0,1.55fr) minmax(16rem,.75fr);
-        grid-template-areas:
-          "orbit spectrum"
-          "orbit volume";
-        align-items:end;
-        column-gap:clamp(1.5rem,4cqi,3rem);
-        row-gap:clamp(.65rem,1.2cqi,.9rem);
-        padding-top:0;
-      }
-      .rt-orbit{ grid-area:orbit; }
-      .rt-spectrum{ grid-area:spectrum; }
-      .rt-volume{ grid-area:volume; }
-    }
-  }
-
-  @container radio-shell (max-width:759px){
-    .rt-shell{
-      --rt-page-top:clamp(4.25rem,min(13vw,9vh),5.25rem);
-      --rt-page-x:clamp(.75rem,min(4vw,2.5vh),1.5rem);
-      --rt-page-bottom:clamp(.75rem,min(3vw,2vh),1.25rem);
-      --rt-dial-size:clamp(18rem,min(82cqi,42svh),27rem);
-      --rt-station-height:clamp(20rem,min(64cqi,36svh),25rem);
-      --rt-orbit-height:clamp(12rem,min(36cqi,23svh),15rem);
-      --rt-spectrum-height:clamp(5rem,min(20cqi,12svh),6.5rem);
-    }
-    .rt-grid{
-      grid-template-columns:minmax(0,1fr);
-      grid-template-areas:
-        "ticker"
-        "dial"
-        "stations"
-        "visual";
-      row-gap:clamp(.7rem,min(2.5cqi,1.6vh),1rem);
-    }
-    .rt-visual-column{
-      display:flex;
-      flex-direction:column;
-      align-items:stretch;
-      gap:clamp(.65rem,2cqi,.85rem);
-      padding-top:0;
-    }
-    .rt-orbit{ width:100%; }
-    .rt-spectrum{
-      width:100%;
-    }
-  }
-
-  @media (max-height:720px){
-    @container radio-shell (min-width:920px){
-      .rt-shell{
-        --rt-page-top:clamp(4rem,10vh,4.5rem);
-        --rt-dial-size:clamp(18rem,min(38vw,54svh),32rem);
-        --rt-station-height:clamp(22rem,min(40vw,61svh),32rem);
-        --rt-orbit-height:clamp(13rem,min(27vw,35svh),22rem);
-      }
-      .rt-transport{ margin-top:.65rem; }
-    }
-  }
-
-  /* Mockup-directed receiver composition. */
-  .rt-grid{
-    width:min(100%,112rem);
-    grid-template-columns:minmax(0,1fr);
-    grid-template-areas:
-      "ticker"
-      "meat";
-    row-gap:0;
-  }
-  .rt-meat{
-    grid-area:meat;
-    width:100%;
-    min-height:calc(100svh - var(--rt-page-top) - 8.5rem);
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    padding-block:clamp(2rem,min(5vw,6vh),5rem) clamp(8.5rem,min(11vw,15vh),11rem);
-  }
-  .rt-signal-canvas{
-    display:block;
-    width:100%;
-    height:100%;
-  }
-  .rt-console{
-    width:min(100%,70rem);
-    display:grid;
-    grid-template-columns:minmax(24rem,1.12fr) minmax(22rem,.88fr);
-    align-items:start;
-    gap:clamp(2.5rem,min(6vw,7vh),6.5rem);
-  }
-  .rt-dial-column,
-  .rt-station-column{
-    grid-area:auto;
-    width:100%;
-    min-width:0;
-  }
-  .rt-dial-column{
-    align-self:start;
-  }
-  @container radio-shell (min-width:760px){
-    .rt-dial-column{
-      position:relative;
-      align-self:stretch;
-    }
-    .rt-dial{
-      position:sticky;
-      top:clamp(1rem,3vh,2rem);
-    }
-  }
-  .rt-dial{
-    width:min(100%,clamp(22rem,min(38vw,54svh),36rem));
-  }
-  .rt-station-column{
-    max-width:31rem;
-    justify-self:end;
-    display:flex;
-    flex-direction:column;
-  }
-  .rt-stations{
-    height:auto;
-    overflow:visible;
-    padding:0;
-    scrollbar-width:auto;
-    scroll-behavior:auto;
-    overscroll-behavior:auto;
-    -webkit-mask-image:none;
-    mask-image:none;
-  }
-  .rt-station{
-    min-height:clamp(3rem,min(4vw,5.2vh),3.75rem);
-  }
-  .rt-player{
-    position:fixed;
-    left:0;
-    right:0;
-    bottom:0;
-    z-index:8500;
-    min-height:clamp(6.5rem,min(9vw,12vh),8rem);
-    padding:
-      clamp(.75rem,min(1.2vw,1.6vh),1.1rem)
-      max(clamp(1rem,3vw,3rem),env(safe-area-inset-right))
-      max(clamp(.75rem,min(1.2vw,1.6vh),1.1rem),env(safe-area-inset-bottom))
-      max(clamp(1rem,3vw,3rem),env(safe-area-inset-left));
-    border-top:1px solid rgba(151,165,174,.6);
-    background:rgba(237,242,245,.96);
-    box-shadow:0 -.65rem 1.6rem rgba(72,90,102,.12),inset 0 1px 0 rgba(255,255,255,.8);
-    backdrop-filter:blur(14px);
-    -webkit-backdrop-filter:blur(14px);
-  }
-  .rt-player-inner{
-    width:min(100%,112rem);
-    min-height:4.75rem;
-    margin:0 auto;
-    display:grid;
-    grid-template-columns:minmax(15rem,1fr) max-content minmax(15rem,1fr);
-    grid-template-areas:"signal controls volume";
-    align-items:center;
-    gap:clamp(1rem,2.5vw,3rem);
-  }
-  .rt-player .rt-transport{
-    grid-area:controls;
-    width:auto;
-    margin:0;
-    justify-self:center;
-    gap:clamp(.45rem,1vw,.8rem);
-  }
-  .rt-player .rt-control{
-    width:clamp(2.4rem,min(3.5vw,5vh),3.2rem);
-    box-shadow:0 .25rem .65rem rgba(85,105,117,.12),inset 0 1px 0 #fff;
-  }
-  .rt-player .rt-control-main{
-    width:clamp(3rem,min(4.5vw,6vh),4rem);
-  }
-  .rt-player-signal{
-    grid-area:signal;
-    height:clamp(3.5rem,min(5vw,7vh),4.75rem);
-    min-width:0;
-    overflow:hidden;
-  }
-  .rt-player .rt-volume{
-    grid-area:volume;
-    width:min(100%,18rem);
-    margin:0;
-    justify-self:end;
-  }
-  .rt-mobile-sound{
-    display:none;
-    align-items:center;
-    gap:.55rem;
-    min-height:2.5rem;
-    padding:0;
-    border:0;
-    background:transparent;
-    color:#65737d;
-    font:600 .58rem/1 "Helvetica Neue",Helvetica,Arial,sans-serif;
-    letter-spacing:.12em;
-    cursor:pointer;
-  }
-  .rt-mobile-sound-track{
-    position:relative;
-    width:2.65rem;
-    height:1.45rem;
-    flex:none;
-    border:1px solid #b8c4cb;
-    border-radius:999px;
-    background:#cbd4d9;
-    box-shadow:inset 0 1px .2rem rgba(80,96,107,.18);
-    transition:background .18s ease,border-color .18s ease;
-  }
-  .rt-mobile-sound-thumb{
-    position:absolute;
-    top:.16rem;
-    left:.16rem;
-    width:1.05rem;
-    aspect-ratio:1;
-    border-radius:50%;
-    background:#fff;
-    box-shadow:0 .12rem .25rem rgba(76,91,101,.25);
-    transition:transform .18s ease;
-  }
-  .rt-mobile-sound.is-on .rt-mobile-sound-track{
-    border-color:#87969f;
-    background:#667781;
-  }
-  .rt-mobile-sound.is-on .rt-mobile-sound-thumb{
-    transform:translateX(1.2rem);
-  }
-
-  @container radio-shell (max-width:759px){
-    .rt-meat{
-      min-height:0;
-      justify-content:flex-start;
-      padding-block:clamp(2rem,10cqi,4.5rem) clamp(7rem,22cqi,8rem);
-    }
-    .rt-console{
-      width:100%;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:clamp(2rem,8cqi,3.75rem);
-    }
-    .rt-dial-column{
-      width:100%;
-    }
-    .rt-dial{
-      width:min(100%,clamp(22rem,min(92cqi,58svh),36rem));
-    }
-    .rt-station-column{
-      width:min(100%,30rem);
-      max-width:none;
-      align-self:center;
-      gap:clamp(1.5rem,6cqi,2.5rem);
-    }
-    .rt-station{
-      min-height:clamp(3.5rem,14cqi,4.5rem);
-    }
-    .rt-player{
-      min-height:5.5rem;
-      padding-top:.75rem;
-      padding-bottom:max(.75rem,env(safe-area-inset-bottom));
-    }
-    .rt-player-inner{
-      min-height:4rem;
-      grid-template-columns:1fr max-content 1fr;
-      grid-template-areas:". controls sound";
-      gap:clamp(.65rem,3cqi,1rem);
-    }
-    .rt-player .rt-transport{
-      justify-content:center;
-      gap:.4rem;
-    }
-    .rt-player .rt-control{ width:2.35rem; }
-    .rt-player .rt-control-main{ width:2.8rem; }
-    .rt-player-signal{ display:none; }
-    .rt-player .rt-volume{
-      display:none;
-    }
-    .rt-mobile-sound{
-      grid-area:sound;
-      display:flex;
-      justify-self:end;
-    }
-  }
-  @media (max-width:759px){
-    .rt-player{
-      min-height:5.5rem;
-      padding-top:.75rem;
-      padding-bottom:max(.75rem,env(safe-area-inset-bottom));
-    }
-    .rt-player-inner{
-      min-height:4rem;
-      grid-template-columns:1fr max-content 1fr;
-      grid-template-areas:". controls sound";
-      gap:clamp(.65rem,3vw,1rem);
-    }
-    .rt-player .rt-transport{
-      justify-content:center;
-      gap:.4rem;
-    }
-    .rt-player .rt-control{ width:2.35rem; }
-    .rt-player .rt-control-main{ width:2.8rem; }
-    .rt-player-signal{ display:none; }
-    .rt-player .rt-volume{
-      display:none;
-    }
-    .rt-mobile-sound{
-      grid-area:sound;
-      display:flex;
-      justify-self:end;
-    }
-  }
-  @media (min-width:760px) and (max-width:1100px){
-    .rt-player{
-      min-height:5.5rem;
-      padding-top:.75rem;
-      padding-bottom:max(.75rem,env(safe-area-inset-bottom));
-    }
-    .rt-player-inner{
-      min-height:4rem;
-      grid-template-columns:1fr max-content 1fr;
-      grid-template-areas:". controls sound";
-      gap:clamp(.8rem,2vw,1.25rem);
-    }
-    .rt-player .rt-transport{
-      justify-content:center;
-      gap:.4rem;
-    }
-    .rt-player .rt-control{ width:2.35rem; }
-    .rt-player .rt-control-main{ width:2.8rem; }
-    .rt-player-signal{ display:none; }
-    .rt-player .rt-volume{
-      display:none;
-    }
-    .rt-mobile-sound{
-      grid-area:sound;
-      display:flex;
-      justify-self:end;
-    }
-  }
+  html,body{ max-width:100%; overflow-x:hidden; }
 </style>
 </helmet>
 
@@ -1017,156 +205,6 @@
     <div style="font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:10px; letter-spacing:.24em; color:#4E4B45;">THE WORLD IS ALWAYS BROADCASTING. &nbsp;HELLA RADIO IS SIMPLY LISTENING.</div>
   </div>
 </div>
-<main class="rt-shell">
-  <div class="rt-grid">
-    <div class="rt-ticker" ref="{{ setTickerWrapRef }}">
-      <div
-        class="rt-ticker-track"
-        ref="{{ setTickerTrackRef }}"
-        onPointerDown="{{ onTickerDown }}"
-        onPointerMove="{{ onTickerMove }}"
-        onPointerUp="{{ onTickerUp }}"
-        onPointerCancel="{{ onTickerUp }}"
-      >
-        <sc-for list="{{ tickerItems }}" as="it" hint-placeholder-count="6">
-          <a href="{{ it.url }}" target="_blank" rel="noopener noreferrer" onClick="{{ onTickerItemClick }}" draggable="false">{{ it.text }}</a>
-        </sc-for>
-        <sc-for list="{{ tickerItems }}" as="it" hint-placeholder-count="6">
-          <a href="{{ it.url }}" target="_blank" rel="noopener noreferrer" onClick="{{ onTickerItemClick }}" draggable="false">{{ it.text }}</a>
-        </sc-for>
-      </div>
-    </div>
-
-    <div class="rt-meat">
-      <div class="rt-console">
-        <section class="rt-dial-column" aria-label="Frequency tuner">
-      <div
-        class="rt-dial"
-        ref="{{ setKnobAreaRef }}"
-        onPointerDown="{{ onKnobPointerDown }}"
-        onKeyDown="{{ onKnobKeyDown }}"
-        role="slider"
-        aria-label="Radio frequency"
-        aria-valuemin="88"
-        aria-valuemax="108"
-        aria-valuenow="{{ freqStr }}"
-        tabindex="0"
-      >
-        <div class="rt-dial-hand" ref="{{ setKnobRef }}">
-          <span class="rt-needle"></span>
-          <span class="rt-needle-cap" ref="{{ setDotARef }}"></span>
-        </div>
-        <sc-for list="{{ dialLabels }}" as="lab" hint-placeholder-count="11">
-          <button
-            type="button"
-            class="rt-scale-label"
-            style="--rt-angle:{{ lab.angle }}deg;--rt-counter:{{ lab.counterAngle }}deg;"
-            onPointerDown="{{ lab.onPointerDown }}"
-            onClick="{{ lab.onClick }}"
-            aria-label="{{ lab.aria }}"
-          >{{ lab.text }}</button>
-        </sc-for>
-        <div class="rt-screen">
-          <div class="rt-station-name">{{ stationName }}</div>
-          <div class="rt-frequency">{{ freqStr }}</div>
-          <div class="rt-band">FM</div>
-          <div class="rt-air">
-            <sc-if value="{{ onAir }}" hint-placeholder-val="{{ false }}">
-              <span class="rt-air-dot" ref="{{ setAirDotRef }}"></span>
-              <span>ON AIR</span>
-            </sc-if>
-            <sc-if value="{{ notPlaying }}" hint-placeholder-val="{{ true }}">
-              <span>READY</span>
-            </sc-if>
-          </div>
-        </div>
-      </div>
-        </section>
-
-        <section class="rt-station-column" aria-label="Radio stations">
-          <div class="rt-stations" ref="{{ setStationListRef }}">
-            <sc-for list="{{ stationItems }}" as="station" hint-placeholder-count="10">
-              <button
-                type="button"
-                class="{{ station.className }}"
-                ref="{{ station.setRef }}"
-                onClick="{{ station.onClick }}"
-                aria-label="{{ station.aria }}"
-              >
-                <span class="rt-station-dot"></span>
-                <span class="rt-station-freq">{{ station.frequency }}</span>
-                <span class="rt-station-title">{{ station.name }}</span>
-                <span class="rt-station-mark"></span>
-              </button>
-            </sc-for>
-          </div>
-        </section>
-      </div>
-    </div>
-  </div>
-</main>
-
-<footer class="rt-player" aria-label="Persistent radio player">
-  <div class="rt-player-inner">
-    <div class="rt-transport">
-      <button class="rt-control" type="button" onClick="{{ onPrev }}" aria-label="Previous station">
-        <svg class="rt-icon" viewBox="0 0 24 24" aria-hidden="true">
-          <polygon points="19 20 9 12 19 4 19 20"></polygon>
-          <line x1="5" x2="5" y1="19" y2="5"></line>
-        </svg>
-      </button>
-      <button class="rt-control rt-control-main" ref="{{ setPlayBtnRef }}" type="button" onClick="{{ onPlay }}" aria-label="{{ playLabel }}">
-        <sc-if value="{{ isPlaying }}" hint-placeholder-val="{{ false }}">
-          <svg class="rt-icon" viewBox="0 0 24 24" aria-hidden="true">
-            <rect x="14" y="4" width="4" height="16" rx="1"></rect>
-            <rect x="6" y="4" width="4" height="16" rx="1"></rect>
-          </svg>
-        </sc-if>
-        <sc-if value="{{ notPlaying }}" hint-placeholder-val="{{ true }}">
-          <svg class="rt-icon" viewBox="0 0 24 24" aria-hidden="true">
-            <polygon points="6 3 20 12 6 21 6 3"></polygon>
-          </svg>
-        </sc-if>
-      </button>
-      <button class="rt-control" type="button" onClick="{{ onNext }}" aria-label="Next station">
-        <svg class="rt-icon" viewBox="0 0 24 24" aria-hidden="true">
-          <polygon points="5 4 15 12 5 20 5 4"></polygon>
-          <line x1="19" x2="19" y1="5" y2="19"></line>
-        </svg>
-      </button>
-    </div>
-
-    <div class="rt-player-signal">
-      <canvas
-        class="rt-signal-canvas"
-        ref="{{ setSpecCanvasRef }}"
-        aria-label="Audio-reactive waveform, equalizer, and signal numbers"
-      ></canvas>
-    </div>
-
-    <label class="rt-volume">
-      <svg class="rt-volume-icon" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"></path>
-        <path d="M16 9a5 5 0 0 1 0 6"></path>
-        <path d="M19.364 18.364a9 9 0 0 0 0-12.728"></path>
-      </svg>
-      <input class="rt-volume-range" type="range" min="0" max="100" value="{{ volume }}" onInput="{{ onVolume }}" aria-label="Volume">
-    </label>
-
-    <button
-      class="rt-mobile-sound {{ soundClass }}"
-      type="button"
-      onClick="{{ onMobileSound }}"
-      aria-label="{{ soundLabel }}"
-      aria-pressed="{{ soundOn }}"
-    >
-      <span>SOUND</span>
-      <span class="rt-mobile-sound-track" aria-hidden="true">
-        <span class="rt-mobile-sound-thumb"></span>
-      </span>
-    </button>
-  </div>
-</footer>
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
@@ -1329,10 +367,9 @@ class Component extends DCLogic {
   _status = 'SIGNAL FOUND'; _phase = 'found'; _signal = 1; _lockedIdx = 0; _foundFlash = 0;
   _scanT = 0; _scanI = 0; _scanG = 0; _lastCommit = 0; _lastT = 0;
   env = 0.15; _pop = 0; sigQuality = 0.7; _spikes = [];
-  _displayGain = 0.14; _displayTarget = 0.14;
 
   // ---- centralized audio controller (only ONE source ever) ----
-  audio = null; audioCtx = null; srcNode = null; analyser = null; freqData = null; timeData = null;
+  audio = null; audioCtx = null; srcNode = null; analyser = null; freqData = null;
   _activeUsesAnalyser = false; _realEnv = false;
   _token = 0; _streamSI = 0; _streamSettled = false; _rerouted = false;
   _watch = null; _fadeRAF = null; _onPlaying = null; _onError = null;
@@ -1345,19 +382,6 @@ class Component extends DCLogic {
     window.addEventListener('pointermove', this.onPointerMove);
     window.addEventListener('pointerup', this.onPointerUp);
     window.addEventListener('keydown', this.onKeyDown);
-    window.addEventListener('message', this.onHostTransport);
-    window.__hellaRadioTransport = this.onHostTransportCommand;
-    window.__hellaRadioDebug = () => ({
-      isPlaying: this.state.isPlaying,
-      audioContextState: this.audioCtx ? this.audioCtx.state : 'missing',
-      analyserActive: this._activeUsesAnalyser,
-      realSignal: this._realEnv,
-      currentSource: this.audio ? this.audio.currentSrc : '',
-      frequencyPeak: this.freqData ? Math.max.apply(null, this.freqData) : 0,
-      waveformPeak: this._wavePeak || 0,
-      waveformRms: this._waveRms || 0,
-      bands: (this.bands || []).slice(),
-    });
     this.clockTimer = setInterval(this.updateClocks, 1000);
     this.updateClocks();
     this.measure();
@@ -1378,9 +402,6 @@ class Component extends DCLogic {
     window.removeEventListener('pointermove', this.onPointerMove);
     window.removeEventListener('pointerup', this.onPointerUp);
     window.removeEventListener('keydown', this.onKeyDown);
-    window.removeEventListener('message', this.onHostTransport);
-    if (window.__hellaRadioTransport === this.onHostTransportCommand) delete window.__hellaRadioTransport;
-    delete window.__hellaRadioDebug;
     if (this.audioCtx) { try { this.audioCtx.close(); } catch (e) {} this.audioCtx = null; }
   }
 
@@ -1388,75 +409,10 @@ class Component extends DCLogic {
   setKnobRef = (el) => { this.knobEl = el; this.applyKnob(); };
   setSpecWrapRef = (el) => { this.specWrapEl = el; };
   setSpecCanvasRef = (el) => { this.specCanvas = el; if (el) this.specCtx = el.getContext('2d'); this.measure(); };
-  setOrbitCanvasRef = (el) => { this.orbitCanvas = el; };
-  onOrbitPointerDown = (e) => {
-    this.onOrbitPointerMove(e);
-    this.orbitDrag = { pointerId: e.pointerId, x: e.clientX, y: e.clientY };
-    try { e.currentTarget.setPointerCapture(e.pointerId); } catch (err) {}
-    e.preventDefault();
-  };
-  onOrbitPointerMove = (e) => {
-    if (!this.orbitCanvas) return;
-    const rect = this.orbitCanvas.getBoundingClientRect();
-    this.orbitPointer = {
-      x: ((e.clientX - rect.left) / Math.max(1, rect.width)) * 2 - 1,
-      y: ((e.clientY - rect.top) / Math.max(1, rect.height)) * 2 - 1,
-      active: true,
-      strength: e.buttons ? 1 : 0.72,
-    };
-    if (this.orbitDrag && this.orbitDrag.pointerId === e.pointerId) {
-      const dx = e.clientX - this.orbitDrag.x;
-      const dy = e.clientY - this.orbitDrag.y;
-      this.orbitDrag.x = e.clientX;
-      this.orbitDrag.y = e.clientY;
-      this.sculptureUserRotationX = Math.max(-0.75, Math.min(0.75, (this.sculptureUserRotationX || 0) + dy * 0.011));
-      this.sculptureUserRotationY = (this.sculptureUserRotationY || 0) + dx * 0.011;
-      this.sculptureUserRotationZ = Math.max(-0.35, Math.min(0.35, (this.sculptureUserRotationZ || 0) + (dx - dy) * 0.0018));
-      e.preventDefault();
-    }
-  };
-  onOrbitPointerUp = (e) => {
-    if (!this.orbitDrag || this.orbitDrag.pointerId !== e.pointerId) return;
-    this.orbitDrag = null;
-    try { e.currentTarget.releasePointerCapture(e.pointerId); } catch (err) {}
-  };
-  onOrbitPointerLeave = () => {
-    if (this.orbitPointer) this.orbitPointer.active = false;
-  };
-  onOrbitWheel = (e) => {
-    this.sculptureDepth = Math.max(-2.4, Math.min(3.2, (this.sculptureDepth || 0) + e.deltaY * 0.004));
-    e.preventDefault();
-  };
   setDotARef = (el) => { this.dotAEl = el; };
   setPlayBtnRef = (el) => { this.playBtnEl = el; };
   setSignalCanvasRef = (el) => { this.sigCanvas = el; if (el) this.sigCtx = el.getContext('2d'); this.measure(); };
   setAirDotRef = (el) => { this.airDotEl = el; };
-  setStationListRef = (el) => { this.stationListEl = el; };
-  setStationButtonRef = (idx, el) => {
-    if (!this.stationEls) this.stationEls = [];
-    this.stationEls[idx] = el;
-  };
-  scrollStationIntoView = (idx) => {
-    const row = this.stationEls && this.stationEls[idx];
-    const consoleEl = this.stationListEl && this.stationListEl.closest('.rt-console');
-    if (!row || !consoleEl || getComputedStyle(consoleEl).display !== 'grid') return;
-
-    requestAnimationFrame(() => {
-      const rect = row.getBoundingClientRect();
-      const player = document.querySelector('.rt-player');
-      const playerHeight = player ? player.getBoundingClientRect().height : 0;
-      const visibleTop = 24;
-      const visibleBottom = window.innerHeight - playerHeight - 24;
-      if (rect.top >= visibleTop && rect.bottom <= visibleBottom) return;
-
-      const availableHeight = Math.max(0, visibleBottom - visibleTop);
-      const targetTop = visibleTop + Math.max(0, (availableHeight - rect.height) / 2);
-      window.scrollTo({
-        top: Math.max(0, window.scrollY + rect.top - targetTop),
-        behavior: 'smooth',
-      });
-    });
-  };
 
   // ---- pirate feed ticker (JS-driven so it can be scrubbed / paused by pointer) ----
   setTickerTrackRef = (el) => { this.tickerEl = el; this._tickerMeasure = true; };
@@ -1486,19 +442,6 @@ class Component extends DCLogic {
       this.specCtx.setTransform(dpr, 0, 0, dpr, 0, 0); this.specW = w; this.specH = h;
       if (w !== this.state.specW) this.setState({ specW: w });
     }
-    if (this.orbitCanvas) {
-      const w = this.orbitCanvas.clientWidth || 420;
-      const h = this.orbitCanvas.clientHeight || w;
-      this.orbitW = w;
-      this.orbitH = h;
-      if (this.sculptureRenderer && this.sculptureCamera) {
-        this.sculptureRenderer.setSize(w, h, false);
-        const aspect = w / Math.max(1, h);
-        this.sculptureCamera.aspect = aspect;
-        this.sculptureCamera.updateProjectionMatrix();
-        this.updateSculptureCameraFit(true);
-      }
-    }
     if (this.sigCanvas) {
       const w = this.sigCanvas.clientWidth || 380; const h = 40; const dpr = Math.min(2, window.devicePixelRatio || 1);
       this.sigCanvas.width = Math.round(w * dpr); this.sigCanvas.height = Math.round(h * dpr);
@@ -1513,25 +456,7 @@ class Component extends DCLogic {
     return bi;
   }
 
-  stationIndexAtDialPoint(clientX, clientY) {
-    if (!this.knobAreaEl) return null;
-    const rect = this.knobAreaEl.getBoundingClientRect();
-    const radius = rect.width / 2;
-    const dx = clientX - (rect.left + radius);
-    const dy = clientY - (rect.top + rect.height / 2);
-    const radialPosition = Math.hypot(dx, dy) / Math.max(1, radius);
-    if (radialPosition < 0.52 || radialPosition > 1.1) return null;
-
-    let angle = Math.atan2(dy, dx) * 180 / Math.PI + 90;
-    if (angle > 180) angle -= 360;
-    if (angle < -162 || angle > 162) return null;
-
-    const clampedAngle = Math.max(-150, Math.min(150, angle));
-    const frequency = 88 + ((clampedAngle + 150) / 300) * 20;
-    return this.nearestIdx(frequency);
-  }
-
-  applyKnob() { if (this.knobEl) this.knobEl.style.transform = 'rotate(' + (-150 + (this.freq - 88) / 20 * 300) + 'deg)'; }
+  applyKnob() { if (this.knobEl) this.knobEl.style.transform = 'rotate(' + ((this.freq - 88) / 20 * 540) + 'deg)'; }
 
   frame(t) {
     const dt = Math.min(0.05, (t - this._lastT) / 1000); this._lastT = t;
@@ -1541,7 +466,7 @@ class Component extends DCLogic {
         this.vel += a * dt; this.freq += this.vel * dt;
         if (Math.abs(this.freq - this.target) < 0.008 && Math.abs(this.vel) < 0.05) { this.freq = this.target; this.vel = 0; this.target = null; }
       } else if (Math.abs(this.vel) > 0.02) {
-        this.freq += this.vel * dt; this.vel *= Math.exp(-2.4 * dt);
+        this.freq += this.vel * dt; this.vel *= Math.exp(-3.2 * dt);
         if (Math.abs(this.vel) < 0.4) {
           const ni = this.nearestIdx(this.freq);
           if (Math.abs(this.STATIONS[ni].frequency - this.freq) < 0.55) this.target = this.STATIONS[ni].frequency; else this.vel = 0;
@@ -1556,9 +481,7 @@ class Component extends DCLogic {
     this.applyKnob();
     this.tickTicker(dt);
     this.updateBands(t);
-    if (!this._realEnv) this.env += (0 - this.env) * 0.2;
-    const displayEase = this._displayTarget < this._displayGain ? 0.18 : 0.075;
-    this._displayGain += (this._displayTarget - this._displayGain) * displayEase;
+    if (!this._realEnv) this.updateEnv(t);
     this.drawSpectrum(t);
     this.updateTubes(t);
     this.computeStatus(t);
@@ -1578,298 +501,29 @@ class Component extends DCLogic {
     this.env += (tgt - this.env) * 0.18;
   }
 
-  initAudioSculpture() {
-    const THREE = window.THREE;
-    if (!THREE || !this.orbitCanvas || this.sculptureRenderer) return;
-    const renderer = new THREE.WebGLRenderer({
-      canvas: this.orbitCanvas,
-      alpha: true,
-      antialias: true,
-      powerPreference: 'high-performance',
-    });
-    renderer.setPixelRatio(Math.min(1.7, window.devicePixelRatio || 1));
-    renderer.setClearColor(0x000000, 0);
-
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
-    const group = new THREE.Group();
-    group.rotation.set(-0.12, -0.34, 0.02);
-    group.scale.set(1, 1.45, 1.45);
-    scene.add(group);
-
-    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-    const sliceCount = isSafari ? 52 : 72;
-    const segmentCount = isSafari ? 48 : 64;
-    const slices = [];
-    const palette = [0x63747f, 0x83959b, 0x71848c, 0x9ba7a3];
-
-    for (let slice = 0; slice < sliceCount; slice++) {
-      const positions = new Float32Array(segmentCount * 3);
-      const geometry = new THREE.BufferGeometry();
-      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-      const material = new THREE.LineBasicMaterial({
-        color: palette[slice % palette.length],
-        transparent: true,
-        opacity: 0.2 + (slice / Math.max(1, sliceCount - 1)) * 0.22,
-        depthWrite: false,
-      });
-      const ring = new THREE.LineLoop(geometry, material);
-      ring.frustumCulled = false;
-      group.add(ring);
-      slices.push({
-        ring,
-        positions,
-        x: -3.75 + slice / Math.max(1, sliceCount - 1) * 7.5,
-        level: 0.18,
-      });
-    }
-
-    this.sculptureRenderer = renderer;
-    this.sculptureScene = scene;
-    this.sculptureCamera = camera;
-    this.sculptureGroup = group;
-    this.sculptureSlices = slices;
-    this.sculptureSegmentCount = segmentCount;
-    this.sculpturePointerStrength = 0;
-    this.sculptureUserRotationX = 0;
-    this.sculptureUserRotationY = 0;
-    this.sculptureUserRotationZ = 0;
-    this.sculptureDepth = 0;
-    this.measure();
-  }
-
-  updateSculptureCameraFit = (snap) => {
-    const camera = this.sculptureCamera;
-    const group = this.sculptureGroup;
-    if (!camera || !group) return;
-
-    // Fit the actual live geometry after XYZ rotation. Static dimensions cannot
-    // account for audio transients or a user turning the sculpture toward camera.
-    group.updateMatrixWorld(true);
-    const e = group.matrixWorld.elements;
-    const halfFov = camera.fov * Math.PI / 360;
-    const tanVertical = Math.tan(halfFov);
-    const aspect = Math.max(0.2, camera.aspect || 1);
-    const tanHorizontal = tanVertical * aspect;
-    const safety = 1.15;
-    let fitDistance = 6;
-    if (this.sculptureSlices && this.sculptureSlices.length) {
-      for (const item of this.sculptureSlices) {
-        const positions = item.positions;
-        for (let offset = 0; offset < positions.length; offset += 3) {
-          const x = positions[offset];
-          const y = positions[offset + 1];
-          const z = positions[offset + 2];
-          const worldX = e[0] * x + e[4] * y + e[8] * z + e[12];
-          const worldY = e[1] * x + e[5] * y + e[9] * z + e[13];
-          const worldZ = e[2] * x + e[6] * y + e[10] * z + e[14];
-          fitDistance = Math.max(
-            fitDistance,
-            worldZ + Math.abs(worldY) * safety / tanVertical,
-            worldZ + Math.abs(worldX) * safety / tanHorizontal,
-          );
-        }
-      }
-    }
-
-    this.sculptureFitDistance = fitDistance;
-    const targetCameraZ = Math.max(fitDistance * 1.02, fitDistance + (this.sculptureDepth || 0));
-    if (snap || !Number.isFinite(this.sculptureCameraZ) || targetCameraZ > this.sculptureCameraZ) {
-      this.sculptureCameraZ = targetCameraZ;
-    } else {
-      this.sculptureCameraZ += (targetCameraZ - this.sculptureCameraZ) * 0.14;
-    }
-    camera.position.set(0, 0, this.sculptureCameraZ);
-    camera.lookAt(0, 0, 0);
-  };
-
-  sculptureEnvelope(x) {
-    const peaks = [
-      [-0.76, 0.1, 1.02],
-      [-0.42, 0.13, 0.48],
-      [-0.12, 0.07, 0.92],
-      [0.2, 0.055, 0.62],
-      [0.44, 0.075, 0.84],
-      [0.7, 0.12, 0.38],
-    ];
-    let value = 0.08 + 0.06 * Math.sin((x + 1) * Math.PI * 5.5);
-    for (const peak of peaks) {
-      const d = x - peak[0];
-      value += peak[2] * Math.exp(-(d * d) / (2 * peak[1] * peak[1]));
-    }
-    const edge = Math.pow(Math.sin(Math.PI * Math.max(0, Math.min(1, (x + 1) / 2))), 0.42);
-    return Math.max(0.06, value * (0.35 + edge * 0.65));
-  }
-
-  updateAudioSculpture(t) {
-    if (!this.sculptureRenderer || !this.sculptureSlices) return;
-    const live = this.state.isPlaying;
-    const elapsed = t * 0.001;
-    const bands = this.bands || [0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04];
-    const pointer = this.orbitPointer || { x: 0, y: 0, active: false, strength: 0 };
-    const pointerTarget = pointer.active ? pointer.strength : 0;
-    this.sculpturePointerStrength += (pointerTarget - this.sculpturePointerStrength) * 0.09;
-
-    const group = this.sculptureGroup;
-    const targetY = -0.34 + this.sculptureUserRotationY + pointer.x * 0.13 * this.sculpturePointerStrength + Math.sin(elapsed * 0.22) * 0.025;
-    const targetX = -0.12 + this.sculptureUserRotationX + pointer.y * 0.08 * this.sculpturePointerStrength + Math.cos(elapsed * 0.19) * 0.018;
-    const targetZ = this.sculptureUserRotationZ + Math.sin(elapsed * 0.17) * 0.018;
-    group.rotation.y += (targetY - group.rotation.y) * 0.055;
-    group.rotation.x += (targetX - group.rotation.x) * 0.055;
-    group.rotation.z += (targetZ - group.rotation.z) * 0.055;
-
-    const sliceCount = this.sculptureSlices.length;
-    const segments = this.sculptureSegmentCount;
-    for (let slice = 0; slice < sliceCount; slice++) {
-      const item = this.sculptureSlices[slice];
-      const u = slice / Math.max(1, sliceCount - 1);
-      const xNorm = u * 2 - 1;
-      const bandPosition = u * (bands.length - 1);
-      const bandIndex = Math.floor(bandPosition);
-      const bandMix = bandPosition - bandIndex;
-      const bandA = bands[Math.min(bands.length - 1, bandIndex)] || 0;
-      const bandB = bands[Math.min(bands.length - 1, bandIndex + 1)] || bandA;
-      let audioLevel = bandA + (bandB - bandA) * bandMix;
-      if (live && this._activeUsesAnalyser && this.freqData && this.freqData.length) {
-        const dataIndex = Math.min(this.freqData.length - 1, Math.floor(Math.pow(u, 1.65) * this.freqData.length));
-        audioLevel = Math.max(audioLevel, this.freqData[dataIndex] / 255);
-      }
-
-      const base = this.sculptureEnvelope(xNorm);
-      const transient = live ? audioLevel * (0.7 + this.env * 0.9) : 0.035;
-      const breath = 0.04 * Math.sin(elapsed * 0.7 + slice * 0.19);
-      const targetLevel = 0.12 + base * (0.72 + transient * 1.25) + breath;
-      item.level += (targetLevel - item.level) * (targetLevel > item.level ? 0.28 : 0.1);
-
-      const pointerDistance = Math.abs(pointer.x - xNorm);
-      const pointerLift = Math.exp(-pointerDistance * pointerDistance / 0.11) * this.sculpturePointerStrength * 0.24;
-      for (let segment = 0; segment < segments; segment++) {
-        const angle = segment / segments * Math.PI * 2;
-        const ripple =
-          Math.sin(angle * 3 + elapsed * 1.2 + slice * 0.08) * 0.035 +
-          Math.sin(angle * 5 - elapsed * 0.8 + slice * 0.04) * 0.018;
-        const radius = Math.max(0.05, item.level * (1 + ripple + pointerLift));
-        const offset = segment * 3;
-        item.positions[offset] = item.x + Math.sin(angle * 2 + elapsed + slice * 0.05) * 0.018 * radius;
-        item.positions[offset + 1] = Math.cos(angle) * radius;
-        item.positions[offset + 2] = Math.sin(angle) * radius;
-      }
-      item.ring.geometry.attributes.position.needsUpdate = true;
-      item.ring.material.opacity = 0.2 + Math.min(0.42, item.level * 0.2 + audioLevel * 0.22);
-    }
-
-    this.updateSculptureCameraFit(false);
-    this.sculptureRenderer.render(this.sculptureScene, this.sculptureCamera);
-  }
-
-  disposeAudioSculpture() {
-    if (this.sculptureSlices) {
-      this.sculptureSlices.forEach((item) => {
-        item.ring.geometry.dispose();
-        item.ring.material.dispose();
-      });
-    }
-    if (this.sculptureRenderer) this.sculptureRenderer.dispose();
-    this.sculptureSlices = null;
-    this.sculptureRenderer = null;
-    this.sculptureScene = null;
-    this.sculptureCamera = null;
-    this.sculptureGroup = null;
-  }
-
   drawSpectrum(t) {
     const c = this.specCtx; if (!c) return;
     const W = this.specW, H = this.specH;
     c.clearRect(0, 0, W, H);
-    const gain = Math.max(0.02, Math.min(1, this._displayGain || 0));
-    const bands = this.bands || new Array(7).fill(0);
-    const hasLiveWaveform = this._realEnv && this.timeData && this.timeData.length;
-    const compact = W < 620;
-    const pad = Math.max(4, W * 0.012);
-    const waveW = compact ? W * 0.58 : W * 0.42;
-    const eqX = waveW + pad * 2;
-    const eqW = compact ? W - eqX - pad : W * 0.25;
-    const numberX = eqX + eqW + pad * 2;
-    const numberW = Math.max(0, W - numberX - pad);
-    const cy = H * 0.5;
-    const wavePeak = Math.max(0.012, this._wavePeak || 0);
-    const waveBoost = hasLiveWaveform ? Math.min(6.2, Math.max(1.2, 0.7 / wavePeak)) : 1;
-    const bandBoost = Math.min(3, Math.max(1, this._bandBoost || 1));
-    const graphite = 'rgba(73,86,87,' + (0.32 + gain * 0.58) + ')';
-    const faint = 'rgba(73,86,87,' + (0.1 + gain * 0.14) + ')';
-    const red = 'rgba(240,79,73,' + (0.35 + gain * 0.65) + ')';
-
-    c.save();
-    c.lineWidth = Math.max(1, H * 0.012);
-    c.strokeStyle = faint;
-    c.strokeRect(pad, H * 0.16, waveW - pad * 1.5, H * 0.68);
-    c.beginPath();
-    c.moveTo(pad, cy);
-    c.lineTo(waveW - pad * 0.5, cy);
-    c.stroke();
-
-    const traces = hasLiveWaveform ? 3 : 1;
-    for (let trace = 0; trace < traces; trace++) {
-      c.beginPath();
-      const alpha = trace === 0 ? 1 : 0.42;
-      c.strokeStyle = trace === 0
-        ? graphite
-        : 'rgba(73,86,87,' + ((0.12 + gain * 0.28) * alpha) + ')';
-      for (let x = pad; x <= waveW - pad * 0.5; x += 2) {
-        const u = (x - pad) / Math.max(1, waveW - pad * 1.5);
-        const envelope = 0.28 + Math.sin(Math.PI * u) * 0.72;
-        let sample = 0;
-        if (hasLiveWaveform) {
-          const offset = trace * Math.max(1, Math.floor(this.timeData.length * 0.015));
-          const index = (Math.floor(u * (this.timeData.length - 1)) + offset) % this.timeData.length;
-          sample = (this.timeData[index] - 128) / 128;
-        }
-        const y = cy - sample * H * (0.32 - trace * 0.04) * gain * waveBoost * envelope;
-        if (x === pad) c.moveTo(x, y); else c.lineTo(x, y);
-      }
-      c.stroke();
+    const peakX = (this.freq - 88) / 20 * W; const base = H * 0.7; const sd = W * 0.05; const step = 3;
+    for (let x = 1; x < W; x += step) {
+      const dx = x - peakX; const gauss = Math.exp(-(dx * dx) / (2 * sd * sd));
+      const noise = (Math.sin(x * 0.13 + t * 0.004) + Math.sin(x * 0.07 - t * 0.0027) + Math.sin(x * 0.21 + t * 0.0061)) / 3;
+      const nn = (noise + 1) / 2;
+      const amp = (0.05 + 0.95 * gauss) * (0.2 + 0.85 * this.env) * (0.32 + 0.68 * nn);
+      const h = amp * H * 0.74; const alpha = Math.min(0.95, 0.1 + 0.62 * gauss + 0.18 * this.env);
+      c.fillStyle = 'rgba(255,159,10,' + alpha + ')'; c.fillRect(x, base - h, 2, h);
+      c.fillStyle = 'rgba(255,159,10,' + (alpha * 0.22) + ')'; c.fillRect(x, base + 1, 2, h * 0.35);
     }
-
-    const columnGap = Math.max(3, eqW * 0.035);
-    const columnW = Math.max(4, (eqW - columnGap * (bands.length - 1)) / bands.length);
-    const segments = 12;
-    const segmentGap = Math.max(1, H * 0.012);
-    const segmentH = Math.max(2, (H * 0.68 - segmentGap * (segments - 1)) / segments);
-    const eqBottom = H * 0.84;
-    for (let band = 0; band < bands.length; band++) {
-      const level = Math.max(0, Math.min(1, bands[band] * gain * bandBoost));
-      const lit = Math.round(level * segments);
-      for (let segment = 0; segment < segments; segment++) {
-        const x = eqX + band * (columnW + columnGap);
-        const y = eqBottom - (segment + 1) * segmentH - segment * segmentGap;
-        const active = segment < lit;
-        const peak = active && segment === lit - 1 && level > 0.58;
-        c.fillStyle = peak ? red : (active ? graphite : faint);
-        c.fillRect(x, y, columnW, segmentH);
-      }
-    }
-
-    if (!compact && numberW > 70) {
-      const low = Math.round(((bands[0] + bands[1]) / 2) * gain * 999);
-      const mid = Math.round(((bands[2] + bands[3] + bands[4]) / 3) * gain * 999);
-      const high = Math.round(((bands[5] + bands[6]) / 2) * gain * 999);
-      const peak = Math.round(Math.max.apply(null, bands) * gain * 999);
-      const values = [low, mid, high, peak];
-      c.font = Math.max(10, Math.min(16, H * 0.12)) + 'px ui-monospace, SFMono-Regular, Menlo, monospace';
-      c.textAlign = 'right';
-      c.textBaseline = 'middle';
-      values.forEach((value, index) => {
-        const y = H * (0.2 + index * 0.2);
-        c.fillStyle = index === 3 && value > 620 ? red : graphite;
-        c.fillText(String(value).padStart(3, '0'), numberX + numberW, y);
-      });
-    }
-    c.restore();
+    const ph = H * 0.8 * (0.5 + 0.5 * this.env);
+    c.save(); c.shadowColor = 'rgba(255,159,10,0.9)'; c.shadowBlur = 16;
+    c.fillStyle = 'rgba(255,214,150,0.95)'; c.fillRect(peakX - 1.5, base - ph, 3, ph); c.restore();
+    c.fillStyle = 'rgba(255,159,10,0.16)'; c.fillRect(0, base, W, 1);
   }
 
   updateTubes(t) {
     const e = this.env;
-    if (this.dotAEl) this.dotAEl.style.boxShadow = '0 0 0 3px rgba(132,148,159,.3), 0 0 ' + (4 + 6 * e) + 'px rgba(240,79,73,' + Math.min(0.5, 0.18 + 0.28 * e) + ')';
+    if (this.dotAEl) this.dotAEl.style.boxShadow = '0 0 ' + (8 + 13 * e) + 'px rgba(255,159,10,' + Math.min(1, 0.55 + 0.45 * e) + ')';
   }
 
   drawSignal(t) {
@@ -1900,19 +554,7 @@ class Component extends DCLogic {
   // ====================================================================
   // CENTRALIZED AUDIO CONTROLLER — only one source can ever be active.
   // ====================================================================
-  isCors(url) {
-    return /(somafm\.com|ntslive\.net|radiomast\.io|out\.airtime\.pro|icecast\.radiofrance\.fr)/i.test(url);
-  }
-  isSafariBrowser() {
-    const ua = navigator.userAgent || '';
-    return /Safari/i.test(ua) && !/(Chrome|Chromium|CriOS|FxiOS|Edg|OPR|Android)/i.test(ua);
-  }
-  playbackUrl(url) {
-    const local = /^(localhost|127\.0\.0\.1)$/i.test(location.hostname);
-    return local && this.isSafariBrowser() && this.isCors(url)
-      ? '/__radio_stream?url=' + encodeURIComponent(url)
-      : url;
-  }
+  isCors(url) { return /somafm\.com/i.test(url); }
 
   ensureCtx() {
     if (!this.audioCtx) {
@@ -1945,16 +587,11 @@ class Component extends DCLogic {
     this.audio = null;
     if (this.srcNode) { try { this.srcNode.disconnect(); } catch (e) {} this.srcNode = null; }
     if (this.analyser) { try { this.analyser.disconnect(); } catch (e) {} this.analyser = null; }
-    this.freqData = null;
-    this.timeData = null;
-    this._wavePeak = 0; this._waveRms = 0; this._bandBoost = 1;
     this._onPlaying = null; this._onError = null;
     this._activeUsesAnalyser = false; this._realEnv = false; this._streamSettled = false;
-    if (!this.state.isPlaying) this._displayTarget = 0.14;
   }
 
   loadStation(idx, autoplay) {
-    this._displayTarget = 0.02;
     this.stopAudio();
     this.currentIdx = idx; this._rerouted = false;
     if (!autoplay) return;
@@ -1970,39 +607,34 @@ class Component extends DCLogic {
     const tok = ++this._token;
     this._streamSI = si; this._streamSettled = false;
     const cors = this.isCors(url);
-    const playbackUrl = this.playbackUrl(url);
-    const proxied = playbackUrl !== url;
-    const canAnalyze = cors || proxied;
-    const a = new Audio(); a.preload = 'auto'; a.muted = false; if (cors && !proxied) a.crossOrigin = 'anonymous';
+    const a = new Audio(); a.preload = 'auto'; a.muted = false; if (cors) a.crossOrigin = 'anonymous';
     this._pool.push(a);
     this.audio = a;
 
     this._onPlaying = () => {
       if (tok !== this._token) return;
       this._streamSettled = true; this.clearWatch();
-      this._displayTarget = this._activeUsesAnalyser ? 1 : 0.14;
       this._rerouted = si > 0; this.commit(true);
     };
     this._onError = () => { if (tok !== this._token) return; this.failover(idx, si); };
     a.addEventListener('playing', this._onPlaying);
     a.addEventListener('error', this._onError);
 
-    if (canAnalyze) {
+    if (cors) {
       this.ensureCtx();
       try {
         this.srcNode = this.audioCtx.createMediaElementSource(a);
         this.analyser = this.audioCtx.createAnalyser();
-        this.analyser.fftSize = 512; this.analyser.smoothingTimeConstant = 0.58;
+        this.analyser.fftSize = 512; this.analyser.smoothingTimeConstant = 0.82;
         this.srcNode.connect(this.analyser); this.analyser.connect(this.audioCtx.destination);
         this.freqData = new Uint8Array(this.analyser.frequencyBinCount);
-        this.timeData = new Uint8Array(this.analyser.fftSize);
         this._activeUsesAnalyser = true;
       } catch (e) { this._activeUsesAnalyser = false; }
     } else {
       this._activeUsesAnalyser = false;
     }
 
-    try { a.src = playbackUrl; a.load(); a.volume = 0; } catch (e) {}
+    try { a.src = url; a.load(); a.volume = 0; } catch (e) {}
     const p = a.play(); if (p && p.catch) p.catch(() => {});
     this.fade(a, 0, this.state.volume / 100, 700);
     this._watch = setTimeout(() => { if (tok === this._token && !this._streamSettled) this.failover(idx, si); }, 7000);
@@ -2051,11 +683,10 @@ class Component extends DCLogic {
     this.stopAnomaly();
     this._anomActive = true;
     const master = ctx.createGain(); master.gain.value = 0;
-    const an = ctx.createAnalyser(); an.fftSize = 512; an.smoothingTimeConstant = 0.58;
+    const an = ctx.createAnalyser(); an.fftSize = 512; an.smoothingTimeConstant = 0.82;
     master.connect(an); an.connect(ctx.destination);
     this.anomMaster = master; this.analyser = an;
     this.freqData = new Uint8Array(an.frequencyBinCount);
-    this.timeData = new Uint8Array(an.fftSize);
     this._activeUsesAnalyser = true; this._streamSettled = true; this._realEnv = false;
     master.gain.setTargetAtTime(this.state.volume / 100 * 0.6, ctx.currentTime, 0.5);
     this.startStaticBed();
@@ -2159,25 +790,25 @@ class Component extends DCLogic {
   }
 
   // ---- EQ / analyser ----
-  settleBands() {
-    if (!this.bands) this.bands = new Array(7).fill(0);
-    for (let b = 0; b < 7; b++) this.bands[b] += (0 - this.bands[b]) * 0.18;
+  proceduralBands(t) {
+    if (!this.bands) this.bands = new Array(7).fill(0.04);
+    for (let b = 0; b < 7; b++) {
+      const wob = (Math.sin(t * 0.0016 * (0.6 + b * 0.22) + b * 1.3) + 1) / 2;
+      const n = (Math.sin(t * 0.004 + b * 2.1) + Math.sin(t * 0.011 + b)) / 4 + 0.5;
+      const tgt = Math.max(0.05, Math.min(1, (0.22 + 0.6 * wob) * (0.45 + 0.6 * n) * (0.5 + 0.5 * this.state.volume / 100)));
+      this.bands[b] += (tgt - this.bands[b]) * 0.18;
+    }
   }
-  updateBands() {
-    if (!this.bands) this.bands = new Array(7).fill(0);
+  settleBands() {
+    if (!this.bands) this.bands = new Array(7).fill(0.04);
+    for (let b = 0; b < 7; b++) this.bands[b] += (0.022 - this.bands[b]) * 0.12;
+  }
+  updateBands(t) {
+    if (!this.bands) this.bands = new Array(7).fill(0.04);
+    if (this.state.isPlaying && !this._activeUsesAnalyser) { this.proceduralBands(t); this._realEnv = false; return; }
     const live = this.state.isPlaying && this._activeUsesAnalyser && this.analyser && this.audioCtx && this.audioCtx.state === 'running';
     if (!live) { this._realEnv = false; this.settleBands(); return; }
     const data = this.freqData; this.analyser.getByteFrequencyData(data);
-    let wavePeak = 0, waveRms = 0;
-    if (this.timeData) {
-      this.analyser.getByteTimeDomainData(this.timeData);
-      for (let i = 0; i < this.timeData.length; i++) {
-        const sample = Math.abs((this.timeData[i] - 128) / 128);
-        if (sample > wavePeak) wavePeak = sample;
-        waveRms += sample * sample;
-      }
-      waveRms = Math.sqrt(waveRms / this.timeData.length);
-    }
     const N = data.length; const hzPerBin = (this.audioCtx.sampleRate / 2) / N;
     const centers = [60, 150, 400, 1000, 2400, 6000, 15000]; const widths = [70, 130, 280, 650, 1500, 3600, 7200]; const gains = [1.05, 1.1, 1.2, 1.35, 1.55, 1.95, 2.7];
     let maxByte = 0, overall = 0;
@@ -2188,16 +819,8 @@ class Component extends DCLogic {
       const k = target > this.bands[b] ? 0.5 : 0.16; this.bands[b] += (target - this.bands[b]) * k; overall += avg;
     }
     overall /= 7;
-    this._wavePeak = wavePeak > 0.006 ? wavePeak : 0;
-    this._waveRms = waveRms > 0.003 ? waveRms : 0;
-    this._bandBoost = maxByte > 0 ? Math.min(3, Math.max(1, 44 / maxByte)) : 1;
-    if (maxByte > 0 || wavePeak > 0.006) {
-      this.env += (Math.min(1, Math.max(overall * 1.7, waveRms * 5.2)) - this.env) * 0.3;
-      this._realEnv = true;
-    } else {
-      this._realEnv = false;
-      this.settleBands();
-    }
+    if (maxByte > 0) { this.env += (Math.min(1, overall * 1.7) - this.env) * 0.3; this._realEnv = true; }
+    else { this._realEnv = false; if (this.state.isPlaying) this.proceduralBands(t); else this.settleBands(); }
   }
 
   computeStatus(t) {
@@ -2231,10 +854,6 @@ class Component extends DCLogic {
   onLock(idx) {
     this.currentIdx = idx;
     const st = this.STATIONS[idx]; if (st) this.startDecode(st.name);
-    if (this._selectionTargetIdx != null) {
-      if (idx === this._selectionTargetIdx) this._selectionTargetIdx = null;
-      return;
-    }
     // occasionally re-run the title decode on a station change, throttled to once / 20s
     const now = performance.now();
     if (!this._logoDecode && !this._logoHover && (!this._logoLast || now - this._logoLast > 20000) && Math.random() < 0.35) { this._logoLast = now; this.startLogoDecode(); }
@@ -2261,7 +880,6 @@ class Component extends DCLogic {
 
   onPlay = () => {
     if (this.state.isPlaying) {
-      this._displayTarget = 0.14;
       this.setState({ isPlaying: false });
       this.stopAudio();
     } else {
@@ -2281,100 +899,44 @@ class Component extends DCLogic {
     this.vel = 0; this.target = this.STATIONS[idx].frequency;
   };
 
-  selectStation = (idx, revealFromDial = false) => {
-    const station = this.STATIONS[idx]; if (!station) return;
-    this.ensureCtx();
-    this._selectionDirection = idx >= this.nearestIdx(this.freq) ? 1 : -1;
-    this._selectionTargetIdx = idx;
-    this.currentIdx = idx;
-    this.vel = 0;
-    this.target = station.frequency;
-    this.startDecode(station.name);
-    if (revealFromDial) this.scrollStationIntoView(idx);
-    this.setState({ isPlaying: true, lockedIdx: idx }, () => this.loadStation(idx, true));
-  };
-
-  // Dial and spectrum labels select the nearest real station and start it.
+  // tap a spectrum number -> tune to the closest station and play it (respecting current play state)
   tuneToNumber = (v) => {
     let bi = 0, bd = 1e9;
     this.STATIONS.forEach((s, i) => { const d = Math.abs(s.frequency - v); if (d < bd) { bd = d; bi = i; } });
-    this.selectStation(bi, true);
+    this.vel = 0; this.target = this.STATIONS[bi].frequency;
   };
-  onScalePointerDown = (e) => { e.preventDefault(); e.stopPropagation(); };
 
   onVolume = (e) => {
-    const v = Number(e.target.value);
-    if (v > 0) this._lastVolume = v;
-    this.setState({ volume: v });
+    const v = Number(e.target.value); this.setState({ volume: v });
     if (this.state.isPlaying && this.anomMaster && this.audioCtx) { try { this.anomMaster.gain.setTargetAtTime(v / 100 * 0.6, this.audioCtx.currentTime, 0.1); } catch (err) {} }
-    if (this.state.isPlaying && !this._fadeRAF && this.audio) { try { this.audio.volume = v / 100; } catch (err) {} }
-  };
-  onMobileSound = () => {
-    const current = this.state.volume;
-    if (current > 0) this._lastVolume = current;
-    const v = current > 0 ? 0 : (this._lastVolume || 78);
-    this.setState({ volume: v });
-    if (this.state.isPlaying && this.anomMaster && this.audioCtx) { try { this.anomMaster.gain.setTargetAtTime(v / 100 * 0.6, this.audioCtx.currentTime, 0.08); } catch (err) {} }
     if (this.state.isPlaying && !this._fadeRAF && this.audio) { try { this.audio.volume = v / 100; } catch (err) {} }
   };
 
   // ---- pointer / dial ----
   onKnobPointerDown = (e) => {
-    e.preventDefault();
     this.dragMode = 'knob'; this.target = null; this.vel = 0; this.dragVel = 0;
     const r = this.knobAreaEl.getBoundingClientRect(); this._cx = r.left + r.width / 2; this._cy = r.top + r.height / 2;
-    this._pointerStartX = e.clientX;
-    this._pointerStartY = e.clientY;
-    this._pointerTravel = 0;
     this.lastAng = Math.atan2(e.clientY - this._cy, e.clientX - this._cx);
-    this._pointerLastT = e.timeStamp || performance.now();
-    this._pointerId = e.pointerId;
-    try { this.knobAreaEl.setPointerCapture(e.pointerId); } catch (err) {}
-    if (this.knobAreaEl) this.knobAreaEl.style.cursor = 'default';
+    if (this.knobAreaEl) this.knobAreaEl.style.cursor = 'grabbing';
   };
   onSpecPointerDown = (e) => {
-    e.preventDefault();
     this.dragMode = 'spec'; this.target = null; this.vel = 0; this.dragVel = 0; this.lastX = e.clientX;
-    this._pointerId = e.pointerId;
-    try { this.specWrapEl.setPointerCapture(e.pointerId); } catch (err) {}
     if (this.specWrapEl) this.specWrapEl.style.cursor = 'grabbing';
   };
   onPointerMove = (e) => {
     if (this.dragMode === 'knob') {
-      this._pointerTravel = Math.max(
-        this._pointerTravel || 0,
-        Math.hypot(e.clientX - this._pointerStartX, e.clientY - this._pointerStartY),
-      );
       const ang = Math.atan2(e.clientY - this._cy, e.clientX - this._cx); let d = ang - this.lastAng;
       if (d > Math.PI) d -= 2 * Math.PI; if (d < -Math.PI) d += 2 * Math.PI; this.lastAng = ang;
-      const now = e.timeStamp || performance.now();
-      const moveDt = Math.max(0.008, Math.min(0.05, (now - this._pointerLastT) / 1000));
-      this._pointerLastT = now;
-      const df = (d / (Math.PI * 5 / 3)) * 20;
-      this.freq = Math.max(88, Math.min(108, this.freq + df));
-      this.dragVel = this.dragVel * 0.7 + (df / moveDt) * 0.3;
+      const df = (d / (2 * Math.PI)) * 8; this.freq = Math.max(88, Math.min(108, this.freq + df));
+      this.dragVel = this.dragVel * 0.6 + (df / 0.016) * 0.4;
     } else if (this.dragMode === 'spec') {
       const dx = e.clientX - this.lastX; this.lastX = e.clientX; const df = dx / this.specW * 20;
       this.freq = Math.max(88, Math.min(108, this.freq + df)); this.dragVel = this.dragVel * 0.6 + (df / 0.016) * 0.4;
     }
   };
-  onPointerUp = (e) => {
-    if (!this.dragMode) return;
-    const wasKnob = this.dragMode === 'knob';
-    const tapTolerance = this.knobAreaEl
-      ? Math.max(8, this.knobAreaEl.getBoundingClientRect().width * 0.025)
-      : 8;
-    const tappedStation = wasKnob && (this._pointerTravel || 0) <= tapTolerance
-      ? this.stationIndexAtDialPoint(e.clientX, e.clientY)
-      : null;
-    this.dragMode = null;
-    this.vel = tappedStation == null ? Math.max(-7, Math.min(7, this.dragVel)) : 0;
-    try {
-      if (this.knobAreaEl && this.knobAreaEl.hasPointerCapture(this._pointerId)) this.knobAreaEl.releasePointerCapture(this._pointerId);
-      if (this.specWrapEl && this.specWrapEl.hasPointerCapture(this._pointerId)) this.specWrapEl.releasePointerCapture(this._pointerId);
-    } catch (err) {}
-    if (this.knobAreaEl) this.knobAreaEl.style.cursor = 'default'; if (this.specWrapEl) this.specWrapEl.style.cursor = 'grab';
-    if (tappedStation != null) this.selectStation(tappedStation, true);
+  onPointerUp = () => {
+    if (!this.dragMode) return; this.dragMode = null; this.vel = Math.max(-9, Math.min(9, this.dragVel));
+    if (this.knobAreaEl) this.knobAreaEl.style.cursor = 'grab'; if (this.specWrapEl) this.specWrapEl.style.cursor = 'grab';
   };
   onKnobWheel = (e) => { e.preventDefault(); this.target = null; this.vel = 0; this.freq = Math.max(88, Math.min(108, this.freq + Math.sign(e.deltaY) * 0.1)); };
   onKnobKeyDown = (e) => {};
@@ -2387,19 +949,6 @@ class Component extends DCLogic {
     if (e.code === 'Space' || e.key === ' ' || e.key === 'Spacebar') { e.preventDefault(); this.onPlay(); }
     else if (e.key === 'ArrowLeft') { e.preventDefault(); this.onPrev(); }
     else if (e.key === 'ArrowRight') { e.preventDefault(); this.onNext(); }
-  };
-
-  onHostTransport = (e) => {
-    if (e.origin !== window.location.origin || e.source !== window.parent) return;
-    const message = e.data || {};
-    if (message.type !== 'hella-radio-transport') return;
-    this.onHostTransportCommand(message.command);
-  };
-
-  onHostTransportCommand = (command) => {
-    if (command === 'toggle-playback') this.onPlay();
-    else if (command === 'previous-station') this.onPrev();
-    else if (command === 'next-station') this.onNext();
   };
 
   updateClocks = () => {
@@ -2460,9 +1009,7 @@ class Component extends DCLogic {
   };
 
   renderVals() {
-    const s = this.state;
-    const isSweeping = this._selectionTargetIdx != null;
-    const li = isSweeping ? this.nearestIdx(s.freq) : s.lockedIdx;
+    const s = this.state; const li = s.lockedIdx;
     const showStation = li != null && this.STATIONS[li] != null; const st = showStation ? this.STATIONS[li] : null;
 
     const MONO = "ui-monospace,'SF Mono',Menlo,Consolas,monospace";
@@ -2558,30 +1105,8 @@ class Component extends DCLogic {
 
     const activeEven = Math.round(this.freq / 2) * 2;
     const axisLabels = [88, 90, 92, 94, 96, 98, 100, 102, 104, 106, 108].map(v => ({ text: String(v), color: v === activeEven ? '#FF9F0A' : '#6E6A62', glow: v === activeEven ? '0 0 8px rgba(255,159,10,.5)' : 'none', aria: 'Tune to ' + v + ' MHz', onClick: () => this.tuneToNumber(v) }));
-    const dialLabels = [88, 90, 92, 94, 96, 98, 100, 102, 104, 106, 108].map((value, index) => {
-      const angle = -150 + index * 30;
-      return {
-        text: String(value),
-        angle,
-        counterAngle: -angle,
-        aria: 'Tune to the station nearest ' + value + ' FM',
-        onPointerDown: this.onScalePointerDown,
-        onClick: () => this.tuneToNumber(value),
-      };
-    });
 
     const networkLine = this.STATIONS.filter(s => s.type !== 'anomaly').length + ' LIVE STATIONS';
-    const stationName = showStation ? st.name : 'NO SIGNAL';
-    const stationItems = this.STATIONS.map((station, index) => ({
-      frequency: station.frequency.toFixed(1),
-      name: station.name,
-      className: 'rt-station' +
-        (index === li ? ' is-active' : '') +
-        (index === li && isSweeping ? (this._selectionDirection < 0 ? ' is-sweeping is-backward' : ' is-sweeping is-forward') : ''),
-      aria: 'Tune to ' + station.name + ' at ' + station.frequency.toFixed(1) + ' FM',
-      setRef: (el) => this.setStationButtonRef(index, el),
-      onClick: () => this.selectStation(index),
-    }));
     const anomOn = this._anomActive && s.isPlaying;
     const desiredKey = anomOn ? 'anom' : (showStation ? li : 'dead');
     if (this._feedKey === null) {
@@ -2595,17 +1120,15 @@ class Component extends DCLogic {
     const tickerItems = this._feedItems;
 
     return {
-      freqStr: s.freq.toFixed(1), stationName, stationItems, dialLabels, utc: s.utc, axisLabels, networkLine, tickerItems, setTickerWrapRef: this.setTickerWrapRef,
+      freqStr: s.freq.toFixed(2), utc: s.utc, axisLabels, networkLine, tickerItems, setTickerWrapRef: this.setTickerWrapRef,
       setKnobAreaRef: this.setKnobAreaRef, setKnobRef: this.setKnobRef, setSpecWrapRef: this.setSpecWrapRef,
       setSpecCanvasRef: this.setSpecCanvasRef, setDotARef: this.setDotARef, setPlayBtnRef: this.setPlayBtnRef,
       setSignalCanvasRef: this.setSignalCanvasRef, setAirDotRef: this.setAirDotRef, setTickerTrackRef: this.setTickerTrackRef,
-      setStationListRef: this.setStationListRef,
       onTickerDown: this.onTickerDown, onTickerMove: this.onTickerMove, onTickerUp: this.onTickerUp, onTickerItemClick: this.onTickerItemClick,
       onKnobPointerDown: this.onKnobPointerDown, onSpecPointerDown: this.onSpecPointerDown, onKnobWheel: this.onKnobWheel, onKnobKeyDown: this.onKnobKeyDown,
       nameChars, nameColor, onAir, showReroute, logoChars, onLogoHover: this.onLogoHover, onLogoLeave: this.onLogoLeave,
       eqCols, isPlaying: s.isPlaying, notPlaying: !s.isPlaying, playLabel: s.isPlaying ? 'Pause' : 'Play', volume: s.volume,
-      soundOn: s.volume > 0, soundClass: s.volume > 0 ? 'is-on' : 'is-off', soundLabel: s.volume > 0 ? 'Turn sound off' : 'Turn sound on',
-      onPlay: this.onPlay, onNext: this.onNext, onPrev: this.onPrev, onVolume: this.onVolume, onMobileSound: this.onMobileSound,
+      onPlay: this.onPlay, onNext: this.onNext, onPrev: this.onPrev, onVolume: this.onVolume,
     };
   }
 }
