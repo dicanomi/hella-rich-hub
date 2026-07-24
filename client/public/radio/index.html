@@ -19,6 +19,18 @@
 <meta name="twitter:description" content="88–108 MHz of live transmissions. A global signal network. Tune in.">
 <meta name="twitter:image" content="https://hella.rich/radio/og-radio.webp">
 <script src="./support.js"></script>
+<script>
+  (function () {
+    var userAgent = navigator.userAgent;
+    var isSafari =
+      /Safari/i.test(userAgent) &&
+      !/(Chrome|Chromium|CriOS|Edg|EdgiOS|OPR|OPiOS|FxiOS)/i.test(userAgent);
+
+    if (isSafari) {
+      document.documentElement.classList.add("rt-safari");
+    }
+  })();
+</script>
 </head>
 <body>
 <x-dc>
@@ -704,6 +716,15 @@
     width:min(100%,18rem);
     margin:0;
     justify-self:end;
+  }
+  @media (min-width:1101px){
+    html.rt-safari .rt-player-inner{
+      grid-template-columns:1fr max-content 1fr;
+      grid-template-areas:". controls volume";
+    }
+    html.rt-safari .rt-player-signal{
+      display:none;
+    }
   }
   .rt-mobile-sound{
     display:none;

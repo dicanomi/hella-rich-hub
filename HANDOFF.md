@@ -9,6 +9,35 @@ Keep entries short and factual. This file is context, not a diary.
 
 ---
 
+## 2026-07-24 10:19 — Codex — Safari radio tray fallback ready for production
+
+**Did:**
+- Added Safari-only browser detection to the redesigned Radio app.
+- Hid the nonfunctional waveform and EQ visualization in Safari while preserving the centered transport and volume controls.
+- Kept the full audio visualization visible in Chrome, Firefox, and other supported browsers.
+- Ran the production build and verified both Safari and Chrome layouts with browser-level checks.
+
+**Current state:**
+- The Safari fallback is committed to GitHub `main`.
+- Cloudflare Pages serves the updated Radio app at `https://hella.rich/radio`.
+- Local review URL: `http://127.0.0.1:3000/radio`.
+
+**Next steps:**
+- [x] Push the Safari fallback to GitHub `main`.
+- [x] Verify Cloudflare Pages serves the updated Radio app.
+
+**Decisions / rationale:**
+- Safari retains audio playback and all controls; only the unsupported decorative analyzer display is removed.
+- Tablet and mobile continue using the existing simplified tray.
+
+**Watch out for:**
+- Safari detection excludes Chromium, Chrome iOS, Edge, Opera, and Firefox iOS user agents.
+
+**Credentials/access needed (pointers only, never actual secrets):**
+- Use the authenticated GitHub Desktop push route if shell Git credentials are unavailable.
+
+---
+
 ## 2026-07-23 13:02 — Codex — Happy Human wrapper color and overlay top spacing aligned
 
 **Did:**
