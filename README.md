@@ -61,13 +61,19 @@ client/
 vite.config.cloudflare.ts   # production build config (Cloudflare Pages)
 ```
 
-## Editing workflow (via Claude)
+## Publishing runbook
 
-1. Claude edits source files and commits to `main` (or a preview branch for big changes).
-2. Cloudflare Pages rebuilds automatically.
-3. Changes appear on hella.rich within a couple of minutes.
+Use this sequence for every production update, regardless of tool or model:
 
-Small, explained commits. Preserve existing design, copy, routing, audio, animation, navigation, and responsive behavior. Never overwrite the whole project.
+1. **Confirm scope.** Start on `main` and inspect `git status --short --branch` plus the full diff. Preserve unrelated work; never reset or overwrite changes outside the request.
+2. **Validate locally.** Run the smallest relevant checks and review the affected local route. For deployment-impacting changes, run `pnpm exec vite build --config vite.config.cloudflare.ts`, which matches the Cloudflare build config without reinstalling dependencies.
+3. **Commit only the approved change.** Run `git diff --check`, stage explicit paths, review the staged diff, and create one clear commit. Do not include incidental lockfile or generated-file changes.
+4. **Publish through GitHub.** Push the commit to `origin/main`. If shell credentials are unavailable, use an already authenticated GitHub client rather than asking the user to repeat the work manually.
+5. **Wait for Cloudflare Pages.** A push to `main` automatically starts the production build. Do not run a separate direct Cloudflare deployment unless the Git integration is intentionally being bypassed.
+6. **Verify production.** Confirm GitHub `main` contains the commit, then test the affected `https://hella.rich/<route>` with a cache-busting query. Check the changed behavior, direct load, and refresh; do not treat a successful push as proof of a successful deployment.
+7. **Close cleanly.** Confirm local `main` matches `origin/main`, the worktree is clean, and add a short factual entry to `HANDOFF.md` with the commit, live route, verification result, and any blocker.
+
+For risky work, use a non-`main` branch and its Cloudflare preview first. Keep commits small and preserve existing design, copy, routing, audio, animation, navigation, and responsive behavior.
 
 ## Related infrastructure
 

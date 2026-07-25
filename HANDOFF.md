@@ -6,6 +6,32 @@ and appends a new entry before ending one. Newest entry on top. Never delete
 older entries; this is the memory none of these tools share natively.
 
 Keep entries short and factual. This file is context, not a diary.
+Use the canonical [publishing runbook](README.md#publishing-runbook) instead of
+repeating deployment instructions in each entry.
+
+---
+
+## 2026-07-24 17:38 — Codex — Shared publishing runbook added
+
+**Did:**
+- Replaced the model-specific README workflow with a concise, tool-neutral publishing runbook.
+- Linked this handoff log to the canonical runbook.
+- Checked the instructions against the current Cloudflare build config, GitHub `main` integration, and live-route verification flow.
+
+**Current state:**
+- Documentation only; no application source or production behavior changed.
+
+**Next steps:**
+- [x] Commit and push the documentation update to GitHub `main`.
+
+**Decisions / rationale:**
+- README owns the reusable workflow; HANDOFF remains a short chronological log.
+
+**Watch out for:**
+- Pushing `main` starts Cloudflare Pages automatically, but this documentation is not part of the served application.
+
+**Credentials/access needed (pointers only, never actual secrets):**
+- Use an authenticated GitHub client if shell Git credentials are unavailable.
 
 ---
 
