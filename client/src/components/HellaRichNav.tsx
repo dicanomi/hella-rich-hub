@@ -19,6 +19,7 @@ interface NavProject {
 const PROJECTS: NavProject[] = [
   { title: 'HAPPY HUMAN', slug: '/happy-human' },
   { title: 'RADIO', slug: '/radio' },
+  { title: 'HELLA.FM', slug: '/hella.fm' },
   { title: 'THE_MACHINE.EXE', slug: '/machine-exe' },
   { title: 'HUMAN.EXE', slug: '/human-exe' },
   { title: 'ORB', slug: '/orb' },

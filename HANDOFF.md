@@ -11,6 +11,34 @@ repeating deployment instructions in each entry.
 
 ---
 
+## 2026-08-18 11:20 — Codex — HELLA.FM local station prototype added
+
+**Did:**
+- Added the local HELLA.FM station simulator as a self-contained static app under `client/public/hella.fm`.
+- Added a React wrapper route at `/hella.fm` and registered it in the hub router, redirects, global product nav, homepage product surfaces, and README.
+- Included the prototype-bundled HELLA.RICH PSA MP3s, Doto LCD font, tuner asset, and the current Science Beats sample media.
+- Ran the Cloudflare production build successfully with Codex's bundled Node runtime.
+
+**Current state:**
+- `/radio` remains unchanged.
+- `/hella.fm` is ready to publish through the normal GitHub `main` to Cloudflare Pages flow after push.
+- Browser-only uploaded folders are not repo assets; permanent station media should be copied from real folders or moved to Cloudflare-hosted audio later.
+
+**Next steps:**
+- [ ] Push the commit to GitHub `main` when ready.
+- [ ] Verify `https://hella.rich/hella.fm` after Cloudflare Pages deploys.
+
+**Decisions / rationale:**
+- Kept HELLA.FM separate from the existing canonical `/radio` product so the local-folder station prototype can evolve without disturbing production radio.
+
+**Watch out for:**
+- The committed static app uses `/hella.fm/` asset paths; if the route changes, rebuild the prototype with the matching Vite base.
+
+**Credentials/access needed (pointers only, never actual secrets):**
+- Use authenticated GitHub Desktop or shell Git credentials to push if Codex shell credentials are unavailable.
+
+---
+
 ## 2026-07-24 17:38 — Codex — Shared publishing runbook added
 
 **Did:**
