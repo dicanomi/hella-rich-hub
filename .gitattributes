@@ -1,0 +1,3 @@
+# Generated HELL.SYNTH bundles contain shader source with intentional whitespace.
+HELL-SYNTH/app/dist/assets/*.js whitespace=-trailing-space,-space-before-tab
+client/public/hell-synth-app/assets/*.js whitespace=-trailing-space,-space-before-tab

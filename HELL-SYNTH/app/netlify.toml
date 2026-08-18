@@ -1,0 +1,6 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# HashRouter is used (/#/instrument), so NO SPA rewrite rules are required.
+# This file exists only to set the build command and publish directory.

@@ -1,0 +1,168 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ── VOXFORM design tokens (design.md §2) ─────────────────── */
+    --bg-abyss: #0A0A0C;
+    --bg-panel: #121216;
+    --bg-raised: #1A1A20;
+    --bg-display: #08080A;
+    --line-hair: #26262C;
+    --line-bright: #3A3A42;
+    --ink-hi: #F2F0EB;
+    --ink-mid: #8E8E96;
+    --ink-low: #55555E;
+    --accent-magenta: #FF2E88;
+    --accent-magenta-dim: #8A1B4D;
+    --accent-cyan: #00E5C7;
+    --accent-cyan-dim: #0B6B5F;
+    --signal-red: #FF3355;
+    --warn-amber: #FFB02E;
+    --led-green: #7CFF6B;
+    /* modulator color coding */
+    --env-1: #FF2E88;
+    --env-2: #FF7A3D;
+    --lfo-1: #00E5C7;
+    --lfo-2: #3D9BFF;
+    --lfo-3: #B98CFF;
+
+    /* ── shadcn/ui tokens (dark, aligned to palette) ──────────── */
+    --background: 240 9% 5%;
+    --foreground: 40 14% 93%;
+    --card: 240 9% 7%;
+    --card-foreground: 40 14% 93%;
+    --popover: 240 11% 8%;
+    --popover-foreground: 40 14% 93%;
+    --primary: 332 100% 59%;
+    --primary-foreground: 240 9% 5%;
+    --secondary: 240 8% 10%;
+    --secondary-foreground: 40 14% 93%;
+    --muted: 240 6% 15%;
+    --muted-foreground: 240 3% 58%;
+    --accent: 171 100% 45%;
+    --accent-foreground: 240 9% 5%;
+    --destructive: 350 100% 60%;
+    --destructive-foreground: 40 14% 93%;
+    --border: 240 6% 16%;
+    --input: 240 6% 16%;
+    --ring: 332 100% 59%;
+    --radius: 4px;
+    --sidebar-background: 240 9% 6%;
+    --sidebar-foreground: 40 14% 93%;
+    --sidebar-primary: 332 100% 59%;
+    --sidebar-primary-foreground: 240 9% 5%;
+    --sidebar-accent: 240 8% 10%;
+    --sidebar-accent-foreground: 40 14% 93%;
+    --sidebar-border: 240 6% 16%;
+    --sidebar-ring: 332 100% 59%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    background-color: var(--bg-abyss);
+    scroll-behavior: auto; /* Lenis owns smooth scroll on landing */
+  }
+
+  body {
+    @apply bg-abyss text-ink-hi font-sans antialiased;
+    font-feature-settings: "ss01" on;
+  }
+
+  .font-mono,
+  code,
+  kbd {
+    font-variant-numeric: tabular-nums;
+  }
+
+  ::selection {
+    background: var(--accent-magenta);
+    color: var(--bg-abyss);
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--bg-abyss);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--line-hair);
+    border: 2px solid var(--bg-abyss);
+    border-radius: 6px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--line-bright);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html.lenis,
+    html.lenis body {
+      height: auto;
+    }
+    .lenis.lenis-smooth {
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* The plugin voice: 9–10px Archivo 600 uppercase micro-labels */
+  .micro-label {
+    @apply font-sans font-semibold uppercase text-ink-mid;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+  }
+
+  /* hella.rich editorial eyebrow: Fragment Mono spaced uppercase */
+  .eyebrow {
+    @apply font-mono uppercase text-ink-mid;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+  }
+}
+
+@layer utilities {
+  /* Recessed display well (visualizer strips, readout windows) */
+  .shadow-recessed {
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(0, 0, 0, 0.9);
+  }
+  /* Raised knob body */
+  .shadow-raised {
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 8px 16px rgba(0, 0, 0, 0.5);
+  }
+  .glow-magenta {
+    box-shadow: 0 0 12px rgba(255, 46, 136, 0.35);
+  }
+  .glow-cyan {
+    box-shadow: 0 0 12px rgba(0, 229, 199, 0.3);
+  }
+  .ease-out-expo {
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .ease-in-expo {
+    transition-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+  }
+}
+
+/* Keyframes shared across pages */
+@keyframes vox-led-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+@keyframes vox-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-33.3333%); }
+}
+@keyframes vox-scroll-dot {
+  0% { transform: translateY(0); opacity: 1; }
+  80% { transform: translateY(40px); opacity: 1; }
+  100% { transform: translateY(44px); opacity: 0; }
+}

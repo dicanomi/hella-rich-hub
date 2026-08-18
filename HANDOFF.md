@@ -11,6 +11,34 @@ repeating deployment instructions in each entry.
 
 ---
 
+## 2026-08-18 16:53 — Codex — HELL.SYNTH preview branch integrated and QA-passed
+
+**Did:**
+- Added the complete `HELL-SYNTH/` Kimi handoff package and served its rebuilt static bundle through a new `/hell-synth` hub route.
+- Added the route to the homepage views, product drawer, shared navigation, redirects, SEO, and repository documentation.
+- Fixed six root-absolute asset paths that broke the logo and guide imagery below a host subpath, and replaced 26 unreachable lockfile mirror URLs with the standard npm registry.
+- Rebuilt HELL.SYNTH from the locked source, confirmed the rebuilt bundle, ran the hub Cloudflare build, and completed browser QA for landing, guide, instrument, transport, responsive gate, and the melt regression.
+
+**Current state:**
+- Work is isolated on `agent/add-hell-synth-preview`; `main` and the live hella.rich site are unchanged.
+- Local review URL: `http://127.0.0.1:4173/hell-synth`.
+- Resize samples were stable at 1500px (1272px grid), 1100px (846px), 1600px (1285px), then identical on the repeated widths.
+
+**Next steps:**
+- [ ] Push the preview branch and review its Cloudflare branch URL.
+- [ ] Resolve or accept the documented dependency-audit and optional Docker-hardening notes before merging to production `main`.
+
+**Decisions / rationale:**
+- Preserved the handoff as a standalone root package while serving a synchronized `client/public/hell-synth-app` copy of its prebuilt bundle through the hub.
+- Kept production unchanged; approval of the branch preview is required before merge.
+
+**Watch out for:**
+- When HELL.SYNTH source changes, rebuild `HELL-SYNTH/app/dist` and resync it to `client/public/hell-synth-app`.
+- `pnpm check` still exposes the pre-existing `TheMachine.tsx` SVG `textTransform` type error; the Cloudflare production build passes.
+
+**Credentials/access needed (pointers only, never actual secrets):**
+- Use authenticated GitHub Desktop or shell Git credentials for branch push if needed.
+
 ## 2026-08-18 11:20 — Codex — HELLA.FM local station prototype added
 
 **Did:**
