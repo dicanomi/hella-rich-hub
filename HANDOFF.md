@@ -18,10 +18,12 @@ repeating deployment instructions in each entry.
 - Corrected HELLA.FM routing so `/hella.fm` redirects to the standalone `/hella.fm/` app instead of rendering the older hub iframe/wrapper.
 - Updated the React HELLA.FM page to hand off to the standalone app for client-side navigation too.
 - Added a tiny Cloudflare Pages Function for the dotted `/hella.fm` route because Pages treats dotted no-slash paths as file-like before normal static routing.
+- Added a public-safe `media/stations.json` based on the approved local `5174` experience: HELLA.RICH station MP3s are split into multiple named stations across the dial, while large third-party-looking music folders remain local-only.
 - Kept the large untracked HELLA.FM media folders out of staging.
 
 **Current state:**
 - Local `main` includes HELLA.SYNTH and the HELLA.FM route fix.
+- HELLA.FM live should use the same app behavior as the approved `5174` build, with committed HELLA.RICH station audio plus generated browser-voice channels.
 - HELLA.FM still needs the Cloudflare/R2-style audio hosting plan before publishing the full local music library.
 
 **Next steps:**
@@ -31,10 +33,10 @@ repeating deployment instructions in each entry.
 
 **Decisions / rationale:**
 - Direct `/hella.fm` should not use the hub wrapper; the approved local build is the standalone static HELLA.FM app.
-- Do not commit `client/public/hella.fm/media/*` until the public audio-hosting approach is decided.
+- Do not commit commercial-looking `client/public/hella.fm/media/*` folders until the public audio-hosting/rights approach is decided.
 
 **Watch out for:**
-- Avoid broad `git add -A`; stage specific HELLA.FM routing files only.
+- Avoid broad `git add -A`; stage specific HELLA.FM routing files and the approved HELLA.RICH station assets only.
 
 ---
 

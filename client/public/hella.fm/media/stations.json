@@ -1,0 +1,370 @@
+{
+  "generatedAt": "2026-08-19T02:22:14.061Z",
+  "source": "approved-5174-safe-publish",
+  "notes": "Derived from the approved local 5174 HELLA.FM build. Large third-party-looking music folders are intentionally not included in the public GitHub/Cloudflare build.",
+  "stations": [
+    {
+      "id": "cipher-choir",
+      "title": "Cipher Choir",
+      "folderName": "Station Stations",
+      "tracks": [
+        {
+          "id": "cipher-choir-1",
+          "title": "Hella Rich (1)",
+          "src": "media/Station%20Stations/Hella%20Rich%20(1).mp3",
+          "origin": "CIPHER CHOIR"
+        },
+        {
+          "id": "cipher-choir-2",
+          "title": "Hella Rich FM (12)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(12).mp3",
+          "origin": "CIPHER CHOIR"
+        },
+        {
+          "id": "cipher-choir-3",
+          "title": "Hella Rich FM (28)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(28).mp3",
+          "origin": "CIPHER CHOIR"
+        },
+        {
+          "id": "cipher-choir-4",
+          "title": "Hella Rich FM (37)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(37).mp3",
+          "origin": "CIPHER CHOIR"
+        },
+        {
+          "id": "cipher-choir-5",
+          "title": "Hella Rich FM (48)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(48).mp3",
+          "origin": "CIPHER CHOIR"
+        },
+        {
+          "id": "cipher-choir-6",
+          "title": "Hella Rich FM (66)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(66).mp3",
+          "origin": "CIPHER CHOIR"
+        },
+        {
+          "id": "cipher-choir-7",
+          "title": "Hella Rich FM (76)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(76).mp3",
+          "origin": "CIPHER CHOIR"
+        }
+      ]
+    },
+    {
+      "id": "science-beats",
+      "title": "Science Beats",
+      "folderName": "science-beats",
+      "tracks": [
+        {
+          "id": "science-beats-funk-bump",
+          "title": "Funk Bump",
+          "src": "media/science-beats/funk-bump.mp3",
+          "origin": "SCIENCE BEATS"
+        }
+      ]
+    },
+    {
+      "id": "signal-orchard",
+      "title": "Signal Orchard",
+      "folderName": "Station Stations",
+      "tracks": [
+        {
+          "id": "signal-orchard-1",
+          "title": "Hella Rich (2)",
+          "src": "media/Station%20Stations/Hella%20Rich%20(2).mp3",
+          "origin": "SIGNAL ORCHARD"
+        },
+        {
+          "id": "signal-orchard-2",
+          "title": "Hella Rich FM (13)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(13).mp3",
+          "origin": "SIGNAL ORCHARD"
+        },
+        {
+          "id": "signal-orchard-3",
+          "title": "Hella Rich FM (29)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(29).mp3",
+          "origin": "SIGNAL ORCHARD"
+        },
+        {
+          "id": "signal-orchard-4",
+          "title": "Hella Rich FM (39)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(39).mp3",
+          "origin": "SIGNAL ORCHARD"
+        },
+        {
+          "id": "signal-orchard-5",
+          "title": "Hella Rich FM (50)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(50).mp3",
+          "origin": "SIGNAL ORCHARD"
+        },
+        {
+          "id": "signal-orchard-6",
+          "title": "Hella Rich FM (67)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(67).mp3",
+          "origin": "SIGNAL ORCHARD"
+        }
+      ]
+    },
+    {
+      "id": "basement-relay",
+      "title": "Basement Relay",
+      "folderName": "Station Stations",
+      "tracks": [
+        {
+          "id": "basement-relay-1",
+          "title": "Hella Rich (3)",
+          "src": "media/Station%20Stations/Hella%20Rich%20(3).mp3",
+          "origin": "BASEMENT RELAY"
+        },
+        {
+          "id": "basement-relay-2",
+          "title": "Hella Rich FM (16)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(16).mp3",
+          "origin": "BASEMENT RELAY"
+        },
+        {
+          "id": "basement-relay-3",
+          "title": "Hella Rich FM (30)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(30).mp3",
+          "origin": "BASEMENT RELAY"
+        },
+        {
+          "id": "basement-relay-4",
+          "title": "Hella Rich FM (40)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(40).mp3",
+          "origin": "BASEMENT RELAY"
+        },
+        {
+          "id": "basement-relay-5",
+          "title": "Hella Rich FM (52)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(52).mp3",
+          "origin": "BASEMENT RELAY"
+        },
+        {
+          "id": "basement-relay-6",
+          "title": "Hella Rich FM (68)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(68).mp3",
+          "origin": "BASEMENT RELAY"
+        }
+      ]
+    },
+    {
+      "id": "velvet-antenna",
+      "title": "Velvet Antenna",
+      "folderName": "Station Stations",
+      "tracks": [
+        {
+          "id": "velvet-antenna-1",
+          "title": "Hella Rich (6)",
+          "src": "media/Station%20Stations/Hella%20Rich%20(6).mp3",
+          "origin": "VELVET ANTENNA"
+        },
+        {
+          "id": "velvet-antenna-2",
+          "title": "Hella Rich FM (17)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(17).mp3",
+          "origin": "VELVET ANTENNA"
+        },
+        {
+          "id": "velvet-antenna-3",
+          "title": "Hella Rich FM (31)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(31).mp3",
+          "origin": "VELVET ANTENNA"
+        },
+        {
+          "id": "velvet-antenna-4",
+          "title": "Hella Rich FM (41)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(41).mp3",
+          "origin": "VELVET ANTENNA"
+        },
+        {
+          "id": "velvet-antenna-5",
+          "title": "Hella Rich FM (53)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(53).mp3",
+          "origin": "VELVET ANTENNA"
+        },
+        {
+          "id": "velvet-antenna-6",
+          "title": "Hella Rich FM (69)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(69).mp3",
+          "origin": "VELVET ANTENNA"
+        }
+      ]
+    },
+    {
+      "id": "ghost-payroll",
+      "title": "Ghost Payroll",
+      "folderName": "Station Stations",
+      "tracks": [
+        {
+          "id": "ghost-payroll-1",
+          "title": "Hella Rich FM (4)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(4).mp3",
+          "origin": "GHOST PAYROLL"
+        },
+        {
+          "id": "ghost-payroll-2",
+          "title": "Hella Rich FM (24)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(24).mp3",
+          "origin": "GHOST PAYROLL"
+        },
+        {
+          "id": "ghost-payroll-3",
+          "title": "Hella Rich FM (32)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(32).mp3",
+          "origin": "GHOST PAYROLL"
+        },
+        {
+          "id": "ghost-payroll-4",
+          "title": "Hella Rich FM (43)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(43).mp3",
+          "origin": "GHOST PAYROLL"
+        },
+        {
+          "id": "ghost-payroll-5",
+          "title": "Hella Rich FM (54)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(54).mp3",
+          "origin": "GHOST PAYROLL"
+        },
+        {
+          "id": "ghost-payroll-6",
+          "title": "Hella Rich FM (70)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(70).mp3",
+          "origin": "GHOST PAYROLL"
+        }
+      ]
+    },
+    {
+      "id": "red-weather",
+      "title": "Red Weather",
+      "folderName": "Station Stations",
+      "tracks": [
+        {
+          "id": "red-weather-1",
+          "title": "Hella Rich FM (9)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(9).mp3",
+          "origin": "RED WEATHER"
+        },
+        {
+          "id": "red-weather-2",
+          "title": "Hella Rich FM (25)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(25).mp3",
+          "origin": "RED WEATHER"
+        },
+        {
+          "id": "red-weather-3",
+          "title": "Hella Rich FM (33)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(33).mp3",
+          "origin": "RED WEATHER"
+        },
+        {
+          "id": "red-weather-4",
+          "title": "Hella Rich FM (44)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(44).mp3",
+          "origin": "RED WEATHER"
+        },
+        {
+          "id": "red-weather-5",
+          "title": "Hella Rich FM (57)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(57).mp3",
+          "origin": "RED WEATHER"
+        },
+        {
+          "id": "red-weather-6",
+          "title": "Hella Rich FM (71)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(71).mp3",
+          "origin": "RED WEATHER"
+        }
+      ]
+    },
+    {
+      "id": "awe-corridor",
+      "title": "AWE Corridor",
+      "folderName": "Station Stations",
+      "tracks": [
+        {
+          "id": "awe-corridor-1",
+          "title": "Hella Rich FM (10)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(10).mp3",
+          "origin": "AWE CORRIDOR"
+        },
+        {
+          "id": "awe-corridor-2",
+          "title": "Hella Rich FM (26)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(26).mp3",
+          "origin": "AWE CORRIDOR"
+        },
+        {
+          "id": "awe-corridor-3",
+          "title": "Hella Rich FM (35)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(35).mp3",
+          "origin": "AWE CORRIDOR"
+        },
+        {
+          "id": "awe-corridor-4",
+          "title": "Hella Rich FM (45)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(45).mp3",
+          "origin": "AWE CORRIDOR"
+        },
+        {
+          "id": "awe-corridor-5",
+          "title": "Hella Rich FM (61)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(61).mp3",
+          "origin": "AWE CORRIDOR"
+        },
+        {
+          "id": "awe-corridor-6",
+          "title": "Hella Rich FM (72)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(72).mp3",
+          "origin": "AWE CORRIDOR"
+        }
+      ]
+    },
+    {
+      "id": "static-chapel",
+      "title": "Static Chapel",
+      "folderName": "Station Stations",
+      "tracks": [
+        {
+          "id": "static-chapel-1",
+          "title": "Hella Rich FM (11)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(11).mp3",
+          "origin": "STATIC CHAPEL"
+        },
+        {
+          "id": "static-chapel-2",
+          "title": "Hella Rich FM (27)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(27).mp3",
+          "origin": "STATIC CHAPEL"
+        },
+        {
+          "id": "static-chapel-3",
+          "title": "Hella Rich FM (36)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(36).mp3",
+          "origin": "STATIC CHAPEL"
+        },
+        {
+          "id": "static-chapel-4",
+          "title": "Hella Rich FM (47)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(47).mp3",
+          "origin": "STATIC CHAPEL"
+        },
+        {
+          "id": "static-chapel-5",
+          "title": "Hella Rich FM (64)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(64).mp3",
+          "origin": "STATIC CHAPEL"
+        },
+        {
+          "id": "static-chapel-6",
+          "title": "Hella Rich FM (75)",
+          "src": "media/Station%20Stations/Hella%20Rich%20FM%20(75).mp3",
+          "origin": "STATIC CHAPEL"
+        }
+      ]
+    }
+  ]
+}
