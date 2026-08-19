@@ -1,4 +1,4 @@
-# HELL.SYNTH — static build + nginx serve
+# HELLA.SYNTH — static build + nginx serve
 # docker build -t hellsynth . && docker run -p 8080:80 hellsynth
 
 FROM node:20-alpine AS build

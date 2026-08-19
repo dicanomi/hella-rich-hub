@@ -29,7 +29,7 @@ export default function BuiltLikePlugin() {
           </h2>
           <p className="mt-6 max-w-[420px] font-sans text-[14px] leading-relaxed text-ink-mid">
             The DSP core is pure TypeScript — no framework, no DOM. The
-            interface is just a view. When HELL.SYNTH ships as a DAW plug-in, the
+            interface is just a view. When HELLA.SYNTH ships as a DAW plug-in, the
             engine won't change a line.
           </p>
           <Link

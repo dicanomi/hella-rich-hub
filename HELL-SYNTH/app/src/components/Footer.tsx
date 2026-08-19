@@ -42,7 +42,7 @@ export default function Footer() {
         animate={{ x: [ -10, 10, -10 ] }}
         transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
       >
-        HELL.SYNTH
+        HELLA.SYNTH
       </motion.div>
 
       <div className="relative mx-auto max-w-[1280px] px-6 pb-10 pt-16">
@@ -57,7 +57,7 @@ export default function Footer() {
             <div className="flex items-center gap-2.5">
               <img src="./logo.svg" alt="" width={20} height={20} />
               <span className="font-display text-sm font-extrabold uppercase tracking-[0.14em] text-ink-hi">
-                HELL.SYNTH
+                HELLA.SYNTH
               </span>
             </div>
             <p className="mt-4 max-w-[220px] font-mono text-[10px] uppercase leading-relaxed tracking-[0.18em] text-ink-low">
@@ -95,7 +95,7 @@ export default function Footer() {
 
         <div className="mt-14 flex flex-col gap-3 border-t border-line-hair pt-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-low">
-            © 2026 HELL.SYNTH — MADE IN SOMA SF
+            © 2026 HELLA.SYNTH — MADE IN SOMA SF
           </p>
           <p className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-mid">
             <span className="inline-block h-1.5 w-1.5 rounded-full bg-magenta shadow-glow-magenta" />

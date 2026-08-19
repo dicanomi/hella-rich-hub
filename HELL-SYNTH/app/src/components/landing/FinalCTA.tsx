@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 
 const WireformCanvas = lazy(() => import('@/components/landing/WireformCanvas'))
 
-/** Final CTA (home.md §8) — wireform returns, breathing; HELL.SYNTH. hover excites it. */
+/** Final CTA (home.md §8) — wireform returns, breathing; HELLA.SYNTH. hover excites it. */
 export default function FinalCTA() {
   const [excited, setExcited] = useState(false)
 
@@ -57,7 +57,7 @@ export default function FinalCTA() {
               onMouseEnter={() => setExcited(true)}
               onMouseLeave={() => setExcited(false)}
             >
-              Hell.synth.
+              HELLA.SYNTH.
             </motion.span>
           </span>
         </h2>

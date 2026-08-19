@@ -1,5 +1,5 @@
 /**
- * HELL.SYNTH Instrument — /instrument.
+ * HELLA.SYNTH Instrument — /instrument.
  * Straight into the synth: no onboarding, no mic wall. Engine boots mic-less
  * on mount; SPACE plays/stops with a fade, ← → cycle presets, QWERTY and USB
  * MIDI play notes, REC captures the master output to WAV.
@@ -143,7 +143,7 @@ function Shell() {
         <div className="relative z-10 max-w-md text-center">
           <div className="mx-auto mb-6 h-1.5 w-1.5 rounded-full bg-magenta shadow-glow-magenta" />
           <h1 className="font-display text-[28px] font-extrabold uppercase leading-tight tracking-[0.06em] text-ink-hi">
-            HELL.SYNTH is a desktop instrument.
+            HELLA.SYNTH is a desktop instrument.
           </h1>
           <p className="mt-4 text-[14px] leading-relaxed text-ink-mid">
             A synthesizer this dense needs a real screen. Come back on a laptop.

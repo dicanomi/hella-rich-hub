@@ -35,10 +35,10 @@ export default function Navbar() {
         }}
       >
         {/* Left: wordmark */}
-        <Link to="/" className="flex items-center gap-2.5" aria-label="HELL.SYNTH home">
+        <Link to="/" className="flex items-center gap-2.5" aria-label="HELLA.SYNTH home">
           <img src="./logo.svg" alt="" width={20} height={20} />
           <span className="font-display text-sm font-extrabold uppercase tracking-[0.14em] text-ink-hi">
-            HELL.SYNTH
+            HELLA.SYNTH
           </span>
         </Link>
 

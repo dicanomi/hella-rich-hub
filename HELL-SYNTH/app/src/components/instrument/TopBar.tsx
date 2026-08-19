@@ -176,11 +176,11 @@ export default function TopBar({
             navigate('/')
           }}
           className="flex items-center gap-2 outline-none"
-          aria-label="HELL.SYNTH home"
+          aria-label="HELLA.SYNTH home"
         >
           <img src="./logo.svg" alt="" className="h-[16px] w-[16px]" />
           <span className="whitespace-nowrap font-display text-[14px] font-extrabold uppercase tracking-[0.14em] text-ink-hi">
-            HELL.SYNTH
+            HELLA.SYNTH
           </span>
         </button>
         <div className="hidden items-center gap-1.5 border-l border-line-hair pl-3 xl:flex">
@@ -323,7 +323,7 @@ export default function TopBar({
               <button
                 type="button"
                 onClick={() => {
-                  if (!window.confirm('Delete all local HELL.SYNTH data (presets, settings)?')) return
+                  if (!window.confirm('Delete all local HELLA.SYNTH data (presets, settings)?')) return
                   if (!window.confirm('Really erase everything? This cannot be undone.')) return
                   localStorage.removeItem('voxform.presets')
                   localStorage.removeItem('voxform.settings')

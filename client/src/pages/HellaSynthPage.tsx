@@ -17,9 +17,9 @@ export default function HellaSynthPage() {
   return (
     <>
       <HellaRichSEO
-        title="HELL.SYNTH"
-        description="HELL.SYNTH is a browser-native instrument powered by a hand-written Web Audio engine."
-        keywords="HELL.SYNTH, hella.rich, browser synthesizer, Web Audio, music instrument"
+        title="HELLA.SYNTH"
+        description="HELLA.SYNTH is a browser-native instrument powered by a hand-written Web Audio engine."
+        keywords="HELLA.SYNTH, hella.rich, browser synthesizer, Web Audio, music instrument"
       />
       <div
         style={{
@@ -31,7 +31,7 @@ export default function HellaSynthPage() {
       >
         <iframe
           src={synthUrl}
-          title="HELL.SYNTH"
+          title="HELLA.SYNTH"
           allow="autoplay; microphone"
           style={{
             position: 'absolute',

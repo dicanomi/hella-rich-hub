@@ -163,7 +163,7 @@ export const FACTORY_PRESETS: Preset[] = [
     s.xy = { ...s.xy, xDest: 'cutoff', yDest: 'filterDrive' };
   }),
 
-  // --- HELL.SYNTH additions: warm, dark starting points. Weirdness lives ---
+  // --- HELLA.SYNTH additions: warm, dark starting points. Weirdness lives ---
   // --- behind the knobs, not in the initial patch.                        ---
 
   preset('soma-pad', 'SOMA PAD', 'PAD', (s) => {

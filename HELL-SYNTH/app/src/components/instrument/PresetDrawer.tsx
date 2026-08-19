@@ -109,7 +109,7 @@ export default function PresetDrawer({ open, onClose }: { open: boolean; onClose
   const importFile = async (file: File) => {
     const p = parsePresetJson(await file.text())
     if (!p) {
-      window.alert('Not a valid HELL.SYNTH preset file.')
+      window.alert('Not a valid HELLA.SYNTH preset file.')
       return
     }
     const list = [...userPresets, p]

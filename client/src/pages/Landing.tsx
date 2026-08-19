@@ -25,7 +25,7 @@ const CARD_FOURCAST    = 'https://d2xsxph8kpxj0f.cloudfront.net/3105196632922903
 const RADIO_CARD       = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-radio-v4-76gepMJyY36Pz5dhQ6sZPg.webp';
 const CARD_MARKET_EXE  = 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663292290338/irIwNEoiIgpyRjrD.png';
 const CARD_HAPPY_HUMAN = `${import.meta.env.BASE_URL}card-happy-human-v1.webp`;
-const CARD_HELL_SYNTH  = `${import.meta.env.BASE_URL}hell-synth-app/og-cover.jpg`;
+const CARD_HELL_SYNTH  = `${import.meta.env.BASE_URL}card-hella-synth-v1.webp`;
 
 // ── H1 Typewriter ──────────────────────────────────────────────────────────
 
@@ -215,7 +215,7 @@ function AboutModal({ onClose, onOpenCredits }: { onClose: () => void; onOpenCre
               { title: 'HAPPY HUMAN', tagline: 'A labor archive for jobs that were already politely deleted.', href: '/happy-human' },
               { title: 'HELLA_RADIO', tagline: 'A late-night signal you tune into.',                           href: '/radio' },
               { title: 'HELLA.FM', tagline: 'A local station simulator for your private folders.',              href: '/hella.fm' },
-              { title: 'HELL.SYNTH', tagline: 'A browser-native instrument with a hand-written audio engine.',  href: '/hell-synth' },
+              { title: 'HELLA.SYNTH', tagline: 'A browser-native instrument with a hand-written audio engine.',  href: '/hell-synth' },
               { title: 'THE_MACHINE.EXE', tagline: 'The market is the setting. Human psychology is the subject.',  href: '/machine-exe' },
               { title: 'HUMAN.EXE',   tagline: 'A biological diagnostic machine that discovers more than it was designed to find.', href: '/human-exe' },
               { title: 'ORB',         tagline: 'A living object.',                                            href: '/orb' },
@@ -890,7 +890,7 @@ export default function Landing() {
           <ProjectCard slug="happy-human" title="HAPPY HUMAN" tagline="A labor archive for jobs that were already politely deleted." cta="Apply" image={CARD_HAPPY_HUMAN} index={1} enterDelay={80} />
           <ProjectCard slug="radio"      title="HELLA_RADIO" tagline="A late-night signal you tune into." cta="Tune In" image={RADIO_CARD}       index={2} enterDelay={140} />
           <ProjectCard slug="hella.fm"   title="HELLA.FM"    tagline="A local station simulator for your private folders." cta="Tune In" image={RADIO_CARD}       index={3} enterDelay={200} />
-          <ProjectCard slug="hell-synth" title="HELL.SYNTH" tagline="A browser-native instrument with a hand-written audio engine." cta="Play" image={CARD_HELL_SYNTH} index={4} enterDelay={260} />
+          <ProjectCard slug="hell-synth" title="HELLA.SYNTH" tagline="A browser-native instrument with a hand-written audio engine." cta="Play" image={CARD_HELL_SYNTH} index={4} enterDelay={260} />
           <ProjectCard slug="machine-exe" title="THE_MACHINE.EXE"  tagline="The market is the setting. Human psychology is the subject." cta="Trade" image={CARD_MARKET_EXE} index={5} enterDelay={320} />
           <ProjectCard slug="human-exe"  title="HUMAN.EXE"   tagline="Human Diagnostic Machine" cta="ENTER" image={CARD_HUMAN_EXE}  index={6} enterDelay={380} />
           <ProjectCard slug="orb"        title="ORB"         tagline="A living object." cta="Touch It" image={CARD_ORB}          index={7} enterDelay={440} />
@@ -907,7 +907,7 @@ export default function Landing() {
               { slug: 'happy-human', title: 'HAPPY HUMAN', desc: 'A labor archive for jobs that were already politely deleted.', img: CARD_HAPPY_HUMAN },
               { slug: 'radio',       title: 'HELLA_RADIO', desc: 'A late-night signal you tune into.', img: RADIO_CARD },
               { slug: 'hella.fm',    title: 'HELLA.FM', desc: 'A local station simulator for your private folders.', img: RADIO_CARD },
-              { slug: 'hell-synth',  title: 'HELL.SYNTH', desc: 'A browser-native instrument with a hand-written audio engine.', img: CARD_HELL_SYNTH },
+              { slug: 'hell-synth',  title: 'HELLA.SYNTH', desc: 'A browser-native instrument with a hand-written audio engine.', img: CARD_HELL_SYNTH },
               { slug: 'machine-exe',  title: 'THE_MACHINE.EXE',  desc: 'The market is the setting. Human psychology is the subject.', img: CARD_MARKET_EXE },
               { slug: 'human-exe',   title: 'HUMAN.EXE',   desc: 'Human Diagnostic Machine. The machine discovers more than it was designed to find.', img: CARD_HUMAN_EXE },
               { slug: 'orb',         title: 'ORB',         desc: 'A living object. Seven moods rendered as sound and color.', img: CARD_ORB },
@@ -929,7 +929,7 @@ export default function Landing() {
               { slug: 'happy-human', n: '01', title: 'HAPPY HUMAN', desc: 'A labor archive for jobs that were already politely deleted.', img: CARD_HAPPY_HUMAN },
               { slug: 'radio',       n: '02', title: 'HELLA_RADIO', desc: 'A late-night signal you tune into.', img: RADIO_CARD },
               { slug: 'hella.fm',    n: '03', title: 'HELLA.FM',    desc: 'A local station simulator for your private folders.', img: RADIO_CARD },
-              { slug: 'hell-synth',  n: '04', title: 'HELL.SYNTH', desc: 'A browser-native instrument with a hand-written audio engine.', img: CARD_HELL_SYNTH },
+              { slug: 'hell-synth',  n: '04', title: 'HELLA.SYNTH', desc: 'A browser-native instrument with a hand-written audio engine.', img: CARD_HELL_SYNTH },
               { slug: 'machine-exe',  n: '05', title: 'THE_MACHINE.EXE',  desc: 'The market is the setting. Human psychology is the subject.', img: CARD_MARKET_EXE },
               { slug: 'human-exe',   n: '06', title: 'HUMAN.EXE',   desc: 'Human Diagnostic Machine. The machine discovers more than it was designed to find.', img: CARD_HUMAN_EXE },
               { slug: 'orb',         n: '07', title: 'ORB',         desc: 'A living object. Seven moods rendered as sound and color.', img: CARD_ORB },

@@ -11,13 +11,37 @@ repeating deployment instructions in each entry.
 
 ---
 
-## 2026-08-18 17:35 — Codex — HELL.SYNTH preview branch integrated and QA-passed
+## 2026-08-18 17:42 — Codex — HELLA.SYNTH name and product card updated
+
+**Did:**
+- Renamed the branch preview's visible product surfaces to `HELLA.SYNTH` while keeping the stable `/hell-synth` route and handoff folder names.
+- Added the approved modular-synth artwork as `client/public/card-hella-synth-v1.webp` and pointed the homepage product card at it.
+- Rebuilt the embedded synth app, resynced `client/public/hell-synth-app`, and rebuilt the hub Cloudflare bundle.
+
+**Current state:**
+- The local preview shows `HELLA.SYNTH` and serves the new product image; the previous short name is absent from the checked app, hub, served bundle, and built output.
+- Work remains isolated on `agent/add-hell-synth-preview`; production `main` is still untouched.
+
+**Next steps:**
+- [ ] Review the refreshed branch preview after Cloudflare deploys the new commit.
+
+**Decisions / rationale:**
+- Kept `/hell-synth` as the URL slug to avoid breaking the existing preview link and route wiring.
+- Committed the approved image as WebP for a smaller production payload; the original generated PNG remains in Codex generated images.
+
+**Watch out for:**
+- The standalone `HELL-SYNTH/app/dist` folder is ignored by the package `.gitignore`; the deployable tracked hub copy is `client/public/hell-synth-app`.
+
+**Credentials/access needed (pointers only, never actual secrets):**
+- No new credentials needed for branch review.
+
+## 2026-08-18 17:35 — Codex — HELLA.SYNTH preview branch integrated and QA-passed
 
 **Did:**
 - Added the complete `HELL-SYNTH/` Kimi handoff package and served its rebuilt static bundle through a new `/hell-synth` hub route.
 - Added the route to the homepage views, product drawer, shared navigation, redirects, SEO, and repository documentation.
 - Fixed six root-absolute asset paths that broke the logo and guide imagery below a host subpath, and replaced 26 unreachable lockfile mirror URLs with the standard npm registry.
-- Rebuilt HELL.SYNTH from the locked source, confirmed the rebuilt bundle, ran the hub Cloudflare build, and completed browser QA for landing, guide, instrument, transport, responsive gate, and the melt regression.
+- Rebuilt HELLA.SYNTH from the locked source, confirmed the rebuilt bundle, ran the hub Cloudflare build, and completed browser QA for landing, guide, instrument, transport, responsive gate, and the melt regression.
 
 **Current state:**
 - Work is isolated on `agent/add-hell-synth-preview`; `main` and the live hella.rich site are unchanged.
@@ -34,7 +58,7 @@ repeating deployment instructions in each entry.
 - Kept production unchanged; approval of the branch preview is required before merge.
 
 **Watch out for:**
-- When HELL.SYNTH source changes, rebuild `HELL-SYNTH/app/dist` and resync it to `client/public/hell-synth-app`.
+- When HELLA.SYNTH source changes, rebuild `HELL-SYNTH/app/dist` and resync it to `client/public/hell-synth-app`.
 - `pnpm check` still exposes the pre-existing `TheMachine.tsx` SVG `textTransform` type error; the Cloudflare production build passes.
 
 **Credentials/access needed (pointers only, never actual secrets):**

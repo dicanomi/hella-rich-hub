@@ -7,7 +7,7 @@ import PresetShowcase from '@/components/landing/PresetShowcase'
 import FinalCTA from '@/components/landing/FinalCTA'
 
 /**
- * HELL.SYNTH landing page (home.md). Motion stack: Lenis (Layout) · GSAP
+ * HELLA.SYNTH landing page (home.md). Motion stack: Lenis (Layout) · GSAP
  * ScrollTrigger pinned sections (Hero, SignalChain) · Framer Motion reveals ·
  * custom cursor + grain (Layout).
  */

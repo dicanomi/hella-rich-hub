@@ -16,7 +16,7 @@ const HASH_ALIASES: Record<string, string> = {
 }
 
 /**
- * HELL.SYNTH manual (guide.md). Rendered inside the shared Layout (Nav + Footer +
+ * HELLA.SYNTH manual (guide.md). Rendered inside the shared Layout (Nav + Footer +
  * Lenis + grain + cursor). Sections deep-link: #quickstart #controls
  * #shortcuts #export #faq.
  */

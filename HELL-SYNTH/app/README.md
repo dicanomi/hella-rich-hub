@@ -1,4 +1,4 @@
-# HELL.SYNTH
+# HELLA.SYNTH
 
 Browser-native synthesizer. React 19 + TypeScript + Vite + Tailwind UI
 driving a fully hand-written Web Audio engine (no audio libraries).

@@ -107,7 +107,7 @@ function VizCanvas({ mode, height }: { mode: Mode; height: number }) {
       return
     }
 
-    // time-domain buffer (output only — HELL.SYNTH has no input path)
+    // time-domain buffer (output only — HELLA.SYNTH has no input path)
     let peak = 0
     const read = (an: AnalyserNode | null) => {
       if (!an) return null

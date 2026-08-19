@@ -25,7 +25,7 @@ export default function GuideHero() {
         transition={{ duration: 0.3, delay: 0.1, ease: EASE_OUT_EXPO }}
         className="font-mono text-[11px] uppercase tracking-[0.22em] text-cyan"
       >
-        HELL.SYNTH_MANUAL.PDF — V2.0
+        HELLA.SYNTH_MANUAL.PDF — V2.0
       </motion.p>
 
       <h1

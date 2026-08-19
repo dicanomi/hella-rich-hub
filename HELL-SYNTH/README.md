@@ -1,6 +1,6 @@
-# HELL.SYNTH — Deployment Handoff Package
+# HELLA.SYNTH — Deployment Handoff Package
 
-**HELL.SYNTH** is a browser-native synthesizer: a dark, hardware-style instrument
+**HELLA.SYNTH** is a browser-native synthesizer: a dark, hardware-style instrument
 UI (React + Tailwind) driving a fully custom Web Audio engine (no audio
 libraries — every oscillator, filter, envelope, LFO, effect, and the step
 sequencer are hand-written DSP). It ships with a marketing/landing page, a
@@ -63,7 +63,7 @@ Open the printed URL → click into `#/instrument` → press SPACE.
 
 ## Verify a deployment is correct
 
-1. Landing page loads at `/` (dark page, HELL.SYNTH wordmark).
+1. Landing page loads at `/` (dark page, HELLA.SYNTH wordmark).
 2. Instrument loads at `/#/instrument` — knob panels, step sequencer,
    keyboard strip at the bottom.
 3. Press **SPACE** — the sequencer runs; preset name arrows `‹ ›` switch sounds.
