@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 400" fill="none" font-family="'Fragment Mono', ui-monospace, monospace">
+  <!-- HELLA.SYNTH signal chain: KEYS -> SEQUENCER -> OSCILLATORS -> LADDER FILTER -> MOD MATRIX -> FX -> WAV -->
+  <defs>
+    <style>
+      .node { fill: #1A1A20; stroke: #3A3A42; stroke-width: 1; }
+      .led  { fill: #FF2E88; }
+      .wire { stroke: #00E5C7; stroke-width: 1; }
+      .lbl  { fill: #8E8E96; font-size: 22px; letter-spacing: 4px; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <!-- wires -->
+  <g class="wire">
+    <line x1="170" y1="200" x2="330" y2="200"/>
+    <line x1="430" y1="200" x2="560" y2="200"/>
+    <line x1="700" y1="200" x2="820" y2="200"/>
+    <line x1="960" y1="200" x2="1070" y2="200"/>
+    <line x1="1210" y1="200" x2="1300" y2="200"/>
+    <line x1="1420" y1="200" x2="1490" y2="200"/>
+  </g>
+
+  <!-- nodes -->
+  <g>
+    <rect class="node" x="70"  y="160" width="100" height="80" rx="4"/>
+    <circle class="led" cx="86" cy="176" r="4"/>
+    <text class="lbl" x="120" y="270">KEYS</text>
+
+    <rect class="node" x="330" y="160" width="100" height="80" rx="4"/>
+    <circle class="led" cx="346" cy="176" r="4"/>
+    <text class="lbl" x="380" y="270">SEQUENCER</text>
+
+    <rect class="node" x="560" y="160" width="140" height="80" rx="4"/>
+    <circle class="led" cx="576" cy="176" r="4"/>
+    <text class="lbl" x="630" y="270">OSCILLATORS</text>
+
+    <rect class="node" x="820" y="160" width="140" height="80" rx="4"/>
+    <circle class="led" cx="836" cy="176" r="4"/>
+    <text class="lbl" x="890" y="270">LADDER FILTER</text>
+
+    <rect class="node" x="1070" y="160" width="140" height="80" rx="4"/>
+    <circle class="led" cx="1086" cy="176" r="4"/>
+    <text class="lbl" x="1140" y="270">MOD MATRIX</text>
+
+    <rect class="node" x="1300" y="160" width="120" height="80" rx="4"/>
+    <circle class="led" cx="1316" cy="176" r="4"/>
+    <text class="lbl" x="1360" y="270">FX</text>
+
+    <rect class="node" x="1490" y="160" width="80" height="80" rx="4"/>
+    <circle class="led" cx="1506" cy="176" r="4"/>
+    <text class="lbl" x="1530" y="270">WAV</text>
+  </g>
+</svg>

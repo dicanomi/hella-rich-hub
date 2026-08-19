@@ -11,6 +11,32 @@ repeating deployment instructions in each entry.
 
 ---
 
+## 2026-08-18 17:55 — Codex — HELLA.SYNTH isolated product branch
+
+**Did:**
+- Started from latest `origin/main` (`c8e92d8`) after confirming the canonical checkout only had unrelated untracked HELLA.FM media folders.
+- Added HELLA.SYNTH as an isolated static app under `client/public/hella.synth` with a new `HellaSynthPage.tsx` wrapper route at `/hella.synth`.
+- Added the approved modular-synth card image as `client/public/card-hella-synth-v1.webp`.
+- Registered HELLA.SYNTH in the app router, shared nav, homepage product surfaces, and README.
+
+**Current state:**
+- Work is isolated on `agent/add-hella-synth-isolated`; production `main` is unchanged.
+- HELLA.FM, radio, Happy Human, and their asset/media folders were not edited.
+
+**Next steps:**
+- [x] Cloudflare build passed with `pnpm exec vite build --config vite.config.cloudflare.ts`.
+- [ ] Commit the focused branch, push it, and verify the Cloudflare branch preview.
+
+**Decisions / rationale:**
+- Used `/hella.synth` to match the brand name and keep the static app in a same-named dedicated folder.
+- Kept the large untracked `client/public/hella.fm/media/*` folders out of scope and out of staging.
+
+**Watch out for:**
+- Do not stage `client/public/hella.fm/media/*`; those local folders are intentionally untracked.
+
+**Credentials/access needed (pointers only, never actual secrets):**
+- Use authenticated Git/GitHub Desktop for branch push if shell credentials are blocked.
+
 ## 2026-08-18 18:45 — Codex — HELLA.FM promoted on homepage and live-ready copy updated
 
 **Did:**
