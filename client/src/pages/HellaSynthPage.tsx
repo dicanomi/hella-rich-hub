@@ -10,7 +10,7 @@ import { HellaRichSEO } from '../components/HellaRichSEO';
 const frameBackground = '#050505';
 
 export default function HellaSynthPage() {
-  const src = `${import.meta.env.BASE_URL}hella.synth/index.html?hub=1`;
+  const src = `${import.meta.env.BASE_URL}hella-synth-app/index.html?hub=1`;
 
   useEffect(() => {
     const previous = document.body.style.background;
