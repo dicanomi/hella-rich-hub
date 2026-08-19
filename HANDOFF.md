@@ -17,6 +17,7 @@ repeating deployment instructions in each entry.
 - Fast-forwarded local `main` to include the completed HELLA.SYNTH branch work.
 - Corrected HELLA.FM routing so `/hella.fm` redirects to the standalone `/hella.fm/` app instead of rendering the older hub iframe/wrapper.
 - Updated the React HELLA.FM page to hand off to the standalone app for client-side navigation too.
+- Added a tiny Cloudflare Pages Function for the dotted `/hella.fm` route because Pages treats dotted no-slash paths as file-like before normal static routing.
 - Kept the large untracked HELLA.FM media folders out of staging.
 
 **Current state:**
