@@ -11,6 +11,32 @@ repeating deployment instructions in each entry.
 
 ---
 
+## 2026-08-18 19:20 — Codex — HELLA.FM direct route corrected after HELLA.SYNTH merge
+
+**Did:**
+- Fast-forwarded local `main` to include the completed HELLA.SYNTH branch work.
+- Corrected HELLA.FM routing so `/hella.fm` redirects to the standalone `/hella.fm/` app instead of rendering the older hub iframe/wrapper.
+- Updated the React HELLA.FM page to hand off to the standalone app for client-side navigation too.
+- Kept the large untracked HELLA.FM media folders out of staging.
+
+**Current state:**
+- Local `main` includes HELLA.SYNTH and the HELLA.FM route fix.
+- HELLA.FM still needs the Cloudflare/R2-style audio hosting plan before publishing the full local music library.
+
+**Next steps:**
+- [ ] Push `main`.
+- [ ] Verify `https://hella.rich/hella.fm` and `https://hella.rich/hella.fm/` both show the approved standalone HELLA.FM build after Cloudflare deploys.
+- [ ] Spot-check `/synth` after deploy so the HELLA.SYNTH work was not disturbed.
+
+**Decisions / rationale:**
+- Direct `/hella.fm` should not use the hub wrapper; the approved local build is the standalone static HELLA.FM app.
+- Do not commit `client/public/hella.fm/media/*` until the public audio-hosting approach is decided.
+
+**Watch out for:**
+- Avoid broad `git add -A`; stage specific HELLA.FM routing files only.
+
+---
+
 ## 2026-08-18 17:55 — Codex — HELLA.SYNTH isolated product branch
 
 **Did:**

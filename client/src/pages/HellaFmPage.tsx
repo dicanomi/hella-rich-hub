@@ -8,31 +8,15 @@
 import { useEffect } from 'react';
 
 export default function HellaFmPage() {
-  const src = `${import.meta.env.BASE_URL}hella.fm/index.html?hub=1`;
+  const src = `${import.meta.env.BASE_URL}hella.fm/`;
 
   useEffect(() => {
-    const previous = document.body.style.background;
-    document.body.style.background = '#161920';
-    return () => {
-      document.body.style.background = previous;
-    };
+    window.location.replace(src);
   }, []);
 
   return (
-    <div style={{ position: 'fixed', inset: 0, background: '#161920', zIndex: 1 }}>
-      <iframe
-        src={src}
-        title="HELLA.FM"
-        allow="autoplay"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          width: '100%',
-          height: '100%',
-          border: 'none',
-          display: 'block',
-        }}
-      />
+    <div style={{ minHeight: '100dvh', display: 'grid', placeItems: 'center', background: '#161920', color: '#eef0ea' }}>
+      Loading HELLA.FM…
     </div>
   );
 }
