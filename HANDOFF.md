@@ -19,11 +19,13 @@ repeating deployment instructions in each entry.
 - Updated the React HELLA.FM page to hand off to the standalone app for client-side navigation too.
 - Added a tiny Cloudflare Pages Function for the dotted `/hella.fm` route because Pages treats dotted no-slash paths as file-like before normal static routing.
 - Added a public-safe `media/stations.json` based on the approved local `5174` experience: HELLA.RICH station MP3s are split into multiple named stations across the dial, while large third-party-looking music folders remain local-only.
+- Rebuilt the static HELLA.FM app from the approved `5174` source so public media loads from `/hella-fm-media/` instead of `/hella.fm/media/`; Cloudflare was serving the app shell for the dotted media path.
 - Kept the large untracked HELLA.FM media folders out of staging.
 
 **Current state:**
 - Local `main` includes HELLA.SYNTH and the HELLA.FM route fix.
 - HELLA.FM live should use the same app behavior as the approved `5174` build, with committed HELLA.RICH station audio plus generated browser-voice channels.
+- Public HELLA.FM audio/manifest assets live at `client/public/hella-fm-media`.
 - HELLA.FM still needs the Cloudflare/R2-style audio hosting plan before publishing the full local music library.
 
 **Next steps:**
