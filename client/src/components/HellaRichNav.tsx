@@ -20,7 +20,7 @@ const PROJECTS: NavProject[] = [
   { title: 'HAPPY HUMAN', slug: '/happy-human' },
   { title: 'RADIO', slug: '/radio' },
   { title: 'HELLA.FM', slug: '/hella.fm' },
-  { title: 'HELLA.SYNTH', slug: '/hella.synth' },
+  { title: 'HELLA.SYNTH', slug: '/synth' },
   { title: 'THE_MACHINE.EXE', slug: '/machine-exe' },
   { title: 'HUMAN.EXE', slug: '/human-exe' },
   { title: 'ORB', slug: '/orb' },

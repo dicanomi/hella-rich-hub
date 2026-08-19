@@ -15,7 +15,7 @@ repeating deployment instructions in each entry.
 
 **Did:**
 - Started from latest `origin/main` (`c8e92d8`) after confirming the canonical checkout only had unrelated untracked HELLA.FM media folders.
-- Added HELLA.SYNTH as an isolated static app under `client/public/hella-synth-app` with a new `HellaSynthPage.tsx` wrapper route at `/hella.synth`.
+- Added HELLA.SYNTH as an isolated static app under `client/public/hella-synth-app` with a new `HellaSynthPage.tsx` wrapper route at `/synth`.
 - Added the approved modular-synth card image as `client/public/card-hella-synth-v1.webp`.
 - Registered HELLA.SYNTH in the app router, shared nav, homepage product surfaces, and README.
 
@@ -28,7 +28,7 @@ repeating deployment instructions in each entry.
 - [ ] Commit the focused branch, push it, and verify the Cloudflare branch preview.
 
 **Decisions / rationale:**
-- Used `/hella.synth` to match the brand name, while serving the embedded static bundle from `client/public/hella-synth-app` so Cloudflare does not intercept the app's `index.html` with the hub SPA fallback.
+- Used `/synth` as the reliable public route because Cloudflare treats no-slash `/hella.synth` like a dotted file path and redirects it to `/`; kept slash-required `/hella.synth/` as an alias while serving the embedded static bundle from `client/public/hella-synth-app`.
 - Kept the large untracked `client/public/hella.fm/media/*` folders out of scope and out of staging.
 
 **Watch out for:**

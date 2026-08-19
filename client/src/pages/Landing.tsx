@@ -216,7 +216,7 @@ function AboutModal({ onClose, onOpenCredits }: { onClose: () => void; onOpenCre
               { title: 'HAPPY HUMAN', tagline: 'A labor archive for jobs that were already politely deleted.', href: '/happy-human' },
               { title: 'HELLA_RADIO', tagline: 'A late-night signal you tune into.',                           href: '/radio' },
               { title: 'HELLA.FM', tagline: 'Preprogrammed local frequencies for the end of normal radio.',    href: '/hella.fm' },
-              { title: 'HELLA.SYNTH', tagline: 'A browser-native instrument with a hand-written audio engine.', href: '/hella.synth' },
+              { title: 'HELLA.SYNTH', tagline: 'A browser-native instrument with a hand-written audio engine.', href: '/synth' },
               { title: 'THE_MACHINE.EXE', tagline: 'The market is the setting. Human psychology is the subject.',  href: '/machine-exe' },
               { title: 'HUMAN.EXE',   tagline: 'A biological diagnostic machine that discovers more than it was designed to find.', href: '/human-exe' },
               { title: 'ORB',         tagline: 'A living object.',                                            href: '/orb' },
@@ -503,10 +503,10 @@ const CROSS_AWARENESS: Record<string, string[]> = {
   'fourcast':    ['THE EYE PREDICTED THIS.', 'LOW BATTERY IGNORED THE WARNING.', 'OUTCOME CALCULATED.'],
   'happy-human': ['HUMAN.EXE FILED AN APPEAL.', 'THE_MACHINE.EXE APPROVED THE LAYOFF.', 'FOURCAST PREDICTED THIS.'],
   'hella.fm':    ['HELLA_RADIO DETECTED A LOCAL SIGNAL.', 'DEAD AIR IS KEEPING TIME.', 'THE STATION REMEMBERS THE ROOM.'],
-  'hella.synth': ['AETHER HEARD A NEW OSCILLATOR.', 'THE SIGNAL CHAIN IS ARMED.', 'HUMAN MODULATION DETECTED.'],
+  'synth':       ['AETHER HEARD A NEW OSCILLATOR.', 'THE SIGNAL CHAIN IS ARMED.', 'HUMAN MODULATION DETECTED.'],
 };
 
-const PRODUCT_SLUGS = ['hella.fm', 'hella.synth', 'happy-human', 'orb', 'the-eye', 'low-battery', 'space-drone', 'aether', 'dead-air', 'fourcast', 'machine-exe'];
+const PRODUCT_SLUGS = ['hella.fm', 'synth', 'happy-human', 'orb', 'the-eye', 'low-battery', 'space-drone', 'aether', 'dead-air', 'fourcast', 'machine-exe'];
 
 // ── Main Landing ───────────────────────────────────────────────────────────
 // ── FeaturedCard — large showcase card (premium curated browsing) ─────────────
@@ -889,7 +889,7 @@ export default function Landing() {
           {view === 'gallery' ? (
           <>
           <ProjectCard slug="hella.fm"   title="HELLA.FM"    tagline="Preprogrammed local frequencies for the end of normal radio." cta="Tune In" image={CARD_HELLA_FM}    index={1} enterDelay={80} />
-          <ProjectCard slug="hella.synth" title="HELLA.SYNTH" tagline="A browser-native instrument with a hand-written audio engine." cta="Play" image={CARD_HELLA_SYNTH} index={2} enterDelay={140} />
+          <ProjectCard slug="synth" title="HELLA.SYNTH" tagline="A browser-native instrument with a hand-written audio engine." cta="Play" image={CARD_HELLA_SYNTH} index={2} enterDelay={140} />
           <ProjectCard slug="happy-human" title="HAPPY HUMAN" tagline="A labor archive for jobs that were already politely deleted." cta="Apply" image={CARD_HAPPY_HUMAN} index={3} enterDelay={200} />
           <ProjectCard slug="radio"      title="HELLA_RADIO" tagline="A late-night signal you tune into." cta="Tune In" image={RADIO_CARD}       index={4} enterDelay={260} />
           <ProjectCard slug="machine-exe" title="THE_MACHINE.EXE"  tagline="The market is the setting. Human psychology is the subject." cta="Trade" image={CARD_MARKET_EXE} index={5} enterDelay={320} />
@@ -906,7 +906,7 @@ export default function Landing() {
           <div className="hr-featured-grid">
             {[
               { slug: 'hella.fm',    title: 'HELLA.FM', desc: 'Preprogrammed local frequencies for the end of normal radio.', img: CARD_HELLA_FM },
-              { slug: 'hella.synth', title: 'HELLA.SYNTH', desc: 'A browser-native instrument with a hand-written audio engine.', img: CARD_HELLA_SYNTH },
+              { slug: 'synth', title: 'HELLA.SYNTH', desc: 'A browser-native instrument with a hand-written audio engine.', img: CARD_HELLA_SYNTH },
               { slug: 'happy-human', title: 'HAPPY HUMAN', desc: 'A labor archive for jobs that were already politely deleted.', img: CARD_HAPPY_HUMAN },
               { slug: 'radio',       title: 'HELLA_RADIO', desc: 'A late-night signal you tune into.', img: RADIO_CARD },
               { slug: 'machine-exe',  title: 'THE_MACHINE.EXE',  desc: 'The market is the setting. Human psychology is the subject.', img: CARD_MARKET_EXE },
@@ -928,7 +928,7 @@ export default function Landing() {
           <div role="list" style={{ display: 'flex', flexDirection: 'column', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
             {[
               { slug: 'hella.fm',    n: '01', title: 'HELLA.FM',    desc: 'Preprogrammed local frequencies for the end of normal radio.', img: CARD_HELLA_FM },
-              { slug: 'hella.synth', n: '02', title: 'HELLA.SYNTH', desc: 'A browser-native instrument with a hand-written audio engine.', img: CARD_HELLA_SYNTH },
+              { slug: 'synth', n: '02', title: 'HELLA.SYNTH', desc: 'A browser-native instrument with a hand-written audio engine.', img: CARD_HELLA_SYNTH },
               { slug: 'happy-human', n: '03', title: 'HAPPY HUMAN', desc: 'A labor archive for jobs that were already politely deleted.', img: CARD_HAPPY_HUMAN },
               { slug: 'radio',       n: '04', title: 'HELLA_RADIO', desc: 'A late-night signal you tune into.', img: RADIO_CARD },
               { slug: 'machine-exe',  n: '05', title: 'THE_MACHINE.EXE',  desc: 'The market is the setting. Human psychology is the subject.', img: CARD_MARKET_EXE },

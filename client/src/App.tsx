@@ -92,6 +92,8 @@ function AppRoutes() {
           <Route path="/radio/" component={RadioPage} />
           <Route path="/hella.fm" component={HellaFmPage} />
           <Route path="/hella.fm/" component={HellaFmPage} />
+          <Route path="/synth" component={HellaSynthPage} />
+          <Route path="/synth/" component={HellaSynthPage} />
           <Route path="/hella.synth" component={HellaSynthPage} />
           <Route path="/hella.synth/" component={HellaSynthPage} />
           <Route path="/happy-human" component={HappyHumanPage} />
