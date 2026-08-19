@@ -11,7 +11,7 @@ repeating deployment instructions in each entry.
 
 ---
 
-## 2026-08-18 16:53 — Codex — HELL.SYNTH preview branch integrated and QA-passed
+## 2026-08-18 17:35 — Codex — HELL.SYNTH preview branch integrated and QA-passed
 
 **Did:**
 - Added the complete `HELL-SYNTH/` Kimi handoff package and served its rebuilt static bundle through a new `/hell-synth` hub route.
@@ -21,11 +21,12 @@ repeating deployment instructions in each entry.
 
 **Current state:**
 - Work is isolated on `agent/add-hell-synth-preview`; `main` and the live hella.rich site are unchanged.
-- Local review URL: `http://127.0.0.1:4173/hell-synth`.
+- Remote review URL: `https://agent-add-hell-synth-preview.hella-rich-hub.pages.dev/hell-synth`.
+- GitHub commit `5752dd5` contains the complete integration; the branch preview was verified after push.
 - Resize samples were stable at 1500px (1272px grid), 1100px (846px), 1600px (1285px), then identical on the repeated widths.
 
 **Next steps:**
-- [ ] Push the preview branch and review its Cloudflare branch URL.
+- [ ] Review and approve the Cloudflare branch preview before merging to production `main`.
 - [ ] Resolve or accept the documented dependency-audit and optional Docker-hardening notes before merging to production `main`.
 
 **Decisions / rationale:**
@@ -37,7 +38,7 @@ repeating deployment instructions in each entry.
 - `pnpm check` still exposes the pre-existing `TheMachine.tsx` SVG `textTransform` type error; the Cloudflare production build passes.
 
 **Credentials/access needed (pointers only, never actual secrets):**
-- Use authenticated GitHub Desktop or shell Git credentials for branch push if needed.
+- No additional credentials are needed for branch review; production merge remains intentionally unperformed.
 
 ## 2026-08-18 11:20 — Codex — HELLA.FM local station prototype added
 
