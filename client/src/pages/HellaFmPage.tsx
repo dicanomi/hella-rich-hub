@@ -1,8 +1,9 @@
 /**
- * HellaFmPage - HELLA.FM local station simulator.
+ * HellaFmPage - HELLA.FM curated station simulator.
  *
- * The prototype is bundled as a self-contained static app so local folder
- * uploads and radio-state experiments can evolve without disturbing /radio.
+ * The prototype is bundled as a self-contained static app so preprogrammed
+ * frequencies, voice stations, and radio-state experiments can evolve without
+ * disturbing /radio.
  */
 import { useEffect } from 'react';
 

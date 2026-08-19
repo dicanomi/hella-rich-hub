@@ -11,6 +11,33 @@ repeating deployment instructions in each entry.
 
 ---
 
+## 2026-08-18 18:45 — Codex — HELLA.FM promoted on homepage and live-ready copy updated
+
+**Did:**
+- Made HELLA.FM the first homepage product card and swapped in the generated HELLA.FM tower card art.
+- Updated HELLA.FM positioning from user-upload/private-folder language to a curated/preprogrammed local-frequency simulator.
+- Kept the large local station MP3 folders out of Git for this pass; the live bundle should use committed starter media plus browser voice/generated stations until the Cloudflare-hosted audio plan is ready.
+- Removed the hidden upload input from the HELLA.FM static app markup.
+
+**Current state:**
+- `/hella.fm` is the featured first-card product on the hub homepage.
+- User-facing upload is not part of this phase.
+
+**Next steps:**
+- [ ] Add real station libraries through the agreed Cloudflare/R2-style audio hosting plan before treating HELLA.FM as a full public radio catalog.
+- [ ] Verify `https://hella.rich/` and `https://hella.rich/hella.fm` after Cloudflare Pages deploys from `main`.
+
+**Decisions / rationale:**
+- Do not commit the 2.5GB local media folders to GitHub/Pages; preserve them locally while keeping the live app light and reversible.
+
+**Watch out for:**
+- If a future build uses `media/stations.json` generated from local folders, do not ship that manifest without also shipping or hosting the referenced audio files.
+
+**Credentials/access needed (pointers only, never actual secrets):**
+- Use authenticated Git/GitHub Desktop for push if shell credentials are blocked.
+
+---
+
 ## 2026-08-18 11:20 — Codex — HELLA.FM local station prototype added
 
 **Did:**

@@ -44,7 +44,7 @@ Edit  →  commit to GitHub (main)  →  Cloudflare Pages builds & deploys  → 
 | `/dead-air` | `DeadAirPage.tsx` |
 | `/fourcast` | `FourcastPage.tsx` |
 | `/radio` | `RadioPage.tsx` (HELLA_RADIO — canonical home; served in-app) |
-| `/hella.fm` | `HellaFmPage.tsx` (local station simulator prototype; served in-app) |
+| `/hella.fm` | `HellaFmPage.tsx` (curated station simulator prototype; served in-app) |
 
 Routes are registered in `client/src/App.tsx`. Heavy products are lazy-loaded.
 
