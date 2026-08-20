@@ -11,6 +11,33 @@ repeating deployment instructions in each entry.
 
 ---
 
+## 2026-08-20 10:51 — Codex — Homepage 3D line-card mode local branch
+
+**Did:**
+- Created local branch `agent/homepage-line-card-mode-20260820` from the current checkout for a reversible homepage visual pass.
+- Added a Three.js-powered card media mode that draws red/cyan/white offset line sculptures per product story while preserving the existing static image mode.
+- Made the line-card mode the default locally and added a minimal pill/dot switch next to the GRID / STACKED / LIST controls.
+- Kept the change scoped to homepage card media surfaces and left existing product routes and HELLA.FM media folders untouched.
+- Ran `pnpm exec vite build --config vite.config.cloudflare.ts` successfully and started local preview at `http://127.0.0.1:5176/`.
+- Pre-publish sanity check passed for the production Cloudflare/Vite build, local homepage, HELLA.FM static entry/assets, and production-like preview at `http://127.0.0.1:4176/`.
+- Optimized the line-card renderer to update existing geometry buffers instead of reallocating geometry every frame.
+
+**Current state:**
+- This is local-only and not pushed to GitHub.
+- The previous homepage image design remains available by switching the pill back to image mode or by returning to `main`.
+
+**Next steps:**
+- [ ] User reviews the local preview.
+- [ ] If approved, decide whether to promote this as the homepage default and preserve the previous homepage as a timestamped versioned route/file.
+- [ ] Do not push or publish until the user approves the visual direction.
+
+**Watch out for:**
+- `pnpm exec tsc --noEmit --incremental false` still reports an unrelated existing `textTransform` SVG prop error in `client/src/pages/machine-exe/TheMachine.tsx`.
+- Local Vite preview serves bare `/hella.fm` as the hub shell, but `/hella.fm/` and `/hella.fm/index.html` serve the radio app; Cloudflare has both `_redirects` and `functions/hella.fm.js` for the live bare dotted route.
+- Existing untracked `client/public/hella.fm/media/*` folders remain out of scope.
+
+---
+
 ## 2026-08-19 22:13 — Codex — HELLA.DECK local integration branch
 
 **Did:**

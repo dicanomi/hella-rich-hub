@@ -11,6 +11,7 @@ import { ParticleField } from '../components/ParticleField';
 import { HeaderTicker } from '../components/HeaderTicker';
 import { ContactModal } from '../components/ContactModal';
 import { CreditsModal } from '../components/CreditsModal';
+import { ProductLineSculpture } from '../components/ProductLineSculpture';
 
 // ── Existing Cloudfront card images (from deployed repos) ──────────────────
 // ── New unified halftone/pulp sci-fi visual system (2026-06-22) ──────────────
@@ -280,9 +281,10 @@ interface ProjectCardProps {
   featured?: boolean;
   enterDelay?: number;
   externalHref?: string;
+  mediaMode?: 'image' | 'line';
 }
 
-function ProjectCard({ slug, title, tagline, image, index, live = true, cta, featured = false, enterDelay = 0, externalHref }: ProjectCardProps) {
+function ProjectCard({ slug, title, tagline, image, index, live = true, cta, featured = false, enterDelay = 0, externalHref, mediaMode = 'image' }: ProjectCardProps) {
   const [hovered, setHovered] = useState(false);
   const [visible, setVisible] = useState(false);
   const [pressed, setPressed] = useState(false);
@@ -374,8 +376,9 @@ function ProjectCard({ slug, title, tagline, image, index, live = true, cta, fea
       <div style={{
         position: 'absolute', inset: 0,
         transform: hovered ? 'scale(1.04)' : 'scale(1)',
-        transition: 'transform 0.6s cubic-bezier(0.23,1,0.32,1)',
+        transition: 'transform 0.6s cubic-bezier(0.23,1,0.32,1), opacity 0.32s ease',
         willChange: 'transform',
+        opacity: mediaMode === 'image' ? 1 : 0,
       }}>
         <img
           src={image}
@@ -388,6 +391,17 @@ function ProjectCard({ slug, title, tagline, image, index, live = true, cta, fea
             transition: 'filter 0.5s ease',
           }}
         />
+      </div>
+
+      {/* 3D line sculpture */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        background: 'radial-gradient(circle at 50% 50%, rgba(255,255,255,0.08), rgba(0,0,0,0.1) 34%, rgba(0,0,0,0.64) 100%)',
+        opacity: mediaMode === 'line' ? 1 : 0,
+        transition: 'opacity 0.32s ease',
+        pointerEvents: 'none',
+      }}>
+        <ProductLineSculpture slug={slug} active={mediaMode === 'line'} hovered={hovered} />
       </div>
 
       {/* Gradient overlay */}
@@ -518,7 +532,7 @@ const PRODUCT_SLUGS = ['deck', 'hella.fm', 'synth', 'happy-human', 'orb', 'the-e
 
 // ── Main Landing ───────────────────────────────────────────────────────────
 // ── FeaturedCard — large showcase card (premium curated browsing) ─────────────
-function FeaturedCard({ slug, title, desc, img }: { slug: string; title: string; desc: string; img: string }) {
+function FeaturedCard({ slug, title, desc, img, mediaMode = 'image' }: { slug: string; title: string; desc: string; img: string; mediaMode?: 'image' | 'line' }) {
   const [hovered, setHovered] = useState(false);
   return (
     <Link
@@ -549,10 +563,20 @@ function FeaturedCard({ slug, title, desc, img }: { slug: string; title: string;
           style={{
             width: '100%', height: '100%', objectFit: 'cover', display: 'block',
             transform: hovered ? 'scale(1.03)' : 'scale(1)',
-            opacity: hovered ? 1 : 0.92,
+            opacity: mediaMode === 'image' ? (hovered ? 1 : 0.92) : 0,
             transition: 'transform 0.4s cubic-bezier(0.23,1,0.32,1), opacity 0.3s ease',
           }}
         />
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          opacity: mediaMode === 'line' ? 1 : 0,
+          transition: 'opacity 0.32s ease',
+          background: 'radial-gradient(circle at 50% 48%, rgba(255,255,255,0.075), rgba(0,0,0,0.22) 42%, rgba(0,0,0,0.72) 100%)',
+          pointerEvents: 'none',
+        }}>
+          <ProductLineSculpture slug={slug} active={mediaMode === 'line'} hovered={hovered} />
+        </div>
       </div>
 
       {/* content */}
@@ -608,9 +632,8 @@ function FeaturedPlaceholder() {
 }
 
 // ── ArchiveRow — catalog list item (digital archive / OS index feel) ──────────
-function ArchiveRow({ slug, n, title, desc, img }: { slug: string; n: string; title: string; desc: string; img: string }) {
+function ArchiveRow({ slug, n, title, desc, img, mediaMode = 'image' }: { slug: string; n: string; title: string; desc: string; img: string; mediaMode?: 'image' | 'line' }) {
   const [hovered, setHovered] = useState(false);
-  const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
   return (
     <Link
       href={'/' + slug}
@@ -632,23 +655,40 @@ function ArchiveRow({ slug, n, title, desc, img }: { slug: string; n: string; ti
       }}
     >
       {/* thumbnail */}
-      <img
-        src={img}
-        alt=""
-        aria-hidden="true"
-        loading="lazy"
-        style={{
-          width: 'clamp(56px,8vw,84px)',
-          height: 'clamp(40px,5.5vw,56px)',
-          objectFit: 'cover',
-          borderRadius: '2px',
-          border: '1px solid rgba(255,255,255,0.1)',
-          alignSelf: 'center',
-          opacity: hovered ? 1 : 0.82,
-          transition: 'opacity 0.18s ease',
-          display: 'block',
-        }}
-      />
+      <span style={{
+        position: 'relative',
+        width: 'clamp(56px,8vw,84px)',
+        height: 'clamp(40px,5.5vw,56px)',
+        borderRadius: '2px',
+        border: '1px solid rgba(255,255,255,0.1)',
+        alignSelf: 'center',
+        overflow: 'hidden',
+        display: 'block',
+        background: '#0d0c0b',
+      }}>
+        <img
+          src={img}
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          style={{
+            width: '100%', height: '100%',
+            objectFit: 'cover',
+            opacity: mediaMode === 'image' ? (hovered ? 1 : 0.82) : 0,
+            transition: 'opacity 0.22s ease',
+            display: 'block',
+          }}
+        />
+        <span style={{
+          position: 'absolute',
+          inset: 0,
+          opacity: mediaMode === 'line' ? 1 : 0,
+          transition: 'opacity 0.22s ease',
+          background: 'rgba(0,0,0,0.58)',
+        }}>
+          <ProductLineSculpture slug={slug} active={mediaMode === 'line'} hovered={hovered} />
+        </span>
+      </span>
 
       {/* index number */}
       <span style={{
@@ -702,11 +742,14 @@ export default function Landing() {
 
   // ── View mode: 'featured' (grid) | 'gallery' (stacked cards) | 'archive' (list) ──
   const [view, setView] = useState<'gallery' | 'featured' | 'archive'>('featured');
+  const [mediaMode, setMediaMode] = useState<'image' | 'line'>('line');
   const [viewSwapping, setViewSwapping] = useState(false);
   useEffect(() => {
     try {
       const saved = localStorage.getItem('hella_view_v2');
       if (saved === 'archive' || saved === 'gallery' || saved === 'featured') setView(saved);
+      const savedMedia = localStorage.getItem('hella_card_media_v1');
+      if (savedMedia === 'image' || savedMedia === 'line') setMediaMode(savedMedia);
     } catch (e) { /* ignore */ }
   }, []);
   const switchView = (next: 'gallery' | 'featured' | 'archive') => {
@@ -716,6 +759,11 @@ export default function Landing() {
     if (reduce) { setView(next); return; }
     setViewSwapping(true);
     setTimeout(() => { setView(next); setViewSwapping(false); }, 160);
+  };
+  const switchMediaMode = () => {
+    const next = mediaMode === 'line' ? 'image' : 'line';
+    setMediaMode(next);
+    try { localStorage.setItem('hella_card_media_v1', next); } catch (e) {}
   };
 
 
@@ -847,11 +895,45 @@ export default function Landing() {
 
         </div>
 
-        {/* ── View toggle: GRID / STACKED / LIST ── */}
+        {/* ── Media + View toggles ── */}
         <div style={{
           padding: '0 clamp(24px,5vw,72px)',
-          display: 'flex', justifyContent: 'flex-end', marginBottom: 'clamp(14px,1.6vw,22px)',
+          display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: 'clamp(14px,1.6vw,22px)',
         }}>
+          <button
+            type="button"
+            onClick={switchMediaMode}
+            aria-label={mediaMode === 'line' ? 'Show product images' : 'Show 3D line sculptures'}
+            aria-pressed={mediaMode === 'line'}
+            title={mediaMode === 'line' ? 'Show product images' : 'Show 3D line sculptures'}
+            style={{
+              width: 42,
+              height: 22,
+              borderRadius: 999,
+              border: '1px solid rgba(255,255,255,0.24)',
+              background: mediaMode === 'line' ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.015)',
+              padding: 2,
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: mediaMode === 'line' ? 'flex-end' : 'flex-start',
+              transition: 'background 0.24s ease, border-color 0.24s ease',
+            }}
+          >
+            <span
+              aria-hidden="true"
+              style={{
+                width: 14,
+                height: 14,
+                borderRadius: '50%',
+                background: mediaMode === 'line' ? '#f4f0e8' : 'rgba(255,255,255,0.42)',
+                boxShadow: mediaMode === 'line'
+                  ? '0 0 12px rgba(45,253,255,0.45), -3px 0 7px rgba(255,48,79,0.42)'
+                  : 'none',
+                transition: 'background 0.24s ease, box-shadow 0.24s ease',
+              }}
+            />
+          </button>
           <div role="tablist" aria-label="Catalog view" style={{
             display: 'inline-flex', alignItems: 'center', gap: '2px',
             border: '1px solid rgba(255,255,255,0.12)', borderRadius: '2px',
@@ -859,6 +941,8 @@ export default function Landing() {
           }}>
             {([['featured','▦','GRID'],['gallery','◫','STACKED'],['archive','☰','LIST']] as const).map(([mode, glyph, label]) => {
               const active = view === mode;
+              const activeBg = '#E8622A';
+              const activeFg = 'rgba(7,5,3,0.94)';
               return (
                 <button
                   key={mode}
@@ -872,9 +956,10 @@ export default function Landing() {
                     fontFamily: "'DM Mono', monospace", fontSize: 'clamp(9px,0.85vw,11px)',
                     letterSpacing: '0.18em', textTransform: 'uppercase',
                     padding: '7px 13px', borderRadius: '1px', border: 'none', cursor: 'pointer',
-                    color: active ? 'rgba(0,0,0,0.9)' : 'rgba(255,255,255,0.5)',
-                    background: active ? 'rgba(255,255,255,0.88)' : 'transparent',
-                    transition: 'background 0.22s ease, color 0.22s ease',
+                    color: active ? activeFg : 'rgba(255,255,255,0.5)',
+                    background: active ? activeBg : 'transparent',
+                    boxShadow: active ? '0 0 16px rgba(232,98,42,0.22)' : 'none',
+                    transition: 'background 0.22s ease, color 0.22s ease, box-shadow 0.22s ease',
                   }}
                   onMouseEnter={e => { if (!active) (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.85)'; }}
                   onMouseLeave={e => { if (!active) (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.5)'; }}
@@ -898,20 +983,20 @@ export default function Landing() {
         }}>
           {view === 'gallery' ? (
           <>
-          <ProjectCard slug="deck" title="HELLA•4" tagline="A reel recorder for field takes, cue loops, and tape-touching trouble." cta="Record" image={CARD_HELLA_DECK} index={1} enterDelay={80} />
-          <ProjectCard slug="hella.fm"   title="HELLA.FM"    tagline="Preprogrammed local frequencies for the end of normal radio." cta="Tune In" image={CARD_HELLA_FM}    index={2} enterDelay={140} />
-          <ProjectCard slug="synth" title="HELLA.SYNTH" tagline="A browser-native instrument with a hand-written audio engine." cta="Play" image={CARD_HELLA_SYNTH} index={3} enterDelay={200} />
-          <ProjectCard slug="happy-human" title="HAPPY HUMAN" tagline="A labor archive for jobs that were already politely deleted." cta="Apply" image={CARD_HAPPY_HUMAN} index={4} enterDelay={260} />
-          <ProjectCard slug="radio"      title="HELLA_RADIO" tagline="A late-night signal you tune into." cta="Tune In" image={RADIO_CARD}       index={5} enterDelay={320} />
-          <ProjectCard slug="machine-exe" title="THE_MACHINE.EXE"  tagline="The market is the setting. Human psychology is the subject." cta="Trade" image={CARD_MARKET_EXE} index={6} enterDelay={380} />
-          <ProjectCard slug="human-exe"  title="HUMAN.EXE"   tagline="Human Diagnostic Machine" cta="ENTER" image={CARD_HUMAN_EXE}  index={7} enterDelay={440} />
-          <ProjectCard slug="orb"        title="ORB"         tagline="A living object." cta="Touch It" image={CARD_ORB}          index={8} enterDelay={500} />
-          <ProjectCard slug="dead-air"   title="DEAD AIR"    tagline="Late night radio scanner." cta="Tune In" image={CARD_DEAD_AIR}   index={9} enterDelay={560} />
-          <ProjectCard slug="aether"     title="ÆTHER"       tagline="Impossible to sound bad." image={CARD_AETHER}      index={10} enterDelay={620} />
-          <ProjectCard slug="space-drone" title="SPACE DRONE" tagline="A drifting machine for doing absolutely nothing." image={CARD_SPACE_DRONE} index={11} enterDelay={680} />
-          <ProjectCard slug="low-battery" title="LOW BATTERY" tagline="The sound you ignore until it becomes your personality." cta="Begin Ignoring" image={CARD_LOW_BATTERY} index={12} enterDelay={740} />
-          <ProjectCard slug="fourcast"   title="FOURCAST"    tagline="A weather app predicting the end of the world. Politely." cta="Check My Day" image={CARD_FOURCAST}   index={13} enterDelay={800} />
-          <ProjectCard slug="the-eye"    title="THE EYE"     tagline="A strange object that notices you." cta="Look" image={CARD_THE_EYE}    index={14} enterDelay={860} />
+          <ProjectCard slug="deck" title="HELLA•4" tagline="A reel recorder for field takes, cue loops, and tape-touching trouble." cta="Record" image={CARD_HELLA_DECK} index={1} enterDelay={80} mediaMode={mediaMode} />
+          <ProjectCard slug="hella.fm"   title="HELLA.FM"    tagline="Preprogrammed local frequencies for the end of normal radio." cta="Tune In" image={CARD_HELLA_FM}    index={2} enterDelay={140} mediaMode={mediaMode} />
+          <ProjectCard slug="synth" title="HELLA.SYNTH" tagline="A browser-native instrument with a hand-written audio engine." cta="Play" image={CARD_HELLA_SYNTH} index={3} enterDelay={200} mediaMode={mediaMode} />
+          <ProjectCard slug="happy-human" title="HAPPY HUMAN" tagline="A labor archive for jobs that were already politely deleted." cta="Apply" image={CARD_HAPPY_HUMAN} index={4} enterDelay={260} mediaMode={mediaMode} />
+          <ProjectCard slug="radio"      title="HELLA_RADIO" tagline="A late-night signal you tune into." cta="Tune In" image={RADIO_CARD}       index={5} enterDelay={320} mediaMode={mediaMode} />
+          <ProjectCard slug="machine-exe" title="THE_MACHINE.EXE"  tagline="The market is the setting. Human psychology is the subject." cta="Trade" image={CARD_MARKET_EXE} index={6} enterDelay={380} mediaMode={mediaMode} />
+          <ProjectCard slug="human-exe"  title="HUMAN.EXE"   tagline="Human Diagnostic Machine" cta="ENTER" image={CARD_HUMAN_EXE}  index={7} enterDelay={440} mediaMode={mediaMode} />
+          <ProjectCard slug="orb"        title="ORB"         tagline="A living object." cta="Touch It" image={CARD_ORB}          index={8} enterDelay={500} mediaMode={mediaMode} />
+          <ProjectCard slug="dead-air"   title="DEAD AIR"    tagline="Late night radio scanner." cta="Tune In" image={CARD_DEAD_AIR}   index={9} enterDelay={560} mediaMode={mediaMode} />
+          <ProjectCard slug="aether"     title="ÆTHER"       tagline="Impossible to sound bad." image={CARD_AETHER}      index={10} enterDelay={620} mediaMode={mediaMode} />
+          <ProjectCard slug="space-drone" title="SPACE DRONE" tagline="A drifting machine for doing absolutely nothing." image={CARD_SPACE_DRONE} index={11} enterDelay={680} mediaMode={mediaMode} />
+          <ProjectCard slug="low-battery" title="LOW BATTERY" tagline="The sound you ignore until it becomes your personality." cta="Begin Ignoring" image={CARD_LOW_BATTERY} index={12} enterDelay={740} mediaMode={mediaMode} />
+          <ProjectCard slug="fourcast"   title="FOURCAST"    tagline="A weather app predicting the end of the world. Politely." cta="Check My Day" image={CARD_FOURCAST}   index={13} enterDelay={800} mediaMode={mediaMode} />
+          <ProjectCard slug="the-eye"    title="THE EYE"     tagline="A strange object that notices you." cta="Look" image={CARD_THE_EYE}    index={14} enterDelay={860} mediaMode={mediaMode} />
           </>
           ) : view === 'featured' ? (
           <div className="hr-featured-grid">
@@ -931,7 +1016,7 @@ export default function Landing() {
               { slug: 'fourcast',    title: 'FOURCAST',    desc: 'A weather app predicting the end of the world. Politely.', img: CARD_FOURCAST },
               { slug: 'the-eye',     title: 'THE EYE',     desc: 'A strange object that notices you.', img: CARD_THE_EYE },
             ].map(p => (
-              <FeaturedCard key={p.slug} slug={p.slug} title={p.title} desc={p.desc} img={p.img} />
+              <FeaturedCard key={p.slug} slug={p.slug} title={p.title} desc={p.desc} img={p.img} mediaMode={mediaMode} />
             ))}
             {/* Blank cards fill the last row so the featured view doesn't look empty at the bottom */}
             <FeaturedPlaceholder />
@@ -954,7 +1039,7 @@ export default function Landing() {
               { slug: 'fourcast',    n: '13', title: 'FOURCAST',    desc: 'A weather app predicting the end of the world. Politely.', img: CARD_FOURCAST },
               { slug: 'the-eye',     n: '14', title: 'THE EYE',     desc: 'A strange object that notices you.', img: CARD_THE_EYE },
             ].map(p => (
-              <ArchiveRow key={p.slug} slug={p.slug} n={p.n} title={p.title} desc={p.desc} img={p.img} />
+              <ArchiveRow key={p.slug} slug={p.slug} n={p.n} title={p.title} desc={p.desc} img={p.img} mediaMode={mediaMode} />
             ))}
           </div>
           )}

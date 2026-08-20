@@ -8,7 +8,7 @@
 import { useEffect } from 'react';
 
 export default function HellaFmPage() {
-  const src = `${import.meta.env.BASE_URL}hella.fm/`;
+  const src = `${import.meta.env.BASE_URL}hella.fm/index.html`;
 
   useEffect(() => {
     window.location.replace(src);
