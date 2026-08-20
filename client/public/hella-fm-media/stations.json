@@ -394,6 +394,12 @@
           "title": "Tech Bro Blues",
           "src": "media/dub.ai/Tech%20Bro%20Blues.mp3",
           "origin": "DUB.AI"
+        },
+        {
+          "id": "dub-ai-marketing-in-the-machine",
+          "title": "Marketing in the Machine",
+          "src": "media/dub.ai/Marketing%20in%20the%20Machine.mp3",
+          "origin": "DUB.AI"
         }
       ]
     }
