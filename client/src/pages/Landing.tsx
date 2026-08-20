@@ -30,6 +30,99 @@ const CARD_HELLA_SYNTH = `${import.meta.env.BASE_URL}card-hella-synth-v1.webp`;
 const CARD_MARKET_EXE  = 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663292290338/irIwNEoiIgpyRjrD.png';
 const CARD_HAPPY_HUMAN = `${import.meta.env.BASE_URL}card-happy-human-v1.webp`;
 
+const PRODUCT_SURFACES = [
+  'HELLA•4',
+  'HAPPY HUMAN',
+  'HELLA.FM',
+  'HELLA_RADIO',
+  'HELLA.SYNTH',
+  'THE_MACHINE.EXE',
+  'HUMAN.EXE',
+  'ORB',
+  'DEAD AIR',
+  'ÆTHER',
+  'SPACE DRONE',
+  'LOW BATTERY',
+  'FOURCAST',
+  'THE EYE',
+];
+
+const TECH_STACK_SECTIONS = [
+  {
+    title: 'Languages + app code',
+    items: [
+      'TypeScript, JavaScript, TSX, HTML, CSS, JSON, Markdown',
+      'Python for production support, asset inspection, conversion, QA, and automation passes',
+      'Shell / CLI workflows for local builds, file operations, deploy checks, and verification',
+      'React component architecture plus standalone static product bundles',
+    ],
+  },
+  {
+    title: 'Hub + product runtime',
+    items: [
+      'React 19 + TypeScript SPA',
+      'Vite 7 production builds',
+      'wouter route graph with lazy-loaded product pages',
+      'Tailwind CSS v4 + custom CSS systems',
+      'Radix UI primitives, lucide-react icons, Sonner, tooltips',
+      'Standalone embedded apps for HELLA.FM, HELLA.SYNTH, HELLA•4, HAPPY HUMAN, and HELLA_RADIO',
+    ],
+  },
+  {
+    title: 'Interaction + visuals',
+    items: [
+      'Three.js / WebGL line sculptures and 3D GLB assets',
+      'Canvas 2D renderers for games, scopes, visualizers, and motion fields',
+      'Framer Motion, GSAP motion thinking, requestAnimationFrame animation loops, and CSS clamp() sizing',
+      'Cursor, pointer, keyboard, touch, and reduced-motion handling',
+      'localStorage / sessionStorage for state, onboarding, and audio settings',
+      'SVG, PNG, WebP, GLB, custom fonts, image optimization, and static asset manifests',
+    ],
+  },
+  {
+    title: 'Sound + DSP',
+    items: [
+      'Tone.js procedural synths, drones, sequences, and effects',
+      'Browser DSP: oscillators, filters, envelopes, LFO modulation, FFT/waveform analysers, compression, limiting, waveshaping, delay, reverb, chorus, distortion, and bitcrushing',
+      'Raw Web Audio API engines for audio toys, scanners, beeps, and atmospheres',
+      '8-bit computer sound, arcade tones, warning beeps, drone beds, pirate radio static, and generated music direction',
+      'MIDI-style sequencer logic, probabilistic rhythms, generated noise colors, convolution-style delay networks, and audio unlock handling',
+      'Static MP3 station libraries, generated music folders, and manifest JSON',
+      'HELLA.FM shareable station URLs and copied station links',
+    ],
+  },
+  {
+    title: 'Production tooling',
+    items: [
+      'pnpm, Node.js, Vite, esbuild, TypeScript, Prettier, and Vitest tooling',
+      'Python-assisted media/asset handling where the browser stack was not the right tool',
+      'GitHub for versioning, Git, GitHub Actions, Cloudflare/Wrangler checks, and local preview servers',
+      'Figma for design direction, layout reference, visual QA, and handoff thinking',
+      'Manual visual QA, responsive checks, route checks, build verification, and rollback-safe commits',
+    ],
+  },
+  {
+    title: 'Platform + deploy',
+    items: [
+      'Cloudflare Pages static hosting',
+      'Cloudflare Pages Functions for product handoffs and redirects',
+      'GitHub main branch auto-deploy workflow',
+      'GitHub Pages staging workflow',
+      'Formspree contact endpoint',
+      'SEO files, sitemap, robots.txt, llms.txt, Open Graph assets, and cache-busted live verification',
+    ],
+  },
+  {
+    title: 'AI + creative stack',
+    items: [
+      'Directed by Jeffrey Willis / Dicanomi',
+      'Built with OpenAI GPT / Codex, Manus, Kimi, Claude, Gemini, Higgsfield, Midjourney, GPT Image, Claude Code, Claude Cowork, Nano Banana, and Suno',
+      'AI-assisted product writing, interaction design, code generation, debugging, QA, visual direction, image generation, audio/music direction, and launch iteration',
+      'Human taste, approvals, rollback calls, and final shipping decisions stayed with the founder',
+    ],
+  },
+];
+
 // ── H1 Message Loop ────────────────────────────────────────────────────────
 
 const HELLA_RICH_MESSAGES = [
@@ -322,6 +415,133 @@ function AboutModal({ onClose, onOpenCredits }: { onClose: () => void; onOpenCre
         <div style={{ marginTop: '24px', fontFamily: "'DM Mono', monospace", fontSize: 'clamp(8px,0.85vw,10px)', color: 'rgba(255,255,255,0.15)', letterSpacing: '0.1em' }}>
           © {new Intl.DateTimeFormat("en-US", { timeZone: "America/Los_Angeles", year: "numeric" }).format(new Date())} hella.rich
         </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Build Info Modal ───────────────────────────────────────────────────────
+function BuildInfoModal({ onClose }: { onClose: () => void }) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', onKey);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+    };
+  }, [onClose]);
+
+  return (
+    <div
+      style={{
+        position: 'fixed', inset: 0, zIndex: 1000,
+        background: 'rgba(0,0,0,0.6)',
+        display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-start',
+        overflowY: 'auto',
+        cursor: 'pointer',
+      }}
+      onClick={onClose}
+    >
+      <div
+        style={{
+          position: 'relative',
+          background: '#0a0908',
+          minHeight: '100vh',
+          width: '100%',
+          maxWidth: '640px',
+          cursor: 'default',
+          padding: 'clamp(48px, 8vh, 80px) clamp(28px, 6vw, 72px)',
+        }}
+        onClick={e => e.stopPropagation()}
+      >
+        <button
+          onClick={onClose}
+          aria-label="Close"
+          className="modal-close-btn"
+          style={{
+            position: 'absolute', top: 'clamp(16px,2.5vh,24px)', right: 'clamp(16px,2.5vw,28px)',
+            width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center',
+            background: 'none', border: 'none', cursor: 'pointer',
+            color: 'rgba(255,255,255,0.45)', zIndex: 10,
+          }}
+        >
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" strokeWidth="1.6" strokeLinecap="round" stroke="currentColor">
+            <line x1="3" y1="3" x2="15" y2="15"/><line x1="15" y1="3" x2="3" y2="15"/>
+          </svg>
+        </button>
+
+        <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 'clamp(9px,0.9vw,11px)', letterSpacing: '0.22em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginBottom: '28px' }}>system receipt</div>
+
+        <section style={{ marginBottom: '44px' }}>
+          <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 'clamp(8px,0.85vw,10px)', letterSpacing: '0.22em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginBottom: '14px' }}>What it took</div>
+          <p style={{
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontSize: 'clamp(21px,2.8vw,34px)',
+            color: 'rgba(255,255,255,0.88)',
+            fontWeight: 300,
+            lineHeight: 1.2,
+            margin: 0,
+            maxWidth: '520px',
+          }}>
+            A small product lab made of web apps, audio machines, strange interfaces, static media, and AI-assisted shipping loops.
+          </p>
+        </section>
+
+        <section style={{ marginBottom: '42px' }}>
+          <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 'clamp(8px,0.85vw,10px)', letterSpacing: '0.22em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginBottom: '16px' }}>Product surface</div>
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '8px',
+              maxWidth: '520px',
+            }}
+          >
+            {PRODUCT_SURFACES.map((item) => (
+              <span
+                key={item}
+                style={{
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  borderRadius: '999px',
+                  padding: '7px 10px',
+                  fontFamily: "'DM Mono', monospace",
+                  fontSize: 'clamp(8px,0.85vw,10px)',
+                  letterSpacing: '0.12em',
+                  color: 'rgba(255,255,255,0.54)',
+                  textTransform: 'uppercase',
+                }}
+              >
+                {item}
+              </span>
+            ))}
+          </div>
+        </section>
+
+        {TECH_STACK_SECTIONS.map((section) => (
+          <section key={section.title} style={{ marginBottom: '38px' }}>
+            <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 'clamp(8px,0.85vw,10px)', letterSpacing: '0.22em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginBottom: '14px' }}>{section.title}</div>
+            <div style={{ display: 'grid', gap: '8px' }}>
+              {section.items.map((item) => (
+                <div
+                  key={item}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'baseline',
+                    gap: '12px',
+                    padding: '9px 0',
+                    borderBottom: '1px solid rgba(255,255,255,0.06)',
+                  }}
+                >
+                  <span style={{ color: 'rgba(255,84,73,0.82)', fontFamily: "'DM Mono', monospace", fontSize: '10px' }}>+</span>
+                  <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 'clamp(10px,1vw,12px)', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.68)', textTransform: 'uppercase', lineHeight: 1.5 }}>
+                    {item}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </section>
+        ))}
       </div>
     </div>
   );
@@ -984,6 +1204,7 @@ function ArchiveRow({ slug, n, title, desc, img, mediaMode = 'image' }: { slug: 
 
 export default function Landing() {
   const [aboutOpen, setAboutOpen] = useState(false);
+  const [buildInfoOpen, setBuildInfoOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
   const [creditsOpen, setCreditsOpen] = useState(false);
   const [awarenessMsg, setAwarenessMsg] = useState<{slug: string; text: string} | null>(null);
@@ -1103,6 +1324,7 @@ export default function Landing() {
       `}</style>
 
       {aboutOpen && <AboutModal onClose={() => setAboutOpen(false)} onOpenCredits={() => setCreditsOpen(true)} />}
+      {buildInfoOpen && <BuildInfoModal onClose={() => setBuildInfoOpen(false)} />}
       {contactOpen && <ContactModal onClose={() => setContactOpen(false)} />}
       {creditsOpen && <CreditsModal onClose={() => setCreditsOpen(false)} />}
       <ParticleField />
@@ -1382,6 +1604,23 @@ export default function Landing() {
               onMouseLeave={e => ((e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.35)')}
             >
               About
+            </button>
+            <button
+              onClick={() => setBuildInfoOpen(true)}
+              style={{
+                background: 'none', border: 'none', cursor: 'pointer',
+                fontFamily: "'DM Mono', monospace",
+                fontSize: 'clamp(8px,0.85vw,10px)',
+                letterSpacing: '0.18em',
+                color: 'rgba(255,255,255,0.35)',
+                textTransform: 'uppercase',
+                padding: 0,
+                transition: 'color 0.2s ease',
+              }}
+              onMouseEnter={e => ((e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.65)')}
+              onMouseLeave={e => ((e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.35)')}
+            >
+              Stack
             </button>
             <button
               onClick={() => setCreditsOpen(true)}
