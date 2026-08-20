@@ -30,48 +30,92 @@ const CARD_HELLA_SYNTH = `${import.meta.env.BASE_URL}card-hella-synth-v1.webp`;
 const CARD_MARKET_EXE  = 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663292290338/irIwNEoiIgpyRjrD.png';
 const CARD_HAPPY_HUMAN = `${import.meta.env.BASE_URL}card-happy-human-v1.webp`;
 
-// ── H1 Typewriter ──────────────────────────────────────────────────────────
+// ── H1 Message Loop ────────────────────────────────────────────────────────
+
+const HELLA_RICH_MESSAGES = [
+  'FOUNDER JEFFREY WILLIS RAISES 700 MILLION FOR HELLA.RICH.',
+  'HELLA.RICH CLOTHING LINE LAUNCHES IN SHIBUYA, JAPAN.',
+  'THE ORB PASSED ITS BACKGROUND CHECK.',
+  'HELLA.FM IS BROADCASTING FROM A LEGALLY UNCLEAR MOON.',
+  'LOW BATTERY HAS ENTERED LEADERSHIP.',
+  'THE EYE BLINKED FIRST. DOCUMENTATION DISPUTES THIS.',
+  'SPACE DRONE FOUND A PURPOSE AND IMMEDIATELY MISPLACED IT.',
+  'HELLA•4 IS REWINDING A FUTURE THAT STILL WORKS.',
+  'DEAD AIR LEFT A KIND VOICEMAIL FROM THE VOID.',
+  'FOURCAST PREDICTS LIGHT DOOM WITH A CHANCE OF GOOD IDEAS.',
+  'THE_MACHINE.EXE APPROVED ONE HUMAN FEELING.',
+  'HUMAN.EXE FOUND A BUG AND NAMED IT CONFIDENCE.',
+  'AETHER IS MAKING THE APOCALYPSE SOUND EXPENSIVE.',
+  'HELLA.SYNTH TURNED PANIC INTO A PRESET.',
+  'PLEASE REMAIN CALM. THE WEBSITE IS BECOMING A PLACE.',
+  'A SMALL INTERNET THING HAS SURVIVED ANOTHER REFRESH.',
+  'GOOD NEWS: THE VOID HAS EXCELLENT TASTE.',
+];
+
+const HELLA_RICH_WORDMARK = 'hella.rich';
 
 /**
  * HellaRichH1 — the ONLY homepage H1 component
  *
- * Looping sequence (repeats forever):
- * 1. HELLA RICH. / MEGA POOR.   (2.5s hold)
- * 2. BUILDING FUTURE...         (0.9s)
- * 3. CALCULATING OUTCOME...     (0.9s)
- * 4. MIDDLE CLASS NOT FOUND     (1.0s)
- * 5. Fade out, return to step 1
- *
- * No handoff to old typewriter. No old phrases.
+ * One brand mark, with a small rotating system message below it.
  */
 function HellaRichH1() {
   const [sysText, setSysText] = useState('');
   const [sysVisible, setSysVisible] = useState(false);
+  const [wordmarkPulse, setWordmarkPulse] = useState(0);
+
+  useEffect(() => {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let lastIndex = Math.floor(Math.random() * HELLA_RICH_MESSAGES.length);
+
+    setSysText(HELLA_RICH_MESSAGES[lastIndex]);
+    setSysVisible(true);
+
+    if (reduced) return;
+
+    const pickNextMessage = () => {
+      let nextIndex = Math.floor(Math.random() * HELLA_RICH_MESSAGES.length);
+      if (nextIndex === lastIndex) {
+        nextIndex = (nextIndex + 1) % HELLA_RICH_MESSAGES.length;
+      }
+      lastIndex = nextIndex;
+      return HELLA_RICH_MESSAGES[nextIndex];
+    };
+
+    let fadeTimer: number | undefined;
+
+    const interval = window.setInterval(() => {
+      setSysVisible(false);
+      fadeTimer = window.setTimeout(() => {
+        setSysText(pickNextMessage());
+        setSysVisible(true);
+      }, 650);
+    }, 4800);
+
+    return () => {
+      if (fadeTimer) window.clearTimeout(fadeTimer);
+      clearInterval(interval);
+    };
+  }, []);
 
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced) return;
 
-    // One full cycle: 2500 + 900 + 900 + 1000 + 600 fade = ~5900ms
-    const CYCLE = 5900;
+    const trigger = () => setWordmarkPulse((pulse) => pulse + 1);
+    let timer: number | undefined;
 
-    const runCycle = (offset: number) => [
-      setTimeout(() => { setSysText('BUILDING FUTURE...');     setSysVisible(true);  }, offset + 2500),
-      setTimeout(() => { setSysText('CALCULATING OUTCOME...'); setSysVisible(true);  }, offset + 3400),
-      setTimeout(() => { setSysText('MIDDLE CLASS NOT FOUND'); setSysVisible(true);  }, offset + 4300),
-      setTimeout(() => {                                        setSysVisible(false); }, offset + 5300),
-      setTimeout(() => { setSysText('');                                              }, offset + 5900),
-    ];
+    const schedule = (delay: number) => {
+      timer = window.setTimeout(() => {
+        trigger();
+        schedule(12000 + Math.random() * 8000);
+      }, delay);
+    };
 
-    // Start first cycle immediately, then loop
-    let timers = runCycle(0);
-    const interval = setInterval(() => {
-      timers = runCycle(0);
-    }, CYCLE);
+    schedule(180);
 
     return () => {
-      timers.forEach(clearTimeout);
-      clearInterval(interval);
+      if (timer) window.clearTimeout(timer);
     };
   }, []);
 
@@ -80,12 +124,28 @@ function HellaRichH1() {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'flex-start',
-      minHeight: '2.15em',
+      gap: '0.08em',
       position: 'relative',
     }}>
-      <span style={{ display: 'block' }}>Hella Rich.</span>
+      <span
+        aria-label={HELLA_RICH_WORDMARK}
+        style={{ display: 'inline-flex', whiteSpace: 'nowrap' }}
+      >
+        {HELLA_RICH_WORDMARK.split('').map((letter, index) => (
+          <span
+            key={`${wordmarkPulse}-${index}`}
+            aria-hidden="true"
+            className="h1-letter"
+            style={{
+              animationDelay: `${index * 22}ms`,
+              minWidth: letter === '.' ? '0.26em' : undefined,
+            }}
+          >
+            {letter}
+          </span>
+        ))}
+      </span>
 
-      {/* System sequence — between the lines, loops */}
       <span
         aria-hidden="true"
         style={{
@@ -96,19 +156,17 @@ function HellaRichH1() {
           color: 'rgba(255,255,255,0.38)',
           fontWeight: 400,
           lineHeight: 1.2,
-          margin: '0.1em 0',
           opacity: sysVisible ? 1 : 0,
-          transition: sysVisible ? 'opacity 0.1s ease' : 'opacity 0.5s ease',
+          transition: 'opacity 0.6s ease',
           pointerEvents: 'none',
           userSelect: 'none',
-          whiteSpace: 'nowrap',
+          whiteSpace: 'normal',
+          textWrap: 'balance',
           minHeight: '1.2em',
         }}
       >
         {sysText}
       </span>
-
-      <span style={{ display: 'block' }}>Mega Poor.</span>
     </span>
   );
 }
@@ -269,6 +327,142 @@ function AboutModal({ onClose, onOpenCredits }: { onClose: () => void; onOpenCre
   );
 }
 
+// ── HELLA.FM listeners tag ─────────────────────────────────────────────────
+function HellaFmListenersTag({ compact = false }: { compact?: boolean }) {
+  const [listeners, setListeners] = useState(911);
+  const [pulse, setPulse] = useState(false);
+
+  useEffect(() => {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) return;
+
+    let current = 911;
+    let timer: number | undefined;
+    let pulseTimer: number | undefined;
+
+    const tick = () => {
+      const hold = Math.random() < 0.2;
+      const shouldRise = current <= 908 || (current < 917 && Math.random() < 0.56);
+      const shift = hold ? 0 : shouldRise
+        ? Math.floor(Math.random() * 5) + 2
+        : -(Math.floor(Math.random() * 3) + 1);
+      const next = Math.max(906, Math.min(918, current + shift));
+      current = next;
+      setListeners(next);
+      if (!hold) {
+        if (pulseTimer) window.clearTimeout(pulseTimer);
+        setPulse(true);
+        pulseTimer = window.setTimeout(() => setPulse(false), 260);
+      }
+      const delay = hold
+        ? 1000 + Math.random() * 1100
+        : shouldRise
+          ? 180 + Math.random() * 360
+          : 620 + Math.random() * 700;
+      timer = window.setTimeout(tick, delay);
+    };
+
+    timer = window.setTimeout(tick, 450 + Math.random() * 650);
+
+    return () => {
+      if (timer) window.clearTimeout(timer);
+      if (pulseTimer) window.clearTimeout(pulseTimer);
+    };
+  }, []);
+
+  return (
+    <span
+      aria-label={`${listeners}k listeners`}
+      className={pulse ? 'listeners-tag listeners-tag--pulse' : 'listeners-tag'}
+      style={{
+        position: 'absolute',
+        top: compact ? 3 : 'clamp(14px,2vw,22px)',
+        right: 0,
+        zIndex: 5,
+        display: 'inline-flex',
+        alignItems: 'baseline',
+        gap: compact ? 2 : 5,
+        padding: compact ? '1px 3px 1px 4px' : '4px 8px 4px 10px',
+        width: compact ? 32 : 'clamp(120px,9.5vw,136px)',
+        boxSizing: 'border-box',
+        background: '#a51d1d',
+        border: '1px solid rgba(255,140,105,0.12)',
+        borderRadius: 0,
+        boxShadow: '0 0 18px rgba(165,29,29,0.22)',
+        pointerEvents: 'none',
+        userSelect: 'none',
+        transformOrigin: '100% 0',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      <span style={{
+        fontFamily: "'Space Grotesk', sans-serif",
+        fontSize: compact ? 8 : 'clamp(16px,1.8vw,22px)',
+        lineHeight: 1,
+        fontWeight: 700,
+        letterSpacing: 0,
+        color: '#e5a16f',
+        fontVariantNumeric: 'tabular-nums',
+        minWidth: compact ? 24 : '48px',
+      }}>
+        {listeners}k
+      </span>
+      {!compact && (
+        <span style={{
+          fontFamily: "'DM Mono', monospace",
+          fontSize: 'clamp(6px,0.7vw,8px)',
+          lineHeight: 1,
+          fontWeight: 700,
+          letterSpacing: '0.16em',
+          color: 'rgba(229,161,111,0.58)',
+          textTransform: 'uppercase',
+        }}>
+          listeners
+        </span>
+      )}
+    </span>
+  );
+}
+
+function HappyHumanHiringTag({ compact = false }: { compact?: boolean }) {
+  return (
+    <span
+      aria-label="Hiring now"
+      style={{
+        position: 'absolute',
+        top: compact ? 3 : 'clamp(14px,2vw,22px)',
+        right: 0,
+        zIndex: 5,
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: compact ? '2px 4px' : '5px 10px',
+        width: compact ? 38 : 'clamp(112px,8.5vw,124px)',
+        boxSizing: 'border-box',
+        background: '#d8cfbc',
+        border: '1px solid rgba(255,255,255,0.18)',
+        borderRadius: 0,
+        boxShadow: '0 0 18px rgba(216,207,188,0.12)',
+        pointerEvents: 'none',
+        userSelect: 'none',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      <span style={{
+        fontFamily: "'DM Mono', monospace",
+        fontSize: compact ? 6 : 'clamp(8px,0.75vw,10px)',
+        lineHeight: 1,
+        fontWeight: 700,
+        letterSpacing: compact ? '0.05em' : '0.16em',
+        color: '#16110d',
+        textTransform: 'uppercase',
+      }}>
+        {compact ? 'HIRING' : 'HIRING NOW'}
+      </span>
+    </span>
+  );
+}
+
 // ── ProjectCard ────────────────────────────────────────────────────────────
 interface ProjectCardProps {
   slug: string;
@@ -404,6 +598,9 @@ function ProjectCard({ slug, title, tagline, image, index, live = true, cta, fea
         <ProductLineSculpture slug={slug} active={mediaMode === 'line'} hovered={hovered} />
       </div>
 
+      {slug === 'hella.fm' && <HellaFmListenersTag />}
+      {slug === 'happy-human' && <HappyHumanHiringTag />}
+
       {/* Gradient overlay */}
       <div style={{
         position: 'absolute', inset: 0,
@@ -442,17 +639,19 @@ function ProjectCard({ slug, title, tagline, image, index, live = true, cta, fea
       )}
 
       {/* Index */}
-      <div style={{
-        position: 'absolute',
-        top: 'clamp(16px,2.5vw,28px)',
-        right: 'clamp(16px,2.5vw,28px)',
-        fontFamily: "'DM Mono', monospace",
-        fontSize: 'clamp(9px,0.9vw,11px)',
-        color: 'rgba(255,255,255,0.22)',
-        letterSpacing: '0.15em',
-      }}>
-        {String(index).padStart(2, '0')}
-      </div>
+      {slug !== 'hella.fm' && (
+        <div style={{
+          position: 'absolute',
+          top: 'clamp(16px,2.5vw,28px)',
+          right: 'clamp(16px,2.5vw,28px)',
+          fontFamily: "'DM Mono', monospace",
+          fontSize: 'clamp(9px,0.9vw,11px)',
+          color: 'rgba(255,255,255,0.22)',
+          letterSpacing: '0.15em',
+        }}>
+          {String(index).padStart(2, '0')}
+        </div>
+      )}
 
       {/* Content */}
       <div style={{
@@ -577,6 +776,8 @@ function FeaturedCard({ slug, title, desc, img, mediaMode = 'image' }: { slug: s
         }}>
           <ProductLineSculpture slug={slug} active={mediaMode === 'line'} hovered={hovered} />
         </div>
+        {slug === 'hella.fm' && <HellaFmListenersTag />}
+        {slug === 'happy-human' && <HappyHumanHiringTag />}
       </div>
 
       {/* content */}
@@ -688,6 +889,8 @@ function ArchiveRow({ slug, n, title, desc, img, mediaMode = 'image' }: { slug: 
         }}>
           <ProductLineSculpture slug={slug} active={mediaMode === 'line'} hovered={hovered} />
         </span>
+        {slug === 'hella.fm' && <HellaFmListenersTag compact />}
+        {slug === 'happy-human' && <HappyHumanHiringTag compact />}
       </span>
 
       {/* index number */}
@@ -816,17 +1019,41 @@ export default function Landing() {
           0%, 49% { opacity: 1; }
           50%, 100% { opacity: 0; }
         }
+        @keyframes h1LetterWake {
+          0% {
+            opacity: 0.54;
+            transform: translateY(0.08em);
+            filter: brightness(0.7);
+          }
+          58% {
+            opacity: 1;
+            transform: translateY(-0.015em);
+            filter: brightness(1.16);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+            filter: brightness(1);
+          }
+        }
+        .h1-letter {
+          display: inline-block;
+          will-change: transform, opacity, filter;
+          animation: h1LetterWake 0.46s cubic-bezier(0.23,1,0.32,1) both;
+        }
         .h1-cursor {
           font-weight: 300;
           color: rgba(255,255,255,0.55);
           animation: h1CursorBlink 0.55s steps(1) infinite;
           margin-left: 0.04em;
         }
-        .h1-wrap {
-          min-height: 2.15em;
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-start;
+        .listeners-tag {
+          transition: transform 0.28s cubic-bezier(0.23,1,0.32,1), filter 0.28s ease, box-shadow 0.28s ease;
+        }
+        .listeners-tag--pulse {
+          transform: scale(1.035);
+          filter: brightness(1.16);
+          box-shadow: 0 0 24px rgba(165,29,29,0.38);
         }
       `}</style>
 
@@ -941,8 +1168,6 @@ export default function Landing() {
           }}>
             {([['featured','▦','GRID'],['gallery','◫','STACKED'],['archive','☰','LIST']] as const).map(([mode, glyph, label]) => {
               const active = view === mode;
-              const activeBg = '#E8622A';
-              const activeFg = 'rgba(7,5,3,0.94)';
               return (
                 <button
                   key={mode}
@@ -956,9 +1181,9 @@ export default function Landing() {
                     fontFamily: "'DM Mono', monospace", fontSize: 'clamp(9px,0.85vw,11px)',
                     letterSpacing: '0.18em', textTransform: 'uppercase',
                     padding: '7px 13px', borderRadius: '1px', border: 'none', cursor: 'pointer',
-                    color: active ? activeFg : 'rgba(255,255,255,0.5)',
-                    background: active ? activeBg : 'transparent',
-                    boxShadow: active ? '0 0 16px rgba(232,98,42,0.22)' : 'none',
+                    color: active ? 'rgba(255,255,255,1)' : 'rgba(255,255,255,0.5)',
+                    background: 'transparent',
+                    boxShadow: 'none',
                     transition: 'background 0.22s ease, color 0.22s ease, box-shadow 0.22s ease',
                   }}
                   onMouseEnter={e => { if (!active) (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.85)'; }}
