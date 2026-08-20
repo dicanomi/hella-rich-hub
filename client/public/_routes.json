@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "include": [
+    "/deck",
+    "/deck/",
+    "/hella.fm",
+    "/hella.fm/*"
+  ],
+  "exclude": []
+}
