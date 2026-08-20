@@ -2,7 +2,7 @@
 /happy-human/   /index.html   200
 /radio          /index.html   200
 /radio/         /index.html   200
-/hella.fm       /hella.fm/    301
+/hella.fm       /hella.fm/index.html   200
 /hella.fm/      /hella.fm/index.html   200
 /hella.fm/:station      /hella.fm/index.html   200
 /synth          /index.html   200
