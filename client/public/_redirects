@@ -4,6 +4,8 @@
 /radio/         /index.html   200
 /hella.fm       /hella.fm/    301
 /hella.fm/      /hella.fm/index.html   200
+/deck           /index.html   200
+/deck/          /index.html   200
 /synth          /index.html   200
 /synth/         /index.html   200
 /hella.synth/   /index.html   200

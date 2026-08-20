@@ -45,6 +45,7 @@ Edit  →  commit to GitHub (main)  →  Cloudflare Pages builds & deploys  → 
 | `/fourcast` | `FourcastPage.tsx` |
 | `/radio` | `RadioPage.tsx` (HELLA_RADIO — canonical home; served in-app) |
 | `/hella.fm` | `HellaFmPage.tsx` (curated station simulator prototype; served in-app) |
+| `/deck` | `HellaDeckPage.tsx` (HELLA•4 reel recorder; served in-app from `client/public/hella-deck-app`) |
 | `/synth` | `HellaSynthPage.tsx` (HELLA.SYNTH browser-native synth instrument; served in-app from `client/public/hella-synth-app`; `/hella.synth/` remains a slash-required alias) |
 
 Routes are registered in `client/src/App.tsx`. Heavy products are lazy-loaded.

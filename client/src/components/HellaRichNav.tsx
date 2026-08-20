@@ -17,9 +17,10 @@ interface NavProject {
 
 // Order matches the homepage product list exactly
 const PROJECTS: NavProject[] = [
+  { title: 'HELLA•4', slug: '/deck' },
   { title: 'HAPPY HUMAN', slug: '/happy-human' },
-  { title: 'RADIO', slug: '/radio' },
   { title: 'HELLA.FM', slug: '/hella.fm' },
+  { title: 'RADIO', slug: '/radio' },
   { title: 'HELLA.SYNTH', slug: '/synth' },
   { title: 'THE_MACHINE.EXE', slug: '/machine-exe' },
   { title: 'HUMAN.EXE', slug: '/human-exe' },
@@ -158,8 +159,8 @@ export function HellaRichNav() {
           background: rgba(255,255,255,0.1);
           border-color: rgba(255,255,255,0.18);
         }
-        .hr-nav.radio .hr-back,
-        .hr-nav.radio .hr-switcher {
+        .hr-nav.light .hr-back,
+        .hr-nav.light .hr-switcher {
           background: #f8fafb;
           border-color: #aeb9c1;
           color: #52616c;
@@ -167,13 +168,13 @@ export function HellaRichNav() {
           -webkit-backdrop-filter: none;
           box-shadow: 0 3px 7px rgba(82,97,108,0.10), inset 0 1px 0 #ffffff;
         }
-        .hr-nav.radio .hr-back:hover,
-        .hr-nav.radio .hr-switcher:hover {
+        .hr-nav.light .hr-back:hover,
+        .hr-nav.light .hr-switcher:hover {
           background: #edf2f5;
           border-color: #8e9ca6;
           color: #3f4d57;
         }
-        .hr-nav.radio .hr-switcher[aria-expanded="true"] {
+        .hr-nav.light .hr-switcher[aria-expanded="true"] {
           background: #e4eaee;
           border-color: #8e9ca6;
           color: #3f4d57;
@@ -227,21 +228,21 @@ export function HellaRichNav() {
           line-height: 1;
         }
         .hr-project-item.current .hr-project-title { color: rgba(255,255,255,0.88); }
-        .hr-nav.radio .hr-dropdown {
+        .hr-nav.light .hr-dropdown {
           background: rgba(248,250,251,0.97);
           border-color: #aeb9c1;
           box-shadow: 0 10px 28px rgba(82,97,108,0.18);
         }
-        .hr-nav.radio .hr-dropdown-label {
+        .hr-nav.light .hr-dropdown-label {
           color: #87949e;
           border-bottom-color: #dce3e8;
         }
-        .hr-nav.radio .hr-project-item:hover { background: #edf2f5; }
-        .hr-nav.radio .hr-project-item.current { background: #e4eaee; }
-        .hr-nav.radio .hr-project-dot { background: #aeb9c1; }
-        .hr-nav.radio .hr-project-dot.live { background: #51a967; }
-        .hr-nav.radio .hr-project-title { color: #687781; }
-        .hr-nav.radio .hr-project-item.current .hr-project-title { color: #3f4d57; }
+        .hr-nav.light .hr-project-item:hover { background: #edf2f5; }
+        .hr-nav.light .hr-project-item.current { background: #e4eaee; }
+        .hr-nav.light .hr-project-dot { background: #aeb9c1; }
+        .hr-nav.light .hr-project-dot.live { background: #51a967; }
+        .hr-nav.light .hr-project-title { color: #687781; }
+        .hr-nav.light .hr-project-item.current .hr-project-title { color: #3f4d57; }
       `}</style>
       {open && (
         <div
@@ -251,7 +252,7 @@ export function HellaRichNav() {
         />
       )}
       <nav
-        className={`hr-nav${currentProject?.slug === '/happy-human' ? ' happy-human' : ''}${location.startsWith('/radio') ? ' radio' : ''}`}
+        className={`hr-nav${currentProject?.slug === '/happy-human' ? ' happy-human' : ''}${location.startsWith('/radio') || location.startsWith('/deck') ? ' light' : ''}`}
         aria-label="hella.rich navigation"
       >
         <a href="/" className="hr-back" aria-label="Back to hella.rich">

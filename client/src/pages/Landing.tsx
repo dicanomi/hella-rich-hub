@@ -24,6 +24,7 @@ const CARD_ORB         = 'https://d2xsxph8kpxj0f.cloudfront.net/3105196632922903
 const CARD_FOURCAST    = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-fourcast-v4-V6r3AdsUgH2RixiRDueELL.webp';
 const RADIO_CARD       = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-radio-v4-76gepMJyY36Pz5dhQ6sZPg.webp';
 const CARD_HELLA_FM    = `${import.meta.env.BASE_URL}card-hella-fm-v2.webp`;
+const CARD_HELLA_DECK  = `${import.meta.env.BASE_URL}card-hella-deck-v1.png`;
 const CARD_HELLA_SYNTH = `${import.meta.env.BASE_URL}card-hella-synth-v1.webp`;
 const CARD_MARKET_EXE  = 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663292290338/irIwNEoiIgpyRjrD.png';
 const CARD_HAPPY_HUMAN = `${import.meta.env.BASE_URL}card-happy-human-v1.webp`;
@@ -213,9 +214,10 @@ function AboutModal({ onClose, onOpenCredits }: { onClose: () => void; onOpenCre
           <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 'clamp(8px,0.85vw,10px)', letterSpacing: '0.22em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginBottom: '16px' }}>The products</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {[
+              { title: 'HELLA•4', tagline: 'A reel recorder for field takes, cue loops, and tape-touching trouble.', href: '/deck' },
               { title: 'HAPPY HUMAN', tagline: 'A labor archive for jobs that were already politely deleted.', href: '/happy-human' },
-              { title: 'HELLA_RADIO', tagline: 'A late-night signal you tune into.',                           href: '/radio' },
               { title: 'HELLA.FM', tagline: 'Preprogrammed local frequencies for the end of normal radio.',    href: '/hella.fm' },
+              { title: 'HELLA_RADIO', tagline: 'A late-night signal you tune into.',                           href: '/radio' },
               { title: 'HELLA.SYNTH', tagline: 'A browser-native instrument with a hand-written audio engine.', href: '/synth' },
               { title: 'THE_MACHINE.EXE', tagline: 'The market is the setting. Human psychology is the subject.',  href: '/machine-exe' },
               { title: 'HUMAN.EXE',   tagline: 'A biological diagnostic machine that discovers more than it was designed to find.', href: '/human-exe' },
@@ -241,9 +243,10 @@ function AboutModal({ onClose, onOpenCredits }: { onClose: () => void; onOpenCre
                 onMouseLeave={e => ((e.currentTarget as HTMLElement).style.opacity = '1')}
               >
                 <span style={{
-                  fontFamily: p.href === '/happy-human' ? "'TAY Hells', 'Georgia', serif" : "'DM Mono', monospace",
-                  fontSize: p.href === '/happy-human' ? 'clamp(14px,1.6vw,19px)' : 'clamp(9px,0.9vw,11px)',
-                  letterSpacing: p.href === '/happy-human' ? '0.04em' : '0.16em',
+                  fontFamily: p.href === '/happy-human' ? "'TAY Hells', 'Georgia', serif" : p.href === '/deck' ? "'Helvetica Neue', Helvetica, Arial, sans-serif" : "'DM Mono', monospace",
+                  fontSize: p.href === '/happy-human' ? 'clamp(14px,1.6vw,19px)' : p.href === '/deck' ? 'clamp(13px,1.5vw,18px)' : 'clamp(9px,0.9vw,11px)',
+                  fontWeight: p.href === '/deck' ? 200 : undefined,
+                  letterSpacing: p.href === '/happy-human' ? '0.04em' : p.href === '/deck' ? '0.16em' : '0.16em',
                   color: 'rgba(255,255,255,0.75)',
                   textTransform: 'uppercase',
                   whiteSpace: 'nowrap',
@@ -298,6 +301,7 @@ function ProjectCard({ slug, title, tagline, image, index, live = true, cta, fea
     slug === 'the-eye'     ? "'Cormorant Garamond', 'Georgia', serif" :
     slug === 'low-battery' ? "'ArenaGraffiti', 'GraffitiCity', 'Permanent Marker', cursive" :
     slug === 'hella.fm'    ? "'DM Mono', 'Space Mono', monospace" :
+    slug === 'deck'        ? "'Helvetica Neue', Helvetica, Arial, sans-serif" :
     slug === 'radio'       ? "'TAY Birdie', 'Space Mono', monospace" :
     slug === 'happy-human' ? "'TAY Hells', 'Georgia', serif" :
     slug === 'human-exe'   ? "'Courier New', 'Lucida Console', monospace" :
@@ -313,6 +317,7 @@ function ProjectCard({ slug, title, tagline, image, index, live = true, cta, fea
     slug === 'the-eye'     ? 'clamp(24px, 4.5vw, 64px)' :
     slug === 'low-battery'  ? 'clamp(28px, 4.5vw, 64px)' :
     slug === 'happy-human' ? 'clamp(30px, 4.8vw, 68px)' :
+    slug === 'deck'        ? 'clamp(30px, 4.6vw, 66px)' :
     'clamp(22px, 3.5vw, 48px)';
 
   const titleWeight =
@@ -322,6 +327,7 @@ function ProjectCard({ slug, title, tagline, image, index, live = true, cta, fea
     slug === 'orb'         ? 300 :
     slug === 'the-eye'     ? 300 :
     slug === 'happy-human' ? 400 :
+    slug === 'deck'        ? 200 :
     400;
 
   const titleTracking =
@@ -332,6 +338,7 @@ function ProjectCard({ slug, title, tagline, image, index, live = true, cta, fea
     slug === 'fourcast'    ? '0.04em' :
     slug === 'the-eye'     ? '0.45em' :
     slug === 'happy-human' ? '0.06em' :
+    slug === 'deck'        ? '0.16em' :
     '0.12em';
 
   const cardHeight = featured
@@ -503,10 +510,11 @@ const CROSS_AWARENESS: Record<string, string[]> = {
   'fourcast':    ['THE EYE PREDICTED THIS.', 'LOW BATTERY IGNORED THE WARNING.', 'OUTCOME CALCULATED.'],
   'happy-human': ['HUMAN.EXE FILED AN APPEAL.', 'THE_MACHINE.EXE APPROVED THE LAYOFF.', 'FOURCAST PREDICTED THIS.'],
   'hella.fm':    ['HELLA_RADIO DETECTED A LOCAL SIGNAL.', 'DEAD AIR IS KEEPING TIME.', 'THE STATION REMEMBERS THE ROOM.'],
+  'deck':        ['HELLA.FM SENT A FIELD TAKE.', 'THE TAPE IS STILL WARM.', 'A CUE IS WAITING ON THE REEL.'],
   'synth':       ['AETHER HEARD A NEW OSCILLATOR.', 'THE SIGNAL CHAIN IS ARMED.', 'HUMAN MODULATION DETECTED.'],
 };
 
-const PRODUCT_SLUGS = ['hella.fm', 'synth', 'happy-human', 'orb', 'the-eye', 'low-battery', 'space-drone', 'aether', 'dead-air', 'fourcast', 'machine-exe'];
+const PRODUCT_SLUGS = ['deck', 'hella.fm', 'synth', 'happy-human', 'orb', 'the-eye', 'low-battery', 'space-drone', 'aether', 'dead-air', 'fourcast', 'machine-exe'];
 
 // ── Main Landing ───────────────────────────────────────────────────────────
 // ── FeaturedCard — large showcase card (premium curated browsing) ─────────────
@@ -550,9 +558,10 @@ function FeaturedCard({ slug, title, desc, img }: { slug: string; title: string;
       {/* content */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: 'clamp(18px,1.8vw,26px)' }}>
         <span style={{
-          fontFamily: slug === 'happy-human' ? "'TAY Hells', 'Georgia', serif" : "'DM Mono', monospace",
+          fontFamily: slug === 'happy-human' ? "'TAY Hells', 'Georgia', serif" : slug === 'deck' ? "'Helvetica Neue', Helvetica, Arial, sans-serif" : "'DM Mono', monospace",
           fontSize: 'clamp(15px,1.5vw,20px)',
-          letterSpacing: slug === 'happy-human' ? '0.04em' : '0.12em',
+          fontWeight: slug === 'deck' ? 200 : undefined,
+          letterSpacing: slug === 'happy-human' ? '0.04em' : slug === 'deck' ? '0.16em' : '0.12em',
           textTransform: 'uppercase',
           color: hovered ? 'rgba(255,255,255,0.96)' : 'rgba(255,255,255,0.85)',
           transition: 'color 0.2s ease',
@@ -654,9 +663,10 @@ function ArchiveRow({ slug, n, title, desc, img }: { slug: string; n: string; ti
       {/* name + description */}
       <span style={{ display: 'flex', flexDirection: 'column', gap: '5px', minWidth: 0 }}>
         <span style={{
-          fontFamily: slug === 'happy-human' ? "'TAY Hells', 'Georgia', serif" : "'DM Mono', monospace",
+          fontFamily: slug === 'happy-human' ? "'TAY Hells', 'Georgia', serif" : slug === 'deck' ? "'Helvetica Neue', Helvetica, Arial, sans-serif" : "'DM Mono', monospace",
           fontSize: 'clamp(13px,1.5vw,18px)',
-          letterSpacing: slug === 'happy-human' ? '0.04em' : '0.14em',
+          fontWeight: slug === 'deck' ? 200 : undefined,
+          letterSpacing: slug === 'happy-human' ? '0.04em' : slug === 'deck' ? '0.16em' : '0.14em',
           textTransform: 'uppercase',
           color: hovered ? 'rgba(255,255,255,0.96)' : 'rgba(255,255,255,0.82)',
           transition: 'color 0.18s ease',
@@ -888,23 +898,25 @@ export default function Landing() {
         }}>
           {view === 'gallery' ? (
           <>
-          <ProjectCard slug="hella.fm"   title="HELLA.FM"    tagline="Preprogrammed local frequencies for the end of normal radio." cta="Tune In" image={CARD_HELLA_FM}    index={1} enterDelay={80} />
-          <ProjectCard slug="synth" title="HELLA.SYNTH" tagline="A browser-native instrument with a hand-written audio engine." cta="Play" image={CARD_HELLA_SYNTH} index={2} enterDelay={140} />
-          <ProjectCard slug="happy-human" title="HAPPY HUMAN" tagline="A labor archive for jobs that were already politely deleted." cta="Apply" image={CARD_HAPPY_HUMAN} index={3} enterDelay={200} />
-          <ProjectCard slug="radio"      title="HELLA_RADIO" tagline="A late-night signal you tune into." cta="Tune In" image={RADIO_CARD}       index={4} enterDelay={260} />
-          <ProjectCard slug="machine-exe" title="THE_MACHINE.EXE"  tagline="The market is the setting. Human psychology is the subject." cta="Trade" image={CARD_MARKET_EXE} index={5} enterDelay={320} />
-          <ProjectCard slug="human-exe"  title="HUMAN.EXE"   tagline="Human Diagnostic Machine" cta="ENTER" image={CARD_HUMAN_EXE}  index={6} enterDelay={380} />
-          <ProjectCard slug="orb"        title="ORB"         tagline="A living object." cta="Touch It" image={CARD_ORB}          index={7} enterDelay={440} />
-          <ProjectCard slug="dead-air"   title="DEAD AIR"    tagline="Late night radio scanner." cta="Tune In" image={CARD_DEAD_AIR}   index={8} enterDelay={500} />
-          <ProjectCard slug="aether"     title="ÆTHER"       tagline="Impossible to sound bad." image={CARD_AETHER}      index={9} enterDelay={560} />
-          <ProjectCard slug="space-drone" title="SPACE DRONE" tagline="A drifting machine for doing absolutely nothing." image={CARD_SPACE_DRONE} index={10} enterDelay={620} />
-          <ProjectCard slug="low-battery" title="LOW BATTERY" tagline="The sound you ignore until it becomes your personality." cta="Begin Ignoring" image={CARD_LOW_BATTERY} index={11} enterDelay={680} />
-          <ProjectCard slug="fourcast"   title="FOURCAST"    tagline="A weather app predicting the end of the world. Politely." cta="Check My Day" image={CARD_FOURCAST}   index={12} enterDelay={740} />
-          <ProjectCard slug="the-eye"    title="THE EYE"     tagline="A strange object that notices you." cta="Look" image={CARD_THE_EYE}    index={13} enterDelay={800} />
+          <ProjectCard slug="deck" title="HELLA•4" tagline="A reel recorder for field takes, cue loops, and tape-touching trouble." cta="Record" image={CARD_HELLA_DECK} index={1} enterDelay={80} />
+          <ProjectCard slug="hella.fm"   title="HELLA.FM"    tagline="Preprogrammed local frequencies for the end of normal radio." cta="Tune In" image={CARD_HELLA_FM}    index={2} enterDelay={140} />
+          <ProjectCard slug="synth" title="HELLA.SYNTH" tagline="A browser-native instrument with a hand-written audio engine." cta="Play" image={CARD_HELLA_SYNTH} index={3} enterDelay={200} />
+          <ProjectCard slug="happy-human" title="HAPPY HUMAN" tagline="A labor archive for jobs that were already politely deleted." cta="Apply" image={CARD_HAPPY_HUMAN} index={4} enterDelay={260} />
+          <ProjectCard slug="radio"      title="HELLA_RADIO" tagline="A late-night signal you tune into." cta="Tune In" image={RADIO_CARD}       index={5} enterDelay={320} />
+          <ProjectCard slug="machine-exe" title="THE_MACHINE.EXE"  tagline="The market is the setting. Human psychology is the subject." cta="Trade" image={CARD_MARKET_EXE} index={6} enterDelay={380} />
+          <ProjectCard slug="human-exe"  title="HUMAN.EXE"   tagline="Human Diagnostic Machine" cta="ENTER" image={CARD_HUMAN_EXE}  index={7} enterDelay={440} />
+          <ProjectCard slug="orb"        title="ORB"         tagline="A living object." cta="Touch It" image={CARD_ORB}          index={8} enterDelay={500} />
+          <ProjectCard slug="dead-air"   title="DEAD AIR"    tagline="Late night radio scanner." cta="Tune In" image={CARD_DEAD_AIR}   index={9} enterDelay={560} />
+          <ProjectCard slug="aether"     title="ÆTHER"       tagline="Impossible to sound bad." image={CARD_AETHER}      index={10} enterDelay={620} />
+          <ProjectCard slug="space-drone" title="SPACE DRONE" tagline="A drifting machine for doing absolutely nothing." image={CARD_SPACE_DRONE} index={11} enterDelay={680} />
+          <ProjectCard slug="low-battery" title="LOW BATTERY" tagline="The sound you ignore until it becomes your personality." cta="Begin Ignoring" image={CARD_LOW_BATTERY} index={12} enterDelay={740} />
+          <ProjectCard slug="fourcast"   title="FOURCAST"    tagline="A weather app predicting the end of the world. Politely." cta="Check My Day" image={CARD_FOURCAST}   index={13} enterDelay={800} />
+          <ProjectCard slug="the-eye"    title="THE EYE"     tagline="A strange object that notices you." cta="Look" image={CARD_THE_EYE}    index={14} enterDelay={860} />
           </>
           ) : view === 'featured' ? (
           <div className="hr-featured-grid">
             {[
+              { slug: 'deck', title: 'HELLA•4', desc: 'A reel recorder for field takes, cue loops, and tape-touching trouble.', img: CARD_HELLA_DECK },
               { slug: 'hella.fm',    title: 'HELLA.FM', desc: 'Preprogrammed local frequencies for the end of normal radio.', img: CARD_HELLA_FM },
               { slug: 'synth', title: 'HELLA.SYNTH', desc: 'A browser-native instrument with a hand-written audio engine.', img: CARD_HELLA_SYNTH },
               { slug: 'happy-human', title: 'HAPPY HUMAN', desc: 'A labor archive for jobs that were already politely deleted.', img: CARD_HAPPY_HUMAN },
@@ -927,19 +939,20 @@ export default function Landing() {
           ) : (
           <div role="list" style={{ display: 'flex', flexDirection: 'column', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
             {[
-              { slug: 'hella.fm',    n: '01', title: 'HELLA.FM',    desc: 'Preprogrammed local frequencies for the end of normal radio.', img: CARD_HELLA_FM },
-              { slug: 'synth', n: '02', title: 'HELLA.SYNTH', desc: 'A browser-native instrument with a hand-written audio engine.', img: CARD_HELLA_SYNTH },
-              { slug: 'happy-human', n: '03', title: 'HAPPY HUMAN', desc: 'A labor archive for jobs that were already politely deleted.', img: CARD_HAPPY_HUMAN },
-              { slug: 'radio',       n: '04', title: 'HELLA_RADIO', desc: 'A late-night signal you tune into.', img: RADIO_CARD },
-              { slug: 'machine-exe',  n: '05', title: 'THE_MACHINE.EXE',  desc: 'The market is the setting. Human psychology is the subject.', img: CARD_MARKET_EXE },
-              { slug: 'human-exe',   n: '06', title: 'HUMAN.EXE',   desc: 'Human Diagnostic Machine. The machine discovers more than it was designed to find.', img: CARD_HUMAN_EXE },
-              { slug: 'orb',         n: '07', title: 'ORB',         desc: 'A living object. Seven moods rendered as sound and color.', img: CARD_ORB },
-              { slug: 'dead-air',    n: '08', title: 'DEAD AIR',    desc: 'Lost transmissions and impossible frequencies.', img: CARD_DEAD_AIR },
-              { slug: 'aether',      n: '09', title: 'ÆTHER',       desc: 'Impossible to sound bad.', img: CARD_AETHER },
-              { slug: 'space-drone', n: '10', title: 'SPACE DRONE', desc: 'A drifting machine for doing absolutely nothing.', img: CARD_SPACE_DRONE },
-              { slug: 'low-battery', n: '11', title: 'LOW BATTERY', desc: 'The sound you ignore until it becomes your personality.', img: CARD_LOW_BATTERY },
-              { slug: 'fourcast',    n: '12', title: 'FOURCAST',    desc: 'A weather app predicting the end of the world. Politely.', img: CARD_FOURCAST },
-              { slug: 'the-eye',     n: '13', title: 'THE EYE',     desc: 'A strange object that notices you.', img: CARD_THE_EYE },
+              { slug: 'deck',        n: '01', title: 'HELLA•4',  desc: 'A reel recorder for field takes, cue loops, and tape-touching trouble.', img: CARD_HELLA_DECK },
+              { slug: 'hella.fm',    n: '02', title: 'HELLA.FM',    desc: 'Preprogrammed local frequencies for the end of normal radio.', img: CARD_HELLA_FM },
+              { slug: 'synth', n: '03', title: 'HELLA.SYNTH', desc: 'A browser-native instrument with a hand-written audio engine.', img: CARD_HELLA_SYNTH },
+              { slug: 'happy-human', n: '04', title: 'HAPPY HUMAN', desc: 'A labor archive for jobs that were already politely deleted.', img: CARD_HAPPY_HUMAN },
+              { slug: 'radio',       n: '05', title: 'HELLA_RADIO', desc: 'A late-night signal you tune into.', img: RADIO_CARD },
+              { slug: 'machine-exe',  n: '06', title: 'THE_MACHINE.EXE',  desc: 'The market is the setting. Human psychology is the subject.', img: CARD_MARKET_EXE },
+              { slug: 'human-exe',   n: '07', title: 'HUMAN.EXE',   desc: 'Human Diagnostic Machine. The machine discovers more than it was designed to find.', img: CARD_HUMAN_EXE },
+              { slug: 'orb',         n: '08', title: 'ORB',         desc: 'A living object. Seven moods rendered as sound and color.', img: CARD_ORB },
+              { slug: 'dead-air',    n: '09', title: 'DEAD AIR',    desc: 'Lost transmissions and impossible frequencies.', img: CARD_DEAD_AIR },
+              { slug: 'aether',      n: '10', title: 'ÆTHER',       desc: 'Impossible to sound bad.', img: CARD_AETHER },
+              { slug: 'space-drone', n: '11', title: 'SPACE DRONE', desc: 'A drifting machine for doing absolutely nothing.', img: CARD_SPACE_DRONE },
+              { slug: 'low-battery', n: '12', title: 'LOW BATTERY', desc: 'The sound you ignore until it becomes your personality.', img: CARD_LOW_BATTERY },
+              { slug: 'fourcast',    n: '13', title: 'FOURCAST',    desc: 'A weather app predicting the end of the world. Politely.', img: CARD_FOURCAST },
+              { slug: 'the-eye',     n: '14', title: 'THE EYE',     desc: 'A strange object that notices you.', img: CARD_THE_EYE },
             ].map(p => (
               <ArchiveRow key={p.slug} slug={p.slug} n={p.n} title={p.title} desc={p.desc} img={p.img} />
             ))}

@@ -11,6 +11,37 @@ repeating deployment instructions in each entry.
 
 ---
 
+## 2026-08-19 22:13 — Codex — HELLA.DECK local integration branch
+
+**Did:**
+- Read the Kimi AI Hella Deck handoff ZIP as implementation guidance only; did not commit the ZIP or its standalone repo scaffold.
+- Built the standalone Hella Deck app from the unpacked handoff and copied the production bundle into `client/public/hella-deck-app`.
+- Added a hub wrapper route at `/deck`, registered HELLA•4 in the router, homepage product surfaces, shared product switcher, and README.
+- Replaced the temporary screenshot card with the approved generated jog-wheel/record-light PNG, and moved HELLA•4 into the first homepage slot.
+- Applied the thin device-logo text treatment to HELLA•4 across homepage views.
+- Ran the local Cloudflare build successfully and verified the integrated `/deck` route renders through the hub preview.
+- Created this work on local branch `agent/add-hella-deck` so `main` is not pushed and Cloudflare production is not triggered.
+- Kept the existing untracked HELLA.FM media folders out of scope and out of staging.
+
+**Current state:**
+- HELLA•4 is a local branch integration awaiting user review and additional hella.rich environment adjustments.
+- The recorder remains isolated as a static app so mic capture, IndexedDB takes, and reel physics do not alter other hub products.
+
+**Next steps:**
+- [x] Run the Cloudflare build locally and review `/deck`.
+- [ ] Review the local branch with the user and make remaining environment adjustments.
+- [ ] Do not push to `main` or publish to Cloudflare until the user approves.
+
+**Decisions / rationale:**
+- Used the existing HELLA.SYNTH-style static-app wrapper pattern rather than adding a new architecture.
+- Used `/deck` as the reliable route; no dotted route is needed for this product.
+
+**Watch out for:**
+- Hella Deck microphone recording requires a secure context for real mic capture; local visual review can still load the interface over HTTP.
+- Preserve the Kimi handoff's interaction contract if rebuilding the standalone app later.
+
+---
+
 ## 2026-08-18 19:20 — Codex — HELLA.FM direct route corrected after HELLA.SYNTH merge
 
 **Did:**
