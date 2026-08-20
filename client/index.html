@@ -9,24 +9,32 @@
     <meta name="description" content="hella.rich is an AI-native product lab by Jeffrey Willis / Dicanomi, featuring small interactive web products exploring sound, motion, emotional UX, strange utilities, and playful internet experiences." />
     <meta name="keywords" content="hella.rich, AI-native, interactive experiments, product lab, ambient audio, web art, interaction design, emotional UX, sound design, creative technology" />
     <meta name="author" content="Jeffrey Willis / Dicanomi" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="theme-color" content="#050805" />
+    <meta name="application-name" content="hella.rich" />
+    <link rel="canonical" href="https://hella.rich/" />
 
     <!-- Open Graph / Facebook / LinkedIn / Slack / Discord -->
     <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:url" content="https://hella.rich/" />
-    <meta property="og:title" content="hella.rich" />
+    <meta property="og:title" content="hella.rich — AI-Native Product Lab" />
     <meta property="og:description" content="hella.rich is an AI-native product lab by Jeffrey Willis / Dicanomi, featuring small interactive web products exploring sound, motion, emotional UX, strange utilities, and playful internet experiences." />
     <meta property="og:image" content="https://hella.rich/og-home.webp" />
+    <meta property="og:image:secure_url" content="https://hella.rich/og-home.webp" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:type" content="image/webp" />
+    <meta property="og:image:alt" content="hella.rich weird interactive web apps share card" />
     <meta property="og:site_name" content="hella.rich" />
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://hella.rich/" />
-    <meta name="twitter:title" content="hella.rich" />
+    <meta name="twitter:title" content="hella.rich — AI-Native Product Lab" />
     <meta name="twitter:description" content="hella.rich is an AI-native product lab by Jeffrey Willis / Dicanomi, featuring small interactive web products exploring sound, motion, emotional UX, strange utilities, and playful internet experiences." />
     <meta name="twitter:image" content="https://hella.rich/og-home.webp" />
+    <meta name="twitter:image:alt" content="hella.rich weird interactive web apps share card" />
 
     <!-- Favicons -->
     <link rel="icon" href="/favicon.ico" />
@@ -41,7 +49,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Space+Mono:wght@400;700&family=IBM+Plex+Mono:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
 
-    <!-- JSON-LD Structured Data — WebSite + Person -->
+    <!-- JSON-LD Structured Data — WebSite + CollectionPage + Product Graph -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -51,39 +59,82 @@
           "@id": "https://hella.rich/#website",
           "url": "https://hella.rich/",
           "name": "hella.rich",
-          "description": "An AI-native experimental product lab featuring small interactive web products exploring sound, motion, emotional UX, and strange internet utilities.",
-          "creator": {
-            "@type": "Person",
-            "@id": "https://github.com/dicanomi",
-            "name": "Jeffrey Willis",
-            "alternateName": "Dicanomi",
-            "url": "https://github.com/dicanomi"
-          },
+          "alternateName": "HELLA.RICH",
+          "description": "An AI-native experimental product lab by Jeffrey Willis / Dicanomi, featuring small interactive web products exploring sound, motion, emotional UX, strange utilities, and playful internet experiences.",
+          "publisher": { "@id": "https://hella.rich/#dicanomi" },
+          "creator": { "@id": "https://hella.rich/#jeffrey-willis" },
+          "image": { "@id": "https://hella.rich/#og-image" },
           "inLanguage": "en"
         },
         {
           "@type": "Person",
-          "@id": "https://github.com/dicanomi",
+          "@id": "https://hella.rich/#jeffrey-willis",
           "name": "Jeffrey Willis",
           "alternateName": "Dicanomi",
-          "url": "https://github.com/dicanomi",
+          "url": "https://hella.rich/",
+          "sameAs": ["https://github.com/dicanomi"],
+          "knowsAbout": [
+            "AI-assisted product development",
+            "Interaction design",
+            "Creative technology",
+            "Web audio",
+            "Experimental web applications"
+          ]
+        },
+        {
+          "@type": "Organization",
+          "@id": "https://hella.rich/#dicanomi",
+          "name": "Dicanomi",
+          "url": "https://hella.rich/",
+          "founder": { "@id": "https://hella.rich/#jeffrey-willis" },
           "sameAs": ["https://github.com/dicanomi"]
         },
         {
-          "@type": "ItemList",
-          "name": "hella.rich Products",
-          "description": "Interactive web products by hella.rich",
+          "@type": "ImageObject",
+          "@id": "https://hella.rich/#og-image",
+          "url": "https://hella.rich/og-home.webp",
+          "contentUrl": "https://hella.rich/og-home.webp",
+          "width": 1200,
+          "height": 630,
+          "caption": "hella.rich weird interactive web apps"
+        },
+        {
+          "@type": "CollectionPage",
+          "@id": "https://hella.rich/#homepage",
           "url": "https://hella.rich/",
+          "name": "hella.rich — AI-Native Product Lab",
+          "isPartOf": { "@id": "https://hella.rich/#website" },
+          "about": [
+            "AI-native product development",
+            "Interactive web apps",
+            "Web Audio API",
+            "Browser DSP",
+            "Three.js",
+            "Creative technology",
+            "Experimental UX"
+          ],
+          "primaryImageOfPage": { "@id": "https://hella.rich/#og-image" },
+          "mainEntity": { "@id": "https://hella.rich/#products" },
+          "inLanguage": "en"
+        },
+        {
+          "@type": "ItemList",
+          "@id": "https://hella.rich/#products",
+          "name": "hella.rich Products",
+          "description": "Interactive web products, audio tools, strange utilities, and experimental web apps by hella.rich.",
+          "url": "https://hella.rich/",
+          "numberOfItems": 14,
           "itemListElement": [
             {
               "@type": "ListItem",
               "position": 1,
               "item": {
                 "@type": "SoftwareApplication",
-                "name": "ORB",
-                "url": "https://hella.rich/orb",
-                "description": "A living interactive object. Seven emotional states expressed through color, sound, and motion.",
-                "applicationCategory": "InteractiveArt",
+                "@id": "https://hella.rich/deck#app",
+                "name": "HELLA•4",
+                "url": "https://hella.rich/deck",
+                "description": "A reel recorder for field takes, cue loops, and tape-touching trouble.",
+                "applicationCategory": "MultimediaApplication",
                 "operatingSystem": "Web"
               }
             },
@@ -92,10 +143,11 @@
               "position": 2,
               "item": {
                 "@type": "SoftwareApplication",
-                "name": "THE EYE",
-                "url": "https://hella.rich/the-eye",
-                "description": "A strange digital object that notices the user. Cursor tracking, realistic blinking, ambient messages, and camera awareness.",
-                "applicationCategory": "InteractiveArt",
+                "@id": "https://hella.rich/happy-human#app",
+                "name": "HAPPY HUMAN",
+                "url": "https://hella.rich/happy-human",
+                "description": "A labor archive for jobs that were already politely deleted.",
+                "applicationCategory": "EntertainmentApplication",
                 "operatingSystem": "Web"
               }
             },
@@ -104,10 +156,11 @@
               "position": 3,
               "item": {
                 "@type": "SoftwareApplication",
-                "name": "LOW BATTERY",
-                "url": "https://hella.rich/low-battery",
-                "description": "A deliberately annoying smoke-detector-inspired interaction about ignored beeps, a fly, and a sanity meter.",
-                "applicationCategory": "InteractiveArt",
+                "@id": "https://hella.rich/hella.fm/#app",
+                "name": "HELLA.FM",
+                "url": "https://hella.rich/hella.fm/",
+                "description": "Preprogrammed local frequencies for the end of normal radio.",
+                "applicationCategory": "MusicApplication",
                 "operatingSystem": "Web"
               }
             },
@@ -116,9 +169,10 @@
               "position": 4,
               "item": {
                 "@type": "SoftwareApplication",
-                "name": "SPACE DRONE",
-                "url": "https://hella.rich/space-drone",
-                "description": "An ambient audio product exploring sound, space, and doing absolutely nothing.",
+                "@id": "https://hella.rich/radio#app",
+                "name": "HELLA_RADIO",
+                "url": "https://hella.rich/radio",
+                "description": "A late-night signal you tune into.",
                 "applicationCategory": "MusicApplication",
                 "operatingSystem": "Web"
               }
@@ -128,9 +182,10 @@
               "position": 5,
               "item": {
                 "@type": "SoftwareApplication",
-                "name": "ÆTHER",
-                "url": "https://hella.rich/aether",
-                "description": "An ambient sound synthesizer. Impossible to sound bad.",
+                "@id": "https://hella.rich/synth#app",
+                "name": "HELLA.SYNTH",
+                "url": "https://hella.rich/synth",
+                "description": "A browser-native instrument with a hand-written audio engine.",
                 "applicationCategory": "MusicApplication",
                 "operatingSystem": "Web"
               }
@@ -140,10 +195,11 @@
               "position": 6,
               "item": {
                 "@type": "SoftwareApplication",
-                "name": "DEAD AIR",
-                "url": "https://hella.rich/dead-air",
-                "description": "A late-night radio scanner. Analog transmissions from the void.",
-                "applicationCategory": "InteractiveArt",
+                "@id": "https://hella.rich/machine-exe#app",
+                "name": "THE_MACHINE.EXE",
+                "url": "https://hella.rich/machine-exe",
+                "description": "The market is the setting. Human psychology is the subject.",
+                "applicationCategory": "FinanceApplication",
                 "operatingSystem": "Web"
               }
             },
@@ -152,48 +208,103 @@
               "position": 7,
               "item": {
                 "@type": "SoftwareApplication",
-                "name": "FOURCAST",
-                "url": "https://hella.rich/fourcast",
-                "description": "A mood/forecast-style product that turns emotional weather into a playful interface predicting the end of the world. Politely.",
-                "applicationCategory": "InteractiveArt",
+                "@id": "https://hella.rich/human-exe#app",
+                "name": "HUMAN.EXE",
+                "url": "https://hella.rich/human-exe",
+                "description": "A biological diagnostic machine that discovers more than it was designed to find.",
+                "applicationCategory": "EntertainmentApplication",
                 "operatingSystem": "Web"
               }
-            }
-          ]
-        },
-        {
-          "@type": "FAQPage",
-          "mainEntity": [
+            },
             {
-              "@type": "Question",
-              "name": "What is hella.rich?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "hella.rich is an AI-native experimental product lab featuring small interactive web products built around sound, motion, emotional UX, and strange internet utilities."
+              "@type": "ListItem",
+              "position": 8,
+              "item": {
+                "@type": "SoftwareApplication",
+                "@id": "https://hella.rich/orb#app",
+                "name": "ORB",
+                "url": "https://hella.rich/orb",
+                "description": "A living interactive object. Seven emotional states expressed through color, sound, and motion.",
+                "applicationCategory": "EntertainmentApplication",
+                "operatingSystem": "Web"
               }
             },
             {
-              "@type": "Question",
-              "name": "Who created hella.rich?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "hella.rich was created by Jeffrey Willis, also known as Dicanomi."
+              "@type": "ListItem",
+              "position": 9,
+              "item": {
+                "@type": "SoftwareApplication",
+                "@id": "https://hella.rich/dead-air#app",
+                "name": "DEAD AIR",
+                "url": "https://hella.rich/dead-air",
+                "description": "A late-night radio scanner. Analog transmissions from the void.",
+                "applicationCategory": "MusicApplication",
+                "operatingSystem": "Web"
               }
             },
             {
-              "@type": "Question",
-              "name": "What kind of products are on hella.rich?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "hella.rich includes playful interactive web apps, ambient sound tools, experimental utilities, and strange digital objects. Products include ORB, THE EYE, LOW BATTERY, SPACE DRONE, ÆTHER, DEAD AIR, and FOURCAST."
+              "@type": "ListItem",
+              "position": 10,
+              "item": {
+                "@type": "SoftwareApplication",
+                "@id": "https://hella.rich/aether#app",
+                "name": "ÆTHER",
+                "url": "https://hella.rich/aether",
+                "description": "An ambient sound synthesizer. Impossible to sound bad.",
+                "applicationCategory": "MusicApplication",
+                "operatingSystem": "Web"
               }
             },
             {
-              "@type": "Question",
-              "name": "How were the hella.rich products built?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "The products were designed, directed, and shipped using AI-assisted workflows, React, Web Audio API, and rapid prototyping techniques."
+              "@type": "ListItem",
+              "position": 11,
+              "item": {
+                "@type": "SoftwareApplication",
+                "@id": "https://hella.rich/space-drone#app",
+                "name": "SPACE DRONE",
+                "url": "https://hella.rich/space-drone",
+                "description": "A drifting machine for doing absolutely nothing.",
+                "applicationCategory": "MusicApplication",
+                "operatingSystem": "Web"
+              }
+            },
+            {
+              "@type": "ListItem",
+              "position": 12,
+              "item": {
+                "@type": "SoftwareApplication",
+                "@id": "https://hella.rich/low-battery#app",
+                "name": "LOW BATTERY",
+                "url": "https://hella.rich/low-battery",
+                "description": "The sound you ignore until it becomes your personality.",
+                "applicationCategory": "EntertainmentApplication",
+                "operatingSystem": "Web"
+              }
+            },
+            {
+              "@type": "ListItem",
+              "position": 13,
+              "item": {
+                "@type": "SoftwareApplication",
+                "@id": "https://hella.rich/fourcast#app",
+                "name": "FOURCAST",
+                "url": "https://hella.rich/fourcast",
+                "description": "A weather app predicting the end of the world. Politely.",
+                "applicationCategory": "LifestyleApplication",
+                "operatingSystem": "Web"
+              }
+            },
+            {
+              "@type": "ListItem",
+              "position": 14,
+              "item": {
+                "@type": "SoftwareApplication",
+                "@id": "https://hella.rich/the-eye#app",
+                "name": "THE EYE",
+                "url": "https://hella.rich/the-eye",
+                "description": "A strange object that notices you.",
+                "applicationCategory": "EntertainmentApplication",
+                "operatingSystem": "Web"
               }
             }
           ]

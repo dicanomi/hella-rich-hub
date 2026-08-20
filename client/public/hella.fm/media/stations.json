@@ -400,6 +400,12 @@
           "title": "Marketing in the Machine",
           "src": "media/dub.ai/Marketing%20in%20the%20Machine.mp3",
           "origin": "DUB.AI"
+        },
+        {
+          "id": "dub-ai-tech-stack-so-righteous",
+          "title": "Tech Stack So Righteous",
+          "src": "media/dub.ai/Tech%20Stack%20So%20Righteous.mp3",
+          "origin": "DUB.AI"
         }
       ]
     }

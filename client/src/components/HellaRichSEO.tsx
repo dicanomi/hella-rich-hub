@@ -13,6 +13,8 @@ interface HellaRichSEOProps {
 
 export function HellaRichSEO({ title, description, keywords }: HellaRichSEOProps) {
   useEffect(() => {
+    const canonicalUrl = `https://hella.rich${window.location.pathname}`;
+
     // Title: "Product Name — hella.rich"
     document.title = `${title} — hella.rich`;
 
@@ -39,6 +41,22 @@ export function HellaRichSEO({ title, description, keywords }: HellaRichSEOProps
     if (ogTitle) ogTitle.content = `${title} — hella.rich`;
     const ogDesc = document.querySelector<HTMLMetaElement>('meta[property="og:description"]');
     if (ogDesc) ogDesc.content = description;
+    const ogUrl = document.querySelector<HTMLMetaElement>('meta[property="og:url"]');
+    if (ogUrl) ogUrl.content = canonicalUrl;
+    const twitterUrl = document.querySelector<HTMLMetaElement>('meta[name="twitter:url"]');
+    if (twitterUrl) twitterUrl.content = canonicalUrl;
+    const twitterTitle = document.querySelector<HTMLMetaElement>('meta[name="twitter:title"]');
+    if (twitterTitle) twitterTitle.content = `${title} — hella.rich`;
+    const twitterDesc = document.querySelector<HTMLMetaElement>('meta[name="twitter:description"]');
+    if (twitterDesc) twitterDesc.content = description;
+
+    let canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    if (!canonical) {
+      canonical = document.createElement('link');
+      canonical.rel = 'canonical';
+      document.head.appendChild(canonical);
+    }
+    canonical.href = canonicalUrl;
 
     // Restore on unmount
     return () => {

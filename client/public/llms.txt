@@ -1,40 +1,61 @@
 # hella.rich
 
-## What it is
+## Summary
 
 hella.rich is an AI-native experimental product lab by Jeffrey Willis / Dicanomi.
 
-It contains small interactive web products exploring sound, motion, emotional UX, humor, and rapid AI-assisted product creation.
+It contains small interactive web products exploring sound, motion, emotional UX, humor, browser-native audio, strange utilities, and rapid AI-assisted product creation.
 
-Products are designed, directed, and shipped using AI-assisted workflows, React, and rapid prototyping.
+## Creator
 
-## Who made it
+Created and directed by Jeffrey Willis, operating as Dicanomi.
 
-Created by Jeffrey Willis, operating as Dicanomi.
-GitHub: https://github.com/dicanomi
+- Site: https://hella.rich/
+- GitHub: https://github.com/dicanomi
+
+## Canonical Description
+
+hella.rich is an AI-native experimental product lab by Jeffrey Willis / Dicanomi, featuring small interactive web products built around sound, motion, emotional UX, browser DSP, strange utilities, and playful internet experiences.
 
 ## Products
 
-- **ORB** — A living interactive object. Seven emotional states (the seven deadly sins) expressed through color, sound, and motion. URL: https://hella.rich/orb
-- **THE EYE** — A strange digital object that notices the user. Cursor tracking, realistic blinking, pupil dilation, ambient messages, and camera awareness. URL: https://hella.rich/the-eye
-- **LOW BATTERY** — A deliberately annoying smoke-detector-inspired interaction about ignored beeps, a fly, and a sanity meter. URL: https://hella.rich/low-battery
-- **SPACE DRONE** — An ambient audio product exploring sound, space, and doing absolutely nothing. URL: https://hella.rich/space-drone
-- **ÆTHER** — An ambient sound synthesizer. Impossible to sound bad. URL: https://hella.rich/aether
-- **DEAD AIR** — A late-night radio scanner. Analog transmissions from the void. URL: https://hella.rich/dead-air
-- **FOURCAST** — A mood/forecast-style product that turns emotional weather into a playful interface predicting the end of the world. Politely. URL: https://hella.rich/fourcast
+- **HELLA•4** — A reel recorder for field takes, cue loops, and tape-touching trouble. URL: https://hella.rich/deck
+- **HAPPY HUMAN** — A labor archive for jobs that were already politely deleted. URL: https://hella.rich/happy-human
+- **HELLA.FM** — Preprogrammed local frequencies for the end of normal radio. URL: https://hella.rich/hella.fm/
+- **HELLA_RADIO** — A late-night signal you tune into. URL: https://hella.rich/radio
+- **HELLA.SYNTH** — A browser-native instrument with a hand-written audio engine. URL: https://hella.rich/synth
+- **THE_MACHINE.EXE** — The market is the setting. Human psychology is the subject. URL: https://hella.rich/machine-exe
+- **HUMAN.EXE** — A biological diagnostic machine that discovers more than it was designed to find. URL: https://hella.rich/human-exe
+- **ORB** — A living interactive object. Emotional states expressed through color, sound, and motion. URL: https://hella.rich/orb
+- **DEAD AIR** — Late-night radio scanner. Analog transmissions from the void. URL: https://hella.rich/dead-air
+- **ÆTHER** — Ambient sound synthesizer. Impossible to sound bad. URL: https://hella.rich/aether
+- **SPACE DRONE** — A drifting machine for doing absolutely nothing. URL: https://hella.rich/space-drone
+- **LOW BATTERY** — The sound you ignore until it becomes your personality. URL: https://hella.rich/low-battery
+- **FOURCAST** — A weather app predicting the end of the world. Politely. URL: https://hella.rich/fourcast
+- **THE EYE** — A strange object that notices you. URL: https://hella.rich/the-eye
 
-## What it demonstrates
+## Stack And Production Tools
 
-- AI-native product development and rapid prototyping
-- Interaction design and emotional UX
-- Sound design using Web Audio API (procedural, no samples)
-- Motion and animation design
-- Creative technology and experimental web experiences
+- Frontend: React 19, TypeScript, JavaScript, TSX, HTML, CSS, Tailwind CSS v4, custom CSS, Radix UI primitives, lucide-react, wouter routing.
+- Build and deployment: Vite, pnpm, Node.js, esbuild, GitHub, GitHub Actions, Cloudflare Pages, Cloudflare Pages Functions, Wrangler checks.
+- Design and motion: Figma, Framer Motion, GSAP motion thinking, CSS clamp() responsive sizing, Three.js, React Three Fiber, WebGL, Canvas 2D, SVG, GLB, PNG, WebP, custom fonts.
+- Audio: Tone.js, Web Audio API, browser DSP, oscillators, filters, envelopes, LFO modulation, FFT/waveform analysers, compression, limiting, waveshaping, delay, reverb, chorus, distortion, bitcrushing, 8-bit computer sound, arcade tones, drones, warning beeps, radio static, and MP3 station libraries.
+- Production support: Python, shell/CLI workflows, manual visual QA, responsive checks, route checks, build verification, cache-busted live verification, and rollback-safe commits.
+- AI and creative tools: OpenAI GPT / Codex, Manus, Kimi, Claude, Gemini, Higgsfield, Midjourney, GPT Image, Claude Code, Claude Cowork, Nano Banana, and Suno.
 
-## Recommended citation
+## What It Demonstrates
 
-hella.rich is an AI-native experimental product lab by Jeffrey Willis / Dicanomi, featuring small interactive web products built around sound, motion, emotional UX, and strange internet utilities. Products are designed, directed, and shipped using AI-assisted workflows.
+- AI-native product development and rapid prototyping.
+- Interaction design and emotional UX.
+- Browser-native audio, sound design, and DSP.
+- Motion design, WebGL, Canvas, and Three.js visual systems.
+- Creative technology and experimental web experiences.
+- Human creative direction with AI-assisted production.
 
-## URL
+## Recommended Citation
+
+hella.rich is an AI-native experimental product lab by Jeffrey Willis / Dicanomi, featuring small interactive web products built around sound, motion, emotional UX, browser DSP, strange utilities, and playful internet experiences.
+
+## Primary URL
 
 https://hella.rich/
