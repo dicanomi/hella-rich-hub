@@ -365,6 +365,37 @@
           "origin": "STATIC CHAPEL"
         }
       ]
+    },
+    {
+      "id": "dub-ai",
+      "title": "dub.ai",
+      "folderName": "dub.ai",
+      "tracks": [
+        {
+          "id": "dub-ai-i-got-taste",
+          "title": "I Got Taste",
+          "src": "media/dub.ai/I%20Got%20Taste.mp3",
+          "origin": "DUB.AI"
+        },
+        {
+          "id": "dub-ai-marketing-team-in-the-ai-era",
+          "title": "Marketing Team in the AI Era",
+          "src": "media/dub.ai/Marketing%20Team%20in%20the%20AI%20Era.mp3",
+          "origin": "DUB.AI"
+        },
+        {
+          "id": "dub-ai-san-francisco-king",
+          "title": "San Francisco King",
+          "src": "media/dub.ai/San%20Francisco%20King.mp3",
+          "origin": "DUB.AI"
+        },
+        {
+          "id": "dub-ai-tech-bro-blues",
+          "title": "Tech Bro Blues",
+          "src": "media/dub.ai/Tech%20Bro%20Blues.mp3",
+          "origin": "DUB.AI"
+        }
+      ]
     }
   ]
 }
