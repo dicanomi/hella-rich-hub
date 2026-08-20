@@ -300,7 +300,33 @@ function vitePluginRadioStreamProxy(): Plugin {
   };
 }
 
-const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector(), vitePluginStorageProxy(), vitePluginRadioStreamProxy()];
+function vitePluginHellaFmStationRoutes(): Plugin {
+  return {
+    name: "hella-fm-station-routes",
+    configureServer(server: ViteDevServer) {
+      server.middlewares.use((req, res, next) => {
+        const pathname = (req.url || "").split("?")[0];
+        if (!pathname || !/^\/hella\.fm\/\d{2,3}(?:\.\d)?\/?$/.test(pathname)) {
+          next();
+          return;
+        }
+
+        const filePath = path.join(PROJECT_ROOT, "client", "public", "hella.fm", "index.html");
+        fs.readFile(filePath, "utf-8", (error, html) => {
+          if (error) {
+            next();
+            return;
+          }
+
+          res.writeHead(200, { "Content-Type": "text/html;charset=utf-8" });
+          res.end(html);
+        });
+      });
+    },
+  };
+}
+
+const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector(), vitePluginStorageProxy(), vitePluginRadioStreamProxy(), vitePluginHellaFmStationRoutes()];
 
 export default defineConfig({
   plugins,
