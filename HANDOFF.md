@@ -11,6 +11,26 @@ repeating deployment instructions in each entry.
 
 ---
 
+## 2026-08-20 11:23 — Codex — Homepage line-card mode published live
+
+**Did:**
+- Published homepage 3D line-card media mode to GitHub `main` in commit `90ddabd`.
+- Included per-product line sculptures, the default line/image pill toggle, brand-orange selected view buttons, Space Drone dot-travel treatment, HELLA•4 independent reel circles, and ORB nested concentric circles.
+- Preserved the previous static card images behind the pill switch.
+- Verified Cloudflare production switched to live bundle `/assets/index-DRzXctfY.js`.
+- Verified `https://hella.rich/?v=90ddabd-final` returns 200 and the live bundle contains the new card-mode strings/colors.
+- Verified `https://hella.rich/hella.fm/?v=90ddabd-final` still serves the HELLA.FM static app and its JS asset returns 200.
+
+**Current state:**
+- Production `hella.rich` is updated.
+- Local `main` has the app publish commit plus this handoff note pending as documentation-only continuity.
+
+**Watch out for:**
+- Existing unrelated TypeScript check issue remains in `client/src/pages/machine-exe/TheMachine.tsx` at the SVG `textTransform` prop.
+- Untracked local HELLA.FM media folders remain intentionally out of scope and uncommitted.
+
+---
+
 ## 2026-08-20 10:51 — Codex — Homepage 3D line-card mode local branch
 
 **Did:**
