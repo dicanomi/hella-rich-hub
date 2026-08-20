@@ -52,8 +52,9 @@
   var buildStationUrl = function () {
     var frequency = getCurrentFrequency() || requested || "88.1";
     var url = new URL(window.location.href);
-    url.pathname = "/hella.fm/" + encodeURIComponent(frequency);
+    url.pathname = "/hella.fm/";
     url.search = "";
+    url.searchParams.set("station", frequency);
     url.hash = "";
 
     return url.toString();
