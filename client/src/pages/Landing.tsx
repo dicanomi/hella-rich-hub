@@ -328,27 +328,68 @@ function AboutModal({ onClose, onOpenCredits }: { onClose: () => void; onOpenCre
 }
 
 // ── HELLA.FM listeners tag ─────────────────────────────────────────────────
+function getHellaFmAudienceTarget() {
+  const hour = new Date().getHours();
+  const minute = new Date().getMinutes();
+  const dayProgress = hour + minute / 60;
+
+  const peak = (center: number, width: number, strength: number) => {
+    const distance = Math.abs(dayProgress - center);
+    return Math.max(0, 1 - distance / width) * strength;
+  };
+
+  const peakSignal =
+    peak(9, 2.3, 0.82) +
+    peak(12, 2.2, 1) +
+    peak(17, 2.8, 0.92);
+  const graveyardDrop = peak(4, 2.4, 1);
+
+  if (graveyardDrop > 0.72) return 1000 + Math.floor(Math.random() * 4200);
+
+  const normalized = Math.min(1, peakSignal);
+  const floor = 42000 + Math.floor(Math.random() * 38000);
+  const ceiling = 1850000 + Math.floor(Math.random() * 720000);
+  const audience = floor + Math.pow(normalized, 1.7) * (ceiling - floor);
+
+  return Math.max(1000, Math.round(audience));
+}
+
+function formatListeners(value: number) {
+  if (value < 1000) return String(value);
+  if (value < 1_000_000) return `${Math.round(value / 1000)}k`;
+  return `${(value / 1_000_000).toFixed(value >= 10_000_000 ? 0 : 1)}M`;
+}
+
 function HellaFmListenersTag({ compact = false }: { compact?: boolean }) {
-  const [listeners, setListeners] = useState(911);
+  const [listeners, setListeners] = useState(0);
   const [pulse, setPulse] = useState(false);
 
   useEffect(() => {
+    const target = getHellaFmAudienceTarget();
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduced) return;
+    if (reduced) {
+      setListeners(target);
+      return;
+    }
 
-    let current = 911;
+    let current = 0;
     let timer: number | undefined;
     let pulseTimer: number | undefined;
 
     const tick = () => {
-      const hold = Math.random() < 0.2;
-      const shouldRise = current <= 908 || (current < 917 && Math.random() < 0.56);
-      const shift = hold ? 0 : shouldRise
-        ? Math.floor(Math.random() * 5) + 2
-        : -(Math.floor(Math.random() * 3) + 1);
-      const next = Math.max(906, Math.min(918, current + shift));
+      const booting = current < target * 0.94;
+      const hold = !booting && Math.random() < 0.2;
+      const driftLimit = Math.max(12, target * 0.015);
+      const shouldRise = booting || current <= target - driftLimit || Math.random() < 0.54;
+      const jump = booting
+        ? Math.max(1, Math.ceil((target - current) * (0.2 + Math.random() * 0.28)))
+        : Math.ceil(target * (0.004 + Math.random() * 0.01));
+      const drop = Math.ceil(target * (0.002 + Math.random() * 0.004));
+      const next = hold
+        ? current
+        : Math.max(0, Math.min(target + driftLimit, current + (shouldRise ? jump : -drop)));
       current = next;
-      setListeners(next);
+      setListeners(Math.round(next));
       if (!hold) {
         if (pulseTimer) window.clearTimeout(pulseTimer);
         setPulse(true);
@@ -356,13 +397,15 @@ function HellaFmListenersTag({ compact = false }: { compact?: boolean }) {
       }
       const delay = hold
         ? 1000 + Math.random() * 1100
-        : shouldRise
-          ? 180 + Math.random() * 360
+        : booting
+          ? 80 + Math.random() * 110
+          : shouldRise
+            ? 180 + Math.random() * 360
           : 620 + Math.random() * 700;
       timer = window.setTimeout(tick, delay);
     };
 
-    timer = window.setTimeout(tick, 450 + Math.random() * 650);
+    timer = window.setTimeout(tick, 80);
 
     return () => {
       if (timer) window.clearTimeout(timer);
@@ -370,9 +413,11 @@ function HellaFmListenersTag({ compact = false }: { compact?: boolean }) {
     };
   }, []);
 
+  const listenerLabel = formatListeners(listeners);
+
   return (
     <span
-      aria-label={`${listeners}k listeners`}
+      aria-label={`${listenerLabel} listeners`}
       className={pulse ? 'listeners-tag listeners-tag--pulse' : 'listeners-tag'}
       style={{
         position: 'absolute',
@@ -383,7 +428,7 @@ function HellaFmListenersTag({ compact = false }: { compact?: boolean }) {
         alignItems: 'baseline',
         gap: compact ? 2 : 5,
         padding: compact ? '1px 3px 1px 4px' : '4px 8px 4px 10px',
-        width: compact ? 32 : 'clamp(120px,9.5vw,136px)',
+        width: compact ? 38 : 'clamp(128px,10.2vw,148px)',
         boxSizing: 'border-box',
         background: '#a51d1d',
         border: '1px solid rgba(255,140,105,0.12)',
@@ -403,9 +448,9 @@ function HellaFmListenersTag({ compact = false }: { compact?: boolean }) {
         letterSpacing: 0,
         color: '#e5a16f',
         fontVariantNumeric: 'tabular-nums',
-        minWidth: compact ? 24 : '48px',
+        minWidth: compact ? 30 : '58px',
       }}>
-        {listeners}k
+        {listenerLabel}
       </span>
       {!compact && (
         <span style={{
