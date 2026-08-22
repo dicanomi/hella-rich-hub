@@ -11,6 +11,71 @@ repeating deployment instructions in each entry.
 
 ---
 
+## 2026-08-22 09:36 — Codex — HELLA CONVERT published live
+
+**Did:**
+- Published HELLA CONVERT to GitHub `main` in commit `bb1e5b6`.
+- Added `/tools/convert`, homepage card/list/gallery entries, global nav entry, Abismo font asset, card image asset, browser-only conversion flow, ZIP export, and optimized completion burst.
+- Ran `pnpm exec vite build --config vite.config.cloudflare.ts` successfully before commit.
+- Verified GitHub `origin/main` points to `bb1e5b6b5d701cc1cf927680901f3cd0a09a2e2e`.
+- Verified Cloudflare production route `https://hella.rich/tools/convert?deploy=bb1e5b6-final` returns HTTP 200.
+- Verified live bundle `/assets/index-Uq04mJ8w.js` contains `HELLA CONVERT`, `/tools/convert`, and the lazy `ToolsConvertPage` import.
+- Verified live assets `https://hella.rich/card-hella-convert-v1.png` and `https://hella.rich/fonts/AbismoSangriento-Regular.otf` return HTTP 200 with correct content types.
+
+**Watch out for:**
+- The converter bundle is large because browser-side HEIC/HEIF decoding and ZIP generation ship with the lazy `/tools/convert` route.
+- Existing unrelated dirty generated/static product HTML files, HELLA.FM media folders, and `ProductLineSculpture 2.tsx` remain out of scope and uncommitted.
+
+## 2026-08-22 07:30 — Codex — HELLA CONVERT upload-zone stretch behavior
+
+**Did:**
+- Adjusted `/tools/convert` desktop layout so the left upload/drop container grows vertically when the right batch panel grows with queued images.
+- Changed the converter grid to stretch same-row columns, kept the left column as a vertical flex stack, and made only the drop zone absorb the extra height.
+- Preserved mobile wrapping behavior and converter functionality.
+- Ran `pnpm exec vite build --config vite.config.cloudflare.ts` successfully.
+- Verified local preview route `http://127.0.0.1:4180/tools/convert` returns HTTP 200.
+
+**Watch out for:**
+- `pnpm exec tsc --noEmit --incremental false` still stops on the pre-existing unrelated `client/src/pages/machine-exe/TheMachine.tsx` SVG `textTransform` type error.
+- Existing dirty generated/static product HTML files and untracked HELLA.FM media folders remain out of scope.
+
+## 2026-08-21 23:17 — Codex — HELLA CONVERT reference layout refinement
+
+**Did:**
+- Refined `/tools/convert` to follow the supplied `hella-convert.png` layout: left identity/status/drop column, right settings/batch column, desktop bottom alignment, and mobile wrapping.
+- Copied `AbismoSangriento-Regular.otf` into `client/public/fonts/AbismoSangriento-Regular.otf` and applied it as a live text webfont for the `HELLA CONVERT` title.
+- Reworked the converter page sizing around fluid `clamp()` values for page padding, title, body copy, panels, controls, stats, drop zone, and queue elements.
+- Preserved the global hella.rich nav and converter functionality.
+- Ran `pnpm exec vite build --config vite.config.cloudflare.ts` successfully and verified `dist/public/fonts/AbismoSangriento-Regular.otf` exists.
+- Verified local preview route `http://127.0.0.1:4180/tools/convert` returns HTTP 200 after rebuild.
+
+**Current state:**
+- Local only. Not pushed and not published to Cloudflare.
+- Visual review is open in the Codex browser panel.
+
+**Watch out for:**
+- `pnpm exec tsc --noEmit --incremental false` still stops on the pre-existing unrelated `client/src/pages/machine-exe/TheMachine.tsx` SVG `textTransform` type error.
+- Existing dirty generated/static product HTML files and untracked HELLA.FM media folders remain out of scope.
+
+## 2026-08-21 22:57 — Codex — HELLA CONVERT local tool route
+
+**Did:**
+- Added a browser-only image converter page at `/tools/convert`.
+- Supports up to 100 queued images, drag/drop, file select, folder select, paste, PNG/JPG/WebP/AVIF output, quality control, max-dimension resize, per-file download, and ZIP download.
+- Added `heic2any` for HEIC/HEIF browser decoding and `jszip` for client-side ZIP export.
+- Registered the lazy route in `client/src/App.tsx` and added `HELLA CONVERT` to the global product switcher.
+- Ran `pnpm exec vite build --config vite.config.cloudflare.ts` successfully with the repo-local pnpm and bundled Node runtime.
+- Verified local preview route `http://127.0.0.1:4180/tools/convert` returns HTTP 200.
+
+**Current state:**
+- Local only. Not pushed and not published to Cloudflare.
+- Converter work is source-scoped to `client/src/pages/ToolsConvertPage.tsx`, `client/src/App.tsx`, `client/src/components/HellaRichNav.tsx`, `package.json`, and `pnpm-lock.yaml`.
+
+**Watch out for:**
+- `pnpm exec tsc --noEmit --incremental false` still stops on the pre-existing unrelated `client/src/pages/machine-exe/TheMachine.tsx` SVG `textTransform` type error.
+- Existing dirty generated/static product HTML files and untracked HELLA.FM media folders predated this converter work and remain out of scope.
+- The converter chunk is large because HEIC/HEIF decoding ships in the lazy `/tools/convert` bundle; it does not load on the homepage.
+
 ## 2026-08-20 11:23 — Codex — Homepage line-card mode published live
 
 **Did:**
