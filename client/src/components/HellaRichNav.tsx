@@ -20,6 +20,7 @@ const PROJECTS: NavProject[] = [
   { title: 'HELLA•4', slug: '/deck' },
   { title: 'HAPPY HUMAN', slug: '/happy-human' },
   { title: 'HELLA.FM', slug: '/hella.fm' },
+  { title: 'HELLA CONVERT', slug: '/tools/convert' },
   { title: 'RADIO', slug: '/radio' },
   { title: 'HELLA.SYNTH', slug: '/synth' },
   { title: 'THE_MACHINE.EXE', slug: '/machine-exe' },

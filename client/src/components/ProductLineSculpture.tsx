@@ -84,6 +84,21 @@ function makePoints(slug: string, variant: number): Point2[] {
         const r = 0.42 + Math.sin(a * 5 + variant) * 0.018;
         return [Math.cos(a) * r * 0.72, Math.sin(a) * r + (t > 0.56 && t < 0.68 ? -0.12 : 0)];
       }
+      case 'tools/convert': {
+        const edge = Math.floor(t * 4);
+        const local = (t * 4) % 1;
+        const wobbleX = Math.sin(t * Math.PI * 14 + variant) * 0.018;
+        const wobbleY = Math.cos(t * Math.PI * 12 + variant) * 0.018;
+        const inset = 0.06 * Math.sin(variant + edge);
+        const left = -0.48 + inset;
+        const right = 0.48 - inset;
+        const top = -0.32 + inset * 0.5;
+        const bottom = 0.32 - inset * 0.5;
+        if (edge === 0) return [left + local * (right - left) + wobbleX, top + wobbleY];
+        if (edge === 1) return [right + wobbleX, top + local * (bottom - top) + wobbleY];
+        if (edge === 2) return [right - local * (right - left) + wobbleX, bottom + wobbleY];
+        return [left + wobbleX, bottom - local * (bottom - top) + wobbleY];
+      }
       case 'human-exe':
         return [Math.cos(a) * (0.62 + wobble), Math.sin(a) * 0.18 + Math.sin(a * 2 + variant) * 0.04];
       case 'orb': {
