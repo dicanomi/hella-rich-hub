@@ -195,6 +195,8 @@ export function ProductLineSculpture({ slug, active, hovered = false }: ProductL
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const hoverRef = useRef(hovered ? 1 : 0);
   const [ready, setReady] = useState(false);
+  const [nearViewport, setNearViewport] = useState(false);
+  const [pageVisible, setPageVisible] = useState(() => !document.hidden);
   const targets = useMemo(() => [makePoints(slug, 0), makePoints(slug, 1.7), makePoints(slug, 3.1)], [slug]);
 
   useEffect(() => {
@@ -203,12 +205,45 @@ export function ProductLineSculpture({ slug, active, hovered = false }: ProductL
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas || !active) return;
+    if (!canvas) return;
+
+    if (!('IntersectionObserver' in window)) {
+      setNearViewport(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setNearViewport(entry.isIntersecting),
+      { rootMargin: '400px 0px', threshold: 0.01 },
+    );
+    observer.observe(canvas);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => setPageVisible(!document.hidden);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, []);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const shouldRender = active && nearViewport && pageVisible;
+    if (!canvas || !shouldRender) {
+      setReady(false);
+      return;
+    }
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 10);
     camera.position.z = 2.6;
-    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'low-power' });
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'low-power' });
+    } catch {
+      setReady(false);
+      return;
+    }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
     renderer.setClearColor(0x000000, 0);
 
@@ -446,7 +481,7 @@ export function ProductLineSculpture({ slug, active, hovered = false }: ProductL
       renderer.dispose();
       setReady(false);
     };
-  }, [active, targets]);
+  }, [active, nearViewport, pageVisible, slug, targets]);
 
   return (
     <canvas

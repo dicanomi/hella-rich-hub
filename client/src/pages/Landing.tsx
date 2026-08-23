@@ -5,31 +5,36 @@
  * All links: internal Manus routes only — no external hella.rich URLs
  * Featured: THE EYE — flagship product, first position, 1.4× taller
  */
-import { useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { Link } from 'wouter';
 import { ParticleField } from '../components/ParticleField';
 import { HeaderTicker } from '../components/HeaderTicker';
 import { ContactModal } from '../components/ContactModal';
 import { CreditsModal } from '../components/CreditsModal';
-import { ProductLineSculpture } from '../components/ProductLineSculpture';
 
-// ── Existing Cloudfront card images (from deployed repos) ──────────────────
+const ProductLineSculpture = lazy(() =>
+  import('../components/ProductLineSculpture').then((module) => ({ default: module.ProductLineSculpture })),
+);
+const HellaChat = lazy(() =>
+  import('../components/HellaChat').then((module) => ({ default: module.HellaChat })),
+);
+
 // ── New unified halftone/pulp sci-fi visual system (2026-06-22) ──────────────
-const CARD_THE_EYE    = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-the-eye-v4-UDPKDjTrGGFm9r9TmYrcDR.webp';
-const CARD_HUMAN_EXE  = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-human-exe-v4-EoZjWPo3vnZDYCHUS4qFWN.webp';
-const CARD_LOW_BATTERY = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-low-battery-v4-X3wys3YEYmwMhoMysNAcFn.webp';
-const CARD_SPACE_DRONE = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-space-drone-v4-6cSZZBhMGxaM4fiPtWGJ2K.webp';
-const CARD_AETHER      = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-aether-v4-GKkH8RzMNuRVh2hT4bABGr.webp';
-const CARD_DEAD_AIR    = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-dead-air-v4-FfS9cpTUNtRWfRr6oyuxkb.webp';
-const CARD_ORB         = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-orb-v4-FdVDyW5VeM5NLNJPJJRM6Z.webp';
-const CARD_FOURCAST    = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-fourcast-v4-V6r3AdsUgH2RixiRDueELL.webp';
-const RADIO_CARD       = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/cfmfimCWRsL5asbWNBo54F/card-radio-v4-76gepMJyY36Pz5dhQ6sZPg.webp';
+const CARD_THE_EYE    = `${import.meta.env.BASE_URL}card-the-eye-v4.webp`;
+const CARD_HUMAN_EXE  = `${import.meta.env.BASE_URL}card-human-exe-v4.webp`;
+const CARD_LOW_BATTERY = `${import.meta.env.BASE_URL}card-low-battery-v4.webp`;
+const CARD_SPACE_DRONE = `${import.meta.env.BASE_URL}card-space-drone-v4.webp`;
+const CARD_AETHER      = `${import.meta.env.BASE_URL}card-aether-v4.webp`;
+const CARD_DEAD_AIR    = `${import.meta.env.BASE_URL}card-dead-air-v4.webp`;
+const CARD_ORB         = `${import.meta.env.BASE_URL}card-orb-v4.webp`;
+const CARD_FOURCAST    = `${import.meta.env.BASE_URL}card-fourcast-v4.webp`;
+const RADIO_CARD       = `${import.meta.env.BASE_URL}card-radio-v4.webp`;
 const CARD_HELLA_FM    = `${import.meta.env.BASE_URL}card-hella-fm-v2.webp`;
-const CARD_HELLA_DECK  = `${import.meta.env.BASE_URL}card-hella-deck-v1.png`;
+const CARD_HELLA_DECK  = `${import.meta.env.BASE_URL}card-hella-deck-v1.webp`;
 const CARD_HELLA_SYNTH = `${import.meta.env.BASE_URL}card-hella-synth-v1.webp`;
-const CARD_HELLA_CONVERT = `${import.meta.env.BASE_URL}card-hella-convert-v1.png`;
-const CARD_HELLA_EFFECTS = `${import.meta.env.BASE_URL}card-hella-effects-v2.png`;
-const CARD_MARKET_EXE  = 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663292290338/irIwNEoiIgpyRjrD.png';
+const CARD_HELLA_CONVERT = `${import.meta.env.BASE_URL}card-hella-convert-v1.webp`;
+const CARD_HELLA_EFFECTS = `${import.meta.env.BASE_URL}card-hella-effects-v2.webp`;
+const CARD_MARKET_EXE  = `${import.meta.env.BASE_URL}card-machine-exe-v4.webp`;
 const CARD_HAPPY_HUMAN = `${import.meta.env.BASE_URL}card-happy-human-v1.webp`;
 
 const PRODUCT_SURFACES = [
@@ -849,17 +854,22 @@ function ProjectCard({ slug, title, tagline, image, index, live = true, cta, fea
         willChange: 'transform',
         opacity: mediaMode === 'image' ? 1 : 0,
       }}>
-        <img
-          src={image}
-          alt={title}
-          style={{
-            width: '100%', height: '100%',
-            objectFit: 'cover',
-            display: 'block',
-            filter: hovered ? 'brightness(0.78) contrast(1.04)' : 'brightness(0.58) contrast(1.02)',
-            transition: 'filter 0.5s ease',
-          }}
-        />
+        {mediaMode === 'image' ? (
+          <img
+            src={image}
+            alt={title}
+            loading={index <= 3 ? 'eager' : 'lazy'}
+            fetchPriority={index <= 3 ? 'high' : 'auto'}
+            decoding="async"
+            style={{
+              width: '100%', height: '100%',
+              objectFit: 'cover',
+              display: 'block',
+              filter: hovered ? 'brightness(0.78) contrast(1.04)' : 'brightness(0.58) contrast(1.02)',
+              transition: 'filter 0.5s ease',
+            }}
+          />
+        ) : null}
       </div>
 
       {/* 3D line sculpture */}
@@ -870,7 +880,11 @@ function ProjectCard({ slug, title, tagline, image, index, live = true, cta, fea
         transition: 'opacity 0.32s ease',
         pointerEvents: 'none',
       }}>
-        <ProductLineSculpture slug={slug} active={mediaMode === 'line'} hovered={hovered} />
+        {mediaMode === 'line' ? (
+          <Suspense fallback={null}>
+            <ProductLineSculpture slug={slug} active hovered={hovered} />
+          </Suspense>
+        ) : null}
       </div>
 
       {slug === 'hella.fm' && <HellaFmListenersTag />}
@@ -1031,18 +1045,21 @@ function FeaturedCard({ slug, title, desc, img, mediaMode = 'image' }: { slug: s
     >
       {/* image */}
       <div style={{ position: 'relative', width: '100%', aspectRatio: '4 / 3', overflow: 'hidden', background: '#0d0c0b' }}>
-        <img
-          src={img}
-          alt=""
-          aria-hidden="true"
-          loading="lazy"
-          style={{
-            width: '100%', height: '100%', objectFit: 'cover', display: 'block',
-            transform: hovered ? 'scale(1.03)' : 'scale(1)',
-            opacity: mediaMode === 'image' ? (hovered ? 1 : 0.92) : 0,
-            transition: 'transform 0.4s cubic-bezier(0.23,1,0.32,1), opacity 0.3s ease',
-          }}
-        />
+        {mediaMode === 'image' ? (
+          <img
+            src={img}
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+            decoding="async"
+            style={{
+              width: '100%', height: '100%', objectFit: 'cover', display: 'block',
+              transform: hovered ? 'scale(1.03)' : 'scale(1)',
+              opacity: hovered ? 1 : 0.92,
+              transition: 'transform 0.4s cubic-bezier(0.23,1,0.32,1), opacity 0.3s ease',
+            }}
+          />
+        ) : null}
         <div style={{
           position: 'absolute',
           inset: 0,
@@ -1051,7 +1068,11 @@ function FeaturedCard({ slug, title, desc, img, mediaMode = 'image' }: { slug: s
           background: 'radial-gradient(circle at 50% 48%, rgba(255,255,255,0.075), rgba(0,0,0,0.22) 42%, rgba(0,0,0,0.72) 100%)',
           pointerEvents: 'none',
         }}>
-          <ProductLineSculpture slug={slug} active={mediaMode === 'line'} hovered={hovered} />
+          {mediaMode === 'line' ? (
+            <Suspense fallback={null}>
+              <ProductLineSculpture slug={slug} active hovered={hovered} />
+            </Suspense>
+          ) : null}
         </div>
         {slug === 'hella.fm' && <HellaFmListenersTag />}
         {slug === 'happy-human' && <HappyHumanHiringTag />}
@@ -1144,19 +1165,22 @@ function ArchiveRow({ slug, n, title, desc, img, mediaMode = 'image' }: { slug: 
         display: 'block',
         background: '#0d0c0b',
       }}>
-        <img
-          src={img}
-          alt=""
-          aria-hidden="true"
-          loading="lazy"
-          style={{
-            width: '100%', height: '100%',
-            objectFit: 'cover',
-            opacity: mediaMode === 'image' ? (hovered ? 1 : 0.82) : 0,
-            transition: 'opacity 0.22s ease',
-            display: 'block',
-          }}
-        />
+        {mediaMode === 'image' ? (
+          <img
+            src={img}
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+            decoding="async"
+            style={{
+              width: '100%', height: '100%',
+              objectFit: 'cover',
+              opacity: hovered ? 1 : 0.82,
+              transition: 'opacity 0.22s ease',
+              display: 'block',
+            }}
+          />
+        ) : null}
         <span style={{
           position: 'absolute',
           inset: 0,
@@ -1164,7 +1188,11 @@ function ArchiveRow({ slug, n, title, desc, img, mediaMode = 'image' }: { slug: 
           transition: 'opacity 0.22s ease',
           background: 'rgba(0,0,0,0.58)',
         }}>
-          <ProductLineSculpture slug={slug} active={mediaMode === 'line'} hovered={hovered} />
+          {mediaMode === 'line' ? (
+            <Suspense fallback={null}>
+              <ProductLineSculpture slug={slug} active hovered={hovered} />
+            </Suspense>
+          ) : null}
         </span>
         {slug === 'hella.fm' && <HellaFmListenersTag compact />}
         {slug === 'happy-human' && <HappyHumanHiringTag compact />}
@@ -1222,17 +1250,21 @@ export default function Landing() {
   const [awarenessMsg, setAwarenessMsg] = useState<{slug: string; text: string} | null>(null);
 
   // ── View mode: 'featured' (grid) | 'gallery' (stacked cards) | 'archive' (list) ──
-  const [view, setView] = useState<'gallery' | 'featured' | 'archive'>('featured');
-  const [mediaMode, setMediaMode] = useState<'image' | 'line'>('line');
-  const [viewSwapping, setViewSwapping] = useState(false);
-  useEffect(() => {
+  const [view, setView] = useState<'gallery' | 'featured' | 'archive'>(() => {
     try {
       const saved = localStorage.getItem('hella_view_v2');
-      if (saved === 'archive' || saved === 'gallery' || saved === 'featured') setView(saved);
-      const savedMedia = localStorage.getItem('hella_card_media_v1');
-      if (savedMedia === 'image' || savedMedia === 'line') setMediaMode(savedMedia);
+      if (saved === 'archive' || saved === 'gallery' || saved === 'featured') return saved;
     } catch (e) { /* ignore */ }
-  }, []);
+    return 'featured';
+  });
+  const [mediaMode, setMediaMode] = useState<'image' | 'line'>(() => {
+    try {
+      const saved = localStorage.getItem('hella_card_media_v1');
+      if (saved === 'image' || saved === 'line') return saved;
+    } catch (e) { /* ignore */ }
+    return 'line';
+  });
+  const [viewSwapping, setViewSwapping] = useState(false);
   const switchView = (next: 'gallery' | 'featured' | 'archive') => {
     if (next === view) return;
     try { localStorage.setItem('hella_view_v2', next); } catch (e) {}
@@ -1727,6 +1759,9 @@ export default function Landing() {
           </div>
         </footer>
       </div>
+      <Suspense fallback={null}>
+        <HellaChat onContact={() => setContactOpen(true)} />
+      </Suspense>
     </>
   );
 }

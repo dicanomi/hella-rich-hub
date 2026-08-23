@@ -1,6 +1,6 @@
 /**
  * ContactModal — hella.rich homepage only
- * Formspree endpoint xkoezagn → jeffreywillis@gmail.com
+ * Formspree keeps the private destination address out of browser code.
  * Design: minimal, premium, Braun/Teenage Engineering influence, dark UI
  */
 
@@ -39,12 +39,14 @@ export function ContactModal({ onClose }: ContactModalProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !message) return;
+    const honeypot = (e.currentTarget.elements.namedItem('_gotcha') as HTMLInputElement | null)?.value ?? '';
+    if (honeypot) return;
     setSubmitState('submitting');
     try {
       const res = await fetch(FORMSPREE, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ name: name || '(no name)', email, message }),
+        body: JSON.stringify({ name: name || '(no name)', email, message, _gotcha: honeypot }),
       });
       setSubmitState(res.ok ? 'success' : 'error');
     } catch {
@@ -95,7 +97,7 @@ export function ContactModal({ onClose }: ContactModalProps) {
     <div
       role="dialog"
       aria-modal="true"
-      aria-label="Contact"
+      aria-label="Contact hella.rich"
       onClick={e => { if (e.target === e.currentTarget) onClose(); }}
       style={{
         position: 'fixed', inset: 0, zIndex: 300,
@@ -157,7 +159,7 @@ export function ContactModal({ onClose }: ContactModalProps) {
           textTransform: 'uppercase',
           marginBottom: 'clamp(6px, 1vh, 10px)',
         }}>
-          CONTACT
+          CONTACT HELLA.RICH
         </div>
 
         {/* Supporting text */}
@@ -170,7 +172,7 @@ export function ContactModal({ onClose }: ContactModalProps) {
           margin: '0 0 clamp(20px, 3vh, 28px)',
           letterSpacing: '-0.01em',
         }}>
-          Questions, ideas, collaborations, weird thoughts, or broken things? Reach out.
+          Questions, ideas, collaborations, weird thoughts, or broken things? Reach hello@hella.rich.
         </p>
 
         {submitState === 'success' ? (
@@ -191,6 +193,15 @@ export function ContactModal({ onClose }: ContactModalProps) {
         ) : (
           /* Form */
           <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(14px, 2vh, 18px)' }}>
+
+            <input
+              type="text"
+              name="_gotcha"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              style={{ position: 'absolute', left: '-10000px', width: '1px', height: '1px', overflow: 'hidden' }}
+            />
 
             {/* Name (optional) */}
             <div>
