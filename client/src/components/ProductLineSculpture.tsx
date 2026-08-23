@@ -10,6 +10,7 @@ type ProductLineSculptureProps = {
 };
 
 const POINT_COUNT = 180;
+const EFFECTS_DOT_COUNT = 24;
 const OFFSETS = [
   { color: '#ff304f', x: -0.018, y: 0.012, opacity: 0.68 },
   { color: '#2dfdff', x: 0.018, y: -0.01, opacity: 0.72 },
@@ -55,6 +56,38 @@ function makeSpaceDots(seed: number) {
       speed: 0.008 + ((i * 17) % 11) * 0.0014,
       size: 0.012 + ((i * 13) % 7) * 0.002,
     };
+  });
+}
+
+function makeEffectsDots() {
+  const columns = 6;
+  const rows = 4;
+  const xGap = 0.22;
+  const yGap = 0.19;
+  return Array.from({ length: EFFECTS_DOT_COUNT }, (_, i) => {
+    const column = i % columns;
+    const row = Math.floor(i / columns);
+    const x = (column - (columns - 1) / 2) * xGap;
+    const y = ((rows - 1) / 2 - row) * yGap;
+
+    return {
+      x,
+      y,
+      phase: i * 0.34,
+      baseSize: 0.038,
+    };
+  });
+}
+
+function makeEffectsCirclePoints(radius: number, phase: number): Point2[] {
+  return Array.from({ length: 96 }, (_, i) => {
+    const t = i / 96;
+    const a = t * Math.PI * 2;
+    const wobble = Math.sin(a * 3 + phase) * 0.0018;
+    return [
+      Math.cos(a) * (radius + wobble),
+      Math.sin(a) * (radius + wobble),
+    ];
   });
 }
 
@@ -181,7 +214,27 @@ export function ProductLineSculpture({ slug, active, hovered = false }: ProductL
 
     const group = new THREE.Group();
     scene.add(group);
+    const isEffects = slug === 'tools/effects';
     const spaceDots = slug === 'space-drone' ? makeSpaceDots(0.38) : [];
+    const effectDots = isEffects ? makeEffectsDots() : [];
+    const effectDotGroups = isEffects
+      ? effectDots.map((dot) => {
+        const ringGroup = new THREE.Group();
+        ringGroup.position.set(dot.x, dot.y, 0);
+        const geometry = buildGeometry(makeEffectsCirclePoints(dot.baseSize, dot.phase), 0, 0);
+        const ringLines = OFFSETS.map(({ color, opacity, x, y }) => {
+          const line = new THREE.LineLoop(
+            geometry.clone(),
+            new THREE.LineBasicMaterial({ color, transparent: true, opacity, linewidth: 1 }),
+          );
+          line.position.set(x, y, color === '#f7f3ea' ? 0.024 : -0.018);
+          ringGroup.add(line);
+          return line;
+        });
+        group.add(ringGroup);
+        return { ringGroup, ringLines };
+      })
+      : [];
     const orbGroups = slug === 'orb'
       ? [0.16, 0.25, 0.34, 0.43, 0.52].map((radius, ringIndex) => {
           const ring = new THREE.Group();
@@ -243,7 +296,7 @@ export function ProductLineSculpture({ slug, active, hovered = false }: ProductL
           return cloud;
         })
       : [];
-    const lines = slug === 'space-drone' || slug === 'deck' || slug === 'orb'
+    const lines = slug === 'space-drone' || slug === 'deck' || slug === 'orb' || isEffects
       ? []
       : OFFSETS.map(({ color, opacity, x, y }) => {
           const line = new THREE.Line(
@@ -314,6 +367,25 @@ export function ProductLineSculpture({ slug, active, hovered = false }: ProductL
           });
           position.needsUpdate = true;
         });
+      } else if (isEffects) {
+        effectDotGroups.forEach(({ ringGroup, ringLines }, index) => {
+          const dot = effectDots[index];
+          const pulse = Math.sin(frame * 1.6 + dot.phase) * (0.04 + hoverValue * 0.08);
+          ringGroup.position.x = dot.x + Math.sin(frame * 0.75 + dot.phase) * (0.003 + hoverValue * 0.006);
+          ringGroup.position.y = dot.y + Math.cos(frame * 0.68 + dot.phase) * (0.003 + hoverValue * 0.006);
+          ringGroup.position.z = Math.sin(frame * 1.05 + dot.phase) * (0.028 + hoverValue * 0.04) + (index % 6) * 0.005;
+          ringGroup.rotation.x = Math.sin(frame * 0.5 + dot.phase) * (0.14 + hoverValue * 0.08);
+          ringGroup.rotation.y = Math.cos(frame * 0.46 + dot.phase) * (0.2 + hoverValue * 0.08);
+          ringGroup.rotation.z += 0.003 + hoverValue * 0.004;
+          ringGroup.scale.setScalar(1 + pulse);
+          ringLines.forEach((line, lineIndex) => {
+            const offset = OFFSETS[lineIndex];
+            const isWhite = offset.color === '#f7f3ea';
+            line.position.x = offset.x * (1 + hoverValue * 0.45);
+            line.position.y = offset.y * (1 + hoverValue * 0.45);
+            (line.material as THREE.LineBasicMaterial).opacity = offset.opacity + (isWhite ? hoverValue * 0.08 : hoverValue * 0.1);
+          });
+        });
       } else {
         const eased = morph * morph * (3 - 2 * morph);
         const mixed = current.map(([x, y], index) => {
@@ -360,6 +432,12 @@ export function ProductLineSculpture({ slug, active, hovered = false }: ProductL
         });
       });
       orbGroups.forEach(({ lines: ringLines }) => {
+        ringLines.forEach(line => {
+          line.geometry.dispose();
+          (line.material as THREE.Material).dispose();
+        });
+      });
+      effectDotGroups.forEach(({ ringLines }) => {
         ringLines.forEach(line => {
           line.geometry.dispose();
           (line.material as THREE.Material).dispose();

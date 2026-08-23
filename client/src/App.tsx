@@ -34,6 +34,7 @@ const HellaFmPage    = lazy(() => import("./pages/HellaFmPage"));
 const HellaDeckPage  = lazy(() => import("./pages/HellaDeckPage"));
 const HellaSynthPage = lazy(() => import("./pages/HellaSynthPage"));
 const ToolsConvertPage = lazy(() => import("./pages/ToolsConvertPage"));
+const ToolsEffectsPage = lazy(() => import("./pages/ToolsEffectsPage"));
 const HappyHumanPage = lazy(() => import("./pages/happy-human/HappyHumanPage"));
 const HumanExePage   = lazy(() => import("./pages/human-exe/HumanExePage"));
 const MarketExePage  = lazy(() => import("./pages/machine-exe/MachinePage"));
@@ -102,6 +103,8 @@ function AppRoutes() {
           <Route path="/hella.synth/" component={HellaSynthPage} />
           <Route path="/tools/convert" component={ToolsConvertPage} />
           <Route path="/tools/convert/" component={ToolsConvertPage} />
+          <Route path="/tools/effects" component={ToolsEffectsPage} />
+          <Route path="/tools/effects/" component={ToolsEffectsPage} />
           <Route path="/happy-human" component={HappyHumanPage} />
           <Route path="/happy-human/" component={HappyHumanPage} />
           <Route path="/human-exe" component={HumanExePage} />

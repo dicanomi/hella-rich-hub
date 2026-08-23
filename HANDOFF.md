@@ -11,6 +11,192 @@ repeating deployment instructions in each entry.
 
 ---
 
+## 2026-08-22 17:45 — Codex — HELLA EFFECTS homepage release
+
+**Did:**
+- Added HELLA EFFECTS to the public product suite, homepage views, global nav, and `/tools/effects` route.
+- Added the approved HELLA EFFECTS homepage artwork and TC Acrylic Hand logo font.
+- Matched the HELLA EFFECTS default sculpture to the existing 3-layer red/blue/white Next.js line-art family.
+- Prepared the build for GitHub push and Cloudflare Pages auto-deploy.
+
+**Current state:**
+- Ready to publish from `main` after Cloudflare build verification.
+
+**Watch out for:**
+- Existing unrelated generated/static product HTML files, HELLA.FM media folders, and `ProductLineSculpture 2.tsx` remain out of scope and uncommitted.
+
+---
+
+## 2026-08-22 12:20 — Codex — HELLA EFFECTS random dice button
+
+**Did:**
+- Added a six-dot die icon-only button next to the preview-state Add images button.
+- The die chooses a random preset different from the current selected effect and reuses existing effect-change logic, so completed outputs reset correctly.
+- Added accessible `aria-label` and `title` text while keeping the visible control icon-only.
+- Locked the dice button dimensions so it does not disturb the action row layout.
+- Ran Vite production build directly through bundled Node successfully and verified `http://127.0.0.1:4182/tools/effects` returns HTTP 200.
+
+**Current state:**
+- Local only. Not pushed and not published to Cloudflare.
+
+---
+
+## 2026-08-22 12:14 — Codex — HELLA EFFECTS pruning and keeper variations
+
+**Did:**
+- Removed Solarized, Punk Flyer, and Pop Halftone from the effect type, preset dropdown, renderer switch, and dead processor code.
+- Added eight variations based on stronger existing families: Flash Bloom, Glass Slice, Scanner Bed, Noir Crush, Heat Map Ghost, Poster Peel, Copier Drag, and Midnight Duotone.
+- Verified there are no remaining code references to `solarized`, `punk-flyer`, or `pop-halftone`.
+- Ran Vite production build directly through bundled Node successfully and verified `http://127.0.0.1:4182/tools/effects` returns HTTP 200.
+
+**Current state:**
+- Local only. Not pushed and not published to Cloudflare.
+- Total preset count is now 36.
+
+**Watch out for:**
+- Existing unrelated dirty generated/static product HTML files, HELLA.FM media folders, and `ProductLineSculpture 2.tsx` remain out of scope and uncommitted.
+
+---
+
+## 2026-08-22 12:08 — Codex — HELLA EFFECTS preset card height lock
+
+**Did:**
+- Locked the Effect Settings style trigger to a fixed responsive height instead of min-height.
+- Clamped the selected preset description to exactly two visible lines with overflow hidden, preventing the settings UI from shifting when captions vary.
+- Ran Vite production build directly through bundled Node successfully and verified `http://127.0.0.1:4182/tools/effects` returns HTTP 200.
+
+**Current state:**
+- Local only. Not pushed and not published to Cloudflare.
+
+---
+
+## 2026-08-22 12:04 — Codex — HELLA EFFECTS structural preset batch
+
+**Did:**
+- Added nine weird/fun structural presets: Poster Tear, Photocopy Smear, Soft Bloom, Ribbed Glass 2, Bad Scanner, Punk Flyer, Noir Grain, Solarized, and Heat Map.
+- Wired all new presets into the dropdown, under-preview arrows, live preview, Apply effect, output naming, and ZIP export.
+- Kept processing browser-only with Canvas APIs and no upload/API path.
+- Ran Vite production build directly through bundled Node successfully and verified `http://127.0.0.1:4182/tools/effects` returns HTTP 200.
+
+**Current state:**
+- Local only. Not pushed and not published to Cloudflare.
+- Total preset count is now 31.
+
+**Watch out for:**
+- Poster Tear/Ribbed Glass/Bad Scanner are displacement/composite effects and can vary by image aspect ratio. They are intentionally rough/fun, not precise retouching.
+- Existing unrelated dirty generated/static product HTML files, HELLA.FM media folders, and `ProductLineSculpture 2.tsx` remain out of scope and uncommitted.
+
+---
+
+## 2026-08-22 11:58 — Codex — HELLA EFFECTS muted duotone set
+
+**Did:**
+- Removed the Etching preset completely after review.
+- Added nine color presets: Muted Orange, Muted Green, Muted Yellow, Muted Red, Muted Pink, Ember Duotone, Moss Duotone, Rose Duotone, and Sulfur Duotone.
+- Added shared Canvas helpers for muted tint washes and three-stop duotone mapping so future color presets can be added faster.
+- Ran Vite production build directly through bundled Node successfully and verified `http://127.0.0.1:4182/tools/effects` returns HTTP 200.
+
+**Current state:**
+- Local only. Not pushed and not published to Cloudflare.
+- Total preset count is now 22.
+
+**Watch out for:**
+- Existing unrelated dirty generated/static product HTML files, HELLA.FM media folders, and `ProductLineSculpture 2.tsx` remain out of scope and uncommitted.
+
+---
+
+## 2026-08-22 11:54 — Codex — HELLA EFFECTS Etching rescue
+
+**Did:**
+- Reworked the Etching preset instead of removing it.
+- Changed it from sepia muddy texture to stark black/white output with Sobel contour edges, curved hatch shading, cross-hatching in darker regions, and clean white paper.
+- Updated the Etching caption to match the cleaner engraved-line direction.
+- Ran Vite production build directly through bundled Node successfully and verified `http://127.0.0.1:4182/tools/effects` returns HTTP 200.
+
+**Current state:**
+- Local only. Not pushed and not published to Cloudflare.
+
+**Watch out for:**
+- Etching is still photo-derived line art, not object-aware illustration. It should read much closer to the reference, but it will not invent botanical-style petal contours from arbitrary photos.
+
+---
+
+## 2026-08-22 11:48 — Codex — HELLA EFFECTS preset expansion
+
+**Did:**
+- Added eight new browser-only Canvas presets: Polaroid Fade, VHS Drip, Blue Duotone, Linear Halftone, Xerox Ghost, Newsprint, Etching, and 3D Glasses.
+- Wired the new presets into the dropdown, under-preview next/previous controls, live preview, Apply effect, single-file output naming, and ZIP export naming.
+- Kept the app API-free and upload-free; all processing still happens locally in the browser.
+- Ran Vite production build directly through bundled Node successfully and verified `http://127.0.0.1:4182/tools/effects` returns HTTP 200.
+
+**Current state:**
+- Local only. Not pushed and not published to Cloudflare.
+- Total preset count is now 14.
+
+**Watch out for:**
+- New effects are still Canvas 2D and deterministic per file. Heavy batches can take time on weaker devices, especially dot/line/etching effects.
+- Existing unrelated dirty generated/static product HTML files, HELLA.FM media folders, and `ProductLineSculpture 2.tsx` remain out of scope and uncommitted.
+
+---
+
+## 2026-08-22 11:25 — Codex — HELLA EFFECTS dropdown preset UI
+
+**Did:**
+- Replaced the settings-panel preset button list with a compact styled dropdown so the UI can scale toward 50 presets without eating vertical space.
+- Added keyboard logic for the preset picker: Arrow Up/Down moves through presets, Enter/Space selects, Home/End jump, Escape closes, and outside click closes.
+- Kept the in-context previous/next arrows below the image preview for fast browsing.
+- Tightened the left intro/stats layout by removing the auto spacer below the logo/copy so the grid stays cleaner and more stable.
+- Ran Vite production build directly through bundled Node successfully and verified `http://127.0.0.1:4182/tools/effects` returns HTTP 200.
+
+**Current state:**
+- Local only. Not pushed and not published to Cloudflare.
+- This pass is UI/preset selector logic only; no new effects were added.
+
+**Watch out for:**
+- Existing unrelated dirty generated/static product HTML files, HELLA.FM media folders, and `ProductLineSculpture 2.tsx` remain out of scope and uncommitted.
+
+---
+
+## 2026-08-22 10:56 — Codex — HELLA EFFECTS presets and upload limits
+
+**Did:**
+- Expanded `/tools/effects` from one preset to six browser-only canvas presets: Bad Print, Flash Trash, Mall Portrait, Acid Glitch, Pop Halftone, and Haunted Glass.
+- Added in-context previous/next effect arrows below the preview plus a simple preset list in the settings panel.
+- Current selected effect now drives live preview, Apply effect, per-file downloads, and ZIP filename.
+- Reduced batch limit from 100 to 25 images and added a 20 MB per-image cap; large images still process at a 2200px longest-edge internal limit.
+- Changing effect or output format resets completed outputs to avoid downloading stale results.
+- Ran Vite production build directly through bundled Node successfully and verified local preview route `http://127.0.0.1:4182/tools/effects` returns HTTP 200.
+
+**Current state:**
+- Local only. Not pushed and not published to Cloudflare.
+- Homepage/card promotion is still intentionally left out until the tool interaction and styles are approved.
+
+**Watch out for:**
+- The new effects are CPU Canvas 2D, not WebGL yet. They remain free/static/deployable, but very large batches can still be slow on weaker phones.
+- Existing dirty generated/static product HTML files, HELLA.FM media folders, and `ProductLineSculpture 2.tsx` remain out of scope and uncommitted.
+
+---
+
+## 2026-08-22 10:41 — Codex — HELLA EFFECTS local MVP route
+
+**Did:**
+- Added a local `/tools/effects` browser-only tool route as a HELLA CONVERT-style sibling.
+- Built the first effect preset, `Bad Print`: rough photocopy contrast, halftone grit, scan-line drag, paper fade, and tiny registration damage.
+- Supports up to 100 queued images, drag/drop, file select, folder select, paste, live first-image preview, PNG/JPG/WebP output, per-file download, and ZIP download.
+- Registered the lazy route in `client/src/App.tsx` and added `HELLA EFFECTS` to the global product switcher.
+- Ran Vite production build directly through bundled Node successfully after pnpm's newer install guard blocked the normal `pnpm exec` flow.
+- Verified local preview route `http://127.0.0.1:4182/tools/effects` returns HTTP 200.
+
+**Current state:**
+- Local only. Not pushed and not published to Cloudflare.
+- Homepage/card promotion was intentionally left out for this first test pass.
+
+**Watch out for:**
+- Pnpm 11 created temporary lock/workspace side effects during verification; those were removed/restored. Prefer direct bundled-Node Vite build if pnpm install approval blocks again.
+- Existing dirty generated/static product HTML files, HELLA.FM media folders, and `ProductLineSculpture 2.tsx` remain out of scope and uncommitted.
+
+---
+
 ## 2026-08-22 09:36 — Codex — HELLA CONVERT published live
 
 **Did:**
