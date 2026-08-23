@@ -1808,30 +1808,49 @@ export default function ToolsEffectsPage() {
 	          font-display: swap;
 	        }
         .effects-page {
+          --page-pad-x: clamp(14px, 4.5vw, 72px);
+          --page-pad-top: clamp(72px, 8.5dvh, 120px);
+          --page-pad-bottom: clamp(12px, 3dvh, 48px);
+          --shell-pad-x: clamp(16px, 3.1vw, 58px);
+          --shell-pad-y: clamp(16px, 2.7dvh, 50px);
+          --shell-view-height: calc(100dvh - var(--page-pad-top) - var(--page-pad-bottom));
           min-height: 100vh;
+          min-height: 100dvh;
           background: #0a0908;
           color: #f5f1e8;
           font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-          padding: clamp(88px, 8.8vw, 118px) clamp(24px, 4.1vw, 52px) clamp(54px, 6vw, 78px);
+          overflow-x: hidden;
+          padding: var(--page-pad-top) var(--page-pad-x) var(--page-pad-bottom);
         }
 	        .effects-shell {
-	          max-width: 1186px;
+	          width: min(100%, clamp(720px, 72vw, 1180px));
 	          margin: 0 auto;
-	          display: grid;
-	          grid-template-columns: minmax(0, 1.04fr) minmax(clamp(330px, 34vw, 452px), 0.78fr);
-	          grid-template-areas: "intro settings" "drop batch";
-	          grid-template-rows: minmax(clamp(360px, 29vw, 392px), auto) clamp(520px, 41vw, 586px);
-	          column-gap: clamp(24px, 2.8vw, 34px);
-	          row-gap: clamp(28px, 3vw, 34px);
-	          align-items: stretch;
-	        }
-	        .effects-intro {
-	          grid-area: intro;
+	          display: block;
+	          border: 1px solid rgba(245,241,232,0.2);
+	          background: rgba(245,241,232,0.025);
+	          box-sizing: border-box;
+	          padding: var(--shell-pad-y) var(--shell-pad-x);
 	          min-width: 0;
+	        }
+	        .effects-shell:not(.has-items) {
+	          height: var(--shell-view-height);
 	          min-height: 0;
 	          display: flex;
 	          flex-direction: column;
-	          height: 100%;
+	        }
+	        .effects-shell.has-items {
+	          height: var(--shell-view-height);
+	          min-height: 0;
+	          display: flex;
+	          flex-direction: column;
+	        }
+	        .effects-intro {
+	          min-width: 0;
+	          min-height: 0;
+	          display: grid;
+	          grid-template-columns: minmax(0, 1fr) auto;
+	          align-items: end;
+	          column-gap: clamp(24px, 4vw, 64px);
 	        }
         .effects-kicker,
         .effects-stat-label,
@@ -1844,63 +1863,81 @@ export default function ToolsEffectsPage() {
           text-transform: uppercase;
         }
         .effects-kicker {
-          margin: 0 0 clamp(22px, 3.1vw, 36px);
+          grid-column: 1 / -1;
+          margin: 0 0 clamp(14px, 2.3dvh, 28px);
           color: rgba(245,241,232,0.44);
           font-size: clamp(8px, 0.74vw, 10px);
           letter-spacing: 0.18em;
         }
         .effects-title {
+          grid-column: 1 / -1;
           margin: 0;
           color: #f06459;
-          font-family: "Abismo Sangriento", "DM Mono", monospace;
-          font-size: clamp(54px, 7.6vw, 116px);
+          font-family: "TC Acrylic Hand", "DM Mono", monospace;
+          font-size: clamp(42px, min(7.9vw, 11.8dvh), 116px);
           font-weight: 400;
           line-height: 0.82;
           letter-spacing: 0;
           text-transform: uppercase;
           text-wrap: balance;
+          max-width: 100%;
+          overflow-wrap: normal;
+        }
+        .effects-shell.has-items .effects-title {
+          font-size: clamp(42px, min(6.2vw, 10dvh), 92px);
+          white-space: nowrap;
+        }
+        .effects-shell.has-items .effects-copy {
+          margin-top: clamp(10px, 1.8dvh, 22px);
         }
         .effects-copy {
-          max-width: clamp(500px, 52vw, 646px);
-          margin: clamp(28px, 4.1vw, 50px) 0 0;
+          max-width: clamp(430px, 38vw, 580px);
+          margin: clamp(12px, 2.4dvh, 34px) 0 0;
           color: rgba(245,241,232,0.82);
-          font-size: clamp(18px, 1.75vw, 20px);
+          font-size: clamp(13px, 1.05vw, 15px);
           line-height: 1.45;
           text-wrap: pretty;
         }
 	        .effects-stats {
 	          display: grid;
-	          grid-template-columns: repeat(3, minmax(0, 1fr));
-	          border: 1px solid rgba(245,241,232,0.16);
-	          margin: auto 0 0;
+	          grid-template-columns: repeat(3, auto);
+	          gap: clamp(26px, 3.1vw, 46px);
+	          justify-content: end;
+	          align-items: start;
+	          align-self: end;
+	          border: 0;
+	          margin: 0;
+	          min-width: clamp(220px, 22vw, 310px);
 	          overflow: hidden;
 	        }
+	        .effects-shell:not(.has-items) .effects-stats {
+	          display: none;
+	        }
         .effects-stat {
-          min-height: clamp(76px, 6.6vw, 80px);
-          padding: clamp(14px, 1.3vw, 17px);
-          border-right: 1px solid rgba(245,241,232,0.16);
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
+          min-height: 0;
+          padding: 0;
+          border: 0;
+          display: block;
         }
-        .effects-stat:last-child { border-right: 0; }
         .effects-stat-label {
+          display: block;
+          margin-bottom: clamp(5px, 0.5vw, 7px);
           color: rgba(245,241,232,0.42);
-          font-size: clamp(8px, 0.65vw, 9px);
+          font-size: clamp(7px, 0.58vw, 9px);
           letter-spacing: 0.17em;
         }
 	        .effects-stat-value {
 	          color: #f04f49;
-	          font-size: clamp(28px, 3vw, 34px);
+	          font-size: clamp(17px, 1.7vw, 22px);
 	          line-height: 1;
 	          font-variant-numeric: tabular-nums;
 	          white-space: nowrap;
 	        }
         .effects-drop {
-          grid-area: drop;
-          border: 1px dashed rgba(245,241,232,0.34);
-          background: rgba(245,241,232,0.035);
-          height: 100%;
+          margin-top: clamp(14px, 2.2dvh, 30px);
+          border: 1px solid rgba(245,241,232,0.2);
+          background: rgba(12,11,10,0.56);
+          height: auto;
           min-height: 0;
           display: flex;
           flex-direction: column;
@@ -1920,33 +1957,51 @@ export default function ToolsEffectsPage() {
           justify-content: center;
           align-items: center;
           text-align: center;
-          padding: clamp(28px, 4.5vw, 56px);
+          padding: clamp(14px, 3.1dvh, 44px) clamp(16px, 4vw, 56px);
+        }
+        .effects-shell:not(.has-items) .effects-drop {
+          flex: 1 1 auto;
+          min-height: 0;
+          height: auto;
+        }
+        .effects-shell.has-items .effects-drop {
+          flex: 1 1 auto;
+          min-height: 0;
+          border: 0;
+          background: transparent;
+        }
+        .effects-shell:not(.has-items) .effects-upload-state {
+          min-height: 0;
         }
         .effects-preview-state { justify-content: stretch; }
+        .effects-shell.has-items .effects-preview-state {
+          flex: 1 1 auto;
+          min-height: 0;
+        }
         .effects-drop-icon {
-          width: clamp(38px, 4vw, 48px);
-          height: clamp(38px, 4vw, 48px);
+          width: clamp(26px, min(3.7vw, 4.8dvh), 44px);
+          height: clamp(26px, min(3.7vw, 4.8dvh), 44px);
           color: #f04f49;
-          margin-bottom: clamp(22px, 2.8vw, 31px);
+          margin-bottom: clamp(10px, 2dvh, 26px);
           stroke-width: 1.8;
         }
         .effects-drop-title {
           margin: 0;
           font-family: "DM Mono", monospace;
-          font-size: clamp(19px, 2vw, 24px);
+          font-size: clamp(15px, min(1.8vw, 2.9dvh), 22px);
           letter-spacing: 0.16em;
           text-transform: uppercase;
         }
         .effects-drop-copy {
-          margin: clamp(16px, 1.7vw, 18px) 0 0;
+          margin: clamp(10px, 1.7dvh, 18px) 0 0;
           color: rgba(245,241,232,0.62);
-          font-size: clamp(13px, 1.35vw, 15px);
+          font-size: clamp(12px, min(1.35vw, 2dvh), 15px);
           line-height: 1.5;
         }
         .effects-preview-frame {
           width: 100%;
-          flex: 1;
-          min-height: 0;
+          height: clamp(260px, min(31vw, 48dvh), 430px);
+          flex: 0 0 auto;
           border: 1px solid rgba(245,241,232,0.12);
           background:
             linear-gradient(90deg, rgba(245,241,232,0.04) 1px, transparent 1px),
@@ -2035,10 +2090,10 @@ export default function ToolsEffectsPage() {
           flex-wrap: wrap;
           justify-content: center;
           gap: clamp(9px, 1vw, 11px);
-          margin-top: clamp(22px, 2.6vw, 28px);
+          margin-top: clamp(16px, 2.8dvh, 28px);
         }
         .effects-button {
-          min-height: clamp(40px, 3.6vw, 43px);
+          min-height: clamp(40px, min(4.6vw, 6.2dvh), 68px);
           border: 1px solid rgba(245,241,232,0.18);
           background: rgba(245,241,232,0.08);
           color: #f5f1e8;
@@ -2082,14 +2137,13 @@ export default function ToolsEffectsPage() {
 	          grid-area: settings;
 	          min-width: 0;
 	          height: 100%;
-	          display: flex;
-	          flex-direction: column;
+	          display: none;
 	        }
         .effects-batch {
           grid-area: batch;
           min-height: 0;
           height: 100%;
-          display: flex;
+          display: none;
           flex-direction: column;
           overflow: hidden;
         }
@@ -2344,109 +2398,29 @@ export default function ToolsEffectsPage() {
 	          line-height: 1.4;
 	        }
 	        .effects-hidden { display: none; }
-	        .effects-page {
-	          padding: clamp(92px, 7.2vw, 132px) clamp(22px, 4.6vw, 72px) clamp(56px, 5vw, 86px);
-	        }
-	        .effects-shell {
-	          width: min(100%, clamp(780px, 72vw, 1180px));
-	          display: block;
-	          border: 1px solid rgba(245,241,232,0.2);
-	          background: rgba(245,241,232,0.025);
-	          padding: clamp(36px, 4.1vw, 56px) clamp(34px, 4.2vw, 58px) clamp(34px, 4.1vw, 55px);
-	        }
-	        .effects-intro {
-	          display: grid;
-	          grid-template-columns: minmax(0, 1fr) auto;
-	          align-items: end;
-	          column-gap: clamp(24px, 4vw, 64px);
-	          height: auto;
-	        }
-	        .effects-kicker,
-	        .effects-title {
-	          grid-column: 1 / -1;
-	        }
-	        .effects-title {
-	          font-family: "TC Acrylic Hand", "DM Mono", monospace;
-	          font-size: clamp(60px, 8.2vw, 124px);
-	          line-height: 0.82;
-	          letter-spacing: 0;
-	        }
-	        .effects-copy {
-	          max-width: clamp(430px, 38vw, 580px);
-	          margin-top: clamp(24px, 3.3vw, 46px);
-	          font-size: clamp(13px, 1.05vw, 15px);
-	          line-height: 1.45;
-	        }
-	        .effects-stats {
-	          display: grid;
-	          grid-template-columns: repeat(3, auto);
-	          gap: clamp(26px, 3.1vw, 46px);
-	          justify-content: end;
-	          align-items: start;
-	          align-self: end;
-	          border: 0;
-	          margin: 0;
-	          min-width: clamp(220px, 22vw, 310px);
-	        }
-	        .effects-shell:not(.has-items) .effects-stats {
-	          display: none;
-	        }
 	        .effects-shell.export-open .effects-button:disabled {
 	          opacity: 1;
-	        }
-	        .effects-stat {
-	          min-height: 0;
-	          padding: 0;
-	          border: 0;
-	          display: block;
-	        }
-	        .effects-stat-label {
-	          display: block;
-	          margin-bottom: clamp(5px, 0.5vw, 7px);
-	          font-size: clamp(7px, 0.58vw, 9px);
-	        }
-	        .effects-stat-value {
-	          font-size: clamp(17px, 1.7vw, 22px);
-	          line-height: 1;
-	        }
-	        .effects-drop {
-	          margin-top: clamp(28px, 2.8vw, 34px);
-	          height: auto;
-	          min-height: clamp(520px, 49vw, 680px);
-	          border-color: rgba(245,241,232,0.2);
-	          background: rgba(12,11,10,0.56);
-	        }
-	        .effects-shell:not(.has-items) .effects-drop {
-	          border-style: solid;
-	          min-height: clamp(560px, 55vw, 720px);
-	        }
-	        .effects-shell.has-items .effects-drop {
-	          border: 0;
-	          background: transparent;
-	          min-height: 0;
-	        }
-	        .effects-upload-state {
-	          min-height: clamp(500px, 50vw, 655px);
 	        }
 	        .effects-preview-state {
 	          padding: 0;
 	          align-items: stretch;
 	          text-align: left;
 	        }
-	        .effects-preview-frame {
-	          height: clamp(330px, 31vw, 430px);
-	          flex: 0 0 auto;
-	          border-color: rgba(245,241,232,0.16);
+	        .effects-preview-frame { border-color: rgba(245,241,232,0.16); }
+	        .effects-shell.has-items .effects-preview-frame {
+	          flex: 1 1 auto;
+	          height: auto;
+	          min-height: 0;
 	        }
 	        .effects-preview-caption {
-	          margin-top: clamp(18px, 1.7vw, 22px);
+	          margin-top: clamp(10px, 1.4dvh, 18px);
 	          font-size: clamp(9px, 0.85vw, 12px);
 	          letter-spacing: 0.14em;
 	        }
 	        .effects-effect-nav {
 	          grid-template-columns: clamp(66px, 5.8vw, 78px) minmax(0, 1fr) clamp(66px, 5.8vw, 78px);
 	          gap: clamp(18px, 2vw, 26px);
-	          margin-top: clamp(30px, 3.2vw, 42px);
+	          margin-top: clamp(16px, 2.4dvh, 34px);
 	        }
 	        .effects-arrow {
 	          width: clamp(58px, 5.5vw, 72px);
@@ -2469,14 +2443,9 @@ export default function ToolsEffectsPage() {
 	          justify-content: flex-start;
 	          align-items: center;
 	          gap: clamp(14px, 1.5vw, 20px);
-	          margin-top: clamp(28px, 3.1vw, 42px);
+	          margin-top: clamp(16px, 2.4dvh, 34px);
 	        }
-	        .effects-button {
-	          min-height: clamp(48px, 4.6vw, 68px);
-	          padding: 0 clamp(18px, 2vw, 28px);
-	          font-size: clamp(10px, 0.92vw, 13px);
-	          letter-spacing: 0.15em;
-	        }
+	        .effects-button { letter-spacing: 0.15em; }
 	        .effects-button.effects-dice-button {
 	          width: clamp(48px, 4.6vw, 68px);
 	          flex-basis: clamp(48px, 4.6vw, 68px);
@@ -2486,10 +2455,6 @@ export default function ToolsEffectsPage() {
 	          min-width: clamp(220px, 21vw, 300px);
 	          font-size: clamp(13px, 1.2vw, 17px);
 	          letter-spacing: 0.16em;
-	        }
-	        .effects-settings,
-	        .effects-batch {
-	          display: none;
 	        }
 	        .effects-export-overlay {
 	          position: fixed;
@@ -2547,15 +2512,29 @@ export default function ToolsEffectsPage() {
 	          justify-content: flex-start;
 	        }
 	        @media (max-width: 960px) {
+	          .effects-page {
+	            --page-pad-top: clamp(66px, 9dvh, 96px);
+	            --page-pad-bottom: clamp(12px, 3dvh, 36px);
+	          }
 	          .effects-shell {
 	            width: min(100%, 760px);
 	          }
 	          .effects-intro {
 	            grid-template-columns: 1fr;
 	          }
+	          .effects-title {
+	            font-size: clamp(40px, min(16vw, 10.5dvh), 92px);
+	          }
+	          .effects-shell.has-items .effects-title {
+	            font-size: clamp(34px, min(8.6vw, 8.2dvh), 66px);
+	          }
+	          .effects-copy {
+	            max-width: 100%;
+	            margin-top: clamp(14px, 2.6dvh, 28px);
+	          }
 	          .effects-stats {
 	            justify-content: start;
-	            margin-top: clamp(22px, 5vw, 34px);
+	            margin-top: clamp(18px, 4vw, 30px);
 	          }
 	          .effects-apply-button {
 	            margin-left: 0;
@@ -2564,13 +2543,29 @@ export default function ToolsEffectsPage() {
 	        }
 	        @media (max-width: 680px) {
 	          .effects-page {
-	            padding: clamp(84px, 17vw, 104px) clamp(14px, 4.5vw, 24px) clamp(28px, 8vw, 48px);
+	            --page-pad-x: clamp(12px, 4vw, 24px);
+	            --page-pad-top: clamp(62px, 8dvh, 78px);
+	            --page-pad-bottom: clamp(10px, 2.4dvh, 24px);
+	            --shell-pad-x: clamp(16px, 5vw, 28px);
+	            --shell-pad-y: clamp(14px, 2.2dvh, 28px);
 	          }
-	          .effects-shell {
-	            padding: clamp(24px, 7vw, 34px) clamp(18px, 6vw, 28px) clamp(22px, 7vw, 32px);
+	          .effects-shell:not(.has-items) {
+	            display: flex;
+	          }
+	          .effects-shell.has-items .effects-intro {
+	            display: none;
+	          }
+	          .effects-shell.has-items .effects-drop {
+	            margin-top: 0;
+	          }
+	          .effects-shell.has-items .effects-preview-frame {
+	            min-height: clamp(190px, 33dvh, 360px);
 	          }
 	          .effects-title {
-	            font-size: clamp(44px, 18vw, 76px);
+	            font-size: clamp(32px, min(14.8vw, 8.6dvh), 64px);
+	          }
+	          .effects-copy {
+	            font-size: clamp(12px, 3.3vw, 14px);
 	          }
 	          .effects-stats {
 	            grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -2589,80 +2584,72 @@ export default function ToolsEffectsPage() {
 	            padding: clamp(18px, 5vw, 28px);
 	          }
 	        }
-	        @media (max-width: 960px) {
-          .effects-page {
-            padding: clamp(78px, 14vw, 104px) clamp(16px, 5vw, 34px) clamp(34px, 8vw, 56px);
-          }
-          .effects-shell {
-            grid-template-columns: 1fr;
-            grid-template-areas: "intro" "settings" "drop" "batch";
-            grid-template-rows: auto auto clamp(420px, 78vw, 586px) clamp(420px, 78vw, 586px);
-          }
-          .effects-title { font-size: clamp(48px, 17vw, 104px); }
-          .effects-copy {
-            max-width: 100%;
-            margin-top: clamp(18px, 5vw, 34px);
-          }
-          .effects-stats { margin-top: clamp(28px, 8vw, 48px); }
-        }
-        @media (max-width: 680px) {
-          .effects-stats { grid-template-columns: 1fr; }
-          .effects-stat { border-right: 0; border-bottom: 1px solid rgba(245,241,232,0.14); }
-          .effects-stat:last-child { border-bottom: 0; }
-          .effects-title { font-size: clamp(44px, 21vw, 82px); }
-        }
 	        @media (max-width: 560px) {
 	          .effects-format-grid { grid-template-columns: 1fr; }
 	          .effects-file { grid-template-columns: 22px minmax(0, 1fr); }
 	          .effects-file-actions { grid-column: 2; justify-content: flex-start; }
 	          .effects-actions { justify-content: stretch; }
-          .effects-button { flex: 1 1 100%; }
-          .effects-button.effects-dice-button {
-            flex: 0 0 43px;
-            width: 43px;
-          }
-          .effects-batch-actions { justify-content: stretch; }
-          .effects-preview-caption { flex-direction: column; gap: 6px; }
-          .effects-effect-nav {
-            grid-template-columns: 38px minmax(0, 1fr) 38px;
-          }
-          .effects-arrow {
-            width: 38px;
-	            height: 38px;
-	          }
-	        }
-	        @media (max-width: 960px) {
-	          .effects-shell {
-	            display: block;
-	            grid-template-columns: none;
-	            grid-template-areas: none;
-	            grid-template-rows: none;
-	          }
-	          .effects-stats {
-	            margin-top: clamp(22px, 5vw, 34px);
-	          }
-	        }
-	        @media (max-width: 680px) {
-	          .effects-stats {
-	            grid-template-columns: repeat(3, minmax(0, 1fr));
-	            width: 100%;
-	            gap: 12px;
-	          }
-	          .effects-stat {
-	            border: 0;
-	          }
-	        }
-	        @media (max-width: 560px) {
+            .effects-button { flex: 1 1 100%; }
 	          .effects-button.effects-dice-button {
-	            flex: 0 0 clamp(48px, 13vw, 56px);
-	            width: clamp(48px, 13vw, 56px);
+	            flex: 1 1 100%;
+	            width: 100%;
 	          }
+	          .effects-batch-actions { justify-content: stretch; }
+	          .effects-preview-caption { flex-direction: column; gap: 6px; }
 	          .effects-effect-nav {
 	            grid-template-columns: 48px minmax(0, 1fr) 48px;
 	          }
 	          .effects-arrow {
 	            width: 48px;
 	            height: 48px;
+	          }
+	          .effects-shell:not(.has-items) {
+	            height: var(--shell-view-height);
+	          }
+	          .effects-shell.has-items .effects-preview-caption {
+	            margin-top: clamp(10px, 1.8dvh, 14px);
+	          }
+	          .effects-shell.has-items .effects-actions {
+	            gap: clamp(12px, 2.8vw, 16px);
+	            margin-top: clamp(14px, 2.2dvh, 18px);
+	          }
+	          .effects-shell.has-items .effects-button.effects-dice-button {
+	            flex: 1 1 100%;
+	            width: 100%;
+	          }
+	          .effects-title {
+	            font-size: clamp(30px, min(13.8vw, 7.4dvh), 56px);
+	          }
+	          .effects-drop-title {
+	            font-size: clamp(13px, 4.4vw, 18px);
+	          }
+	          .effects-drop-copy {
+	            font-size: clamp(11px, 3.4vw, 13px);
+	          }
+	        }
+	        @media (max-height: 760px) and (min-width: 681px) {
+	          .effects-page {
+	            --page-pad-top: clamp(58px, 7dvh, 82px);
+	            --page-pad-bottom: clamp(10px, 2dvh, 22px);
+	            --shell-pad-y: clamp(14px, 2dvh, 28px);
+	          }
+	          .effects-title {
+	            font-size: clamp(42px, min(6.6vw, 12dvh), 88px);
+	          }
+	          .effects-kicker {
+	            margin-bottom: clamp(10px, 1.8dvh, 20px);
+	          }
+	          .effects-copy {
+	            margin-top: clamp(12px, 2dvh, 24px);
+	          }
+	          .effects-shell.has-items .effects-copy {
+	            display: none;
+	          }
+	          .effects-drop-icon {
+	            margin-bottom: clamp(10px, 2dvh, 20px);
+	          }
+	          .effects-actions {
+	            margin-top: clamp(12px, 2.2dvh, 22px);
 	          }
 	        }
 	      `}</style>

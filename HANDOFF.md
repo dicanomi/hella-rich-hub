@@ -11,6 +11,22 @@ repeating deployment instructions in each entry.
 
 ---
 
+## 2026-08-22 19:08 — Codex — HELLA EFFECTS responsive release
+
+**Did:**
+- Fixed `/tools/effects` populated-state fluid scaling so the post-upload workflow uses the same viewport shell height as the default screen.
+- Made the preview frame absorb available browser height, tightened populated captions/nav/action spacing, and kept short desktop heights from overlapping.
+- Hid the intro on small populated screens and made the dice button stack full-width with the other controls.
+- Verified uploaded-image layout at 390x844, 430x932, 768x1024, 1476x1720, 1746x1408, 1952x1272, 2048x1157, and 1920x700.
+
+**Current state:**
+- Ready for scoped commit and live Cloudflare Pages publication after build/push.
+
+**Watch out for:**
+- Existing unrelated generated/static product HTML files, HELLA.FM media folders, and `ProductLineSculpture 2.tsx` remain out of scope and uncommitted.
+
+---
+
 ## 2026-08-22 17:45 — Codex — HELLA EFFECTS homepage release
 
 **Did:**
