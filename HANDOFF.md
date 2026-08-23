@@ -20,7 +20,7 @@ repeating deployment instructions in each entry.
 - Verified uploaded-image layout at 390x844, 430x932, 768x1024, 1476x1720, 1746x1408, 1952x1272, 2048x1157, and 1920x700.
 
 **Current state:**
-- Ready for scoped commit and live Cloudflare Pages publication after build/push.
+- Published live from `main` in commit `f7248a5`; production route `https://hella.rich/tools/effects` was cache-busted and rendered-verified after upload.
 
 **Watch out for:**
 - Existing unrelated generated/static product HTML files, HELLA.FM media folders, and `ProductLineSculpture 2.tsx` remain out of scope and uncommitted.
