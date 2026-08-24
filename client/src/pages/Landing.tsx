@@ -1115,18 +1115,43 @@ function FeaturedCard({ slug, title, desc, img, mediaMode = 'image' }: { slug: s
   );
 }
 
-// ── FeaturedPlaceholder — blank black card to fill the featured grid's last row ──
-function FeaturedPlaceholder() {
+function FeaturedHeroCard({ slug, title, desc, img, cta = 'Launch' }: { slug: string; title: string; desc: string; img: string; cta?: string }) {
+  const [hovered, setHovered] = useState(false);
   return (
-    <div className="hr-featured-placeholder" aria-hidden="true">
-      <span style={{
-        fontFamily: "'DM Mono', monospace",
-        fontSize: 'clamp(9px,0.85vw,11px)',
-        letterSpacing: '0.3em',
-        textTransform: 'uppercase',
-        color: 'rgba(255,255,255,0.30)',
-      }}>◫ &nbsp;MORE SOON</span>
-    </div>
+    <Link
+      href={'/' + slug}
+      aria-label={title + ' — ' + desc}
+      className="hr-grid-hero"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <img
+        className="hr-grid-hero__image"
+        src={img}
+        alt=""
+        aria-hidden="true"
+        width={1086}
+        height={1448}
+        loading="eager"
+        decoding="async"
+        fetchPriority="high"
+        style={{
+          transform: hovered ? 'scale(1.018)' : 'scale(1)',
+          opacity: hovered ? 0.98 : 0.9,
+        }}
+      />
+      <div className="hr-grid-hero__shade" aria-hidden="true" />
+      <div className="hr-grid-hero__copy">
+        <span className="hr-grid-hero__title">{title}</span>
+        <span className="hr-grid-hero__desc">{desc}</span>
+        <span className="hr-grid-hero__cta">
+          {cta}
+          <svg width="18" height="10" viewBox="0 0 18 10" fill="none" aria-hidden="true">
+            <path d="M1 5H16M16 5L12 1M16 5L12 9" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </span>
+      </div>
+    </Link>
   );
 }
 
@@ -1547,9 +1572,16 @@ export default function Landing() {
           <ProjectCard slug="the-eye"    title="THE EYE"     tagline="A strange object that notices you." cta="Look" image={CARD_THE_EYE}    index={16} enterDelay={980} mediaMode={mediaMode} />
           </>
           ) : view === 'featured' ? (
-          <div className="hr-featured-grid">
+          <div className="hr-featured-view">
+            <FeaturedHeroCard
+              slug="deck"
+              title="HELLA•4"
+              desc="A reel recorder for field takes, cue loops, and tape-touching trouble."
+              img={CARD_HELLA_DECK}
+              cta="Launch"
+            />
+            <div className="hr-featured-grid">
             {[
-              { slug: 'deck', title: 'HELLA•4', desc: 'A reel recorder for field takes, cue loops, and tape-touching trouble.', img: CARD_HELLA_DECK },
               { slug: 'hella.fm',    title: 'HELLA.FM', desc: 'Preprogrammed local frequencies for the end of normal radio.', img: CARD_HELLA_FM },
               { slug: 'synth', title: 'HELLA.SYNTH', desc: 'A browser-native instrument with a hand-written audio engine.', img: CARD_HELLA_SYNTH },
               { slug: 'tools/convert', title: 'HELLA CONVERT', desc: 'Convert image files in your browser. No account, no payment step.', img: CARD_HELLA_CONVERT },
@@ -1568,8 +1600,7 @@ export default function Landing() {
             ].map(p => (
               <FeaturedCard key={p.slug} slug={p.slug} title={p.title} desc={p.desc} img={p.img} mediaMode={mediaMode} />
             ))}
-            {/* Blank cards fill the last row so the featured view doesn't look empty at the bottom */}
-            <FeaturedPlaceholder />
+            </div>
           </div>
           ) : (
           <div role="list" style={{ display: 'flex', flexDirection: 'column', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
@@ -1621,7 +1652,7 @@ export default function Landing() {
         </main>
 
         {/* ── Footer ── */}
-        <footer style={{
+        <footer className="hr-site-footer" style={{
           padding: 'clamp(24px,4vh,40px) clamp(24px,5vw,72px)',
           display: 'flex',
           alignItems: 'center',

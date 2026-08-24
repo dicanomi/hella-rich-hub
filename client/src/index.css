@@ -412,7 +412,98 @@
   }
 }
 
-/* ── Featured view — 3-up showcase grid (2-up tablet, 1 mobile) ── */
+/* ── Featured view — grid hero plus 3-up showcase grid (2-up tablet, 1 mobile) ── */
+.hr-featured-view {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2vw, 32px);
+}
+
+.hr-grid-hero {
+  position: relative;
+  display: block;
+  height: clamp(260px, 34vw, 480px);
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 3px;
+  background: #0d0c0b;
+  color: inherit;
+  text-decoration: none;
+}
+
+.hr-grid-hero__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center 47%;
+  transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.3s ease;
+}
+
+.hr-grid-hero__shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to right, rgba(0,0,0,0.76) 0%, rgba(0,0,0,0.34) 36%, rgba(0,0,0,0.08) 72%),
+    linear-gradient(to top, rgba(0,0,0,0.46), rgba(0,0,0,0.04) 58%);
+  pointer-events: none;
+}
+
+.hr-grid-hero__copy {
+  position: absolute;
+  left: clamp(26px, 4vw, 58px);
+  bottom: clamp(28px, 4vw, 58px);
+  z-index: 1;
+  display: flex;
+  width: min(420px, calc(100% - 52px));
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(10px, 1.2vw, 14px);
+}
+
+.hr-grid-hero__title {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 200;
+  line-height: 0.92;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.92);
+  text-wrap: balance;
+}
+
+.hr-grid-hero__desc {
+  max-width: 38ch;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: clamp(13px, 1.2vw, 16px);
+  font-weight: 300;
+  line-height: 1.45;
+  color: rgba(255,255,255,0.68);
+  text-wrap: pretty;
+}
+
+.hr-grid-hero__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: clamp(4px, 0.8vw, 10px);
+  border-bottom: 1px solid rgba(255,255,255,0.32);
+  padding-bottom: 4px;
+  font-family: "DM Mono", monospace;
+  font-size: clamp(9px, 0.85vw, 11px);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.76);
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.hr-grid-hero:hover .hr-grid-hero__cta {
+  border-color: rgba(255,255,255,0.6);
+  color: rgba(255,255,255,0.92);
+}
+
 .hr-featured-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -423,22 +514,35 @@
 }
 @media (max-width: 600px) {
   .hr-featured-grid { grid-template-columns: 1fr; }
+  .hr-grid-hero {
+    height: calc(((100vw - 48px) * 0.75) + 142px);
+  }
+  .hr-grid-hero__copy {
+    left: clamp(22px, 7vw, 30px);
+    bottom: clamp(24px, 8vw, 34px);
+    width: min(330px, calc(100% - 44px));
+  }
+  .hr-grid-hero__title {
+    font-size: clamp(34px, 12vw, 48px);
+  }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hr-featured-grid a, .hr-featured-grid img { transition: none !important; }
+  .hr-featured-grid a, .hr-featured-grid img, .hr-grid-hero, .hr-grid-hero img { transition: none !important; }
 }
-/* Blank placeholder cards — fill the last row of the featured grid so it doesn't read as empty */
-.hr-featured-placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 180px;
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 3px;
-  background: rgba(255,255,255,0.02);
+@media (min-width: 1025px) {
+  .hr-site-footer {
+    padding-bottom: max(96px, calc(84px + env(safe-area-inset-bottom))) !important;
+  }
 }
-/* Only fill the row in the 3-across desktop layout; hide for 2-across and 1-across */
-@media (max-width: 960px) {
-  .hr-featured-placeholder { display: none; }
+
+@media (max-width: 1024px) {
+  .hr-site-footer {
+    padding-bottom: max(132px, calc(112px + env(safe-area-inset-bottom))) !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .hr-site-footer {
+    padding-bottom: max(128px, calc(108px + env(safe-area-inset-bottom))) !important;
+  }
 }
