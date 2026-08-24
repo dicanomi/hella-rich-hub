@@ -23,7 +23,6 @@ import NotFound from "./pages/NotFound";
 
 // Product experiences — lazy loaded on demand
 const TheEyePage     = lazy(() => import("./pages/TheEyePage"));
-const LowBatteryPage = lazy(() => import("./pages/LowBatteryPage"));
 const SpaceDronePage = lazy(() => import("./pages/SpaceDronePage"));
 const AetherPage     = lazy(() => import("./pages/AetherPage"));
 const OrbPage        = lazy(() => import("./pages/OrbPage"));
@@ -36,8 +35,6 @@ const HellaSynthPage = lazy(() => import("./pages/HellaSynthPage"));
 const ToolsConvertPage = lazy(() => import("./pages/ToolsConvertPage"));
 const ToolsEffectsPage = lazy(() => import("./pages/ToolsEffectsPage"));
 const HappyHumanPage = lazy(() => import("./pages/happy-human/HappyHumanPage"));
-const HumanExePage   = lazy(() => import("./pages/human-exe/HumanExePage"));
-const MarketExePage  = lazy(() => import("./pages/machine-exe/MachinePage"));
 
 function PageFallback() {
   return (
@@ -85,7 +82,6 @@ function AppRoutes() {
         <Switch>
           <Route path="/" component={Landing} />
           <Route path="/the-eye" component={TheEyePage} />
-          <Route path="/low-battery" component={LowBatteryPage} />
           <Route path="/space-drone" component={SpaceDronePage} />
           <Route path="/aether" component={AetherPage} />
           <Route path="/orb" component={OrbPage} />
@@ -107,8 +103,6 @@ function AppRoutes() {
           <Route path="/tools/effects/" component={ToolsEffectsPage} />
           <Route path="/happy-human" component={HappyHumanPage} />
           <Route path="/happy-human/" component={HappyHumanPage} />
-          <Route path="/human-exe" component={HumanExePage} />
-          <Route path="/machine-exe" component={MarketExePage} />
           <Route component={NotFound} />
         </Switch>
       </Suspense>

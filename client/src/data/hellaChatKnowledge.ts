@@ -31,13 +31,10 @@ const PRODUCT_LINKS: HellaChatLink[] = [
   { label: "HELLA.SYNTH", href: "/synth" },
   { label: "HELLA CONVERT", href: "/tools/convert" },
   { label: "HELLA EFFECTS", href: "/tools/effects" },
-  { label: "THE_MACHINE.EXE", href: "/machine-exe" },
-  { label: "HUMAN.EXE", href: "/human-exe" },
   { label: "ORB", href: "/orb" },
   { label: "DEAD AIR", href: "/dead-air" },
   { label: "AETHER", href: "/aether" },
   { label: "SPACE DRONE", href: "/space-drone" },
-  { label: "LOW BATTERY", href: "/low-battery" },
   { label: "FOURCAST", href: "/fourcast" },
   { label: "THE EYE", href: "/the-eye" },
 ];
@@ -107,7 +104,7 @@ export const HELLA_CHAT_ANSWERS: HellaChatAnswer[] = [
       ...PRODUCT_MATCH_TERMS,
     ],
     answer: [
-      "Current surfaces: HELLA.4, HAPPY HUMAN, HELLA.FM, HELLA_RADIO, HELLA.SYNTH, HELLA CONVERT, HELLA EFFECTS, THE_MACHINE.EXE, HUMAN.EXE, ORB, DEAD AIR, AETHER, SPACE DRONE, LOW BATTERY, FOURCAST, and THE EYE.",
+      "Current surfaces: HELLA.4, HAPPY HUMAN, HELLA.FM, HELLA_RADIO, HELLA.SYNTH, HELLA CONVERT, HELLA EFFECTS, ORB, DEAD AIR, AETHER, SPACE DRONE, FOURCAST, and THE EYE.",
       "They cover browser audio, DSP, motion, image tools, market psychology, weird utilities, playful interfaces, and AI-assisted product experiments.",
     ],
     vocabulary: ["catalog", "grid", "stacked", "list", "launch", "record", "tune", "convert", "style", "play"],
@@ -173,7 +170,7 @@ export const HELLA_CHAT_ANSWERS: HellaChatAnswer[] = [
     match: ["audio", "sound", "music", "synth", "dsp", "radio", "fm"],
     answer: [
       "Audio work uses Tone.js, Web Audio API, oscillators, filters, envelopes, LFO modulation, FFT and waveform analysis, compression, limiting, waveshaping, delay, reverb, chorus, distortion, bitcrushing, static, MP3 station libraries, and browser-native playback systems.",
-      "HELLA.FM, HELLA.SYNTH, DEAD AIR, AETHER, LOW BATTERY, and SPACE DRONE all live in that sound-first world.",
+      "HELLA.FM, HELLA.SYNTH, DEAD AIR, AETHER, and SPACE DRONE all live in that sound-first world.",
     ],
     vocabulary: ["tone", "tonejs", "web audio", "oscillator", "filter", "lfo", "fft", "waveform", "mp3", "station", "signal", "frequency", "drone"],
   },

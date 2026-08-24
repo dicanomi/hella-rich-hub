@@ -111,8 +111,6 @@ function makePoints(slug: string, variant: number): Point2[] {
         return [(t - 0.5) * 1.5, Math.sin(t * Math.PI * 10 + variant) * Math.sin(t * Math.PI * 2) * 0.32];
       case 'radio':
         return [(t - 0.5) * 1.42, Math.sin(t * Math.PI * 18 + variant) * 0.14 + Math.sin(t * Math.PI * 36) * 0.08];
-      case 'machine-exe':
-        return [(t - 0.5) * 1.38, (Math.sin(t * 19 + variant) * 0.12) + (t > 0.62 ? (t - 0.62) * 0.9 : 0) - 0.12];
       case 'happy-human': {
         const r = 0.42 + Math.sin(a * 5 + variant) * 0.018;
         return [Math.cos(a) * r * 0.72, Math.sin(a) * r + (t > 0.56 && t < 0.68 ? -0.12 : 0)];
@@ -132,8 +130,6 @@ function makePoints(slug: string, variant: number): Point2[] {
         if (edge === 2) return [right - local * (right - left) + wobbleX, bottom + wobbleY];
         return [left + wobbleX, bottom - local * (bottom - top) + wobbleY];
       }
-      case 'human-exe':
-        return [Math.cos(a) * (0.62 + wobble), Math.sin(a) * 0.18 + Math.sin(a * 2 + variant) * 0.04];
       case 'orb': {
         const ring = 0.16 + Math.floor(t * 5) * 0.09;
         return [Math.cos(a + variant * 0.04) * ring, Math.sin(a + variant * 0.04) * ring];
@@ -152,8 +148,6 @@ function makePoints(slug: string, variant: number): Point2[] {
         const r = Math.sqrt(t) * 0.62;
         return [Math.cos(a * 5 + variant) * r, Math.sin(a * 5 + variant) * r];
       }
-      case 'low-battery':
-        return [(t - 0.5) * 1.18, Math.sin(t * Math.PI * 2 + variant) * 0.04 + (t > 0.74 && t < 0.84 ? 0.28 : -0.02)];
       case 'fourcast':
         return [(t - 0.5) * 1.18 + Math.sin(t * 40) * 0.04, Math.sin(t * 27 + variant) * 0.22 + Math.sign(Math.sin(t * 9)) * 0.08];
       case 'the-eye': {

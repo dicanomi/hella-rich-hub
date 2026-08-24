@@ -14,7 +14,12 @@
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-const EYE_IMAGE = 'https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/4dGTww6dwDMqWYygdCjBiT/the-eye-v3-AmPFkNFW8nwGoNjxkpQypv.webp';
+const EYE_FRAMES = {
+  forward: `${import.meta.env.BASE_URL}eye-movement/eye-forward.png`,
+  closed: `${import.meta.env.BASE_URL}eye-movement/eye-closed.png`,
+};
+
+type EyeFrame = keyof typeof EYE_FRAMES;
 
 const IC_X = 0.50;
 const IC_Y = 0.47;
@@ -38,6 +43,7 @@ export function TheEye({ phase, aura, isActive, onClick, started }: TheEyeProps)
   const [awakenGlow, setAwakenGlow] = useState(false);
   const [awakened, setAwakened] = useState(false);
   const [proximityDilation, setProximityDilation] = useState(0);
+  const [activeFrame, setActiveFrame] = useState<EyeFrame>('forward');
   const proximityTarget = useRef(0);
   const proximityCurrent = useRef(0);
 
@@ -50,6 +56,13 @@ export function TheEye({ phase, aura, isActive, onClick, started }: TheEyeProps)
   const mouseDisengageTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useRef(typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches);
+
+  useEffect(() => {
+    Object.values(EYE_FRAMES).forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
 
   // ── rAF spring loop — ALWAYS RUNNING ──────────────────────────────────────
   useEffect(() => {
@@ -220,6 +233,18 @@ export function TheEye({ phase, aura, isActive, onClick, started }: TheEyeProps)
   const upperH = upperLid * 48;
   const lowerH = lowerLid * 42;
   const isClickable = phase === 'idle' || phase === 'showing' || phase === 'revealing';
+  const blinkClosed = upperLid > 0.72 || lowerLid > 0.34;
+  const gazeFrame: EyeFrame = (() => {
+    if (blinkClosed) return 'closed';
+    return 'forward';
+  })();
+
+  useEffect(() => {
+    if (gazeFrame === activeFrame) return;
+    const delay = gazeFrame === 'closed' || activeFrame === 'closed' ? 0 : 150;
+    const timer = setTimeout(() => setActiveFrame(gazeFrame), delay);
+    return () => clearTimeout(timer);
+  }, [activeFrame, gazeFrame]);
 
   return (
     <div
@@ -267,22 +292,27 @@ export function TheEye({ phase, aura, isActive, onClick, started }: TheEyeProps)
             rgba(0,0,0,0.05) 70%, transparent 78%)`,
         }}
       >
-        {/* Eye image — oversized to allow iris movement */}
+        {/* Eye image */}
         <div style={{
           position: 'absolute', width: '114%', height: '114%', top: '-7%', left: '-7%',
           transform: `translate(${irisPxX}px, ${irisPxY}px)`,
           transition: 'filter 0.7s ease', willChange: 'transform',
         }}>
-          <img
-            src={EYE_IMAGE} alt="" aria-hidden="true" draggable={false}
-            style={{
-              width: '100%', height: '100%', objectFit: 'cover', display: 'block',
-              filter: isActive
-                ? 'brightness(1.12) contrast(1.06) saturate(1.15)'
-                : 'brightness(1.03) contrast(1.02) saturate(1.04)',
-              transition: 'filter 0.7s ease',
-            }}
-          />
+          {Object.entries(EYE_FRAMES).map(([frame, src]) => (
+            <img
+              key={frame}
+              src={src} alt="" aria-hidden="true" draggable={false}
+              style={{
+                position: 'absolute', inset: 0,
+                width: '100%', height: '100%', objectFit: 'cover', display: 'block',
+                opacity: activeFrame === frame ? 1 : 0,
+                filter: isActive
+                  ? 'brightness(1.12) contrast(1.06) saturate(1.15)'
+                  : 'brightness(1.03) contrast(1.02) saturate(1.04)',
+                transition: 'opacity 0.28s ease-in-out, filter 0.7s ease',
+              }}
+            />
+          ))}
         </div>
 
         {/* Iris glow overlay */}

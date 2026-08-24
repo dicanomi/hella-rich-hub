@@ -11,6 +11,41 @@ repeating deployment instructions in each entry.
 
 ---
 
+## 2026-08-24 09:40 — Codex — Local QA asset repair checkpoint ready for release
+
+**Did:**
+- Repaired active app media locally: The Eye now uses local `eye-movement` frames, Dead Air uses local `dead-air/knob.png`, and HELLA.SYNTH static bundle references its existing media under `/hella-synth-app/`.
+- Retired Low Battery, Human.exe, and The_Machine.exe from active routes/nav/homepage/metadata surfaces and archived their source under `client/src/archive/2026-08-24-retired-apps/`.
+- Verified local Vite build passes and local QA found Synth images/audio, Dead Air knob, The Eye frames, homepage, global nav, and retired routes behaving correctly.
+- Left unrelated untracked HELLA.FM media folders and `ProductLineSculpture 2.tsx` out of scope.
+
+**Current state:**
+- Local preview is `http://127.0.0.1:3003/`.
+- Ready for a scoped timestamped commit and GitHub/Cloudflare publication after explicit approval.
+
+**Watch out for:**
+- Stage explicit paths only; do not include unrelated `client/public/hella.fm/media/*` folders or the untracked `client/src/components/ProductLineSculpture 2.tsx`.
+- Some pre-existing static wrapper metadata edits may remain unstaged unless intentionally included in a separate SEO/social release.
+
+---
+
+## 2026-08-24 08:49 — Codex — Retired Low Battery, Human.exe, The_Machine.exe locally
+
+**Did:**
+- Removed `/low-battery`, `/human-exe`, and `/machine-exe` from the active React route graph, homepage product views, global nav, credits product list, chat product links/copy, sitemap, llms.txt, and static Happy Human/Radio product menus.
+- Archived the retired app source under `client/src/archive/2026-08-24-retired-apps/`.
+- Left unrelated pre-existing dirty generated/static files and HELLA.FM media folders alone.
+- Ran direct bundled-Node Vite build successfully and verified local dev server routes respond on `http://127.0.0.1:3002/`.
+
+**Current state:**
+- Local only. Not pushed and not published to Cloudflare.
+- QA homepage at `http://127.0.0.1:3002/`; retired paths should fall through to the app not-found view.
+
+**Watch out for:**
+- Vite/SPA history fallback returns HTTP 200 for retired paths locally; verify visually that `/low-battery`, `/human-exe`, and `/machine-exe` show the not-found experience rather than app content.
+
+---
+
 ## 2026-08-22 19:08 — Codex — HELLA EFFECTS responsive release
 
 **Did:**

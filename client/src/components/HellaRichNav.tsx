@@ -24,13 +24,10 @@ const PROJECTS: NavProject[] = [
   { title: 'HELLA EFFECTS', slug: '/tools/effects' },
   { title: 'RADIO', slug: '/radio' },
   { title: 'HELLA.SYNTH', slug: '/synth' },
-  { title: 'THE_MACHINE.EXE', slug: '/machine-exe' },
-  { title: 'HUMAN.EXE', slug: '/human-exe' },
   { title: 'ORB', slug: '/orb' },
   { title: 'DEAD AIR', slug: '/dead-air' },
   { title: 'ÆTHER', slug: '/aether' },
   { title: 'SPACE DRONE', slug: '/space-drone' },
-  { title: 'LOW BATTERY', slug: '/low-battery' },
   { title: 'FOURCAST', slug: '/fourcast' },
   { title: 'THE EYE', slug: '/the-eye' },
 ];

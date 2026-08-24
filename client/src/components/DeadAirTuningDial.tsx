@@ -23,7 +23,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const DIAL_IMAGE_URL =
-  "https://d2xsxph8kpxj0f.cloudfront.net/310519663292290338/9ZxPKGjDMY2C56HR5iUGn8/dial-eUGeMiXR6xxUeNgQFS9Mns.webp";
+  `${import.meta.env.BASE_URL}dead-air/knob.png`;
 
 // Arc constants — must match DeadAir.tsx exactly
 const ARC_START = -225;
@@ -512,7 +512,14 @@ export default function TuningDial({
           <img
             src={DIAL_IMAGE_URL}
             alt="Tuning dial"
-            style={{ width: "100%", height: "100%", borderRadius: "50%", display: "block" }}
+            style={{
+              width: "100%",
+              height: "100%",
+              borderRadius: "50%",
+              display: "block",
+              objectFit: "cover",
+              transform: "rotate(-208deg)",
+            }}
             draggable={false}
           />
         </div>
