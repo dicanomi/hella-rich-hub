@@ -346,16 +346,22 @@ let mosaic;
 let swapTimer;
 let imageryVisible = false;
 let swapsPaused = false;
+let firstSwapOnEntry = true;
 
 function syncSwaps() {
   clearInterval(swapTimer);
   if (mosaic && imageryVisible && !document.hidden && !reduced.matches && !swapsPaused) {
-    swapTimer = setInterval(shuffleGrid, 2000);
+    if (firstSwapOnEntry && shuffleGrid()) firstSwapOnEntry = false;
+    swapTimer = setInterval(() => {
+      if (shuffleGrid()) firstSwapOnEntry = false;
+    }, 2000);
   }
 }
 
 function shuffleGrid() {
   const tiles = [...mosaic.children];
+  // A quick return to the screen can happen mid-crossfade.
+  if (tiles.some(tile => tile.childElementCount > 1)) return false;
   const originals = tiles.map(tile => tile.firstElementChild);
   const order = [...originals];
   // Sattolo's shuffle moves every image to a different tile.
@@ -371,10 +377,12 @@ function shuffleGrid() {
       duration: 750, easing: 'ease-in-out',
     }).finished.then(() => old.remove());
   }
+  return true;
 }
 
 new IntersectionObserver(async ([entry], observer) => {
   imageryVisible = entry.intersectionRatio >= .5;
+  if (!imageryVisible) firstSwapOnEntry = true;
   if (imageryVisible && !mosaic && !reduced.matches && !imagery.dataset.loading) {
     imagery.dataset.loading = '';
     const grid = document.createElement('div');
@@ -402,7 +410,9 @@ new IntersectionObserver(async ([entry], observer) => {
 }, { threshold: .5 }).observe(imagery);
 swapControl.addEventListener('click', () => {
   swapsPaused = !swapsPaused;
-  swapControl.textContent = swapsPaused ? 'Resume image swaps' : 'Pause image swaps';
+  const action = swapsPaused ? 'Resume' : 'Pause';
+  swapControl.textContent = action;
+  swapControl.setAttribute('aria-label', action + ' image swaps');
   syncSwaps();
 });
 document.addEventListener('visibilitychange', syncSwaps);

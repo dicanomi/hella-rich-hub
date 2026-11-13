@@ -135,9 +135,9 @@ html:has(.opening[open]){overflow:hidden}
 .identity:has([data-logo=white] :focus-visible){--white-preview:1}
 .identity:has([data-logo=cyan] :focus-visible){--cyan-preview:1}
 @media(hover:hover) and (pointer:fine){
-  .identity:has([data-logo=white] .logo-download:hover){--white-preview:1;--cyan-preview:0}
-  .identity:has([data-logo=cyan] .logo-download:hover){--white-preview:0;--cyan-preview:1}
-  .identity:has([data-logo=ink] .logo-download:hover){--white-preview:0;--cyan-preview:0}
+  .identity:has([data-logo=white]:hover){--white-preview:1;--cyan-preview:0}
+  .identity:has([data-logo=cyan]:hover){--white-preview:0;--cyan-preview:1}
+  .identity:has([data-logo=ink]:hover){--white-preview:0;--cyan-preview:0}
 }
 .identity{background:color-mix(in srgb,var(--cover) calc(var(--white-preview,0) * 100%),var(--paper));color:color-mix(in srgb,var(--paper) calc(var(--white-preview,0) * 100%),var(--ink))}
 .lockup-preview .preview-white{opacity:var(--white-preview,0)}
