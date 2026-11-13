@@ -27,7 +27,7 @@ function updatePosition() {
     readingOffset = splitScreen ? 0 : Math.max(0, -rect.top);
   }
   if (active !== 0) arrowHint.hidden = true;
-  position.textContent = pad(active + 1) + ' / ' + pad(screens.length);
+  position.textContent = pad(active) + ' / ' + pad(screens.length - 1);
   arrows[0].setAttribute('aria-disabled', active === 0);
   arrows[1].setAttribute('aria-label', active === screens.length - 1 ? 'Return to cover' : 'Next screen');
 }
