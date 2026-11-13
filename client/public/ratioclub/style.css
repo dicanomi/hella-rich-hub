@@ -51,7 +51,8 @@ button[aria-disabled=true]{opacity:.45;cursor:default}
 .copy{display:grid;place-items:center;border:0;background:transparent;width:44px;height:44px;padding:0;margin-inline:-10px}
 .copy:hover,.copy[data-copied]{background:#8883;border-radius:5px}
 .typography{background:var(--cyan);color:var(--paper)}
-.type-grid{gap:clamp(1rem,8.7vw,7.85rem)}
+.typography-content{--type-column-gap:clamp(1rem,8.7vw,7.85rem)}
+.type-grid{gap:var(--type-column-gap)}
 .specimen{font-size:clamp(4.7rem,24vw,21.6rem);line-height:1;letter-spacing:-.035em}
 .specimen.slab{font-family:var(--slab)}
 figcaption{margin-block-start:clamp(1rem,3vw,2rem);color:var(--ink);font-size:clamp(.75rem,1vw,.9rem);text-transform:uppercase}
@@ -101,7 +102,7 @@ html:has(.opening[open]){overflow:hidden}
   .copy{margin-inline:-10px;margin-block:-4px}
   .color-mode{top:.55rem}
 }
-@media(max-width:34rem){.identity-grid{grid-template-columns:1fr;gap:2.5rem}.downloads li{grid-template-columns:minmax(6rem,1fr) auto}.type-grid{gap:1rem}}
+@media(max-width:34rem){.identity-grid{grid-template-columns:1fr;gap:2.5rem}.downloads li{grid-template-columns:minmax(6rem,1fr) auto}.typography-content{--type-column-gap:1rem}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 
 .swatch:nth-child(2){--delay:32ms}.swatch:nth-child(3){--delay:64ms}.swatch:nth-child(4){--delay:96ms}.swatch:nth-child(5){--delay:128ms}.swatch:nth-child(6){--delay:160ms}
@@ -164,7 +165,7 @@ html:has(.opening[open]){overflow:hidden}
 .character-view summary{display:inline-flex;align-items:center;cursor:pointer;list-style:none}
 .character-view summary::-webkit-details-marker{display:none}
 .character-view:not([open]) .characters-open,.character-view[open] .characters-closed{display:none}
-.character-samples{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(1.25rem,5vw,4rem)}
+.character-samples{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));row-gap:1.25rem;column-gap:var(--type-column-gap)}
 .character-samples>div{padding-block:1rem}
 .character-samples h3{font-size:1.125rem;margin-bottom:.5rem}
 .character-samples p{font-size:1rem;line-height:1.65;margin-block:.4rem;overflow-wrap:anywhere}
