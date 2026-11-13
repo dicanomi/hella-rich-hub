@@ -6,8 +6,8 @@
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; media-src 'self'; base-uri 'none'; form-action 'none'">
 <title>Ratioclub — Brand Style Guide</title>
-<link rel="stylesheet" href="style.css?v=482964b2b1b6">
-<script src="guide.js?v=2a6964fce650" defer></script>
+<link rel="stylesheet" href="style.css?v=929d5f0511ac">
+<script src="guide.js?v=25571760fd92" defer></script>
 </head>
 <body>
 <main>
@@ -28,11 +28,15 @@
 <section class="screen identity" id="identity" aria-labelledby="identity-title" tabindex="-1">
   <h2 id="identity-title" class="sr">Identity</h2>
   <div class="identity-grid">
-    <img class="clearspace" data-reveal src="assets/logos/logo-lockup.svg" width="480" height="175" alt="Ratioclub wordmark with clear space and construction guides.">
+    <div class="lockup-preview" data-reveal>
+      <img class="clearspace" src="assets/logos/logo-lockup.svg" width="480" height="175" alt="Ratioclub wordmark with clear space and construction guides.">
+      <img class="clearspace preview-white" src="assets/logos/lockup-white.svg" width="480" height="175" alt="">
+      <img class="clearspace preview-cyan" src="assets/logos/lockup-cyan.svg" width="480" height="175" alt="">
+    </div>
     <ul class="downloads" data-reveal>
-      <li><span>Ink</span><div><a href="assets/logos/ratioclub-ink.svg" download aria-label="Download Ink logo as SVG">SVG</a><span aria-hidden="true"> / </span><a href="assets/logos/ratioclub-ink.png" download aria-label="Download Ink logo as PNG">PNG</a> <span class="down" aria-hidden="true">↓</span></div></li>
-      <li><span>White</span><div><a href="assets/logos/ratioclub-white.svg" download aria-label="Download White logo as SVG">SVG</a><span aria-hidden="true"> / </span><a href="assets/logos/ratioclub-white.png" download aria-label="Download White logo as PNG">PNG</a> <span class="down" aria-hidden="true">↓</span></div></li>
-      <li><span>Cyan</span><div><a href="assets/logos/ratioclub-cyan.svg" download aria-label="Download Cyan logo as SVG">SVG</a><span aria-hidden="true"> / </span><a href="assets/logos/ratioclub-cyan.png" download aria-label="Download Cyan logo as PNG">PNG</a> <span class="down" aria-hidden="true">↓</span></div></li>
+      <li data-logo="ink"><a class="logo-download" href="assets/logos/ratioclub-ink.zip" download aria-label="Download Ink logo as SVG and PNG">Ink</a><div><a href="assets/logos/ratioclub-ink.svg" download aria-label="Download Ink logo as SVG">SVG</a><span aria-hidden="true"> / </span><a href="assets/logos/ratioclub-ink.png" download aria-label="Download Ink logo as PNG">PNG</a> <span class="down" aria-hidden="true">↓</span></div></li>
+      <li data-logo="white"><a class="logo-download" href="assets/logos/ratioclub-white.zip" download aria-label="Download White logo as SVG and PNG">White</a><div><a href="assets/logos/ratioclub-white.svg" download aria-label="Download White logo as SVG">SVG</a><span aria-hidden="true"> / </span><a href="assets/logos/ratioclub-white.png" download aria-label="Download White logo as PNG">PNG</a> <span class="down" aria-hidden="true">↓</span></div></li>
+      <li data-logo="cyan"><a class="logo-download" href="assets/logos/ratioclub-cyan.zip" download aria-label="Download Cyan logo as SVG and PNG">Cyan</a><div><a href="assets/logos/ratioclub-cyan.svg" download aria-label="Download Cyan logo as SVG">SVG</a><span aria-hidden="true"> / </span><a href="assets/logos/ratioclub-cyan.png" download aria-label="Download Cyan logo as PNG">PNG</a> <span class="down" aria-hidden="true">↓</span></div></li>
     </ul>
   </div>
 </section>
@@ -51,12 +55,13 @@
 <section class="screen typography" id="typography" aria-labelledby="type-title" tabindex="-1">
   <h2 id="type-title" class="sr">Typography</h2>
   <div class="type-grid">
-    <figure data-reveal><div class="specimen slab" aria-hidden="true">Aa</div><figcaption>Roboto Slab<br>Regular, Medium, Bold</figcaption></figure>
-    <figure data-reveal><div class="specimen" aria-hidden="true">Aa</div><figcaption>Roboto<br>Light, Regular, Medium, Bold</figcaption></figure>
+    <figure data-reveal><div class="specimen slab" aria-hidden="true"><span>Aa</span></div><figcaption>Roboto Slab<br>Regular, Medium, Bold</figcaption></figure>
+    <figure data-reveal><div class="specimen" aria-hidden="true"><span>Aa</span></div><figcaption>Roboto<br>Light, Regular, Medium, Bold</figcaption></figure>
   </div>
 </section>
 <section class="screen media imagery" id="imagery" aria-label="Imagery: Photography" tabindex="-1">
   <img src="assets/media/imagery.png" width="1440" height="890" loading="lazy" alt="Sixteen cyan-toned studies of spirals, rings and repeating patterns in nature.">
+  <button type="button" class="play" hidden>Pause image swaps</button>
 </section>
 <section class="screen media shapes" id="shapes" aria-label="Imagery: Shape animation" tabindex="-1">
   <video src="assets/media/shapes.mp4" poster="assets/media/shapes.png" width="1440" height="890" preload="none" loop muted playsinline aria-label="Geometric shape animation"></video>
@@ -67,6 +72,7 @@
 </section>
 </main>
 <nav class="pager" aria-label="Screen navigation" hidden>
+  <span class="arrow-hint" aria-hidden="true" hidden>Use your <span>← →</span> arrow keys</span>
   <button type="button" data-step="-1" aria-label="Previous screen" aria-keyshortcuts="ArrowLeft"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20 12H4m0 0 7-7m-7 7 7 7"/></svg></button>
   <span id="position" aria-hidden="true">01 / 07</span>
   <button type="button" data-step="1" aria-label="Next screen" aria-keyshortcuts="ArrowRight"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12h16m0 0-7-7m7 7-7 7"/></svg></button>

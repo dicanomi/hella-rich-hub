@@ -1,5 +1,6 @@
 const screens = [...document.querySelectorAll('.screen')];
 const pager = document.querySelector('.pager');
+const arrowHint = pager.querySelector('.arrow-hint');
 const arrows = [...pager.querySelectorAll('button')];
 const position = document.querySelector('#position');
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
@@ -17,6 +18,7 @@ function updatePosition() {
     return rect.top <= midpoint && rect.bottom > midpoint;
   });
   if (current >= 0) active = current;
+  if (active !== 0) arrowHint.hidden = true;
   position.textContent = pad(active + 1) + ' / ' + pad(screens.length);
   arrows[0].setAttribute('aria-disabled', active === 0);
   arrows[1].setAttribute('aria-label', active === screens.length - 1 ? 'Return to cover' : 'Next screen');
@@ -63,6 +65,46 @@ function step(direction) {
 pager.hidden = false;
 updatePosition();
 addEventListener('scroll', queuePosition, { passive: true });
+const desktopSnap = matchMedia('(min-width: 52rem) and (min-height: 40rem) and (hover: hover) and (pointer: fine)');
+let lastScrollY = window.scrollY;
+let scrollDirection = 0;
+let settleTimer;
+const hasScrollEnd = 'onscrollend' in document;
+
+function settleScreen() {
+  if (!desktopSnap.matches || reduced.matches || navigationFade || document.querySelector('.opening').open) return;
+  const direction = scrollDirection;
+  scrollDirection = 0;
+  if (!direction) return;
+
+  const viewport = window.innerHeight;
+  for (let i = 1; i < screens.length; i++) {
+    const nextTop = screens[i].getBoundingClientRect().top;
+    if (nextTop <= 1 || nextTop >= viewport - 1) continue;
+
+    const previousTop = screens[i - 1].getBoundingClientRect().top;
+    const distance = nextTop - previousTop;
+    // Measure from the last full viewport of a long section when scrolling down.
+    if (direction > 0 && nextTop <= Math.min(distance, viewport) * .25) {
+      window.scrollBy({ top: nextTop, behavior: 'smooth' });
+    } else if (direction < 0 && distance <= viewport + 1 && -previousTop <= distance * .25) {
+      window.scrollBy({ top: previousTop, behavior: 'smooth' });
+    }
+    break;
+  }
+}
+
+addEventListener('scroll', () => {
+  const y = window.scrollY;
+  if (y !== lastScrollY) scrollDirection = Math.sign(y - lastScrollY);
+  lastScrollY = y;
+  if (!hasScrollEnd && desktopSnap.matches && !reduced.matches) {
+    clearTimeout(settleTimer);
+    settleTimer = setTimeout(settleScreen, 180);
+  }
+}, { passive: true });
+if (hasScrollEnd) document.addEventListener('scrollend', settleScreen);
+
 addEventListener('resize', queuePosition);
 addEventListener('pageshow', queuePosition);
 arrows.forEach(arrow => arrow.addEventListener('click', () => step(Number(arrow.dataset.step))));
@@ -178,7 +220,7 @@ if (['', '#cover', '#wordmark'].includes(location.hash) && !reduced.matches && s
   const clip = splash.querySelector('video');
   const cover = screens[0];
   let closing = false;
-  const timer = setTimeout(dismissSplash, 4000);
+  const timer = setTimeout(dismissSplash, 3500);
 
   async function dismissSplash() {
     if (closing) return;
@@ -207,3 +249,130 @@ if (['', '#cover', '#wordmark'].includes(location.hash) && !reduced.matches && s
   clip.src = clip.dataset.src;
   clip.play().catch(() => {});
 }
+
+if (desktopSnap.matches && ['', '#cover', '#wordmark'].includes(location.hash)) {
+  const showArrowHint = () => {
+    if (active !== 0 || window.scrollY > 4) return;
+    arrowHint.hidden = false;
+    setTimeout(() => { arrowHint.hidden = true; }, 3650);
+  };
+  if (splash.open) splash.addEventListener('close', showArrowHint, { once: true });
+  else showArrowHint();
+}
+
+const imagery = document.querySelector('.imagery');
+const swapControl = imagery.querySelector('button');
+let mosaic;
+let swapTimer;
+let imageryVisible = false;
+let swapsPaused = false;
+
+function syncSwaps() {
+  clearInterval(swapTimer);
+  if (mosaic && imageryVisible && !document.hidden && !reduced.matches && !swapsPaused) {
+    swapTimer = setInterval(shuffleGrid, 2000);
+  }
+}
+
+function shuffleGrid() {
+  const tiles = [...mosaic.children];
+  const originals = tiles.map(tile => tile.firstElementChild);
+  const order = [...originals];
+  // Sattolo's shuffle moves every image to a different tile.
+  for (let i = order.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * i);
+    [order[i], order[j]] = [order[j], order[i]];
+  }
+  for (const [index, tile] of tiles.entries()) {
+    const old = originals[index];
+    const incoming = order[index].cloneNode();
+    tile.append(incoming);
+    incoming.animate([{ opacity: 0 }, { opacity: 1 }], {
+      duration: 750, easing: 'ease-in-out',
+    }).finished.then(() => old.remove());
+  }
+}
+
+new IntersectionObserver(async ([entry], observer) => {
+  imageryVisible = entry.intersectionRatio >= .5;
+  if (imageryVisible && !mosaic && !reduced.matches && !imagery.dataset.loading) {
+    imagery.dataset.loading = '';
+    const grid = document.createElement('div');
+    grid.className = 'nature-grid';
+    grid.setAttribute('aria-hidden', 'true');
+    const images = Array.from({ length: 16 }, (_, index) => {
+      const tile = document.createElement('div');
+      const img = new Image();
+      img.alt = '';
+      img.src = 'assets/media/nature/' + pad(index + 1) + '.jpg';
+      tile.append(img);
+      grid.append(tile);
+      return img;
+    });
+    try {
+      await Promise.all(images.map(img => img.decode()));
+      mosaic = grid;
+      imagery.append(grid);
+      swapControl.hidden = reduced.matches;
+    } catch {
+      observer.disconnect();
+    }
+  }
+  syncSwaps();
+}, { threshold: .5 }).observe(imagery);
+swapControl.addEventListener('click', () => {
+  swapsPaused = !swapsPaused;
+  swapControl.textContent = swapsPaused ? 'Resume image swaps' : 'Pause image swaps';
+  syncSwaps();
+});
+document.addEventListener('visibilitychange', syncSwaps);
+reduced.addEventListener('change', () => {
+  swapControl.hidden = !mosaic || reduced.matches;
+  syncSwaps();
+});
+
+const glyphPairs = [
+  ...Array.from('ABCDEFGHIJKLMNOPQRSTUVWXYZ', letter => letter + letter.toLowerCase()),
+  '01', '23', '45', '67', '89',
+  '!@', '#$', '%^', '&{', '}|', '":', '?<', '>ß', '∂ƒ', '©®',
+];
+for (const specimen of document.querySelectorAll('.specimen')) {
+  const glyph = specimen.firstElementChild;
+  let timer;
+  let frame = 0;
+
+  function stop() {
+    clearInterval(timer);
+    frame = 0;
+    glyph.textContent = glyphPairs[0];
+    glyph.style.removeProperty('--glyph-fit');
+  }
+
+  specimen.addEventListener('pointerenter', event => {
+    if (event.pointerType !== 'mouse' || reduced.matches || document.hidden) return;
+    stop();
+    timer = setInterval(() => {
+      frame = (frame + 1) % glyphPairs.length;
+      glyph.textContent = glyphPairs[frame];
+      glyph.style.setProperty('--glyph-fit', Math.min(1, specimen.clientWidth / glyph.offsetWidth));
+    }, 90);
+  });
+  specimen.addEventListener('pointerleave', stop);
+  reduced.addEventListener('change', stop);
+  document.addEventListener('visibilitychange', stop);
+}
+
+// iOS Safari can still pull to refresh despite overscroll-behavior.
+let touchStart;
+document.addEventListener('touchstart', event => {
+  touchStart = event.touches.length === 1 && window.scrollY <= 0
+    ? { x: event.touches[0].clientX, y: event.touches[0].clientY }
+    : null;
+}, { passive: true });
+document.addEventListener('touchmove', event => {
+  if (!touchStart || event.touches.length !== 1 || window.scrollY > 0) return;
+  const { clientX, clientY } = event.touches[0];
+  if (clientY - touchStart.y > Math.abs(clientX - touchStart.x) && event.cancelable) {
+    event.preventDefault();
+  }
+}, { passive: false });
