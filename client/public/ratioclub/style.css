@@ -58,7 +58,7 @@ figcaption{margin-block-start:clamp(1rem,3vw,2rem);color:var(--ink);font-size:cl
 .media:is(.imagery,.pattern)>img{height:var(--page);object-fit:cover}
 .media video{grid-area:1/1;pointer-events:none}
 .imagery{background:#10262d}
-.shapes{background:var(--paper)}.pattern{background:#1c373e}
+.shapes{background:#FFFFFF}.pattern{background:#1c373e}
 .opening{position:fixed;inset:0;margin:0;padding:0;border:0;width:100%;height:100%;max-width:none;max-height:none;background:#222829}
 .opening:not([open]){display:none}
 .opening::backdrop{background:transparent}
