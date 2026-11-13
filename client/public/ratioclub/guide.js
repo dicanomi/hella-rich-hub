@@ -264,7 +264,17 @@ for (const video of document.querySelectorAll('.screen video')) {
 
 
 const splash = document.querySelector('.opening');
-if (['', '#cover', '#wordmark'].includes(location.hash) && !reduced.matches && splash.showModal) {
+const reloaded = performance.getEntriesByType('navigation')[0]?.type === 'reload';
+const startAtCover = reloaded || ['', '#cover', '#wordmark'].includes(location.hash);
+if (startAtCover) {
+  history.scrollRestoration = 'manual';
+  if (reloaded && location.hash && location.hash !== '#cover') {
+    history.replaceState(history.state, '', '#cover');
+  }
+  screens[0].scrollIntoView({ behavior: 'instant' });
+  updatePosition();
+}
+if (startAtCover && !reduced.matches && splash.showModal) {
   const clip = splash.querySelector('video');
   const cover = screens[0];
   let closing = false;
@@ -316,7 +326,7 @@ if (['', '#cover', '#wordmark'].includes(location.hash) && !reduced.matches && s
   clip.play().catch(() => {});
 }
 
-if (desktopSnap.matches && ['', '#cover', '#wordmark'].includes(location.hash)) {
+if (desktopSnap.matches && startAtCover) {
   const showArrowHint = () => {
     if (active !== 0 || window.scrollY > 4) return;
     arrowHint.hidden = false;

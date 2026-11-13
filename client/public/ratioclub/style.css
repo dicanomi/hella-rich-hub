@@ -156,3 +156,13 @@ html:has(.opening[open]){overflow:hidden}
 @media(max-width:48rem), (max-width:60rem) and (hover:none) and (pointer:coarse){
   .pager{display:none}
 }
+
+.masthead a{display:block;min-block-size:44px}
+.typography{grid-template-rows:1fr auto;row-gap:clamp(1rem,3vw,2rem)}
+.character-view{color:var(--ink);min-width:0}
+.character-view summary{display:list-item;width:fit-content;min-height:44px;padding-block:.75rem;cursor:pointer}
+.character-samples{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(1.25rem,5vw,4rem);padding-block:1rem}
+.character-samples h3{font-size:1.125rem;margin-bottom:.5rem}
+.character-samples p{font-size:1rem;line-height:1.65;margin-block:.4rem;overflow-wrap:anywhere}
+.character-slab{font-family:var(--slab)}
+@media(max-width:48rem){.character-samples{grid-template-columns:1fr}}
