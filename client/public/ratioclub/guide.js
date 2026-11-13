@@ -100,8 +100,8 @@ mode.hidden = false;
 function updateFormat() {
   format = mode.querySelector(':checked').value;
   for (const swatch of swatches) {
-    const value = swatch.querySelector('[data-hex]');
-    value.textContent = format === 'hex' ? value.dataset.hex : value.dataset.cmyk;
+    swatch.querySelector('.value-hex').setAttribute('aria-hidden', format !== 'hex');
+    swatch.querySelector('.value-cmyk').setAttribute('aria-hidden', format !== 'cmyk');
     swatch.querySelector('button').setAttribute('aria-label', 'Copy ' + swatch.querySelector('h3').textContent + ' ' + format.toUpperCase());
   }
 }
