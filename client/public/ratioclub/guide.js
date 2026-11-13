@@ -8,6 +8,9 @@ const status = document.querySelector('.status');
 const pad = number => String(number).padStart(2, '0');
 let active = 0;
 let scheduled = false;
+let readingOffset = 0;
+let splitScreen = false;
+let resizeTimer;
 const fade = document.querySelector('.screen-fade');
 let navigationFade;
 function updatePosition() {
@@ -17,7 +20,12 @@ function updatePosition() {
     const rect = screen.getBoundingClientRect();
     return rect.top <= midpoint && rect.bottom > midpoint;
   });
-  if (current >= 0) active = current;
+  if (!resizeTimer && current >= 0) active = current;
+  const rect = screens[active].getBoundingClientRect();
+  if (!resizeTimer) {
+    splitScreen = rect.top > 2 || rect.bottom < window.innerHeight - 2;
+    readingOffset = splitScreen ? 0 : Math.max(0, -rect.top);
+  }
   if (active !== 0) arrowHint.hidden = true;
   position.textContent = pad(active + 1) + ' / ' + pad(screens.length);
   arrows[0].setAttribute('aria-disabled', active === 0);
@@ -72,7 +80,7 @@ let settleTimer;
 const hasScrollEnd = 'onscrollend' in document;
 
 function settleScreen() {
-  if (!desktopSnap.matches || reduced.matches || navigationFade || document.querySelector('.opening').open) return;
+  if (resizeTimer || !desktopSnap.matches || reduced.matches || navigationFade || document.querySelector('.opening').open) return;
   const direction = scrollDirection;
   scrollDirection = 0;
   if (!direction) return;
@@ -105,7 +113,35 @@ addEventListener('scroll', () => {
 }, { passive: true });
 if (hasScrollEnd) document.addEventListener('scrollend', settleScreen);
 
-addEventListener('resize', queuePosition);
+addEventListener('resize', () => {
+  const previous = screens[active];
+  const offset = readingOffset;
+  const chooseMajority = splitScreen;
+  clearTimeout(resizeTimer);
+  clearTimeout(settleTimer);
+  resizeTimer = setTimeout(() => {
+    resizeTimer = undefined;
+    if (navigationFade || document.querySelector('.opening').open) return;
+    let target = previous;
+    if (chooseMajority) {
+      let largest = 0;
+      for (const screen of screens) {
+        const rect = screen.getBoundingClientRect();
+        const visible = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
+        if (visible > largest || (visible === largest && screen === previous)) {
+          largest = visible;
+          target = screen;
+        }
+      }
+    }
+    const rect = target.getBoundingClientRect();
+    const inset = chooseMajority ? 0 : Math.min(offset, Math.max(0, rect.height - window.innerHeight));
+    window.scrollBy({ top: rect.top + inset, behavior: 'instant' });
+    lastScrollY = window.scrollY;
+    scrollDirection = 0;
+    updatePosition();
+  }, 110);
+});
 addEventListener('pageshow', queuePosition);
 arrows.forEach(arrow => arrow.addEventListener('click', () => step(Number(arrow.dataset.step))));
 document.querySelectorAll('.hero a[href^="#"]').forEach(link => {
@@ -237,14 +273,32 @@ if (['', '#cover', '#wordmark'].includes(location.hash) && !reduced.matches && s
     cover.focus({ preventScroll: true });
     updatePosition();
   }
-  splash.querySelector('.intro-skip').addEventListener('click', event => {
+  const input = new AbortController();
+  const options = { signal: input.signal };
+  let touchY;
+  splash.addEventListener('wheel', event => {
+    if (!event.deltaY || event.ctrlKey) return;
     event.preventDefault();
     dismissSplash();
-  });
+  }, { ...options, passive: false });
+  splash.addEventListener('touchstart', event => {
+    touchY = event.touches.length === 1 ? event.touches[0].clientY : undefined;
+  }, { ...options, passive: true });
+  splash.addEventListener('touchmove', event => {
+    if (touchY !== undefined && event.touches.length === 1 &&
+        Math.abs(event.touches[0].clientY - touchY) >= 12) dismissSplash();
+  }, { ...options, passive: true });
+  window.addEventListener('keydown', event => {
+    if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey ||
+        !['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) return;
+    event.preventDefault();
+    dismissSplash();
+  }, options);
   splash.addEventListener('cancel', event => {
     event.preventDefault();
     dismissSplash();
-  });
+  }, options);
+  splash.addEventListener('close', () => input.abort(), { once: true });
   splash.showModal();
   clip.src = clip.dataset.src;
   clip.play().catch(() => {});
