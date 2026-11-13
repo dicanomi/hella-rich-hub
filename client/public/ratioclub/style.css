@@ -14,10 +14,11 @@ button[aria-disabled=true]{opacity:.45;cursor:default}
 [hidden]{display:none!important}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 .screen{position:relative;min-block-size:100vh;min-block-size:var(--page);inline-size:100%}
-.hero{background:var(--cover);color:var(--paper);padding:clamp(2rem,13.2svh,7.5rem) var(--edge) 5rem var(--gutter)}
+.hero{display:grid;align-items:center;background:var(--cover);color:var(--paper);padding:5rem var(--edge) 5rem var(--gutter)}
 .masthead img{display:block;width:max(7rem,11vw);height:auto}
-.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:max(1rem,2vw);padding-inline-end:11.2vw;margin-block-start:clamp(2.5rem,20.75svh,11.65rem)}
-h1{font:400 max(2.7rem,5.7vw)/1.14 var(--slab);color:var(--cyan);margin-block-start:-.17em}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:max(1rem,2vw);padding-inline-end:11.2vw}
+.hero-brand{display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;gap:1.5rem;padding-block:.65rem max(.65rem,1.6vw)}
+.hero h1{font:400 max(2.7rem,5.7vw)/1.14 var(--slab);color:var(--cyan)}
 .intro-skip{position:absolute;left:var(--edge);bottom:4.75rem;color:#fff;background:var(--cover);padding:.75rem 1rem;border:0;border-radius:5px;text-decoration:none}
 .screen-fade{position:fixed;inset:0;z-index:10;background:var(--ink);opacity:0;pointer-events:none}
 .hero nav{margin-inline-start:3.2vw;font-size:max(1.25rem,2.22vw)}
@@ -89,8 +90,9 @@ html:has(.opening[open]){overflow:hidden}
   .seen .swatch{animation-name:swatch-in;animation-delay:var(--delay, 0ms)}
 }
 @media(max-width:48rem){
-  .hero{padding-inline:var(--edge)}
-  .hero-grid{grid-template-columns:1fr;padding-inline-end:0;gap:clamp(1.4rem,5svh,3rem);margin-block-start:clamp(2rem,9svh,5rem)}
+  .hero{padding-block-start:clamp(2rem,8svh,4rem);padding-inline:var(--edge)}
+  .hero-brand{gap:clamp(1.1rem,4svh,2rem);padding-block:0}
+  .hero-grid{grid-template-columns:1fr;padding-inline-end:0;gap:clamp(1.4rem,5svh,3rem)}
   .hero nav{margin-inline-start:0}
   .identity,.typography{padding-inline:var(--edge)}
   .swatches{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(3,minmax(10rem,1fr))}
