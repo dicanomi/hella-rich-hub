@@ -488,3 +488,35 @@ document.addEventListener('touchmove', event => {
     event.preventDefault();
   }
 }, { passive: false });
+
+const characters = document.querySelector('.character-view');
+const characterSummary = characters.querySelector('summary');
+const characterSamples = characters.querySelector('.character-samples');
+let characterMotion;
+let charactersExpanded = characters.open;
+
+characterSummary.addEventListener('click', event => {
+  event.preventDefault();
+  charactersExpanded = !charactersExpanded;
+  const from = characters.open ? characterSamples.getBoundingClientRect().height : 0;
+  characterMotion?.cancel();
+  if (reduced.matches) {
+    characters.open = charactersExpanded;
+    return;
+  }
+  characters.open = true;
+  const to = charactersExpanded ? characterSamples.getBoundingClientRect().height : 0;
+  characterMotion = characterSamples.animate([
+    { maxHeight: from + 'px', overflow: 'clip', boxSizing: 'border-box' },
+    { maxHeight: to + 'px', overflow: 'clip', boxSizing: 'border-box' },
+  ], { duration: 240, easing: 'cubic-bezier(.25,.75,.3,1)' });
+  characterMotion.onfinish = () => {
+    characters.open = charactersExpanded;
+    characterMotion = undefined;
+  };
+});
+
+reduced.addEventListener('change', () => {
+  characterMotion?.cancel();
+  characters.open = charactersExpanded;
+});
