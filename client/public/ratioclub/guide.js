@@ -260,6 +260,32 @@ if (desktopSnap.matches && ['', '#cover', '#wordmark'].includes(location.hash)) 
   else showArrowHint();
 }
 
+const wordmark = document.querySelector('.cover-wordmark');
+const logoLetters = [...wordmark.querySelectorAll('.logo-letter')];
+let coverVisible = false;
+let logoMotion = [];
+
+function rippleWordmark() {
+  if (!coverVisible || splash.open || reduced.matches) return;
+  if (logoMotion.some(animation => animation.playState === 'running')) return;
+  const lift = 5 * 370 / wordmark.clientWidth;
+  logoMotion = logoLetters.map((letter, index) => letter.animate([
+    { transform: 'translateY(0)', easing: 'ease-out' },
+    { transform: 'translateY(-' + lift + 'px)', offset: .42, easing: 'ease-in-out' },
+    { transform: 'translateY(0)' },
+  ], { duration: 180, delay: index * 24 }));
+}
+
+new IntersectionObserver(([entry]) => {
+  coverVisible = entry.intersectionRatio >= .5;
+  if (coverVisible) rippleWordmark();
+}, { threshold: .5 }).observe(screens[0]);
+splash.addEventListener('close', rippleWordmark);
+wordmark.addEventListener('pointerenter', event => {
+  if (event.pointerType === 'mouse') rippleWordmark();
+});
+reduced.addEventListener('change', () => logoMotion.forEach(animation => animation.cancel()));
+
 const imagery = document.querySelector('.imagery');
 const swapControl = imagery.querySelector('button');
 let mosaic;
