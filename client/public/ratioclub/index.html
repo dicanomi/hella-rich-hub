@@ -1,11 +1,82 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#000"><title>Ratioclub Round 4</title><link rel="icon" href="/ratioclub/favicon.png"><style>
-html,body{margin:0;width:100%;height:100%;background:#000;color:#fff;font-family:Arial,sans-serif}main{height:100vh;height:100dvh;display:grid;place-items:center}img,video{display:block;width:100%;height:100%;object-fit:contain}nav{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:10px;align-items:center;background:#222b;border-radius:4px;padding:4px 8px;font-size:12px}button{border:0;background:transparent;color:#fff;cursor:pointer;font-size:16px;padding:2px 5px}button:disabled{opacity:.3}#play{position:fixed;inset:45% auto auto 50%;transform:translate(-50%,-50%);background:#222;padding:12px 18px;border-radius:4px}#play[hidden]{display:none}
-</style></head><body><main aria-label="Ratioclub presentation"></main><button id="play" hidden>Play video</button><nav aria-label="Presentation controls"><button id="prev" aria-label="Previous slide">‹</button><span id="count" aria-live="polite"></span><button id="next" aria-label="Next slide">›</button><button id="restart" aria-label="Restart presentation">↻</button><button id="fullscreen" aria-label="Full screen">⛶</button></nav><script>
-const main=document.querySelector('main'),count=document.querySelector('#count'),prev=document.querySelector('#prev'),next=document.querySelector('#next'),play=document.querySelector('#play');
-const assetBase=new URL('assets/',location.origin+location.pathname.replace(/(?:index\.html)?\/?$/,'/'));
-const revisions={"1":"edf6a0b90a18","10":"22ed58403ba6","11":"efbe6ca24876","12":"0a56c71e9911","13":"31e98adc2baf","14":"e1a27ad43053","15":"44059f774a36","16":"eb6175548d4e","17":"1b353b23205c","18":"b9739802acaf","19":"abbaac92c94a","2":"ea424aeec469","20":"c7835cf99703","21":"ddeb4902e32c","22":"e22511caf51a","23":"bf9e20c74922","24":"99a6f18dd0fb","25":"5e9f40a45c0c","26":"a8cd9986e2c0","27":"1dced5eaec61","28":"0d793b80359e","29":"e2bc4ae606dd","3":"55334b1d20fe","30":"e20c0fab9ef9","31":"42785eef187a","32":"1aef3f0fbd1a","33":"9a5f67c95a85","34":"880b63ed9e7c","35":"2b36792dee73","36":"96a668c0b7e2","37":"2972d459d3a6","38":"d313f8844615","39":"b0bd5de5a1a5","4":"ef97a7b7fa14","40":"54a06f749f5f","41":"6462886517a5","5":"0eaec559535a","6":"57f919d7ff7e","7":"6b34a1dd46de","8":"cacf4ab565c7","9":"82cde24dcc64"};
-const videos=new Set([8,15,22,29,36]);let slide=1,active;
-function show(n){if(n<1||n>41)return;if(active instanceof HTMLVideoElement)active.pause();slide=n;const media=document.createElement(videos.has(n)?'video':'img');active=media;play.hidden=true;if(media instanceof HTMLVideoElement){media.muted=true;media.defaultMuted=true;media.autoplay=true;media.loop=true;media.playsInline=true;media.preload='auto';media.setAttribute('aria-label',`Slide ${n} animated logo`);}else{media.alt=`Ratioclub Round 4, slide ${n}`;}media.src=new URL(`slide-${n}.${videos.has(n)?'mp4':'png'}`,assetBase).href;media.src+='?v='+revisions[n];main.replaceChildren(media);count.textContent=`${n} / 41`;prev.disabled=n===1;next.disabled=n===41;if(media instanceof HTMLVideoElement)media.play().catch(()=>{if(active===media)play.hidden=false;});for(const ahead of [n+1,n-1]){if(ahead>0&&ahead<=41&&!videos.has(ahead)){const image=new Image();image.src=new URL(`slide-${ahead}.png`,assetBase).href+'?v='+revisions[ahead];}}}
-prev.onclick=()=>show(slide-1);next.onclick=()=>show(slide+1);document.querySelector('#restart').onclick=()=>show(1);play.onclick=()=>{if(active instanceof HTMLVideoElement)active.play().then(()=>play.hidden=true).catch(()=>{});};document.querySelector('#fullscreen').onclick=()=>{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen?.();};document.addEventListener('keydown',e=>{if(e.altKey||e.metaKey||e.ctrlKey)return;const moves={ArrowRight:1,ArrowDown:1,PageDown:1,' ':1,ArrowLeft:-1,ArrowUp:-1,PageUp:-1};if(e.key in moves){e.preventDefault();show(slide+moves[e.key]);}else if(e.key==='Home'){e.preventDefault();show(1);}else if(e.key==='End'){e.preventDefault();show(41);}});show(1);
-</script></body></html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; media-src 'self'; base-uri 'none'; form-action 'none'">
+<title>Ratioclub — Brand Style Guide</title>
+<link rel="stylesheet" href="style.css">
+<script src="guide.js" defer></script>
+</head>
+<body>
+<main>
+<section class="screen hero" id="cover" aria-labelledby="cover-title" tabindex="-1">
+  <header class="masthead">
+    <a href="#cover" aria-label="Ratioclub, cover"><img src="assets/logos/ratioclub-white.svg" alt="" width="370" height="66"></a>
+  </header>
+  <div class="hero-grid">
+    <h1 id="cover-title">Brand<br>Style Guide</h1>
+    <nav id="contents" aria-label="Chapters" tabindex="-1">
+      <a href="#identity"><span>01</span>Identity</a>
+      <a href="#color"><span>02</span>Color</a>
+      <a href="#typography"><span>03</span>Typography</a>
+      <a href="#imagery"><span>04</span>Imagery</a>
+    </nav>
+  </div>
+</section>
+<section class="screen identity" id="identity" aria-labelledby="identity-title" tabindex="-1">
+  <h2 id="identity-title" class="sr">Identity</h2>
+  <div class="identity-grid">
+    <img class="clearspace" data-reveal src="assets/logos/logo-lockup.svg" width="480" height="175" alt="Ratioclub wordmark with clear space and construction guides.">
+    <ul class="downloads" data-reveal>
+      <li><span>Ink</span><div><a href="assets/logos/ratioclub-ink.svg" download aria-label="Download Ink logo as SVG">SVG</a><span aria-hidden="true"> / </span><a href="assets/logos/ratioclub-ink.png" download aria-label="Download Ink logo as PNG">PNG</a> <span class="down" aria-hidden="true">↓</span></div></li>
+      <li><span>White</span><div><a href="assets/logos/ratioclub-white.svg" download aria-label="Download White logo as SVG">SVG</a><span aria-hidden="true"> / </span><a href="assets/logos/ratioclub-white.png" download aria-label="Download White logo as PNG">PNG</a> <span class="down" aria-hidden="true">↓</span></div></li>
+      <li><span>Cyan</span><div><a href="assets/logos/ratioclub-cyan.svg" download aria-label="Download Cyan logo as SVG">SVG</a><span aria-hidden="true"> / </span><a href="assets/logos/ratioclub-cyan.png" download aria-label="Download Cyan logo as PNG">PNG</a> <span class="down" aria-hidden="true">↓</span></div></li>
+    </ul>
+  </div>
+</section>
+<section class="screen palette" id="color" aria-labelledby="color-title" tabindex="-1">
+  <h2 id="color-title" class="sr">Color</h2>
+  <fieldset class="color-mode" hidden><legend class="sr">Color format</legend><label><input type="radio" name="format" value="hex" checked><span>HEX</span></label><label><input type="radio" name="format" value="cmyk"><span>CMYK</span></label></fieldset>
+  <ul class="swatches">
+    <li class="swatch cyan" data-reveal><div><h3>Cyan</h3><p data-hex="#4E94A7" data-cmyk="65.1 / 21.2 / 22.4 / 0.4">#4E94A7<noscript> · CMYK 65.1 / 21.2 / 22.4 / 0.4</noscript></p><button class="copy" type="button" hidden aria-label="Copy Cyan HEX"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><rect x="2" y="8" width="14" height="14" rx="3"/><rect x="8" y="2" width="14" height="14" rx="3"/></svg></button></div></li>
+    <li class="swatch burnt" data-reveal><div><h3>Burnt</h3><p data-hex="#A74E4E" data-cmyk="23.1 / 76.9 / 59.6 / 8.2">#A74E4E<noscript> · CMYK 23.1 / 76.9 / 59.6 / 8.2</noscript></p><button class="copy" type="button" hidden aria-label="Copy Burnt HEX"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><rect x="2" y="8" width="14" height="14" rx="3"/><rect x="8" y="2" width="14" height="14" rx="3"/></svg></button></div></li>
+    <li class="swatch silver" data-reveal><div><h3>Silver</h3><p data-hex="#F7F7F7" data-cmyk="0 / 0 / 0 / 3.5">#F7F7F7<noscript> · CMYK 0 / 0 / 0 / 3.5</noscript></p><button class="copy" type="button" hidden aria-label="Copy Silver HEX"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><rect x="2" y="8" width="14" height="14" rx="3"/><rect x="8" y="2" width="14" height="14" rx="3"/></svg></button></div></li>
+    <li class="swatch ink" data-reveal><div><h3>Ink</h3><p data-hex="#000604" data-cmyk="60 / 40 / 45 / 100">#000604<noscript> · CMYK 60 / 40 / 45 / 100</noscript></p><button class="copy" type="button" hidden aria-label="Copy Ink HEX"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><rect x="2" y="8" width="14" height="14" rx="3"/><rect x="8" y="2" width="14" height="14" rx="3"/></svg></button></div></li>
+    <li class="swatch graphite" data-reveal><div><h3>Graphite</h3><p data-hex="#171F23" data-cmyk="90.2 / 73.3 / 68.2 / 59.2">#171F23<noscript> · CMYK 90.2 / 73.3 / 68.2 / 59.2</noscript></p><button class="copy" type="button" hidden aria-label="Copy Graphite HEX"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><rect x="2" y="8" width="14" height="14" rx="3"/><rect x="8" y="2" width="14" height="14" rx="3"/></svg></button></div></li>
+    <li class="swatch olive" data-reveal><div><h3>Olive Gray</h3><p data-hex="#1C373E" data-cmyk="92.5 / 63.5 / 58.8 / 38">#1C373E<noscript> · CMYK 92.5 / 63.5 / 58.8 / 38</noscript></p><button class="copy" type="button" hidden aria-label="Copy Olive Gray HEX"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><rect x="2" y="8" width="14" height="14" rx="3"/><rect x="8" y="2" width="14" height="14" rx="3"/></svg></button></div></li>
+  </ul>
+</section>
+<section class="screen typography" id="typography" aria-labelledby="type-title" tabindex="-1">
+  <h2 id="type-title" class="sr">Typography</h2>
+  <div class="type-grid">
+    <figure data-reveal><div class="specimen slab" aria-hidden="true">Aa</div><figcaption>Roboto Slab<br>Regular, Medium, Bold</figcaption></figure>
+    <figure data-reveal><div class="specimen" aria-hidden="true">Aa</div><figcaption>Roboto<br>Light, Regular, Medium, Bold</figcaption></figure>
+  </div>
+</section>
+<section class="screen media imagery" id="imagery" aria-label="Imagery: Photography" tabindex="-1">
+  <img src="assets/media/imagery.png" width="1440" height="890" loading="lazy" alt="Sixteen cyan-toned studies of spirals, rings and repeating patterns in nature.">
+</section>
+<section class="screen media shapes" id="shapes" aria-label="Imagery: Shape animation" tabindex="-1">
+  <video src="assets/media/shapes.mp4" poster="assets/media/shapes.png" width="1440" height="890" preload="none" loop muted playsinline aria-label="Geometric shape animation"></video>
+  <button type="button" class="play" aria-label="Play shape animation" data-label="shape animation">Play</button>
+</section>
+<section class="screen media pattern" id="pattern" aria-label="Imagery: Pattern" tabindex="-1">
+  <img src="assets/media/pattern.svg" width="1440" height="890" loading="lazy" alt="Cyan geometric linework arranged in a repeating pattern.">
+</section>
+</main>
+<nav class="pager" aria-label="Screen navigation" hidden>
+  <button type="button" data-step="-1" aria-label="Previous screen" aria-keyshortcuts="ArrowLeft"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20 12H4m0 0 7-7m-7 7 7 7"/></svg></button>
+  <span id="position" aria-hidden="true">01 / 07</span>
+  <button type="button" data-step="1" aria-label="Next screen" aria-keyshortcuts="ArrowRight"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12h16m0 0-7-7m7 7-7 7"/></svg></button>
+</nav>
+<dialog class="media opening" aria-label="Opening wordmark animation">
+  <video data-src="assets/media/wordmark.mp4" width="1440" height="890" preload="none" loop muted playsinline aria-label="Ratioclub wordmark animation"></video>
+  <a class="intro-skip" href="#cover">Skip intro</a>
+</dialog>
+<div class="screen-fade" aria-hidden="true"></div>
+<p class="status" role="status"></p>
+<noscript><p class="no-script">Video playback controls require JavaScript. <a href="assets/media/shapes.mp4">Open shape animation</a> · <a href="assets/media/wordmark.mp4">Open wordmark animation</a></p></noscript>
+</body>
+</html>
