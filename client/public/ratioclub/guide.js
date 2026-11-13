@@ -74,13 +74,16 @@ pager.hidden = false;
 updatePosition();
 addEventListener('scroll', queuePosition, { passive: true });
 const desktopSnap = matchMedia('(min-width: 52rem) and (min-height: 40rem) and (hover: hover) and (pointer: fine)');
+// An attached trackpad should not enable snapping on a touchscreen tablet.
+const touchPointer = matchMedia('(any-pointer: coarse)');
+const canSnap = () => desktopSnap.matches && !touchPointer.matches && !reduced.matches;
 let lastScrollY = window.scrollY;
 let scrollDirection = 0;
 let settleTimer;
 const hasScrollEnd = 'onscrollend' in document;
 
 function settleScreen() {
-  if (resizeTimer || !desktopSnap.matches || reduced.matches || navigationFade || document.querySelector('.opening').open) return;
+  if (resizeTimer || !canSnap() || navigationFade || document.querySelector('.opening').open) return;
   const direction = scrollDirection;
   scrollDirection = 0;
   if (!direction) return;
@@ -106,7 +109,7 @@ addEventListener('scroll', () => {
   const y = window.scrollY;
   if (y !== lastScrollY) scrollDirection = Math.sign(y - lastScrollY);
   lastScrollY = y;
-  if (!hasScrollEnd && desktopSnap.matches && !reduced.matches) {
+  if (!hasScrollEnd && canSnap()) {
     clearTimeout(settleTimer);
     settleTimer = setTimeout(settleScreen, 180);
   }
@@ -119,9 +122,18 @@ addEventListener('resize', () => {
   const chooseMajority = splitScreen;
   clearTimeout(resizeTimer);
   clearTimeout(settleTimer);
+  if (!canSnap()) {
+    resizeTimer = undefined;
+    scrollDirection = 0;
+    queuePosition();
+    return;
+  }
   resizeTimer = setTimeout(() => {
     resizeTimer = undefined;
-    if (navigationFade || document.querySelector('.opening').open) return;
+    if (!canSnap() || navigationFade || document.querySelector('.opening').open) {
+      queuePosition();
+      return;
+    }
     let target = previous;
     if (chooseMajority) {
       let largest = 0;

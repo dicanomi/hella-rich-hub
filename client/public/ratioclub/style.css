@@ -98,7 +98,6 @@ html:has(.opening[open]){overflow:hidden}
   .swatch{padding:1rem 1rem 1.1rem}
   .swatch>div{writing-mode:horizontal-tb;transform:none;gap:.4rem}
   .copy{margin-inline:-10px;margin-block:-4px}
-  .palette{padding-block-end:3.5rem;background:var(--cover)}
   .color-mode{top:.55rem}
 }
 @media(max-width:34rem){.identity-grid{grid-template-columns:1fr;gap:2.5rem}.downloads li{grid-template-columns:minmax(6rem,1fr) auto}.type-grid{gap:1rem}}
@@ -152,4 +151,8 @@ html:has(.opening[open]){overflow:hidden}
 @media(prefers-reduced-motion:no-preference){
   .arrow-hint{animation:arrow-hint 3.6s ease both}
   @keyframes arrow-hint{0%,100%{opacity:0} 7%,91%{opacity:1}}
+}
+
+@media(max-width:48rem), (max-width:60rem) and (hover:none) and (pointer:coarse){
+  .pager{display:none}
 }
