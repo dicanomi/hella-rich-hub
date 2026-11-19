@@ -9,4 +9,6 @@
 /hella.synth/   /index.html   200
 /ratioclub      /ratioclub/index.html   200
 /ratioclub/     /ratioclub/index.html   200
+/ratioclub/website    /ratioclub/website/    301
+/ratioclub/website/   /ratioclub/website/index.html   200
 /*    /index.html   200
