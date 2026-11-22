@@ -8,5 +8,7 @@ export async function onRequest(context) {
  const target=new URL(prefix+'404',url.origin);
  const response=await context.env.ASSETS.fetch(target);
  const headers=new Headers(response.headers);headers.set('X-Robots-Tag','noindex, nofollow');
+ headers.set('Cache-Control','public, max-age=0, must-revalidate, no-transform');
+ headers.set('Content-Security-Policy',"script-src 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; frame-src 'none'");
  return new Response(response.body,{status:404,headers});
 }
