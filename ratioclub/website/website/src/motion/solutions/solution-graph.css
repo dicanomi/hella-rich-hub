@@ -1,0 +1,20 @@
+.solution-graph-motion { width: 100%; contain: paint; }
+.solution-graph-motion svg { display: block; width: 100%; height: auto; }
+.solution-travel-dot { opacity: 0; }
+.solution-graph-motion[data-dot-state="forward"] .solution-travel-dot,
+.solution-graph-motion[data-dot-state="backward"] .solution-travel-dot { opacity: 1; }
+.graph-hover-base, .graph-hover-lift { transition: transform 650ms cubic-bezier(.22,1,.36,1); }
+.graph-hover-base path { transition: opacity 450ms ease-out; }
+.solution-graph-motion { --mesh-lift: -12px; }
+.solution-graph-motion[data-variant="inference"] { --mesh-lift: -6px; }
+.solution-graph-motion[data-variant="operations"] { --mesh-lift: -10px; }
+.solution-graph-motion[data-hover="true"] .graph-hover-base { transform: translateY(4px); transition-duration: 360ms; }
+.solution-graph-motion[data-hover="true"] .graph-hover-base path { opacity: .45; }
+.solution-graph-motion[data-hover="true"] .graph-hover-lift { transform: translateY(var(--mesh-lift)); transition-duration: 360ms; }
+@media (prefers-reduced-motion: reduce) {
+  .solution-signal { animation: none; stroke: #4e94a7; }
+  .solution-marker { animation: none; fill: #4e94a7; }
+  .solution-travel-dot { display: none; }
+  .graph-hover-base, .graph-hover-lift { transition: none; transform: none !important; }
+
+}

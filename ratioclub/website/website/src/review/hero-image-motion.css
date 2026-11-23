@@ -1,0 +1,11 @@
+.hero-image-motion { --hero-motion-state:paused; }
+.hero-image-motion--running { --hero-motion-state:running; }
+.hero-image-plane { position:absolute; inset:0; display:block; transform-origin:66% 32%; animation:hero-image-drift 14s ease-in-out infinite alternate; animation-play-state:var(--hero-motion-state); }
+.hero-image-plane img { display:block; width:100%; height:100%; object-fit:cover; }
+.hero-image-light { position:absolute; inset:-8%; pointer-events:none; background:radial-gradient(ellipse at 66% 32%,rgb(127 169 181 / .12),transparent 58%),linear-gradient(115deg,transparent 30%,rgb(111 158 171 / .08) 52%,transparent 73%); animation:hero-image-light 11s ease-in-out infinite alternate; animation-play-state:var(--hero-motion-state); }
+@keyframes hero-image-drift { from{transform:translate3d(-.4%,.3%,0) scale(1.06) rotate(-.5deg)} to{transform:translate3d(.4%,-.3%,0) scale(1.10) rotate(.5deg)} }
+@keyframes hero-image-light { from{transform:translate3d(-3%,1%,0);opacity:.2} to{transform:translate3d(3%,-1%,0);opacity:.7} }
+.hero-image-review-notes { padding:var(--page-gutter); color:var(--silver); background:var(--graphite); }
+.hero-image-review-notes h2 { font:500 clamp(24px,3vw,40px)/1.25 "Roboto Slab",serif; margin-bottom:24px; }
+.hero-image-review-notes p { max-width:65ch; line-height:1.6; margin-bottom:16px; }
+.hero-image-review-notes a { text-decoration:underline; text-underline-offset:4px; }

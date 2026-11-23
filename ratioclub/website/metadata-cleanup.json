@@ -1,0 +1,12 @@
+{
+  "method": "Metadata-only container cleanup; encoded pixels/media streams and visual geometry retained.",
+  "files": [
+    "website/public/cms-media/1.mp4",
+    "website/src/assets/hero-review-1mb.mp4",
+    "website/src/assets/privacy-options-muted.svg",
+    "website/src/assets/hero-review-updated.mp4",
+    "website/src/assets/hero-spiral-desktop.mp4",
+    "website/src/assets/hero-spiral-mobile.mp4",
+    "website/src/assets/review/advantage-motion-reference.mp4"
+  ]
+}

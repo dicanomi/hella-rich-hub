@@ -1,0 +1,23 @@
+/* Figma 600:10490 / 600:10888: edge-to-edge Graphite, original content measure. */
+.fullscreen-dialog:is(.contact-dialog,.privacy-dialog) {
+ position:fixed; inset:0; margin:0; width:100%; height:100%; height:100dvh;
+ max-width:none; max-height:none; padding:0; border:0; border-radius:0;
+ overflow:auto; overscroll-behavior:contain; background:var(--graphite);
+}
+.fullscreen-dialog-stage {
+ min-height:100%; display:flex;
+ padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px);
+}
+.fullscreen-dialog-container {
+ width:100%; max-width:569.529px; min-width:0; margin:auto; padding:40px 60px 60px;
+}
+#root .contact-dialog .contact-close-action {
+ margin-top:16px;
+ min-height:52px; padding:14px; border:0; background:var(--cyan); color:var(--graphite);
+ font:600 16px/24px 'Roboto Mono',monospace; letter-spacing:0;
+}
+#root .contact-dialog .contact-close-action:is(:hover,:focus-visible) { background:var(--nav-hover); }
+body:has(.fullscreen-dialog[open]) { overflow:hidden; }
+@media(max-width:569px) {
+ .fullscreen-dialog-container { padding:32px 24px; }
+}

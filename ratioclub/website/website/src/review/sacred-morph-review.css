@@ -1,0 +1,6 @@
+.sacred-morph-review { background:var(--silver); padding:40px var(--page-gutter); }
+.sacred-density-section { min-height:130vh; position:relative; }
+#root .sacred-density-section h1 { font:400 14px/1.5 'Roboto Mono',monospace; text-transform:uppercase; letter-spacing:.12em; color:var(--graphite); max-width:900px; margin:0 auto 24px; }
+.sacred-morph-row { position:sticky; top:calc(50vh - min(150px,15vw)); display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); width:100%; max-width:900px; margin:auto; }
+.sacred-morph-object { min-width:0; touch-action:pan-y; }
+.sacred-morph-object svg { display:block; width:100%; height:auto; overflow:visible; }

@@ -1,0 +1,28 @@
+.subpage-header { padding-inline:var(--frame-gutter); background:var(--silver); color:var(--silver); }
+.subpage-header .site-header { background:var(--graphite); }
+.subpage-hero { padding-inline:var(--frame-gutter); background:var(--silver); }
+.subpage-hero-surface {
+  position:relative; display:flex; align-items:flex-end; gap:var(--page-gutter);
+  min-block-size:clamp(12.25rem, calc(6.601rem + 21.8324vw), 38rem);
+  padding:var(--section-padding-top,clamp(4.5rem,10vw,10rem)) calc(var(--page-gutter) - var(--frame-gutter)) var(--section-padding-bottom,clamp(2rem,calc(.9156rem + 4.191vw),8rem));
+  background:var(--cyan); border-radius:0 0 var(--frame-gutter) var(--frame-gutter);
+}
+.subpage-hero h1 { font:700 clamp(2.5rem,calc(1.6425rem + 3.3138vw),7rem)/1.1 "Roboto Slab",serif; letter-spacing:-1px; margin:0; }
+.subpage-hero-artwork { position:absolute; width:clamp(7rem,16.6667vw,25rem); aspect-ratio:1; right:calc(var(--page-gutter) - var(--frame-gutter)); top:50%; transform:translateY(-50%); display:grid; align-items:center; justify-items:end; }
+.subpage-hero-artwork>.svg-artwork { width:var(--hero-artwork-width,100%); }
+:is(.solutions-page,.about-page) .subpage-hero-surface { background:var(--graphite); color:var(--silver); }
+@media(max-width:600px) {
+  .subpage-hero-artwork { display:none; }
+  .subpage-hero-surface { padding-top:4.5rem; padding-bottom:2rem; }
+}
+
+:is(.solutions-page,.about-page) .subpage-hero h1 { color:var(--cyan); }
+
+/* Shorten only the Solutions/About hero area below navigation by one quarter. */
+:is(.solutions-page,.about-page) .subpage-hero-surface {
+ min-block-size:clamp(9.1875rem,calc(4.95075rem + 16.3743vw),28.5rem);
+ padding-top:var(--section-padding-top,clamp(3.375rem,7.5vw,7.5rem));
+}
+@media(max-width:600px){
+ :is(.solutions-page,.about-page) .subpage-hero-surface { padding-top:3.375rem; }
+}

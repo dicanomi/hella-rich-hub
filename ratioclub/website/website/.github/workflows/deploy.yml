@@ -1,0 +1,56 @@
+name: Deploy website
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      AWS_REGION: ${{ vars.AWS_REGION }}
+      ROLE_ARN: ${{ vars.AWS_ROLE_ARN }}
+      BUCKET: ${{ vars.AWS_S3_BUCKET }}
+      DISTRIBUTION_ID: ${{ vars.AWS_DISTRIBUTION_ID }}
+      BUILD_DIR: dist
+      VITE_SITE_URL: https://www.ratioclub.com
+      VITE_BASE_PATH: /
+      VITE_ALLOW_INDEXING: ${{ vars.VITE_ALLOW_INDEXING || 'false' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+      - name: Check target configuration
+        run: |
+          test -n "$AWS_REGION"
+          test -n "$ROLE_ARN"
+          test -n "$BUCKET"
+          test -n "$DISTRIBUTION_ID"
+      - uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
+        with:
+          role-to-assume: ${{ env.ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Upload hashed assets first (retain prior release chunks)
+        run: aws s3 sync "$BUILD_DIR/assets/" "s3://$BUCKET/assets/" --cache-control "public,max-age=31536000,immutable"
+      - name: Upload mutable files with revalidation
+        run: |
+          aws s3 cp "$BUILD_DIR/" "s3://$BUCKET/" --recursive             --exclude 'assets/*' --exclude '.vite/*' --exclude index.html             --exclude _headers --exclude _redirects --cache-control "no-cache"
+      - name: Upload index.html last
+        run: aws s3 cp "$BUILD_DIR/index.html" "s3://$BUCKET/index.html" --cache-control "no-cache"
+      - name: Clear CloudFront cache
+        run: aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION_ID" --paths '/*'

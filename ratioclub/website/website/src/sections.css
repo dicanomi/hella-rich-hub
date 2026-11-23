@@ -1,0 +1,796 @@
+:root {
+  --heading-size: clamp(2rem, calc(1.59649rem + 1.55945vw), 4rem);
+  --heading-leading: clamp(2.3rem, calc(1.71491rem + 2.26121vw), 5rem);
+  --heading-weight: 900;
+  --lead-size: clamp(1rem, calc(0.79825rem + 0.77973vw), 2rem);
+  --section-space: clamp(2.5rem, calc(-0.27412rem + 10.72125vw), 12rem);
+  --body-leading: 1.5;
+  --body-24-letter-spacing: -0.5px;
+}
+figure,
+blockquote {
+  margin: 0;
+}
+h3 {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.content-section {
+  padding: var(--section-padding-top, 0px) var(--page-gutter)
+    var(--section-padding-bottom, var(--section-space));
+}
+.section-heading {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(1.5rem, calc(0.64254rem + 3.31384vw), 4rem);
+}
+.eyebrow {
+  align-self: flex-start;
+  text-align: left;
+  display: inline-block;
+  max-width: 100%;
+  padding: 0.625rem 1.25rem;
+  color: var(--silver);
+  background: var(--graphite);
+  font:
+    600 clamp(0.6875rem, calc(0.61184rem + 0.2924vw), 1rem)/1.4286 "Roboto Mono",
+    monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-box-trim: trim-both;
+  text-box-edge: cap alphabetic;
+}
+.section-heading h2 {
+  font:
+    var(--heading-weight) var(--heading-size)/var(--heading-leading)
+      "Roboto Slab",
+    serif;
+  letter-spacing: clamp(-1px, calc(0.4035px - 0.09746vw), 0px);
+  max-width: 41.25rem;
+}
+.svg-artwork {
+  position: relative;
+  width: 100%;
+  container-type: inline-size;
+}
+.svg-artwork img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  max-width: none;
+  transform: translate(-50%, -50%) scale(calc(100cqw / var(--artwork-width)));
+}
+.forward-deployed {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: clamp(1.5rem, calc(0.08772rem + 5.45809vw), 7rem);
+  align-items: start;
+}
+.forward-deployed .section-heading {
+  grid-column: 2;
+  grid-row: 1;
+  padding-top: 0;
+  gap: clamp(1.5rem, calc(0.5921rem + 3.5088vw), 5rem);
+}
+.forward-deployed h2 {
+  max-width: 29.05rem;
+}
+.advantage-diagram {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+}
+.advantage-diagram figcaption {
+  display: block;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.diagram-mobile {
+  display: none;
+}
+.advantage-points {
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, calc(0.5921rem + 3.5088vw), 5rem);
+  padding-top: clamp(1.5rem, calc(0.5921rem + 3.5088vw), 5rem);
+  padding-bottom: clamp(0px, calc(-30.263px + 7.31vw), 100px);
+}
+.advantage-points p {
+  letter-spacing: var(--body-24-letter-spacing);
+  font-size: var(--lead-size);
+  line-height: 1.4;
+  max-width: 100%;
+}
+.advantage-points p:nth-child(1),
+.advantage-points p:nth-child(3) {
+  width: 81%;
+}
+.advantage-points strong {
+  font-family: "Roboto Slab", serif;
+}
+.advantage-points p:nth-child(-n + 2) strong {
+  display: block;
+}
+.quote-section {
+  padding: var(--section-padding-top, 0px) var(--frame-gutter)
+    var(--section-padding-bottom, 0px);
+}
+.quote-section figure {
+  padding: clamp(3rem, calc(1.5625rem + 5.55556vw), 9rem)
+    clamp(1.5rem, calc(-0.54276rem + 7.89474vw), 9rem);
+  background: var(--cyan);
+  border-radius: var(--frame-gutter) var(--frame-gutter) 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, calc(1.19737rem + 1.16959vw), 3rem);
+  min-height: clamp(26.055rem, calc(25.573rem + 1.86vw), 30rem);
+}
+.quote-section blockquote {
+  max-width: 44.79rem;
+  font:
+    400 clamp(1.75rem, calc(1.64912rem + 0.38986vw), 2.5rem)/1.4 "Roboto Slab",
+    serif;
+  letter-spacing: clamp(-1px, calc(0.4035px - 0.09746vw), 0px);
+  text-box-trim: trim-both;
+  text-box-edge: cap alphabetic;
+}
+.quote-section figcaption {
+  font-size: clamp(1.125rem, calc(0.97368rem + 0.5848vw), 1.75rem);
+  line-height: 1.3333;
+  font-weight: 500;
+}
+.quote-section--rounded figure {
+  border-radius: var(--frame-gutter);
+}
+.quote-desktop-text { display:none; }
+@media(min-width:601px) {
+ .quote-section figure { padding:105px 43px 105px 105px; gap:36px; border-radius:15px 15px 0 0; min-height:0;
+ }
+ .quote-section--rounded figure { border-radius:15px; }
+ .quote-section blockquote { display:flex; flex-direction:column; align-items:flex-start; gap:36px; max-width:716.586px; }
+ .quote-section blockquote::before { content:'"'; display:block; height:43.042px; font:400 218px/1.4 'Roboto Slab',serif; letter-spacing:-1px; text-box:trim-both cap alphabetic; }
+ .quote-section .quote-mobile-text { display:none; }
+ .quote-section .quote-desktop-text { display:block; }
+ .quote-section figcaption { font:500 24px/32px Roboto,sans-serif; letter-spacing:0; }
+}
+.media-divider {
+  margin-inline: var(--frame-gutter);
+  overflow: hidden;
+  border-radius: 0 0 var(--frame-gutter) var(--frame-gutter);
+}
+.media-divider img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.scale-speed-efficiency {
+  --section-padding-top: clamp(2.5rem, calc(0.35636rem + 8.2846vw), 10rem);
+  --section-padding-bottom: clamp(2.5rem, calc(0.35636rem + 8.2846vw), 10rem);
+}
+.scale-speed-efficiency .section-heading {
+  margin-bottom: 0.625rem;
+  gap: clamp(1.5rem, calc(0.49123rem + 3.89864vw), 5rem);
+}
+.scale-speed-efficiency .section-heading h2 {
+  text-box-trim: trim-both;
+  text-box-edge: cap alphabetic;
+}
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: auto auto auto;
+  gap: clamp(1.5rem, calc(1.09649rem + 1.55945vw), 3rem);
+  row-gap: 0;
+}
+.feature-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: subgrid;
+  grid-row: span 3;
+  row-gap: 0;
+  min-width: 0;
+  border-bottom: 1px solid #171f234d;
+  padding-bottom: 3.25rem;
+}
+.feature-artwork-slot > div {
+  max-width: 100%;
+}
+.feature-artwork-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: clamp(8rem, 19.40972vw, 23rem);
+}
+.feature-card h3 {
+  font:
+    400
+      clamp(1.125rem, calc(0.5rem + 1.66667vw), 2.5rem)/clamp(
+        1.5rem,
+        calc(2.02632rem - 0.5848vw),
+        1.875rem
+      )
+      "Roboto Slab",
+    serif;
+  margin-bottom: clamp(1rem, calc(0.647rem + 1.3645vw), 2rem);
+}
+.feature-card p {
+  font-size: clamp(0.875rem, 1.11111vw, 1.125rem);
+  line-height: 1.5;
+}
+.core-solutions .section-heading {
+  gap: clamp(1.5rem, calc(1.07127rem + 1.65692vw), 3rem);
+  margin-bottom: clamp(1.5rem, calc(1.07127rem + 1.65692vw), 3rem);
+}
+.solutions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.5rem, calc(1.07127rem + 1.65692vw), 3rem);
+}
+.solution-card {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1.25rem;
+  border-left: 1px solid #171f234d;
+  padding-left: clamp(1rem, calc(0.64693rem + 1.36452vw), 2.5rem);
+}
+.solution-card h3 {
+  font:
+    600 clamp(1.125rem, calc(0.32143rem + 2.14286vw), 3rem)/1.38889
+      "Roboto Slab",
+    serif;
+  letter-spacing: clamp(-2px, calc(0.807px - 0.19493vw), 0px);
+  min-height: 7.6rem;
+}
+.solution-artwork-slot {
+  display: grid;
+  align-items: center;
+  min-height: clamp(7rem, 20.97222vw, 24rem);
+}
+.solution-card figure {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.solution-card figcaption {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.solution-card > p {
+  font-size: var(--lead-size);
+  line-height: 1.4;
+  letter-spacing: var(--body-24-letter-spacing);
+}
+.conversion-banner {
+  padding: var(--section-padding-top, 0px) var(--frame-gutter)
+    var(--section-padding-bottom, 0px);
+}
+.conversion-surface {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding: clamp(2.5rem, calc(1.61732rem + 3.41131vw), 7rem)
+    calc(var(--page-gutter) - var(--frame-gutter));
+  border-radius: var(--frame-gutter) var(--frame-gutter) 0 0;
+  background: var(--cyan);
+}
+.conversion-copy {
+  flex: 0 1 60%;
+  min-width: min(100%, 28rem);
+}
+.conversion-copy h2 {
+  font:
+    500 clamp(2rem, calc(1.59649rem + 1.55945vw), 4rem)/1.3 "Roboto Slab",
+    serif;
+  max-width: 42rem;
+  letter-spacing: clamp(-1px, calc(0.4035px - 0.09746vw), 0px);
+  margin-bottom: clamp(1.25rem, calc(0.99781rem + 0.97466vw), 2.5rem);
+}
+.conversion-copy p {
+  letter-spacing: var(--body-24-letter-spacing);
+  font-size: var(--lead-size);
+  line-height: 1.4;
+}
+.conversion-action {
+  text-transform: uppercase;
+  max-width: 100%;
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+  padding: 1.25rem;
+  min-height: 44px;
+  background: var(--graphite);
+  color: var(--cyan);
+  font:
+    600 1rem/1.5 "Roboto Mono",
+    monospace;
+  letter-spacing: 3px;
+}
+.conversion-action:hover {
+  background: #1c373e;
+}
+
+.site-footer {
+  position: relative;
+  margin-inline: var(--frame-gutter);
+  overflow: hidden;
+  padding-top: var(
+    --section-padding-top,
+    clamp(2.5rem, calc(1.61732rem + 3.41131vw), 7rem)
+  );
+  padding-bottom: var(--section-padding-bottom, 0px);
+  background: var(--graphite);
+  color: var(--cyan);
+}
+.footer-content {
+  padding-inline: calc(var(--page-gutter) - var(--frame-gutter));
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  min-height: 15.5rem;
+  padding-bottom: clamp(2rem, 3.33333vw, 3rem);
+}
+.footer-content ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5.7px;
+  margin: 0;
+  padding: 0;
+}
+.footer-content .navigation-button {
+  width: fit-content;
+}
+.copyright {
+  color:var(--steel-tint);
+  align-self:flex-start;
+  padding-block:2px;
+  text-box-trim:none;
+  overflow:visible;
+  font:
+    400 clamp(0.75rem, calc(0.72478rem + 0.09747vw), 1rem)/1.5 Roboto,
+    sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+/* The supplied SVG paths stay sharp; these CSS passes reproduce progressive blur. */
+.footer-wordmark {
+  --wordmark-crop: clamp(6px, 1.95vw, 36px);
+  container-type: inline-size;
+  isolation: isolate;
+  position: relative;
+  display: block;
+  width: calc(100% - 2 * (var(--page-gutter) - var(--frame-gutter)));
+  aspect-ratio: 1324.65 / 234.666;
+  margin-inline: calc(var(--page-gutter) - var(--frame-gutter));
+  margin-bottom: calc(-1 * var(--wordmark-crop));
+}
+.wordmark-pass,
+.wordmark-blur,
+.wordmark-shape {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.wordmark-shape {
+  background: #1e292e;
+  mask-image: var(--wordmark-mask);
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+}
+.wordmark-pass {
+  mix-blend-mode: plus-lighter;
+}
+.wordmark-blur {
+  filter: var(--wordmark-blur, none);
+}
+/* Placement-specific space retained from the approved card instances. */
+.core-solutions .eyebrow {
+  margin-bottom: clamp(0px, calc(-8.8772px + 2.14425vw), 22px);
+}
+.core-solutions .section-heading h2 {
+  min-height: 4.0625rem;
+}
+.solution-card:nth-child(1) h3 {
+  min-height: clamp(4.5rem, 8.43542vw, 10rem);
+}
+.solution-card:nth-child(2) h3 {
+  min-height: clamp(4.5rem, 9.31319vw, 10rem);
+}
+.solution-card:nth-child(3) h3 {
+  min-height: clamp(4.5rem, 7.64653vw, 10rem);
+}
+.solution-card:last-child {
+  padding-bottom: 2.275rem;
+}
+@media (max-width: 600px) {
+  .eyebrow {
+    font-family: Roboto, sans-serif;
+    letter-spacing: 0;
+    font-size: 0.6875rem;
+    padding-inline: 0.75rem;
+  }
+  .forward-deployed {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    --section-padding-top: 2.5rem;
+  }
+  .forward-deployed .section-heading {
+    padding-top: 0;
+    gap: 1.5rem;
+  }
+  .diagram-desktop {
+    display: none;
+  }
+  .diagram-mobile {
+    display: block;
+  }
+  .advantage-diagram {
+    width: 100%;
+  }
+  .advantage-diagram figcaption {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+    display: block;
+    margin-top: 1.5rem;
+    font:
+      400 1rem/1.5 Roboto,
+      sans-serif;
+  }
+  .advantage-points {
+    padding: 0;
+    gap: 1.5rem;
+  }
+  .advantage-points p {
+    line-height: 1.5;
+  }
+  .advantage-points p:nth-child(1),
+  .advantage-points p:nth-child(3) {
+    width: 100%;
+  }
+  .advantage-points strong {
+    font-family: Roboto, sans-serif;
+    display: inline !important;
+  }
+  .quote-section figure {
+    padding: 3rem var(--page-gutter);
+    gap: 1.5rem;
+  }
+  .quote-section blockquote {
+    line-height: 1.15;
+    text-box-trim: none;
+  }
+  .quote-section figcaption {
+    font-weight: 700;
+  }
+  .media-divider img {
+    height: clamp(5.6rem, 21.67vw, 10rem);
+    object-fit: cover;
+  }
+  .scale-speed-efficiency .section-heading {
+    margin-bottom: 1.5rem;
+  }
+  .scale-speed-efficiency .section-heading h2 {
+    text-box-trim: none;
+  }
+  .feature-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+  .feature-card {
+    display: block;
+    grid-row: auto;
+    padding-block: 1.5rem;
+  }
+  .feature-artwork-slot {
+    min-height: 0;
+    margin-bottom: 1rem;
+    padding-bottom: 0;
+  }
+  .feature-card p {
+    font-size: 1rem;
+  }
+  .feature-card h3 {
+    font-size: clamp(1.625rem, calc(1.47368rem + 0.5848vw), 2.5rem);
+    margin-bottom: 1rem;
+  }
+  .feature-artwork-slot > div {
+    transform: translateY(-15px);
+  }
+  .solutions-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+  .solution-card {
+    border-left: 0;
+    padding: 1.5rem 0;
+    gap: 1rem;
+    border-bottom: 1px solid #d8dddc;
+  }
+  .solution-card:last-child {
+    padding-bottom: 1.5rem;
+    border-bottom: 0;
+  }
+  .solution-card figure {
+    order: 0;
+    gap: 1.5rem;
+  }
+  .solutions-grid .solution-card h3 {
+    font-size: clamp(1.625rem, calc(1.37281rem + 0.97466vw), 3rem);
+    order: 1;
+    font-weight: 400;
+    line-height: 1.15;
+    min-height: 0;
+    letter-spacing: 0;
+  }
+  .solution-card > p {
+    order: 2;
+    line-height: 1.5;
+  }
+  .solution-artwork-slot {
+    min-height: 0;
+    padding-block: 1rem;
+  }
+  .solution-artwork-slot .svg-artwork {
+    width: 92%;
+    margin-inline: auto;
+  }
+  .conversion-copy {
+    flex-basis: 100%;
+  }
+  .conversion-copy h2 {
+    font-weight: 400;
+    line-height: 1.15;
+  }
+  .conversion-copy p {
+    line-height: 1.5;
+  }
+  .conversion-action {
+    color: var(--silver);
+  }
+  .footer-content {
+    flex-direction: column;
+    gap: 1.5rem;
+    min-height: 0;
+  }
+  .footer-content .navigation-button {
+    min-height: 44px;
+    padding-inline: 0.625rem;
+  }
+  .copyright {
+    max-width: 20rem;
+    min-height: 2.625rem;
+  }
+}
+
+.site-footer {
+  isolation: isolate;
+}
+/* Balanced pairs on compact tablets; never a three-plus-one orphan. */
+@media (min-width: 601px) and (max-width: 1100px) {
+  .feature-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: none;
+    gap: 2rem;
+  }
+  .feature-card { display: block; grid-row: auto; }
+  .feature-card h3 {
+    font-size: clamp(1.5rem, calc(2.09375rem - .83333vw), 1.625rem);
+    line-height: 1.2;
+  }
+  .feature-card p { font-size: clamp(.875rem, calc(1.5625rem - 1vw), 1rem); }
+  .feature-artwork-slot { min-height: 12.5rem; }
+}
+
+/* Preserve the intentional footer frame over the Ink document canvas. */
+.site-footer {
+  box-shadow: var(--frame-gutter) 0 var(--silver), calc(-1 * var(--frame-gutter)) 0 var(--silver);
+}
+
+/* Animated and static Advantage artwork share the same reserved geometry. */
+.advantage-diagram-content, .advantage-motion { width: 100%; }
+.advantage-motion svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+
+/* Shared framing keeps the procedural wireframes visually balanced. */
+.feature-wireframe-size {
+  --feature-artwork-size:clamp(216px, calc(186.94737px + 7.01754vw), 288px);
+  width:var(--feature-artwork-size);
+}
+@media(max-width:600px) {
+ #scale-speed-efficiency .feature-wireframe-size { width:calc(var(--feature-artwork-size) * 1.25); }
+ #scale-speed-efficiency .feature-artwork-slot { padding-block:0 30px; overflow-x:clip; overflow-y:visible; }
+ #scale-speed-efficiency .feature-wireframe-size svg { transform:scale(1.25); transform-origin:center; }
+}
+.wireframe-object--illustration { width: 100%; }
+.wireframe-object--illustration svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.solution-artwork-slot { position: relative; }
+.solution-graph-slot { width: 100%; }
+
+.conversion-actions { display:flex; flex-direction:column; align-items:flex-end; gap:1.875rem; max-width:100%; }
+.conversion-actions .conversion-action { flex-shrink:1; text-align:left; }
+.conversion-actions .conversion-action>span:first-child { min-width:0; }
+.text-action { display:inline-flex; align-items:center; justify-content:space-between; gap:1rem; min-height:44px; max-width:100%; padding:1.25rem; background:transparent; color:var(--graphite); font:600 1rem/1.5 "Roboto Mono",monospace; letter-spacing:3px; text-transform:uppercase; text-align:left; }
+.text-action>span:first-child { min-width:0; text-decoration:underline; text-underline-offset:.4em; }
+.text-action:hover { color:#000604; }
+
+/* Shared tracks align titles, diagrams, captions and copy without fixed text heights. */
+@media (min-width:601px) {
+  .solution-card { display:grid; grid-template-rows:subgrid; grid-row:span 4; }
+  .solution-card h3 { min-height:0; }
+  .solution-card figure { display:grid; grid-template-rows:subgrid; grid-row:span 2; }
+}
+
+/* Atomic final word pair, with a narrow-container escape hatch. */
+.text-tail { display:inline-block; max-inline-size:100%; vertical-align:bottom; text-indent:0; }
+
+.conversion-action:focus-visible { background:#1c373e; text-decoration:none; }
+.text-action:focus-visible { background:#dbe8ec; text-decoration:none; }
+.navigation-button:focus-visible { background:var(--nav-hover); color:var(--graphite); }
+
+/* Each service is one named semantic link, preserving the existing grid tracks. */
+a.solution-card-link { color:inherit; text-decoration:none; }
+a.solution-card-link:hover,
+a.solution-card-link:focus-visible { color:inherit; text-decoration:none; opacity:.8; }
+.service-detail h2:focus { outline:none; }
+.service-detail h2 { scroll-margin-top:1.5rem; }
+
+/* Core Solutions navigation: same copy, shared paragraph and action tracks. */
+.core-solutions-heading { display:flex; align-items:flex-end; justify-content:space-between; gap:1.5rem; margin-bottom:clamp(1.5rem, calc(1.07127rem + 1.65692vw), 3rem); }
+.core-solutions-heading .section-heading { margin-bottom:0; }
+.core-solutions .solution-overview-link { flex-shrink:0; color:var(--graphite); padding:var(--action-padding); text-decoration:none; }
+.core-solutions .solution-overview-link>span:first-child { text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:.3em; }
+.core-solutions .solution-overview-link:hover,
+.core-solutions .solution-overview-link:focus-visible { color:var(--graphite); background:transparent; text-decoration:none; opacity:.8; }
+.solution-card-action { display:flex; align-self:start; align-items:center; gap:1rem; min-height:44px; margin-top:1.25rem; font:600 1rem/1.5 "Roboto Mono",monospace; letter-spacing:3px; text-transform:uppercase; }
+@media(min-width:601px){ .solution-card { grid-row:span 5; } }
+@media(max-width:600px){ .core-solutions-heading { flex-wrap:wrap; align-items:flex-start; }.solution-card-action { order:3; } }
+
+.solution-card-action>span:first-child { text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:.3em; }
+
+/* Shared conversion sizing: reserve intrinsic CTA width; stack before columns get cramped. */
+.conversion-surface .conversion-actions { flex:none; width:fit-content; align-items:flex-end; justify-self:end; }
+.conversion-surface :is(.conversion-action,.text-action) { width:fit-content; min-width:0; padding:var(--action-padding); letter-spacing:clamp(0px,calc(-1.21px + .2924vw),3px); }
+.conversion-surface .conversion-action { flex-shrink:0; }
+@media(min-width:601px){
+ .conversion-surface { display:grid; grid-template-columns:minmax(0,1fr) max-content; }
+ .conversion-surface .conversion-copy { min-width:0; container-type:inline-size; }
+ .conversion-copy h2 { font-size:clamp(1.5rem,min(6.5cqi,calc(1.59649rem + 1.55945vw)),4rem); max-width:17em; text-wrap:balance; }
+ .conversion-surface :is(.conversion-action,.text-action) { white-space:nowrap; }
+}
+@media(min-width:601px) and (max-width:1100px){
+ .conversion-surface { grid-template-columns:minmax(0,1fr); }
+}
+
+/* Closing banners use a compact paragraph-to-action gap; intro rhythm stays separate. */
+.conversion-surface { row-gap:1.5rem; }
+
+/* All closing banners share the Medium weight in the updated component. */
+.conversion-copy h2 { font-weight:500; }
+@media(max-width:600px){ .conversion-title-break { display:none; } }
+
+/* Retain the approved lighter mobile heading variant. */
+@media(max-width:600px){ :root { --heading-weight:400; } }
+
+/* Desktop optical alignment from the Figma illustration-slot padding:
+   GPU bottom 18px, inference top 2px, operations bottom 26px at 381px wide.
+   Move the complete artwork only; shared caption/body tracks stay unchanged. */
+@media(min-width:601px){
+ .core-solutions .solution-artwork-slot { container-type:inline-size; }
+ .core-solutions .solution-graph-slot { position:relative; }
+ .core-solutions .solution-card:nth-child(1) .solution-graph-slot { top:-2.362205cqi; }
+ .core-solutions .solution-card:nth-child(2) .solution-graph-slot { top:.262467cqi; }
+ .core-solutions .solution-card:nth-child(3) .solution-graph-slot { top:-3.403141cqi; }
+}
+
+/* Standalone footer tops are rounded; attached CTA/footer seams stay flush. */
+.site-footer { border-top-left-radius:15px; border-top-right-radius:15px; }
+.site-footer--connected { border-top-left-radius:0; border-top-right-radius:0; }
+@media(max-width:600px){ .site-footer { border-radius:0; } }
+
+/* Secondary conversion link ends at the filled CTA edge, without a right inset. */
+.conversion-surface .conversion-actions>.text-action { padding-right:0; text-align:right; justify-content:flex-end; }
+.conversion-actions>.text-action>span:first-child { text-align:right; }
+
+/* Once the banner stacks, its actions follow the copy's left edge.
+   Retain the right-aligned action column on wide desktop. */
+@media(max-width:1100px){
+ .conversion-surface .conversion-actions { align-items:flex-start; justify-self:start; }
+ .conversion-surface .conversion-actions>.text-action { padding-left:0; padding-right:var(--action-padding); text-align:left; justify-content:flex-start; }
+ .conversion-surface .conversion-actions>.text-action>span:first-child { text-align:left; }
+}
+
+/* Keep closing-banner paragraphs within About's approved reading column,
+   independently of the heading and action widths. Stacked layouts stay fluid. */
+@media(min-width:1280px){
+ .conversion-index .conversion-copy p,
+ .solutions-page .conversion-copy p {
+  max-width:calc((100vw - var(--page-gutter) * 2 - 4px) * .5625);
+ }
+}
+
+/* Let the mobile testimonial fit its content so its equal 48px vertical
+   padding is not expanded by the desktop minimum height. */
+@media(max-width:600px){
+ .quote-section figure,
+ .solutions-quote .quote-section figure { min-height:0; }
+}
+
+/* Mobile uses the same separate quotation mark as the desktop treatment. */
+@media(max-width:600px){
+ .quote-section .quote-mobile-text { display:none; }
+ .quote-section .quote-desktop-text { display:block; }
+ .quote-section blockquote { display:flex; flex-direction:column; align-items:flex-start; gap:24px; }
+ .quote-section blockquote::before {
+  content:'"'; display:block; height:32px;
+  font:400 128px/1.4 'Roboto Slab',serif; letter-spacing:-1px;
+  text-box:trim-both cap alphabetic;
+ }
+}
+
+/* Solutions-only quote artwork trial, preserving the compact quote layout. */
+.quote-golden-artwork { display:none; }
+@media(min-width:1101px){
+ .quote-section--golden figure { display:grid; grid-template-columns:minmax(0,716.586px) minmax(160px,1fr); column-gap:clamp(32px,4.1667vw,60px); }
+ .quote-section--golden blockquote { grid-column:1; grid-row:1; }
+ .quote-section--golden figcaption { grid-column:1; grid-row:2; }
+ .quote-golden-artwork { display:block; grid-column:2; grid-row:1 / span 2; width:min(100%,240px); align-self:center; justify-self:center; }
+ .quote-golden-artwork svg { display:block; width:100%; height:auto; overflow:visible; stroke:var(--graphite); }
+}
+
+@media(min-width:1101px){
+ .quote-section--golden figure { overflow:hidden; }
+ .quote-section--golden .quote-golden-artwork { width:100%; height:210px; position:relative; }
+ .quote-golden-artwork .golden-morph-object { position:absolute; width:clamp(600px,52vw,1000px); left:50%; top:50%; transform:translate(-50%,-50%); }
+}
+
+/* Reserve a protected text gutter at every desktop width, including rotations. */
+@media(min-width:1101px){
+ .quote-section--golden .quote-golden-artwork {
+  clip-path:inset(-1500px -43px -1500px 0);
+ }
+ .quote-section--golden .quote-golden-artwork .golden-morph-object {
+  left:calc(50% + clamp(0px,calc((1440px - 100vw) * .25),100px));
+ }
+}
+
+@media(min-width:1101px){
+ .quote-section--golden .quote-golden-artwork { clip-path:none; }
+ .quote-section--golden .quote-golden-artwork .golden-morph-object {
+  left:0;
+  transform:translateY(-50%);
+ }
+}
+
+@media(min-width:1101px){
+ .quote-section--golden figure { column-gap:clamp(16px,2.08335vw,30px); }
+ .quote-section--golden .quote-golden-artwork .golden-morph-object { left:-25px; }
+}
+
+/* Index mobile illustration padding from the updated Figma cards. */
+@media(max-width:600px){
+ #core-solutions .solution-artwork-slot { padding-block:0 20px; }
+ #core-solutions .solution-card:nth-child(1) { padding-top:0; }
+ #core-solutions .solution-card:nth-child(2) { padding-top:40px; }
+ #core-solutions .solution-card:nth-child(3) { padding-top:24px; }
+}

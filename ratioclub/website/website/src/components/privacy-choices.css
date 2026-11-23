@@ -1,0 +1,104 @@
+.privacy-trigger { display:inline-flex; align-items:center; justify-content:flex-end; gap:.5em; min-height:44px; margin:0; padding:0; border:0; background:transparent; color:inherit; font:inherit; letter-spacing:inherit; text-transform:uppercase; cursor:pointer; }
+.privacy-trigger img { display:block; width:2.25em; height:auto; flex-shrink:0; }
+.privacy-trigger > span { text-decoration:underline; text-underline-offset:.2em; }
+.privacy-trigger:hover { opacity:.8; }
+.privacy-trigger:focus-visible { opacity:1; outline:0; box-shadow:none; }
+.privacy-trigger:focus-visible > span { text-decoration-thickness:2px; }
+/* Figma 597:7818: 569.529px panel, 449.529px content column. */
+.privacy-dialog { width:min(569.529px,calc(100vw - 2rem)); max-width:none; max-height:calc(100svh - 2rem); padding:40px 60px 60px; border:0; border-radius:var(--radius-panel); overflow:auto; background:var(--graphite); color:#8b9192; text-align:left; text-transform:none; letter-spacing:normal; }
+.privacy-dialog::backdrop { background:rgb(0 6 4 / 75%); }
+.privacy-dialog-header { display:flex; align-items:center; justify-content:space-between; gap:1rem; min-height:59px; margin-bottom:34px; }
+#root .privacy-dialog-header h2 { min-width:0; margin:0; color:var(--silver); font:400 32px/1.3 'Roboto Slab',serif; letter-spacing:0; }
+.privacy-dialog .privacy-close { flex:none; padding:0; }
+.privacy-close img { width:24px; height:24px; }
+.privacy-dialog-body { display:flex; flex-direction:column; gap:34px; padding:0; font:400 16px/1.7 Roboto,sans-serif; letter-spacing:normal; }
+.privacy-dialog-body>p:first-child { margin:0; padding-bottom:11px; text-box:trim-both cap alphabetic; }
+.privacy-option { display:grid; grid-template-columns:minmax(0,1fr) 64.529px; column-gap:35px; align-items:start; min-height:121px; padding-top:10px; }
+.privacy-option>div { min-width:0; padding:11px 0 9px; text-box:trim-both cap alphabetic; }
+.privacy-option label { display:block; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--silver); }
+.privacy-option p { margin:0; }
+.privacy-option input { appearance:none; width:64.529px; height:32.265px; border:0; border-radius:26.887px; background:var(--ink,#000604); position:relative; margin:0; opacity:1; }
+.privacy-option input::after { content:''; position:absolute; width:21.51px; height:21.51px; background:url('../assets/privacy-switch-knob.svg') center/contain no-repeat; top:5.377px; left:5.377px; }
+.privacy-option input:checked { background:var(--ink,#000604); box-shadow:none; }
+.privacy-option input:checked::after { left:37.642px; }
+.privacy-option input:not(:disabled) { cursor:pointer; }
+.privacy-option input:focus-visible { outline:2px solid var(--silver); outline-offset:4px; }
+@media(prefers-reduced-motion:no-preference){ .privacy-option input { transition:background-color 140ms ease-out; } .privacy-option input::after { transition:left 140ms ease-out; } }
+.privacy-option-note { display:block; font:700 13px/2.1 'Roboto Mono',monospace; color:var(--silver); letter-spacing:0; text-transform:uppercase; }
+.privacy-signal { margin:0; font-weight:700; }
+.privacy-notices { padding-top:10px; }
+.privacy-notices p { margin:0; }
+.privacy-notices p:last-child { text-box:trim-end cap alphabetic; }
+.privacy-policy-links { display:flex; flex-wrap:wrap; column-gap:28px; }
+.privacy-policy-links>span { display:none; }
+.privacy-policy-links a { color:inherit; text-underline-offset:.12em; text-box:trim-start cap alphabetic; }
+.privacy-policy-links a:focus-visible { outline:0; text-decoration-thickness:3px; }
+.privacy-draft-note,.privacy-saved { font-size:16px; }
+.privacy-actions { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:34px; padding-top:20px; }
+#root .privacy-dialog .privacy-actions .primary-action { width:100%; height:100%; min-width:0; min-height:52px; padding:14px; background:var(--cyan); color:var(--graphite); border:0; font:600 16px/24px 'Roboto Mono',monospace; letter-spacing:0; justify-content:flex-start; white-space:normal; text-align:left; }
+#root .privacy-dialog .privacy-actions .primary-action:hover,#root .privacy-dialog .privacy-actions .primary-action:focus-visible { background:var(--nav-hover); color:var(--graphite); }
+@media(max-width:569px){ .privacy-dialog { padding:32px 24px; } .privacy-option { column-gap:20px; } }
+@media(max-width:420px){ .privacy-actions { grid-template-columns:1fr; gap:16px; } }
+a.conversion-action,a.text-action { text-decoration:none; }
+/* Reference: copyright above, muted icon/link on the next right-aligned line. */
+.copyright { display:flex; flex-direction:column; align-items:flex-end; text-align:right; }
+.copyright > span { display:block; max-width:100%; }
+.copyright .privacy-trigger { margin-top:-.35em; }
+@media(max-width:600px){ .footer-content .copyright { width:100%; max-width:none; align-self:stretch; } }
+
+/* State text occupies the free half of the track; native checked semantics
+   remain on the input for keyboard and assistive technology users. */
+.privacy-option input::before {
+ content:'OFF'; position:absolute; top:0; left:31px; width:29px;
+ font:700 10px/32.265px 'Roboto Mono',monospace;
+ color:#8b9192; text-align:center; pointer-events:none;
+}
+.privacy-option input:checked::before { content:'ON'; left:4px; }
+.privacy-option input:disabled {
+ background:var(--steel); box-shadow:none; cursor:default;
+}
+.privacy-option input:disabled::after { opacity:.5; }
+.privacy-option input:disabled::before { color:var(--silver); opacity:.65; }
+.privacy-option-note:empty { display:none; }
+.privacy-option:has(input:disabled) label { cursor:default; }
+
+/* Softer thumb contrast, matching the muted state labels. */
+.privacy-option input::after {
+ background:#8b9192;
+ border-radius:50%;
+}
+
+@media(max-width:600px){
+ .privacy-dialog .privacy-dialog-header { align-items:flex-start; }
+ .privacy-dialog .privacy-close { align-self:flex-start; }
+}
+
+/* Opening flourish only: move the thumb, never the real preference or label. */
+@media(prefers-reduced-motion:no-preference){
+ .privacy-dialog[data-switch-intro] .privacy-option input { --switch-intro-offset:32.265px; }
+ .privacy-dialog[data-switch-intro] .privacy-option input:checked { --switch-intro-offset:-32.265px; }
+ .privacy-dialog[data-switch-intro] .privacy-option input::after { animation:privacy-switch-intro 260ms ease-in-out both; }
+}
+@keyframes privacy-switch-intro {
+ from { transform:translateX(var(--switch-intro-offset)); }
+ to { transform:translateX(0); }
+}
+
+/* Modal-only close affordance; navigation toggle motion stays separate. */
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+ :is(.contact-close,.privacy-close) .modal-close-symbol { transform:rotate(0deg); transition:transform 200ms ease-in-out; }
+ :is(.contact-close,.privacy-close):hover .modal-close-symbol { transform:rotate(90deg); }
+}
+
+/* Three strokes form an X at rest; its second diagonal separates into ratio dots. */
+.modal-close-symbol { position:relative; display:block; flex:none; width:24px; height:24px; pointer-events:none; user-select:none; color:var(--silver); }
+.modal-close-symbol-bar { position:absolute; left:2px; top:11px; width:20px; height:2px; border-radius:100px; background:currentColor; transform:rotate(45deg); }
+.modal-close-symbol-dot { position:absolute; width:10px; height:2px; border-radius:100px; background:currentColor; transform:rotate(-45deg); }
+.modal-close-symbol-dot--first { left:3.4645px; top:14.5355px; }
+.modal-close-symbol-dot--second { left:10.5355px; top:7.4645px; }
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+ .modal-close-symbol-dot { transition:left 200ms ease-in-out,top 200ms ease-in-out,width 200ms ease-in-out; }
+ :is(.contact-close,.privacy-close):hover .modal-close-symbol-dot { width:2px; }
+ :is(.contact-close,.privacy-close):hover .modal-close-symbol-dot--first { left:4.636px; top:17.364px; }
+ :is(.contact-close,.privacy-close):hover .modal-close-symbol-dot--second { left:17.364px; top:4.636px; }
+}

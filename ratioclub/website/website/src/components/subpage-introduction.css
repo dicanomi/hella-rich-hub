@@ -1,0 +1,31 @@
+.subpage-introduction { --intro-action-gap:var(--paragraph-cta-gap); padding:var(--section-padding-top,clamp(2.5rem,calc(-.2741rem + 10.7212vw),14rem)) var(--page-gutter) var(--section-padding-bottom,clamp(2.5rem,calc(.9868rem + 5.848vw),10rem)); }
+.subpage-introduction h2 { font:400 clamp(2rem,calc(1.193rem + 3.1189vw),6rem)/1.1 "Roboto Slab",serif; letter-spacing:-1px; max-width:var(--intro-title-width,80%); }
+.subpage-introduction-columns { display:grid; grid-template-columns:minmax(0,1.03554fr) minmax(0,1fr); gap:var(--intro-action-gap,1rem) var(--page-gutter); margin-top:clamp(1.5rem,calc(-1.6776rem + 12.2807vw),14rem); }
+.subpage-introduction-columns p { font-size:clamp(1rem,calc(.59649rem + 1.55945vw),3rem); line-height:1.4; }
+.subpage-introduction-lead, .subpage-introduction-detail { font-family:Roboto,sans-serif; }
+.subpage-introduction-action { grid-column:1; }
+.subpage-introduction .primary-action { width:fit-content; max-width:100%; }
+@media(max-width:600px) {
+  .subpage-introduction h2 { max-width:none; line-height:1.15; letter-spacing:0; }
+  .subpage-introduction-columns { grid-template-columns:minmax(0,1fr); gap:1.5rem; }
+  .subpage-introduction-lead { font-family:Roboto,sans-serif; }
+  .subpage-introduction-lead strong { font-weight:400; }
+  .subpage-introduction-columns p { line-height:1.5; }
+  .subpage-introduction .primary-action { width:100%; }
+}
+
+/* Approved introduction rhythm: 125 / 75 / 100 / 200 at 1440px,
+   scaling to the existing compact 40 / 24 / 24 / 40 mobile spacing. */
+.subpage-introduction:is(.solutions-introduction,.about-introduction) {
+ --section-padding-top:clamp(2.5rem,calc(.35354rem + 8.2846vw),7.8125rem);
+ --section-padding-bottom:clamp(2.5rem,calc(-1.5351rem + 15.5945vw),12.5rem);
+ --intro-action-gap:clamp(1.5rem,calc(-.419rem + 7.4074vw),6.25rem);
+}
+.subpage-introduction:is(.solutions-introduction,.about-introduction) .subpage-introduction-columns {
+ margin-top:clamp(1.5rem,calc(.2121rem + 4.97076vw),4.6875rem);
+}
+@media(min-width:601px){
+ .subpage-introduction:is(.solutions-introduction,.about-introduction) .subpage-introduction-lead { grid-column:1; grid-row:1; align-self:start; }
+ .subpage-introduction:is(.solutions-introduction,.about-introduction) .subpage-introduction-detail { grid-column:2; grid-row:1 / span 2; align-self:start; }
+ .subpage-introduction:is(.solutions-introduction,.about-introduction) .subpage-introduction-action { grid-column:1; grid-row:2; align-self:start; }
+}

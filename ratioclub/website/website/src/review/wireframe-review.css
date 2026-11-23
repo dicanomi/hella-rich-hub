@@ -1,0 +1,13 @@
+.wireframe-review { min-height: 100svh; background: var(--silver); color: var(--graphite); padding: clamp(24px, 4vw, 72px); }
+.wireframe-review header { max-width: 900px; margin-bottom: 36px; }
+.wireframe-review h1 { font: 500 clamp(28px, 3vw, 52px)/1.2 "Roboto Slab", serif; margin: 24px 0; }
+.wireframe-review p { line-height: 1.5; margin-bottom: 16px; }
+.wireframe-review a { text-decoration: underline; text-underline-offset: 4px; }
+.wireframe-review-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
+.wireframe-object { min-width: 0; border-bottom: 1px solid #cbd0d0; padding-bottom: 24px; }
+.wireframe-hover-area svg { overflow: visible; display: block; width: 100%; height: auto; }
+.wireframe-object h2 { font: 400 clamp(22px, 2vw, 30px)/1.3 "Roboto Slab", serif; margin: 16px 0; }
+.wireframe-object button { min-height: 44px; padding: 10px 16px; font: 500 14px/1.5 "Roboto Mono", monospace; color: var(--graphite); background: var(--cyan); }
+.wireframe-object button:disabled { opacity: .5; }
+@media (max-width: 1100px) { .wireframe-review-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .wireframe-review-grid { grid-template-columns: minmax(0, 1fr); } }

@@ -1,0 +1,14 @@
+# RatioClub
+
+> Ratioclub embeds senior Forward Deployed Engineers to validate GPU clusters, optimize inference, and operate production AI infrastructure on AWS.
+
+## Pages
+
+- [Ratioclub — Enterprise AWS Consulting & AI Infrastructure](https://www.ratioclub.com/): Ratioclub embeds senior Forward Deployed Engineers to validate GPU clusters, optimize inference, and operate production AI infrastructure on AWS.
+- [Solutions — Ratioclub](https://www.ratioclub.com/solutions): Production AI infrastructure and inference engineering on AWS. Ratioclub validates GPU clusters, engineers inference platforms, and operates production AI.
+- [About Us — Ratioclub](https://www.ratioclub.com/about): Meet Ratioclub: independent AI infrastructure engineering on AWS, combining architectural neutrality, senior execution, and measurable production outcomes.
+- [Contact — Ratioclub](https://www.ratioclub.com/contact): Talk to Ratioclub about AI infrastructure, engineering collaboration, or your next project. Connect with the team or schedule an architecture review.
+
+## Scope
+
+The website describes AWS AI infrastructure engineering services. Draft legal pages and local design experiments are excluded from this guide.

@@ -1,0 +1,7 @@
+{
+  "files_screened": 364,
+  "known_personal_marker_or_credential_hits": 0,
+  "private_state_or_source_map_files": 0,
+  "third_party_license_credits_retained": true,
+  "scope": "Delivered files; dependency caches and temporary validation output are excluded and will not be archived."
+}

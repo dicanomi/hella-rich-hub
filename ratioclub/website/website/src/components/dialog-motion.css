@@ -1,0 +1,6 @@
+@keyframes branded-backdrop-in { from { opacity:0; } to { opacity:1; } }
+@keyframes branded-backdrop-out { from { opacity:1; } to { opacity:0; } }
+@media(prefers-reduced-motion:no-preference){
+ :is(.contact-dialog,.privacy-dialog)[open]::backdrop { animation:branded-backdrop-in 180ms ease-out both; }
+ :is(.contact-dialog,.privacy-dialog)[data-closing='true']::backdrop { animation:branded-backdrop-out 180ms ease-in both; }
+}

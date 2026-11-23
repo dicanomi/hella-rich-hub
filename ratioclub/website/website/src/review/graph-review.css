@@ -1,0 +1,8 @@
+.graph-review { min-height: 100svh; color: var(--graphite); background: var(--silver); }
+.graph-review-header { padding: clamp(24px, 4vw, 64px) var(--page-gutter); max-width: 1000px; }
+.graph-review-header h1 { margin: 24px 0; font: 500 clamp(28px, 3vw, 48px)/1.2 "Roboto Slab", serif; }
+.graph-review-header p { margin-bottom: 16px; line-height: 1.5; }
+.graph-review-header a { text-decoration: underline; text-underline-offset: 4px; }
+.graph-review-controls { display: flex; align-items: center; gap: 16px; margin: 24px 0; }
+.graph-replay { padding: 12px 18px; min-height: 44px; color: var(--graphite); background: var(--cyan); }
+@media (prefers-reduced-motion: reduce) { .graph-review-controls { display: none; } }

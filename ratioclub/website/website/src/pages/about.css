@@ -1,0 +1,143 @@
+.about-page {
+  --about-gap:var(--page-gutter);
+  --about-section-space:clamp(2.5rem,calc(-1.5351rem + 15.5945vw),18rem);
+  --about-lead:clamp(1rem,calc(.59649rem + 1.55945vw),3rem);
+  background:var(--silver);
+}
+.about-introduction { --intro-title-width:63.4%; --section-padding-bottom:var(--about-section-space); }
+.about-introduction-columns p { letter-spacing:clamp(-1px,calc(.4035px - .09746vw),0px); text-box-trim:trim-both; text-box-edge:cap alphabetic; }
+.about-section { --section-padding-bottom:max(0px,calc(var(--about-section-space) + var(--about-gap-correction,0px))); }
+.about-section-heading { margin-bottom:var(--about-gap); }
+.about-number { font:900 clamp(3rem,calc(.8979rem + 8.1244vw),12rem)/1.015625 "Roboto Slab",serif; letter-spacing:-1px; text-box-trim:trim-both; text-box-edge:cap alphabetic; margin-bottom:clamp(1.5rem,calc(.3904rem + 4.2885vw),6rem); }
+.about-section h2 { font:var(--heading-weight) clamp(2rem,calc(1.59649rem + 1.55945vw),4rem)/1.25 "Roboto Slab",serif; letter-spacing:clamp(-1px,calc(.4035px - .09746vw),0px); max-width:72.25%; white-space:pre-line; text-box-trim:trim-both; text-box-edge:cap alphabetic; }
+.about-section-description { font-size:var(--about-lead); line-height:1.4; text-box-trim:trim-both; text-box-edge:cap alphabetic; }
+.about-card-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--about-gap); margin-top:clamp(1.5rem,calc(1.0965rem + 1.5595vw),4rem); }
+.about-feature-card { min-width:0; }
+.about-artwork-slot { display:flex; align-items:center; justify-content:flex-start; min-height:var(--about-artwork-slot-height,clamp(11rem,16.9vw,22rem)); margin-bottom:1.25rem; }
+.about-artwork-size { width:min(100%,clamp(240px,calc(214.1754px + 6.2378vw),340px)); }
+.about-feature-card h3 { white-space:pre-line; font:400 clamp(1.625rem,calc(1.47368rem + .5848vw),2.5rem)/1.2 "Roboto Slab",serif; min-height:2.4em; margin-bottom:clamp(1rem,calc(.6469rem + 1.3645vw),2.5rem); }
+.about-feature-card>p { font-size:1rem; line-height:1.5; }
+.about-feature-card:last-child h3 { max-width:min(100%,clamp(260px,21.6667vw,450px)); }
+.about-capabilities h2 { max-width:48.55%; }
+.about-capabilities-table { table-layout:fixed; border-collapse:separate; border-spacing:0; width:100%; margin-top:clamp(2.5rem,calc(.9868rem + 5.848vw),10rem); text-align:left; font-size:clamp(1rem,calc(.94956rem + .19493vw),1.4rem); line-height:1.3333; }
+.about-capabilities-table th,.about-capabilities-table td { vertical-align:top; padding:clamp(1.5rem,3vw,4rem) clamp(1.5rem,4.1667vw,6rem) clamp(1.5rem,3vw,4rem) 0; }
+.about-capabilities-table th:last-child,.about-capabilities-table td:last-child { padding-right:0; }
+.about-capabilities-table th:first-child { width:27.2727%; }
+.about-capabilities-table thead th { font:400 clamp(1.5rem,calc(1.44956rem + .19493vw),2rem)/1.4 "Roboto Slab",serif; border-bottom:1px solid var(--graphite); padding-top:0; padding-bottom:clamp(1.5rem,4vw,5rem); }
+.about-capabilities-table thead th:first-child { font-weight:700; }
+.about-capabilities-table thead th:nth-child(2) { width:38.6364%; }
+.capabilities-mobile-caption,.capabilities-mobile-label { display:none; }
+.about-heritage h2 { max-width:59.775%; }
+.about-heritage-columns { display:grid; grid-template-columns:minmax(0,.7355fr) minmax(0,1fr); gap:var(--about-gap); align-items:stretch; }
+.about-heritage-columns blockquote { display:flex; align-items:center; padding:var(--about-gap); border-radius:var(--frame-gutter); background:var(--cyan); font:400 var(--about-lead)/1.4 "Roboto Slab",serif; letter-spacing:clamp(-1px,calc(.4035px - .09746vw),0px); }
+.about-heritage-columns blockquote p { text-box-trim:trim-both; text-box-edge:cap alphabetic; }
+.heritage-quote-attribution,.heritage-quote-text { display:none; }
+@media(min-width:601px) {
+ .about-standard-title-line { display:block; white-space:nowrap; }
+ .about-heritage-columns blockquote { flex-direction:column; align-items:flex-start; justify-content:center; gap:10px; padding:clamp(40px,5.55556vw,80px) var(--about-gap); border-radius:15px; font-size:clamp(24px,2.083333vw,30px); letter-spacing:0; }
+ .about-heritage-columns blockquote::before { content:'"'; display:block; height:68.394px; font:400 218px/1.4 'Roboto Slab',serif; letter-spacing:-1px; text-box:trim-both cap alphabetic; }
+ .about-heritage-columns .heritage-quote-mobile { display:none; }
+ .about-heritage-columns .heritage-quote-text { display:block; }
+ .about-heritage-columns .heritage-quote-attribution { display:block; margin-top:32px; font-weight:500; }
+}
+.about-heritage-columns>div { font-size:var(--about-lead); line-height:1.4; }
+.about-heritage-columns>div p+p { margin-top:1.4em; }
+.about-principles { --about-artwork-slot-height:clamp(15rem,19.4097vw,26rem); }
+.about-principles .about-section-heading { margin-bottom:0; }
+.about-principles .about-card-grid { margin-top:var(--about-gap); }
+@media(min-width:601px) and (max-width:700px) {
+ .about-standard .about-card-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+.about-page .conversion-copy { min-width:min(100%,28rem); flex-basis:56%; }
+.about-page .conversion-actions { flex:0 1 34%; }
+
+@media(max-width:600px) {
+  .about-introduction { --intro-title-width:100%; }
+  .about-introduction-columns p { text-box-trim:none; letter-spacing:0; }
+  .about-number { font-size:3rem; line-height:1.15; letter-spacing:0; text-box-trim:none; margin-bottom:1.5rem; }
+  .about-section-heading { margin-bottom:1.5rem; }
+  .about-section h2 { white-space:normal; max-width:none; font-weight:400; line-height:1.15; text-box-trim:none; }
+  .about-section-description { line-height:1.5; text-box-trim:none; }
+  .about-card-grid { grid-template-columns:minmax(0,1fr); gap:0; margin-top:1rem; }
+  .about-feature-card { padding-block:1.5rem; border-bottom:1px solid #d8dddc; }
+  .about-artwork-slot { min-height:0; justify-content:center; margin-bottom:1rem; }
+  .about-artwork-size { width:min(100%,240px); }
+  .about-artwork-slot { padding-block:30px; overflow-x:clip; overflow-y:visible; }
+  .about-artwork-size svg { transform:scale(1.25); transform-origin:center; }
+  .about-feature-card h3 { white-space:normal; min-height:0; font-size:1.625rem; line-height:1.15; margin-bottom:1rem; }
+  .about-feature-card:last-child h3 { max-width:none; }
+  .about-capabilities-table,.about-capabilities-table tbody,.about-capabilities-table tr,.about-capabilities-table td,.about-capabilities-table tbody th { display:block; width:100%; }
+  .about-capabilities-table thead { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
+  .about-capabilities-table tbody th:first-child { width:100%; }
+  .about-capabilities-table tbody th { font:400 1.5rem/1.15 "Roboto Slab",serif; padding:1.25rem 0 .75rem; }
+  .about-capabilities-table td { padding:0 0 .75rem; line-height:1.5; }
+  .about-capabilities-table tr { padding-bottom:1.5rem; }
+  .capabilities-mobile-caption { display:block; font:400 2rem/1.15 "Roboto Slab",serif; text-align:left; margin-bottom:1.5rem; }
+  .capabilities-mobile-label { display:block; font-size:.75rem; line-height:1.45; margin-bottom:.75rem; }
+  .about-heritage-columns { grid-template-columns:minmax(0,1fr); gap:2.25rem; }
+  .about-heritage-columns blockquote { padding:2.5rem 2.75rem; border-radius:15px; font-size:1.5rem; line-height:1.1667; letter-spacing:0; }
+  .about-heritage-columns blockquote p { text-box-trim:none; }
+  .about-heritage-columns>div { font-size:1rem; line-height:1.5; }
+  .about-heritage-columns>div p+p { margin-top:1.5em; }
+  .about-principles .about-card-grid { margin-top:1rem; }
+
+}
+
+/* Each card group shares artwork, title and copy tracks as the content reflows. */
+@media(min-width:601px) {
+ .about-feature-card { display:grid; grid-template-rows:subgrid; grid-row:span 3; }
+ .about-card-grid { row-gap:0; }
+ .about-artwork-slot { min-height:0; }
+}
+
+/* Updated Figma conversion component: 740px copy column / 676px title at 1440. */
+@media(min-width:1101px){
+ .about-page .conversion-surface { padding-inline:calc(var(--page-gutter) - var(--frame-gutter) + 2px); grid-template-columns:minmax(0,56.25%) max-content; }
+ .about-page .conversion-copy h2 { max-width:91.3047%; }
+}
+
+/* Give compact desktop headings room before reducing their type size.
+   The 1440px Figma measures and mobile composition stay intact. */
+@media(min-width:601px) and (max-width:1439px){
+ .about-section h2 { max-width:min(100%,max(72.25%,calc(954px - (1440px - 100vw) * .15))); }
+ .about-capabilities h2 { max-width:min(100%,max(48.55%,calc(641px - (1440px - 100vw) * .08))); }
+ .about-heritage h2 { max-width:min(100%,max(59.775%,calc(789px - (1440px - 100vw) * .12))); }
+ .about-introduction { --intro-title-width:min(100%,max(63.4%,calc(837px - (1440px - 100vw) * .3))); }
+}
+
+/* Shared H2 typography needs the full row before desktop action columns fit. */
+@media(min-width:601px) and (max-width:1279px){
+ .about-page .conversion-surface { grid-template-columns:minmax(0,1fr); }
+ .about-page .conversion-copy h2 { max-width:min(100%,17em); }
+}
+
+@media(max-width:600px){
+ .about-heritage-columns blockquote { flex-direction:column; align-items:flex-start; gap:24px; }
+ .about-heritage-columns .heritage-quote-mobile { display:none; }
+ .about-heritage-columns .heritage-quote-text { display:block; }
+ .about-heritage-columns .heritage-quote-attribution { display:block; font-size:18px; font-weight:500; }
+ .about-heritage-columns blockquote::before {
+  content:'"'; display:block; height:32px;
+  font:400 128px/1.4 'Roboto Slab',serif; letter-spacing:-1px;
+  text-box:trim-both cap alphabetic;
+ }
+}
+
+.about-artwork-size .sacred-morph-object { min-width:0; touch-action:pan-y; }
+.about-artwork-size .sacred-morph-object svg { display:block; width:100%; height:auto; overflow:visible; }
+
+:is(.about-page,.solutions-page) .subpage-hero-artwork .golden-morph-object { width:100%; min-width:0; }
+:is(.about-page,.solutions-page) .subpage-hero-artwork .golden-morph-object svg { display:block; width:100%; height:auto; overflow:visible; stroke:var(--silver); }
+
+/* Match the former SVG's full slot and share the title's bottom baseline. */
+:is(.about-page,.solutions-page) .subpage-hero-artwork {
+ top:auto;
+ bottom:var(--section-padding-bottom,clamp(2rem,calc(.9156rem + 4.191vw),8rem));
+ transform:none;
+}
+:is(.about-page,.solutions-page) .subpage-hero-artwork .golden-morph-object svg { height:100%; aspect-ratio:1; }
+
+/* Match the approved Solutions introduction grid without changing mobile. */
+@media(min-width:601px){
+ .about-introduction-columns { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}

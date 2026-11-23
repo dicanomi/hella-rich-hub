@@ -1,0 +1,21 @@
+/* Footer legal text follows the copyright treatment, separate from nav buttons. */
+.legal-nav-link { background:transparent; text-decoration:none; color:var(--steel-tint); font:400 clamp(.75rem,calc(.72478rem + .09747vw),1rem)/20px Roboto,sans-serif; letter-spacing:.1em; text-transform:uppercase; }
+.footer-legal-links { display:flex; flex-direction:column; align-items:flex-end; margin-top:50px; }
+.footer-legal-links .legal-nav-link { text-align:right; }
+.expanded-legal-links { display:flex; flex-direction:column; align-items:flex-end; gap:16px; margin-top:24px; }
+.expanded-legal-links .legal-nav-link { display:flex; align-items:center; min-height:44px; padding:0; text-align:right; }
+.footer-legal-links .legal-nav-link:hover { color:var(--silver); }
+.expanded-legal-links .legal-nav-link:hover { color:var(--silver); }
+.footer-content .copyright .privacy-trigger>span { text-decoration:none; }
+.footer-content .copyright .privacy-trigger:hover { color:var(--silver); opacity:1; }
+.legal-nav-link:focus-visible,.footer-content .copyright .privacy-trigger:focus-visible { outline:2px solid var(--silver); outline-offset:4px; }
+@media(max-width:600px){
+ .footer-content .copyright { align-items:flex-start; text-align:left; }
+ .footer-content .copyright .privacy-trigger { justify-content:flex-start; text-align:left; }
+ .footer-legal-links { align-self:flex-start; align-items:flex-start; margin-top:24px; text-align:left; }
+ .footer-legal-links .legal-nav-link { display:flex; align-items:center; min-height:24px; text-align:left; }
+}
+
+/* Updated footer link rhythm from the desktop and mobile Figma variants. */
+.footer-content .copyright .privacy-trigger,
+.footer-legal-links .legal-nav-link { line-height:25px; }

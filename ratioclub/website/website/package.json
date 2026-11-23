@@ -1,0 +1,42 @@
+{
+  "name": "ratioclub-website",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build --mode release",
+    "lint": "oxlint",
+    "preview": "vite preview",
+    "typecheck": "tsc -b",
+    "test": "playwright test",
+    "build:release": "tsc -b && vite build --mode release",
+    "check": "npm run lint && npm run build && npm test",
+    "test:release": "node scripts/check-release.mjs",
+    "editor:setup": "node scripts/setup-editor.mjs",
+    "editor": "npm run dev --prefix media-editor",
+    "editor:seed": "npm run seed --prefix media-editor",
+    "build:local": "tsc -b && vite build",
+    "test:archive": "echo \"Historic specs are in ../reference/test-sources; see docs/QA.md before running them.\""
+  },
+  "dependencies": {
+    "@gsap/react": "^2.1.2",
+    "gsap": "^3.15.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@playwright/test": "^1.65.1",
+    "@types/node": "^24.19.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "oxlint": "^1.90.0",
+    "typescript": "~7.0.2",
+    "vite": "^8.3.6"
+  },
+  "engines": {
+    "node": ">=22.18.0 <23"
+  }
+}

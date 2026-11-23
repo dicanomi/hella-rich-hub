@@ -1,0 +1,129 @@
+.solutions-page {
+  --solution-comparison-label-width:27.272727%;
+  --solution-comparison-middle-width:38.636364%;
+  --solution-right-column-width:34.090909%;
+  --solution-scoping-gap:calc(var(--solution-gap) * 1.35);
+  --solution-body: clamp(1rem, calc(.79825rem + .77973vw), 2rem);
+  --solution-gap: clamp(1.5rem, calc(.5921rem + 3.5088vw), 7rem);
+  --solution-section-space: clamp(2.5rem, calc(-1.5351rem + 15.5945vw), 18rem);
+  background:var(--silver);
+}
+.solutions-introduction { --intro-title-width:100%; --section-padding-bottom:var(--solution-section-space); }
+.solutions-introduction+.service-detail { --section-padding-top:0px; }
+@media(min-width:601px) {
+ .solutions-introduction-lead { grid-column:1; grid-row:1; align-self:start; }
+ .solutions-introduction-detail { grid-column:2; grid-row:1 / span 2; align-self:start; }
+ .solutions-introduction-action { grid-row:2; align-self:start; }
+}
+.solutions-page .primary-action { max-width:100%; }
+.service-detail { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:auto 1fr; column-gap:var(--solution-gap); padding:var(--section-padding-top,0px) var(--page-gutter) var(--section-padding-bottom,var(--solution-section-space)); align-items:start; }
+.service-detail-number { grid-column:1; grid-row:1; font:900 clamp(4rem,calc(2.38596rem + 6.2378vw),12rem)/1.015625 "Roboto Slab",serif; letter-spacing:-1px; margin-bottom:clamp(1.5rem,3vw,4rem); }
+.service-detail-artwork { grid-column:1; grid-row:2; min-width:0; }
+.service-detail-artwork figcaption { font-size:clamp(.625rem,calc(.4737rem + .5848vw),1rem); line-height:1.4; margin-top:clamp(1rem,2.4vw,3rem); }
+.service-detail-copy { grid-column:2; grid-row:1 / span 2; min-width:0; }
+.service-detail-copy h2 { text-box-trim:trim-both; text-box-edge:cap alphabetic; font:var(--heading-weight) clamp(1.5rem,calc(.89474rem + 2.33918vw),4.5rem)/1.25 "Roboto Slab",serif; letter-spacing:-1px; max-width:75%; margin-bottom:var(--solution-gap); }
+.service-detail-body { letter-spacing:var(--body-24-letter-spacing); font-size:var(--solution-body); line-height:1.4; }
+.service-detail-body p { margin-bottom:1.4em; }
+.service-detail-subtitle { font:700 1em/1.4 "Roboto Slab",serif; }
+.service-detail-body ul { padding-left:1.1em; margin:0; display:grid; gap:1.4em; }
+.service-detail-body li { padding-left:.15em; }
+.service-detail--reverse { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.service-detail--reverse .service-detail-number,.service-detail--reverse .service-detail-artwork { grid-column:2; }
+.service-detail--reverse .service-detail-copy { grid-column:1; }
+.solutions-quote .quote-section figure { min-height:clamp(26.055rem,calc(25.573rem + 1.86vw),30rem); }
+.solutions-comparison { --section-padding-top:var(--solution-section-space); --section-padding-bottom:var(--solution-section-space); }
+.solutions-comparison .section-heading { gap:clamp(1.5rem,calc(-.114rem + 6.2378vw),7rem); }
+.solutions-comparison-table { table-layout:fixed; width:100%; border-collapse:separate; border-spacing:0; margin-top:clamp(2rem,calc(.38596rem + 6.2378vw),7rem); text-align:left; font-size:clamp(1rem,calc(.94956rem + .19493vw),1.4rem); line-height:1.5; }
+.solutions-comparison-table th,.solutions-comparison-table td { vertical-align:top; padding:clamp(1.25rem,2vw,3rem) clamp(1.5rem,4vw,5rem) clamp(1.25rem,2vw,3rem) 0; }
+.solutions-comparison-table th:last-child,.solutions-comparison-table td:last-child { padding-right:0; }
+.solutions-comparison-table th:first-child { width:var(--solution-comparison-label-width); }
+.solutions-comparison-table thead th:nth-child(2) { width:var(--solution-comparison-middle-width); }
+.solutions-comparison-table thead th:last-child { width:var(--solution-right-column-width); }
+.solutions-comparison-table thead th { font:400 var(--solution-body)/1.5 "Roboto Slab",serif; border-bottom:1px solid #b6b9ba; padding-top:0; }
+.solutions-comparison-table tbody th { font-family:"Roboto Slab",serif; font-weight:700; }
+.comparison-mobile-label { display:none; }
+.solutions-scoping { display:grid; grid-template-columns:minmax(0,calc(100% - var(--solution-right-column-width) - var(--solution-scoping-gap))) minmax(0,var(--solution-right-column-width)); gap:var(--solution-scoping-gap); --section-padding-bottom:var(--solution-section-space); }
+.solutions-scoping-copy h2 { font:700 var(--solution-body)/1.4 "Roboto Slab",serif; max-width:34ch; }
+.solutions-scoping-copy>p { letter-spacing:var(--body-24-letter-spacing); font-size:var(--solution-body); line-height:1.4; margin-top:2em; }
+.solutions-scoping-actions { display:grid; gap:clamp(1.5rem,3vw,4rem); }
+.solutions-scoping-actions p { font-size:clamp(1rem,calc(.94956rem + .19493vw),1.4rem); line-height:1.4; margin-bottom:clamp(1.5rem,2.6vw,3rem); }
+@media(max-width:600px) {
+  .solutions-desktop-break { display:none; }
+  .service-detail,.service-detail--reverse { grid-template-columns:minmax(0,1fr); gap:1.5rem; }
+  .service-detail .service-detail-number { grid-column:1; grid-row:1; margin:0; font-size:4rem; line-height:.86; }
+  .service-detail .service-detail-copy { grid-column:1; grid-row:2; }
+  .service-detail-artwork { display:none; }
+  .service-detail-copy h2 { max-width:none; font-weight:400; font-size:1.5rem; line-height:1.03; letter-spacing:0; margin-bottom:1.5rem; }
+  .service-detail-body { line-height:1.5; }
+  .service-detail-body p { margin-bottom:1.5em; }
+  .service-detail-body ul { gap:1.5em; }
+  .solutions-comparison .eyebrow { display:none; }
+  .solutions-comparison-table,.solutions-comparison-table tbody,.solutions-comparison-table tr,.solutions-comparison-table td,.solutions-comparison-table tbody th { display:block; width:100%; }
+  .solutions-comparison-table { margin-top:1.5rem; }
+  .solutions-comparison-table thead { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
+  .solutions-comparison-table tbody th:first-child { width:100%; }
+  .solutions-comparison-table tbody th { font:400 1.5rem/1.15 "Roboto Slab",serif; padding:1.25rem 0 .75rem; }
+  .solutions-comparison-table td { padding:0 0 .75rem; }
+  .solutions-comparison-table tr { padding-bottom:1.5rem; }
+  .comparison-mobile-label { display:block; font:600 .875rem/1.5 "Roboto Mono",monospace; letter-spacing:.08em; text-transform:uppercase; margin-bottom:.75rem; }
+  .solutions-scoping { grid-template-columns:minmax(0,1fr); gap:1.5rem; }
+  .solutions-scoping-copy h2 { font:400 2rem/1.15 "Roboto Slab",serif; }
+  .solutions-scoping-copy>p { margin-top:1.5rem; line-height:1.5; }
+  .solutions-scoping-actions p { margin-bottom:1.5rem; }
+}
+
+.service-artwork-slot,.service-motion { width:100%; }
+.service-motion svg { display:block; width:100%; height:auto; overflow:visible; }
+
+/* Scoping actions hug their content; retain shared design-system padding. */
+.solutions-scoping-actions>div>.primary-action { width:fit-content; min-width:0; padding:var(--action-padding); }
+
+/* Figma audit: scoped refinements; retain approved shared button dimensions. */
+.solutions-introduction-columns { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.solutions-introduction-columns>p { text-box-trim:trim-both; text-box-edge:cap alphabetic; }
+.solutions-comparison .section-heading { gap:clamp(1.5rem,calc(.64254rem + 3.31384vw),4rem); }
+.solutions-comparison .section-heading h2 { max-width:13.75em; }
+.solutions-scoping-actions { gap:clamp(1.5rem,calc(.8443rem + 2.5341vw),4.5rem); }
+/* Paired scoping CTAs use the component’s compact Figma gap, not intro spacing. */
+.solutions-scoping-actions>div>p { margin-bottom:1.25rem; }
+@media(max-width:600px){
+ .solutions-introduction-columns { grid-template-columns:minmax(0,1fr); }
+ .solutions-introduction-columns>p { text-box-trim:none; }
+}
+
+@media(max-width:600px){
+  .service-detail { padding-top:var(--section-padding-top,2.5rem); }
+  .solutions-scoping { --section-padding-top:2.5rem; }
+}
+.solutions-page .conversion-action { padding:var(--action-padding); }
+
+/* Align numeral cap tops with the opposite trimmed heading; preserve the gap below. */
+@media(min-width:601px){
+ .service-detail-number { text-box-trim:trim-start; text-box-edge:cap alphabetic; }
+}
+
+/* Use the available copy column as the desktop grid narrows. */
+@media(min-width:601px) and (max-width:1439px){
+ .service-detail-copy h2 { max-width:min(100%,max(75%,calc(473px - (1440px - 100vw) * .12))); }
+}
+
+/* Boundary spacing is owned by the preceding section, avoiding doubled gaps. */
+.solutions-page .service-detail,
+.solutions-page .solutions-scoping { --section-padding-top:0px; }
+
+.solutions-scoping-actions>div>.text-action { padding-left:0; }
+
+/* Compact copy-to-link rhythm; keep the existing 44px minimum target. */
+.solutions-scoping-actions>div>p { margin-bottom:10px; }
+.solutions-scoping-actions>div>.text-action { padding-top:10px; }
+@media(min-width:601px){
+ .solutions-scoping { align-items:start; }
+ .solutions-scoping-copy h2,
+ .solutions-scoping-actions>div>p { text-box-trim:trim-start; text-box-edge:cap alphabetic; }
+}
+
+
+/* Compact diagram-caption reading measure from the approved reference. */
+.service-detail-artwork figcaption { max-width:54ch; }
+
+

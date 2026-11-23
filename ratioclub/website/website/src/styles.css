@@ -1,0 +1,675 @@
+@property --frame-gutter {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 15px;
+}
+
+@font-face {
+  font-family: Roboto;
+  src: url("./assets/roboto.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Roboto Slab";
+  src: url("./assets/roboto-slab.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Roboto Mono";
+  src: url("./assets/RobotoMono-Variable.woff2") format("woff2");
+  font-weight: 100 700;
+  font-display: swap;
+}
+
+:root {
+  font-family: Roboto, sans-serif;
+  color: #171f23;
+  background: #000604;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --silver: #f7f7f7;
+  --graphite: #171f23;
+  /* Supporting colors, separate from the brand palette. */
+  --steel: #2f3f47;
+  --steel-tint: #7d878c;
+  --ink: #000604;
+  --cyan: #4e94a7;
+  --nav-hover: #59a9bf;
+  --radius-panel: 15px;
+  --paragraph-cta-gap:clamp(1.5rem,calc(.0877rem + 5.4581vw),7rem);
+  --action-padding: clamp(0.875rem, calc(0.7237rem + 0.5848vw), 1.25rem);
+  /* Measured endpoints: 24px at 414px, 60px at 1440px. No page width cap. */
+  --page-gutter: clamp(1.5rem, calc(0.5921rem + 3.5088vw), 7rem);
+  --frame-gutter: 15px;
+  --hero-bottom: clamp(3rem, calc(-0.354rem + 12.963vw), 14rem);
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: var(--ink);
+}
+main {
+  background: var(--silver);
+}
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+button {
+  font: inherit;
+  cursor: pointer;
+}
+button,
+dialog {
+  color: inherit;
+}
+a {
+  color: inherit;
+}
+a[href] {
+  cursor: pointer;
+}
+a[href] *,
+button:not(:disabled) * {
+  cursor: inherit;
+}
+a:not(.navigation-button):not(.brand-link):not(.hero-scroll):not(.footer-wordmark):not(.primary-action):not(.conversion-action) {
+  transition: opacity 140ms ease-out;
+}
+a:not(.navigation-button):not(.brand-link):not(.hero-scroll):not(.footer-wordmark):not(.primary-action):not(.conversion-action):hover {
+  opacity: 0.8;
+}
+button {
+  border-radius: 0;
+  border: 0;
+}
+button:focus-visible,
+a:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+button:focus-visible { filter: brightness(1.25); }
+a:focus-visible { text-decoration: underline; text-underline-offset: .2em; }
+.primary-action:focus-visible { background: var(--nav-hover); color: var(--graphite); text-decoration: none; }
+
+img {
+  display: block;
+}
+p,
+h1,
+h2 {
+  margin: 0;
+}
+p,
+h1,
+h2,
+.primary-action span {
+  overflow-wrap: anywhere;
+}
+.primary-action span {
+  min-width: 0;
+}
+.sr-only,
+.skip-link:not(:focus) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+.skip-link {
+  position: fixed;
+  z-index: 20;
+  left: 1rem;
+  top: 1rem;
+  padding: 1rem;
+  background: var(--silver);
+  color: var(--graphite);
+}
+.hero-index {
+  --hero-bottom-bar: var(--frame-gutter);
+  padding-inline: var(--frame-gutter);
+  padding-bottom: var(--hero-bottom-bar);
+  background: var(--silver);
+}
+.hero-surface {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-block-size: calc(100svh - var(--hero-bottom-bar));
+  isolation: isolate;
+  border-radius: 0 0 var(--frame-gutter) var(--frame-gutter);
+  color: var(--silver);
+  background: var(--graphite);
+}
+.hero-media {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  border-radius: inherit;
+}
+.hero-poster,
+.hero-poster-image img,
+.hero-motion,
+.hero-motion video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.hero-poster-image img {
+  object-fit: cover;
+}
+.hero-motion,.hero-poster {
+  background: var(--graphite);
+  overflow: hidden;
+  isolation: isolate;
+}
+.hero-motion:not(.hero-motion--visible) { visibility: hidden; }
+/* Keep still and video backgrounds on the same constant darkening layer. */
+.hero-motion::after,.hero-poster::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / 45%);
+  pointer-events: none;
+}
+.hero-video-frames {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+.hero-motion--visible .hero-video-frames,.hero-poster .hero-video-frames {
+  opacity: 1;
+}
+.hero-motion video {
+  object-fit: cover;
+}
+.hero-overlay {
+  position: absolute;
+  width: 137.37%;
+  height: 184.36%;
+  max-width: none;
+  left: -18.68%;
+  top: -1.19%;
+  mix-blend-mode: overlay;
+}
+.hero-overlay img {
+  width: 100%;
+  height: 100%;
+}
+.hero-desaturate {
+  position: absolute;
+  inset: 0;
+  background: var(--graphite);
+  mix-blend-mode: saturation;
+}
+/* CSS approximates the authored progressive blur; static posters preserve its exact render. */
+.hero-progressive-blur {
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(clamp(0px, calc(-1.21px + 0.2924vw), 4px));
+  mask-image: linear-gradient(transparent 40%, #000 100%);
+}
+.site-header {
+  --header-height: clamp(5rem, calc(3.411rem + 6.14vw), 11rem);
+  position: relative;
+  z-index: 3;
+  border-radius: inherit;
+}
+.header-row {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 3.8vw, 3.5rem);
+  min-height: var(--header-height);
+  padding-inline: calc(var(--page-gutter) - var(--frame-gutter));
+}
+.brand-link {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  margin-right: auto;
+}
+.brand-link .brand-artwork {
+  min-width: 124px;
+}
+.header-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  column-gap: clamp(1rem, 4.1667vw, 5rem);
+  row-gap: 0.25rem;
+}
+.header-links a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  font:
+    600 0.875rem/1.25rem "Roboto Mono",
+    monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  text-underline-offset: 0.4em;
+}
+
+.menu-toggle {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  background: linear-gradient(180deg, var(--graphite) 0%, #030505 100%);
+  box-shadow: inset -1px -1px 0 rgb(0 0 0 / 25%), inset .5px .5px 0 rgb(255 255 255 / 9%);
+  border-radius: 4px;
+}
+.navigation-viewport {
+  position: absolute;
+  top: 0;
+  inset-inline: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.expanded-navigation {
+  position: relative;
+  padding: calc(var(--header-height) + 0.625rem)
+    calc(var(--page-gutter) - var(--frame-gutter)) clamp(2.8rem, 4.86vw, 5rem);
+  background: var(--graphite);
+  border-radius: 0 0 15px 15px;
+  opacity:0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 140ms ease-out,
+    visibility 0s linear 140ms;
+  max-height: 100svh;
+  overflow-y: auto;
+}
+.site-header--open .expanded-navigation {
+  opacity:1;
+  visibility: visible;
+  pointer-events: auto;
+  transition-delay: 0s;
+}
+.expanded-navigation ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: clamp(0.356rem, calc(0.558rem - 0.224vw), 0.5rem);
+  margin: 0;
+  padding: 0;
+}
+.navigation-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 29px;
+  padding: 0.15rem 0.625rem;
+  font:
+    400 1rem/1.5 "Roboto Mono",
+    monospace;
+  text-decoration: none;
+  background: var(--cyan);
+  color: var(--graphite);
+  transition: background-color 140ms ease-out;
+}
+a.navigation-button:hover {
+  background: var(--nav-hover);
+}
+.navigation-button[aria-disabled] {
+  cursor: not-allowed;
+}
+.hero-copy {
+  position: relative;
+  margin-top: auto;
+  padding: clamp(7rem, 18vh, 20rem)
+    calc(var(--page-gutter) - var(--frame-gutter))
+    max(
+      var(--hero-bottom),
+      calc(var(--page-gutter) - var(--frame-gutter) + 56px)
+    );
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(1.5rem, calc(0.264rem + 4.7758vw), 6rem);
+}
+.hero-copy h1 {
+  font:
+    400
+      clamp(2.5rem, calc(1.6425rem + 3.3138vw), 7rem)/clamp(
+        2.875rem,
+        calc(1.98224rem + 3.45029vw),
+        7.7rem
+      )
+      "Roboto Slab",
+    serif;
+  letter-spacing: clamp(-0.04625rem, calc(0.01866rem - 0.0721vw), 0px);
+  width: min(100%, calc(7.232rem + 60.456vw));
+  text-wrap: wrap;
+  margin-block: calc(-1 * clamp(0rem, calc(-0.3531rem + 1.3645vw), 0.875rem));
+}
+.primary-action {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: var(--action-padding);
+  min-height: 52px;
+  min-width: min(100%, 22.875rem);
+  max-width: 100%;
+  background: var(--cyan);
+  color: var(--graphite);
+  text-align: left;
+  font:
+    clamp(600, calc(740.35 - 0.09746 * 100vw / 1px), 700) 1rem/1.5 "Roboto Mono",
+    monospace;
+  text-transform: uppercase;
+  letter-spacing: clamp(0px, calc(-1.21px + 0.2924vw), 3px);
+  transition: background-color 140ms ease-out;
+}
+.action-arrow {
+  display: block;
+  width: 14px;
+  height: 10px;
+  flex-shrink: 0;
+  background: currentColor;
+  mask-size: contain;
+  mask-position: center;
+  mask-repeat: no-repeat;
+}
+.primary-action:hover {
+  background: var(--nav-hover);
+}
+.hero-scroll {
+  position: absolute;
+  left: 59%;
+  bottom: 0;
+  transform: translateX(-50%);
+}
+.media-toggle {
+  position: absolute;
+  z-index: 1;
+  bottom: calc(var(--page-gutter) - var(--frame-gutter));
+  right: calc(var(--page-gutter) - var(--frame-gutter));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0.5rem;
+  background: var(--graphite);
+  color: var(--silver);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+}
+.pause-icon {
+  display: block;
+  width: 10px;
+  height: 12px;
+  border-inline: 3px solid currentColor;
+}
+.play-icon {
+  display: block;
+  width: 0;
+  height: 0;
+  border-left: 10px solid currentColor;
+  border-block: 6px solid transparent;
+}
+.introduction {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: clamp(1.5rem, calc(0.5921rem + 3.5088vw), 6rem);
+  padding: var(
+      --section-padding-top,
+      clamp(2.5rem, calc(-0.2741rem + 10.7212vw), 12rem)
+    )
+    var(--page-gutter)
+    var(
+      --section-padding-bottom,
+      clamp(2.5rem, calc(-0.2741rem + 10.7212vw), 12rem)
+    );
+  scroll-margin-top: 1rem;
+}
+.introduction > p {
+  flex-grow: 1;
+  flex-shrink: 1;
+  min-width: 0;
+}
+.introduction > .introduction-lead {
+  flex-basis: max(
+    28rem,
+    calc((100% - clamp(1.5rem, calc(0.5921rem + 3.5088vw), 6rem)) * 0.50873)
+  );
+}
+.introduction > .introduction-detail {
+  flex-basis: max(
+    28rem,
+    calc((100% - clamp(1.5rem, calc(0.5921rem + 3.5088vw), 6rem)) * 0.49127)
+  );
+}
+.introduction-lead {
+  font:
+    400 clamp(1.75rem, calc(1.2456rem + 1.9493vw), 4rem)/1.4 "Roboto Slab",
+    serif;
+  letter-spacing: clamp(-1px, calc(0.404px - 0.0975vw), 0px);
+  text-box-trim: trim-both;
+  text-box-edge: cap alphabetic;
+}
+.introduction-detail {
+  font:
+    400 clamp(1rem, calc(0.5965rem + 1.5595vw), 2.75rem)/1.4 Roboto,
+    sans-serif;
+  letter-spacing: clamp(-1px, calc(0.404px - 0.0975vw), 0px);
+  text-box-trim: trim-both;
+  text-box-edge: cap alphabetic;
+}
+.introduction-lead {
+  line-height: clamp(1.15, calc(1.04912 + 0.00024366 * 100vw / 1px), 1.4);
+}
+.introduction-lead strong {
+  font-weight: clamp(400, calc(278.947 + 0.2924 * 100vw / 1px), 700);
+}
+.introduction-detail {
+  line-height: clamp(1.4, calc(1.54035 - 0.00009746 * 100vw / 1px), 1.5);
+}
+.dialog-close {
+  margin-top: 1.5rem;
+  min-height: 44px;
+  padding: 0.75rem 1.25rem;
+  background: var(--graphite);
+  color: var(--silver);
+}
+.pending-page {
+  padding: var(--page-gutter);
+  display: grid;
+  gap: 2rem;
+  min-height: 100svh;
+  align-content: center;
+}
+.pending-page h1 {
+  font:
+    400 2.5rem/1.15 "Roboto Slab",
+    serif;
+}
+/* Composition switches only; all size and spacing interpolation remains continuous. */
+@media (max-width: 48rem) {
+  .header-links {
+    display: none;
+  }
+  .hero-scroll {
+    display: none;
+  }
+
+  .primary-action {
+    justify-content: space-between;
+  }
+  .hero-progressive-blur {
+    display: none;
+  }
+  .navigation-button {
+    min-height: 48px;
+    padding-inline: 0.75rem;
+  }
+  .introduction-lead {
+    text-box-trim: none;
+  }
+
+  .introduction-detail {
+    text-box-trim: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Approved exception: the frame switches off at mobile; it never becomes thin. */
+@media (max-width: 600px) {
+  :root {
+    --frame-gutter: 0px;
+  }
+}
+/* Keep the hero frame stable at each viewport size. */
+.hero-index {
+  position: relative;
+  isolation: isolate;
+  background: var(--graphite);
+}
+.hero-index::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: transparent;
+  /* Only the lower rounded-corner cutouts need white behind the surface. */
+  background-image: linear-gradient(to top, var(--silver) calc(2 * var(--frame-gutter)), transparent calc(2 * var(--frame-gutter)));
+  border: solid var(--silver);
+  border-width: 0 var(--frame-gutter) var(--frame-gutter);
+  pointer-events: none;
+  opacity: 1;
+}
+@media (max-width: 600px) {
+  .hero-index::before {
+    opacity: 0;
+  }
+}
+
+.brand-artwork { display: block; }
+.brand-artwork svg { display: block; overflow: visible; }
+.brand-artwork .brand-logo-mobile { display: none; }
+@media (max-width: 48rem) {
+  .brand-artwork .brand-logo-desktop { display: none; }
+  .brand-artwork .brand-logo-mobile { display: block; }
+}
+
+/* Programmatic scroll destination: no browser ring around the whole section. */
+.introduction:focus { outline: none; }
+
+/* Page headings receive navigation focus without a browser selection ring. */
+#hero-title:focus,
+#page-title:focus {
+  outline: none;
+}
+
+/* Index service-discovery experiment: retain primary CTA styling and padding. */
+.hero-actions { display:flex; flex-wrap:wrap; align-items:center; gap:1rem; width:100%; }
+.hero-actions .hero-explore { color:var(--silver); padding:var(--action-padding); text-decoration:none; }
+.hero-actions .hero-explore:hover { color:var(--silver); }
+.hero-actions .hero-explore:focus-visible { background:transparent; color:var(--silver); opacity:.8; text-decoration:none; }
+.hero-actions .hero-explore>span:first-child { text-decoration:none; }
+
+@media(max-width:600px){ :root { --paragraph-cta-gap:1.5rem; } }
+
+/* Compact desktop hero: remove the extra width restriction before scaling. */
+@media(min-width:601px) and (max-width:1439px){
+ .hero-copy h1 { width:min(100%,max(calc(7.232rem + 60.456vw),calc(986px - (1440px - 100vw) * .3))); }
+}
+
+/* Updated shared Figma navigation surfaces; CTA/footer components are separate. */
+.site-header--open .header-row { background:var(--graphite); }
+.expanded-navigation { background:var(--graphite); }
+@media(max-width:600px) {
+ .expanded-navigation { border-bottom-left-radius:0; border-bottom-right-radius:0; }
+}
+@media(min-width:601px) {
+ .site-header--open .header-row { background:transparent; }
+ .expanded-navigation { transition:opacity 180ms ease-out,visibility 0s linear 180ms; }
+ .site-header--open .expanded-navigation { transition-delay:0s; }
+ .site-header[data-hero-menu] .expanded-navigation { height:var(--open-nav-height); max-height:none; }
+}
+
+.menu-toggle:focus-visible { box-shadow:inset -1px -1px 0 rgb(0 0 0 / 25%),inset .5px .5px 0 rgb(255 255 255 / 9%); }
+
+/* One persistent pair of bars makes open/close motion reversible mid-click. */
+.menu-toggle-icon { position:relative; display:block; width:24px; height:24px; transform:rotate(0deg); transition:transform 300ms cubic-bezier(.22,1,.36,1); }
+.menu-toggle-bar { position:absolute; left:2px; top:11px; width:20px; height:2px; border-radius:100px; background:var(--silver); transform-origin:center; transition:transform 300ms cubic-bezier(.22,1,.36,1); }
+.menu-toggle-bar:first-child { transform:translateY(-7.5px) rotate(0deg); }
+.menu-toggle-bar:last-child { transform:translateY(7.5px) rotate(0deg); }
+.menu-toggle[aria-expanded="true"] .menu-toggle-icon { transform:rotate(180deg); }
+.menu-toggle[aria-expanded="true"] .menu-toggle-bar:first-child { transform:translateY(0) rotate(45deg); }
+.menu-toggle[aria-expanded="true"] .menu-toggle-bar:last-child { transform:translateY(0) rotate(-45deg); }
+@media(prefers-reduced-motion:reduce){
+ .menu-toggle-icon,.menu-toggle-bar { transition:none; }
+}
+
+/* These controls act as buttons, without selecting labels or dragging artwork. */
+.menu-toggle,
+.menu-toggle *,
+.site-footer .navigation-button,
+.site-footer .navigation-button *,
+.expanded-navigation .navigation-button,
+.expanded-navigation .navigation-button * {
+ -webkit-user-select:none;
+ user-select:none;
+ -webkit-user-drag:none;
+}
+
+/* Figma top navigation: Ink at 30%, Silver text, 10px box inset. */
+.header-links { column-gap:20px; }
+.header-row { column-gap:20px; }
+.header-links a {
+ padding:10px;
+ min-height:40px;
+ justify-content:center;
+ background:var(--top-nav-box-background,rgb(0 6 4 / 30%));
+ color:var(--silver);
+ text-decoration:none;
+}
+.header-links a:hover { color:var(--silver); text-decoration:none; }
+
+/* Header logos use Brand Silver; footer wordmark remains unchanged. */
+.site-header .brand-artwork svg path { fill:var(--silver); }
+.hero-index .site-header .brand-artwork svg path { fill:var(--silver); }
+
+/* Index-only switch: remove this override to restore the boxed backgrounds. */
+.hero-index { --top-nav-box-background:transparent; }
+
+/* Reversible top-nav background switch, shared by all page headers. */
+.site-header { --top-nav-box-background:transparent; }
+
+/* Desktop uses the two direct links; compact navigation retains its menu. */
+@media(min-width:769px){
+ .site-header .header-row>.menu-toggle { display:none; }
+ .site-header>.navigation-viewport { display:none; }
+}

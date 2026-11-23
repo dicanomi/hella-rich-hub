@@ -1,0 +1,45 @@
+/* CTA contract. Compact navigation/footer links are a separate component. */
+:root {
+ --cta-font-size:1rem;
+ --cta-font-weight:600;
+ --cta-line-height:1.5;
+ --cta-letter-spacing:clamp(0px,calc(-1.21px + .2924vw),3px);
+}
+#root :is(.primary-action,.conversion-action,.text-action,.solution-card-action) {
+ font:var(--cta-font-weight) var(--cta-font-size)/var(--cta-line-height) "Roboto Mono",monospace;
+ letter-spacing:var(--cta-letter-spacing);
+ text-transform:uppercase;
+}
+#root :is(.primary-action,.conversion-action) {
+ padding:var(--action-padding);
+ min-width:0;
+ width:fit-content;
+ max-width:100%;
+ min-height:52px;
+ gap:1rem;
+ text-decoration:none;
+}
+
+/* Shared CTA arrow nudge from Index; never changes CTA geometry. */
+@media (prefers-reduced-motion: no-preference) {
+ #root :is(.primary-action,.conversion-action,.text-action,.solution-card-link) .action-arrow {
+  transition:transform 200ms cubic-bezier(.22,1,.36,1);
+ }
+ #root :is(.primary-action,.conversion-action,.text-action,.solution-card-link):focus-visible .action-arrow {
+  transform:translateX(4px);
+ }
+}
+@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference) {
+ #root :is(.primary-action,.conversion-action,.text-action,.solution-card-link):hover .action-arrow {
+  transform:translateX(4px);
+ }
+}
+.action-label-mobile { display:none; }
+@media(max-width:600px) {
+  .action-label-desktop { display:none; }
+  .action-label-mobile { display:inline; }
+}
+
+@media(max-width:600px){
+ .action-label-mobile { white-space:nowrap; }
+}
