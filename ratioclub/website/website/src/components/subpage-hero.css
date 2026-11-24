@@ -26,3 +26,15 @@
 @media(max-width:600px){
  :is(.solutions-page,.about-page) .subpage-hero-surface { padding-top:3.375rem; }
 }
+
+/* Shared by both independently loaded hero routes. */
+:is(.about-page,.solutions-page) .subpage-hero-artwork .golden-morph-object { width:100%; min-width:0; }
+:is(.about-page,.solutions-page) .subpage-hero-artwork .golden-morph-object svg { display:block; width:100%; height:auto; overflow:visible; stroke:var(--silver); }
+
+/* Match the former SVG's full slot and share the title's bottom baseline. */
+:is(.about-page,.solutions-page) .subpage-hero-artwork {
+ top:auto;
+ bottom:var(--section-padding-bottom,clamp(2rem,calc(.9156rem + 4.191vw),8rem));
+ transform:none;
+}
+:is(.about-page,.solutions-page) .subpage-hero-artwork .golden-morph-object svg { height:100%; aspect-ratio:1; }

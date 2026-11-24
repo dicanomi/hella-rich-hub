@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState,useSyncExternalStore } from 'react';
 import type { FormEvent } from 'react';
 import { SubpageHero } from '../components/SubpageHero';
 import { Footer } from '../components/Footer';
@@ -6,8 +6,10 @@ import { contactConfig } from '../config/contact';
 import arrow from '../assets/arrow-right-desktop.svg';
 import artwork from '../assets/hero-about-eight-arms.svg';
 import './contact.css';
+const subscribeClientReady=()=>()=>{};
 export default function ContactPage(){
  const [submitted,setSubmitted]=useState(false);
+ const interactive=useSyncExternalStore(subscribeClientReady,()=>true,()=>false);
  // Disconnected preview: report that nothing was sent; never imply delivery.
  function sendMessage(event:FormEvent<HTMLFormElement>){
   event.preventDefault();
@@ -23,12 +25,12 @@ export default function ContactPage(){
 
    </div>
    <div id="contact-form" className="contact-form">
-   {submitted ? <p className="contact-send-status" role="status">Message not sent. Email delivery is currently disconnected. Please email hello@ratioclub.com.</p> : <form inert={typeof document === "undefined"} onSubmit={sendMessage}>
+   {!interactive?<p className="contact-static-notice">Email delivery through this website is disconnected. Please use the email link to contact the team.</p>:submitted ? <p className="contact-send-status" role="status">Message not sent. Email delivery is currently disconnected. Please email hello@ratioclub.com.</p> : <form onSubmit={sendMessage}>
     <div className="contact-field"><label htmlFor="contact-name">Name</label><input id="contact-name" name="name" autoComplete="name" required maxLength={120}/></div>
     <div className="contact-field"><label htmlFor="contact-email">Email</label><input id="contact-email" name="email" type="email" autoComplete="email" required maxLength={254}/></div>
     <div className="contact-field"><label htmlFor="contact-company">Company <span>(optional)</span></label><input id="contact-company" name="company" autoComplete="organization" maxLength={160}/></div>
     <div className="contact-field"><label htmlFor="contact-message">Message</label><textarea id="contact-message" name="message" required rows={7} maxLength={5000}/></div>
-    <button className="primary-action" type="submit"><span>SEND MESSAGE</span><span className="action-arrow" aria-hidden="true" style={{maskImage:`url("${arrow}")`}}/></button>
+    <button className="primary-action" type="submit"><span>SEND MESSAGE</span><span className="action-arrow" aria-hidden="true" style={{WebkitMaskImage:`url("${arrow}")`,maskImage:`url("${arrow}")`}}/></button>
    </form>}
    </div>
   </main><Footer/>

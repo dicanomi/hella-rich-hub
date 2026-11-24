@@ -11,12 +11,13 @@ import { ConversionBanner } from "./components/ConversionBanner";
 import { Footer } from "./components/Footer";
 import { HeroIndex } from "./components/HeroIndex";
 import { Introduction } from "./components/Introduction";
-import ContactPage from "./pages/ContactPage";
-import LegalPage from "./pages/LegalPage";
-import NotFoundPage from "./pages/NotFoundPage";
-
-import SolutionsPage from "./pages/SolutionsPage";
-import AboutPage from "./pages/AboutPage";
+import {routeLoaders} from './route-modules';
+import {SiteRouteContext} from './components/SiteRouteContext';
+const ContactPage=lazy(routeLoaders.contact);
+const LegalPage=lazy(routeLoaders.legal);
+const NotFoundPage=lazy(routeLoaders.notFound);
+const SolutionsPage=lazy(routeLoaders.solutions);
+const AboutPage=lazy(routeLoaders.about);
 import {ContactModal} from './components/ContactModal';
 const HeroOptionsReview = import.meta.env.VITE_ENABLE_REVIEWS === "true" ? lazy(() => import("./review/HeroOptionsReview")) : null;
 const HeroParticleReview = import.meta.env.VITE_ENABLE_REVIEWS === "true" ? lazy(() => import("./review/HeroParticleReview")) : null;
@@ -38,10 +39,17 @@ const subscribeLocation = (callback: () => void) => {
   };
 };
 const currentPath = () => routePath(window.location.pathname);
-export default function App() {
-  const path = useSyncExternalStore(subscribeLocation, currentPath);
+export default function App({initialPath='/'}:{initialPath?:string}) {
+  const path = useSyncExternalStore(subscribeLocation,currentPath,()=>initialPath);
   useLayoutEffect(() => { applyPageMetadata(path); }, [path]);
-  return <><PageContent key={path} path={path} /><ContactModal key={'contact'+path}/></>;
+  return <SiteRouteContext value={path}><Suspense fallback={<main className="pending-page" aria-busy="true">Loading page…</main>}><PageContent key={path} path={path} /><RouteReady path={path}/></Suspense><ContactModal key={'contact'+path}/></SiteRouteContext>;
+}
+function RouteReady({path}:{path:string}){
+ useLayoutEffect(()=>{
+  const root=document.getElementById('root');if(root)root.dataset.hydrated='true';
+  window.dispatchEvent(new CustomEvent('ratioclub:route-ready',{detail:path}));
+ },[path]);
+ return null;
 }
 export function PageContent({path}: {path:string}) {
   if (path === "/hero-options" && HeroOptionsReview) return <Suspense fallback={<main className="pending-page">Loading hero options…</main>}><HeroOptionsReview /></Suspense>;

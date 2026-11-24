@@ -19,7 +19,7 @@ const artwork = [
 
 export function CoreSolutions({ spacing, artworks }: { spacing?: SectionSpacing; artworks?: ReactNode[] }) {
   const labels = ["Validation", "Platforms", "Operations"] as const;
-  const arrowIcon = <span className="action-arrow" aria-hidden="true" style={{maskImage:`url("${arrow}")`}} />;
+  const arrowIcon = <span className="action-arrow" aria-hidden="true" style={{WebkitMaskImage:`url("${arrow}")`,maskImage:`url("${arrow}")`}} />;
   const variants = ["gpu", "inference", "operations"] as const;
   return (
     <Section
@@ -38,7 +38,9 @@ export function CoreSolutions({ spacing, artworks }: { spacing?: SectionSpacing;
       </div>
       <div className="solutions-grid">
         {solutionsContent.cards.map((card, index) => (
-          <a className="solution-card solution-card-link" key={card.title} href={sitePath(`/solutions#service-${variants[index]}-title`)} aria-labelledby={`index-service-${variants[index]}`}>
+          <article className="solution-card" key={card.title}
+            onPointerEnter={event=>{if(event.pointerType==='mouse'&&matchMedia('(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference)').matches)event.currentTarget.querySelector('.solution-graph-motion')?.setAttribute('data-hover','true');}}
+            onPointerLeave={event=>event.currentTarget.querySelector('.solution-graph-motion')?.setAttribute('data-hover','false')}>
             <h3 id={`index-service-${variants[index]}`}>{card.title}</h3>
             <figure>
               <div className="solution-artwork-slot">
@@ -47,8 +49,8 @@ export function CoreSolutions({ spacing, artworks }: { spacing?: SectionSpacing;
               <BodyText as="figcaption">{card.caption}</BodyText>
             </figure>
             <BodyText as="p">{card.body}</BodyText>
-            <span className="solution-card-action" aria-hidden="true"><span>{labels[index]}</span>{arrowIcon}</span>
-          </a>
+            <a className="solution-card-action solution-card-link" href={sitePath(`/solutions#service-${variants[index]}-title`)} aria-labelledby={`index-service-${variants[index]} index-service-action-${variants[index]}`}><span id={`index-service-action-${variants[index]}`}>{labels[index]}</span>{arrowIcon}</a>
+          </article>
         ))}
       </div>
     </Section>

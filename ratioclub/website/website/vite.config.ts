@@ -24,6 +24,7 @@ export default defineConfig(({ mode, command }) => {
   return {
   base:mount,
   define: {
+    'import.meta.env.VITE_BUILD_YEAR':JSON.stringify(String(new Date().getFullYear())),
     'import.meta.env.VITE_ENABLE_REVIEWS': JSON.stringify(release ? 'false' : 'true'),
     'import.meta.env.VITE_SITE_URL': JSON.stringify(siteBase),
     'import.meta.env.VITE_ALLOW_INDEXING': JSON.stringify(String(allowIndexing)),
@@ -66,7 +67,15 @@ export default defineConfig(({ mode, command }) => {
         const { prerender } = await import("./scripts/prerender.mjs");
         const pages = await prerender(mode, siteBase, allowIndexing, mount);
         for (const path of Object.keys(pageMetadata)) {
-          const html = renderMetadata(template, path, siteBase, allowIndexing).replace(/ blocking="render"/g, "").replace('<div id="root"></div>', `<div id="root">${pages[path]}</div>`).replace(/<noscript>[\s\S]*?<\/noscript>/, "");
+          let html = renderMetadata(template,path,siteBase,allowIndexing).replace(/ blocking="render"/g, "").replace('<div id="root"></div>',`<div id="root" data-prerendered="true" data-route="${path}">${pages[path]}</div>`).replace(/<noscript>[\s\S]*?<\/noscript>/, "");
+          // Direct-route HTML must have its lazy module's CSS even before JavaScript runs.
+          const routeKey=path==='/solutions'?'src/pages/SolutionsPage.tsx':path==='/about'?'src/pages/AboutPage.tsx':path==='/contact'?'src/pages/ContactPage.tsx':path==='/privacy-notice'||path==='/terms-and-conditions'?'src/pages/LegalPage.tsx':path==='/404'?'src/pages/NotFoundPage.tsx':undefined;
+          const manifest=JSON.parse(readFileSync('dist/.vite/manifest.json','utf8'));
+          const css=new Set<string>(),visited=new Set<string>();
+          const collect=(key:string)=>{if(visited.has(key))return;visited.add(key);const entry=manifest[key];if(!entry)return;for(const file of entry.css??[])css.add(file);for(const key of entry.imports??[])collect(key);};
+          if(routeKey)collect(routeKey);
+          const links=[...css].filter(file=>!html.includes(`href="${mount+file}"`)).map(file=>`<link rel="stylesheet" crossorigin href="${mount+file}">`).join('');
+          html=html.replace('</head>',links+'</head>');
           if (path === "/404") writeFileSync("dist/404.html", html);
           else if (path === "/") writeFileSync("dist/index.html", html);
           else writeFileSync(`dist${path}.html`, html);

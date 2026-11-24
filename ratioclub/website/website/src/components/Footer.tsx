@@ -31,7 +31,7 @@ export function Footer({ spacing, connected=false }: { spacing?: SectionSpacing;
               );
               return (
                 <BodyText as="li" key={label}>
-                    <a href={item.path==='/contact'?'#contact':sitePath(item.path)} target={item.external?'_blank':undefined} rel={item.external?'noopener noreferrer':undefined} data-contact-modal={item.path==='/contact'?true:undefined} aria-haspopup={item.path==='/contact'?'dialog':undefined} className="navigation-button">
+                    <a href={sitePath(item.path)} target={item.external?'_blank':undefined} rel={item.external?'noopener noreferrer':undefined} data-contact-modal={item.path==='/contact'?true:undefined} aria-haspopup={item.path==='/contact'?'dialog':undefined} className="navigation-button">
                       {label}
                       {arrow}
                     </a>

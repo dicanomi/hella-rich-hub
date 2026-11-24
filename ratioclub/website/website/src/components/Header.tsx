@@ -1,5 +1,6 @@
-import {sitePath,routePath} from "../config/paths";
-import { useState, useRef, useEffect } from "react";
+import {SiteRouteContext} from './SiteRouteContext';
+import {sitePath} from "../config/paths";
+import { useState, useRef, useEffect, useContext } from "react";
 import { HeaderLogo } from "./HeaderLogo";
 import rightArrow from "../assets/arrow-right-desktop.svg";
 import mobileRightArrow from "../assets/arrow-right-mobile.svg";
@@ -10,6 +11,7 @@ import {openContactEvent} from './contact-modal-events';
 import './legal-navigation.css';
 
 export function Header() {
+  const path=useContext(SiteRouteContext);
   const [open, setOpen] = useState(false);
   const trigger = useRef<HTMLButtonElement>(null);
   const header = useRef<HTMLElement>(null);
@@ -84,8 +86,8 @@ export function Header() {
       <div className="header-row">
         <HeaderLogo />
         <nav className="header-links" aria-label="Main navigation">
-          <a href={sitePath("/solutions")} aria-current={(typeof window === "undefined" ? "" : routePath(window.location.pathname)) === "/solutions" ? "page" : undefined}>Solutions</a>
-          <a href={sitePath("/about")} aria-current={(typeof window === "undefined" ? "" : routePath(window.location.pathname)).replace(/\/$/, "") === "/about" ? "page" : undefined}>About us</a>
+          <a href={sitePath("/solutions")} aria-current={path === "/solutions" ? "page" : undefined}>Solutions</a>
+          <a href={sitePath("/about")} aria-current={path === "/about" ? "page" : undefined}>About us</a>
         </nav>
         <button
           ref={trigger}
@@ -118,7 +120,7 @@ export function Header() {
               <li key={item.label}>
                   <a
                     className="navigation-button"
-                    href={item.path==='/contact'?'#contact':sitePath(item.path)}
+                    href={sitePath(item.path)}
                     target={item.external?'_blank':undefined}
                     rel={item.external?'noopener noreferrer':undefined}
                     data-contact-modal={item.path==='/contact'?true:undefined}

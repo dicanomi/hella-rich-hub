@@ -374,7 +374,7 @@ a.navigation-button:hover {
   color: var(--graphite);
   text-align: left;
   font:
-    clamp(600, calc(740.35 - 0.09746 * 100vw / 1px), 700) 1rem/1.5 "Roboto Mono",
+    600 1rem/1.5 "Roboto Mono",
     monospace;
   text-transform: uppercase;
   letter-spacing: clamp(0px, calc(-1.21px + 0.2924vw), 3px);
@@ -479,14 +479,16 @@ a.navigation-button:hover {
   text-box-trim: trim-both;
   text-box-edge: cap alphabetic;
 }
-.introduction-lead {
-  line-height: clamp(1.15, calc(1.04912 + 0.00024366 * 100vw / 1px), 1.4);
-}
-.introduction-lead strong {
-  font-weight: clamp(400, calc(278.947 + 0.2924 * 100vw / 1px), 700);
-}
-.introduction-detail {
-  line-height: clamp(1.4, calc(1.54035 - 0.00009746 * 100vw / 1px), 1.5);
+/* Safe defaults on engines without typed CSS arithmetic. */
+.introduction-lead { line-height:1.4; }
+.introduction-lead strong { font-weight:700; }
+.introduction-detail { line-height:1.4; }
+/* Progressive enhancement retains the exact approved fluid metrics where supported. */
+@supports (font-weight:calc(100vw / 1px)) {
+ .primary-action { font-weight:clamp(600,calc(740.35 - .09746 * 100vw / 1px),700); }
+ .introduction-lead { line-height:clamp(1.15,calc(1.04912 + .00024366 * 100vw / 1px),1.4); }
+ .introduction-lead strong { font-weight:clamp(400,calc(278.947 + .2924 * 100vw / 1px),700); }
+ .introduction-detail { line-height:clamp(1.4,calc(1.54035 - .00009746 * 100vw / 1px),1.5); }
 }
 .dialog-close {
   margin-top: 1.5rem;
@@ -509,9 +511,6 @@ a.navigation-button:hover {
 }
 /* Composition switches only; all size and spacing interpolation remains continuous. */
 @media (max-width: 48rem) {
-  .header-links {
-    display: none;
-  }
   .hero-scroll {
     display: none;
   }
@@ -672,4 +671,17 @@ a.navigation-button:hover {
 @media(min-width:769px){
  .site-header .header-row>.menu-toggle { display:none; }
  .site-header>.navigation-viewport { display:none; }
+}
+
+/* All header visibility switches use the same CSS-pixel breakpoint. */
+@media(max-width:768px){ .site-header .header-links { display:none; } }
+/* A two-color keyboard indicator stays visible on light and dark surfaces. */
+#root :is(a,button,input,textarea,select,summary,[tabindex]):focus-visible {
+ outline:2px solid var(--silver); outline-offset:3px;
+ box-shadow:0 0 0 5px var(--graphite);
+}
+@media(forced-colors:active){
+ #root :is(a,button,input,textarea,select,summary,[tabindex]):focus-visible {
+  outline:2px solid Highlight; outline-offset:3px; box-shadow:none;
+ }
 }

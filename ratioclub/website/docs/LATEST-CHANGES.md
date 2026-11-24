@@ -1,4 +1,4 @@
-# Latest deployed implementation — 23 November 2026
+# Latest deployed implementation — 24 November 2026
 
 The source matches the latest approved deployed implementation, packaged for the official client origin. No personal review-host configuration or Git history is included.
 
@@ -15,6 +15,6 @@ The source matches the latest approved deployed implementation, packaged for the
 
 Email delivery, runtime Payload access and tracking remain disconnected. Indexing remains disabled. The updated legal text does not activate any processing or certify compliance. Experimental review pages remain excluded from release builds.
 
-## Client review item retained from the deployed source
+## Lucas review fixes
 
-The Privacy Choices dialog still contains a status sentence saying legal notices remain placeholders. This is stale now that the two document pages contain supplied replacement copy. It is retained to match the deployed implementation; correct that helper sentence in a reviewed follow-up. The supplied legal text describes processing practices; integrations remain disabled in this implementation. Review document/implementation consistency before production activation.
+Issues #4–#12 have reviewed source fixes and regression coverage. See LUCAS-ISSUE-REVIEW.md for details. The stale Privacy Choices helper sentence is corrected; supplied legal copy is unchanged. AWS CloudFront Response Headers Policy association still needs administrator verification.

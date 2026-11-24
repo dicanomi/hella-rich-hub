@@ -18,7 +18,7 @@
 .privacy-option label { display:block; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--silver); }
 .privacy-option p { margin:0; }
 .privacy-option input { appearance:none; width:64.529px; height:32.265px; border:0; border-radius:26.887px; background:var(--ink,#000604); position:relative; margin:0; opacity:1; }
-.privacy-option input::after { content:''; position:absolute; width:21.51px; height:21.51px; background:url('../assets/privacy-switch-knob.svg') center/contain no-repeat; top:5.377px; left:5.377px; }
+.privacy-option input::after { content:''; position:absolute; width:21.51px; height:21.51px; background:#8b9192; top:5.377px; left:5.377px; }
 .privacy-option input:checked { background:var(--ink,#000604); box-shadow:none; }
 .privacy-option input:checked::after { left:37.642px; }
 .privacy-option input:not(:disabled) { cursor:pointer; }

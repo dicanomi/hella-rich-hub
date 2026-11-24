@@ -69,3 +69,7 @@
 .legal-notice-table-scroll tbody th { font-weight:400; }
 
 .legal-notice-part a { text-decoration:underline; text-underline-offset:.18em; }
+
+@media(max-width:600px){
+ .legal-reading-contents a { display:flex; align-items:center; min-height:44px; padding-block:9px; }
+}

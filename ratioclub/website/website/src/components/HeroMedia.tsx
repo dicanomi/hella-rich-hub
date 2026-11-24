@@ -26,6 +26,7 @@ function prefersStillImage() {
 export function HeroMedia() {
   const mediaRef = useRef<HTMLDivElement>(null);
   const playbackWanted = useRef(true);
+  const playbackRequested = useRef(false);
   const synchronizePlayback = useRef<() => void>(() => {});
   const videoRef = useRef<HTMLVideoElement>(null);
   const [showPoster, setShowPoster] = useState(prefersStillImage);
@@ -36,6 +37,7 @@ export function HeroMedia() {
 
   useEffect(() => {
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const compact = window.matchMedia('(max-width:768px), (hover:none)');
     const dataPreference = window.matchMedia("(prefers-reduced-data: reduce)");
     const connection = (navigator as NavigatorWithConnection).connection;
     const updatePreferences = () => {
@@ -50,14 +52,19 @@ export function HeroMedia() {
         setSource(undefined);
         setHasFrame(false);
         setIsPlaying(false);
-      } else
-        setSource(heroVideo);
+      } else if(!compact.matches||playbackRequested.current) {
+        setShowPoster(false);setSource(heroVideo);
+      } else {
+        videoRef.current?.pause();setShowPoster(true);setSource(undefined);setHasFrame(false);setIsPlaying(false);
+      }
     };
     updatePreferences();
+    compact.addEventListener("change",updatePreferences);
     motion.addEventListener("change", updatePreferences);
     dataPreference.addEventListener("change", updatePreferences);
     connection?.addEventListener("change", updatePreferences);
     return () => {
+      compact.removeEventListener("change",updatePreferences);
       motion.removeEventListener("change", updatePreferences);
       dataPreference.removeEventListener("change", updatePreferences);
       connection?.removeEventListener("change", updatePreferences);
@@ -74,7 +81,7 @@ export function HeroMedia() {
     let inViewport = bounds.bottom > 0 && bounds.top < window.innerHeight;
     const synchronize = () => {
       if (!disposed && inViewport && !document.hidden && playbackWanted.current) {
-        void video.play().catch(() => { if (!disposed) setIsPlaying(false); });
+        void video.play().catch(() => { if (!disposed) {setIsPlaying(false);setSource(undefined);setHasFrame(false);setShowPoster(true);} });
       } else video.pause();
     };
     synchronizePlayback.current = synchronize;
@@ -104,6 +111,7 @@ export function HeroMedia() {
 
   function togglePlayback() {
     const video = videoRef.current;
+    playbackRequested.current=true;
     if (!source) {
       playbackWanted.current = true;
       setShowPoster(false);
@@ -141,7 +149,7 @@ export function HeroMedia() {
               muted
               loop
               playsInline
-              preload="auto"
+              preload="none"
               onPlaying={() => {
                 setIsPlaying(true);
                 setHasFrame(true);

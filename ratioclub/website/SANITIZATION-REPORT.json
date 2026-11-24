@@ -1,7 +1,7 @@
 {
-  "files_screened": 364,
+  "files_screened": 393,
   "known_personal_marker_or_credential_hits": 0,
   "private_state_or_source_map_files": 0,
   "third_party_license_credits_retained": true,
-  "scope": "Delivered files; dependency caches and temporary validation output are excluded and will not be archived."
+  "scope": "Tracked delivered files, reviewed November 24, 2026. Dependency caches, temporary validation output and Git history are excluded. Marker screening is not a full security audit."
 }

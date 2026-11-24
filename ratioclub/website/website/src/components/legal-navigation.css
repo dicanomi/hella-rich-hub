@@ -19,3 +19,7 @@
 /* Updated footer link rhythm from the desktop and mobile Figma variants. */
 .footer-content .copyright .privacy-trigger,
 .footer-legal-links .legal-nav-link { line-height:25px; }
+
+@media(max-width:600px){
+ .footer-legal-links .legal-nav-link { min-height:44px; padding-block:9.5px; }
+}

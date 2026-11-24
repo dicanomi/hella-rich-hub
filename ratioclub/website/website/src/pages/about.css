@@ -126,18 +126,12 @@
 .about-artwork-size .sacred-morph-object { min-width:0; touch-action:pan-y; }
 .about-artwork-size .sacred-morph-object svg { display:block; width:100%; height:auto; overflow:visible; }
 
-:is(.about-page,.solutions-page) .subpage-hero-artwork .golden-morph-object { width:100%; min-width:0; }
-:is(.about-page,.solutions-page) .subpage-hero-artwork .golden-morph-object svg { display:block; width:100%; height:auto; overflow:visible; stroke:var(--silver); }
-
-/* Match the former SVG's full slot and share the title's bottom baseline. */
-:is(.about-page,.solutions-page) .subpage-hero-artwork {
- top:auto;
- bottom:var(--section-padding-bottom,clamp(2rem,calc(.9156rem + 4.191vw),8rem));
- transform:none;
-}
-:is(.about-page,.solutions-page) .subpage-hero-artwork .golden-morph-object svg { height:100%; aspect-ratio:1; }
-
 /* Match the approved Solutions introduction grid without changing mobile. */
 @media(min-width:601px){
  .about-introduction-columns { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+
+@supports not (text-box-trim:trim-both){
+ .about-heritage-columns blockquote::before { content:""; display:block; flex:none; width:63.38px; height:68.394px; background:url('../assets/quote-mark.svg') left top/contain no-repeat; font:inherit; letter-spacing:normal; }
+ @media(max-width:600px){ .about-heritage-columns blockquote::before { width:29.66px; height:32px; } }
 }

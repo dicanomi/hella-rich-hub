@@ -22,6 +22,6 @@ export default function NotFoundPage(){
    </div>
   </div>
   <Header/>
-  <div className="not-found-copy"><h1 id="page-title" tabIndex={-1}>Signal Down — 404</h1><a className="primary-action" href={sitePath("/")}><span>Index</span><span className="action-arrow" aria-hidden="true" style={{maskImage:`url("${arrow}")`}}/></a></div>
+  <div className="not-found-copy"><h1 id="page-title" tabIndex={-1}>Signal Down — 404</h1><a className="primary-action" href={sitePath("/")}><span>Index</span><span className="action-arrow" aria-hidden="true" style={{WebkitMaskImage:`url("${arrow}")`,maskImage:`url("${arrow}")`}}/></a></div>
  </section></main>;
 }

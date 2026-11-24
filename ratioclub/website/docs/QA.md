@@ -1,4 +1,4 @@
-# Handoff verification — 23 November 2026
+# Handoff verification — 24 November 2026
 
 The active acceptance suite is in website/tests. Historical tests in reference/test-sources may describe superseded designs and are not the current acceptance suite.
 
@@ -16,6 +16,10 @@ The optional Payload editor is unchanged from the earlier sanitized handoff. Its
 - Website validation used Node 26.7.0 and npm 11.19.0 on macOS. The package pins Node 22.23.5 for the client's CI; rerun validation on that Node version/Linux runner before production merge. The local engine warning is documented rather than presented as Node 22 validation.
 - The build still reports the pre-existing GSAP static/dynamic import warning. No unrelated dependency or animation refactor was included.
 - Optional editor remains source-only and disconnected; its previous validation results are historical. No fresh editor install, database, seeding or login was created.
-- Review the stale Privacy Choices helper sentence identified in LATEST-CHANGES.md. The supplied legal documents describe processing practices but do not enable integrations.
+- The stale Privacy Choices helper sentence has been corrected. Updated legal documents remain unchanged; integrations remain disconnected.
 
 Release configuration checks also passed: invalid origins rejected, review mode protected, release routes/indexing verified, and the final dist output restored for https://www.ratioclub.com/ with indexing disabled.
+
+## Lucas fixes, November 24
+
+Clean locked dependency install, lint, TypeScript and official-origin release build passed. All 46 active checks pass in Chromium and WebKit, including the existing 14 acceptance checks and 32 issue regressions. Non-home route modules now load independently; shared hero styles are owned by the shared component to avoid route CSS dependencies. Actual legacy browser versions, physical iPhones and client AWS configuration are not certified by these tests. See LUCAS-ISSUE-REVIEW.md.

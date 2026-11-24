@@ -1,7 +1,7 @@
 import {useEffect,useState} from 'react';
 
 export function useLocalCopyrightYear(){
- const [year,setYear]=useState(()=>new Date().getFullYear());
+ const [year,setYear]=useState(()=>Number(import.meta.env.VITE_BUILD_YEAR)||new Date().getFullYear());
  useEffect(()=>{
   let timer:ReturnType<typeof setTimeout>;
   const sync=()=>{

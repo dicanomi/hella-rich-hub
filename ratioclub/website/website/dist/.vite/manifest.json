@@ -1,0 +1,460 @@
+{
+  "_AnimatedAdvantageArtwork-DtSjhEZ9.js": {
+    "file": "assets/AnimatedAdvantageArtwork-DtSjhEZ9.js",
+    "name": "AnimatedAdvantageArtwork",
+    "imports": [
+      "_jsx-runtime-gzR6375A.js",
+      "_gsap-u1zAqBeV.js",
+      "_ScrollTrigger-DMxwdad9.js",
+      "index.html"
+    ]
+  },
+  "_AnimatedServiceArtwork-BRaDfUPE.js": {
+    "file": "assets/AnimatedServiceArtwork-BRaDfUPE.js",
+    "name": "AnimatedServiceArtwork",
+    "imports": [
+      "_jsx-runtime-gzR6375A.js",
+      "_gsap-u1zAqBeV.js",
+      "_ScrollTrigger-DMxwdad9.js",
+      "index.html"
+    ]
+  },
+  "_Footer-BK5xsfBP.js": {
+    "file": "assets/Footer-BK5xsfBP.js",
+    "name": "Footer",
+    "imports": [
+      "_jsx-runtime-gzR6375A.js",
+      "_Header-AyVwE3x6.js"
+    ],
+    "css": [
+      "assets/Footer-DcefvQxH.css"
+    ],
+    "assets": [
+      "assets/privacy-options-muted-DkxXu0K4.svg",
+      "assets/privacy-options-graphite-Bq0hRtRR.svg",
+      "assets/footer-wordmark-static-Cp--nmku.webp"
+    ]
+  },
+  "_Footer-DcefvQxH.css": {
+    "file": "assets/Footer-DcefvQxH.css",
+    "src": "_Footer-DcefvQxH.css"
+  },
+  "_Header-AyVwE3x6.js": {
+    "file": "assets/Header-AyVwE3x6.js",
+    "name": "Header",
+    "imports": [
+      "_jsx-runtime-gzR6375A.js"
+    ],
+    "css": [
+      "assets/Header-DxrhE3RX.css"
+    ],
+    "assets": [
+      "assets/arrow-right-desktop-3-uXlyWQ.svg",
+      "assets/arrow-right-mobile-86d8PD0j.svg",
+      "assets/arrow-external-desktop-DxZVflH6.svg",
+      "assets/arrow-external-mobile-3OqIzeXw.svg"
+    ]
+  },
+  "_Header-DxrhE3RX.css": {
+    "file": "assets/Header-DxrhE3RX.css",
+    "src": "_Header-DxrhE3RX.css"
+  },
+  "_SacredMorphShapes-gCqNc-rM.js": {
+    "file": "assets/SacredMorphShapes-gCqNc-rM.js",
+    "name": "SacredMorphShapes",
+    "imports": [
+      "_jsx-runtime-gzR6375A.js",
+      "index.html"
+    ]
+  },
+  "_ScrollTrigger-DMxwdad9.js": {
+    "file": "assets/ScrollTrigger-DMxwdad9.js",
+    "name": "ScrollTrigger",
+    "imports": [
+      "_rolldown-runtime-4tVxZq34.js"
+    ]
+  },
+  "_SubpageHero-Dq8-Yn5j.js": {
+    "file": "assets/SubpageHero-Dq8-Yn5j.js",
+    "name": "SubpageHero",
+    "imports": [
+      "_jsx-runtime-gzR6375A.js",
+      "_Header-AyVwE3x6.js",
+      "index.html",
+      "_gsap-u1zAqBeV.js"
+    ],
+    "css": [
+      "assets/SubpageHero-aFRPE4p8.css"
+    ]
+  },
+  "_SubpageHero-aFRPE4p8.css": {
+    "file": "assets/SubpageHero-aFRPE4p8.css",
+    "src": "_SubpageHero-aFRPE4p8.css"
+  },
+  "_SubpageIntroduction-CAExE6pd.js": {
+    "file": "assets/SubpageIntroduction-CAExE6pd.js",
+    "name": "SubpageIntroduction",
+    "imports": [
+      "_Footer-BK5xsfBP.js",
+      "index.html",
+      "_jsx-runtime-gzR6375A.js"
+    ],
+    "css": [
+      "assets/SubpageIntroduction-ClpGOFhI.css"
+    ]
+  },
+  "_SubpageIntroduction-ClpGOFhI.css": {
+    "file": "assets/SubpageIntroduction-ClpGOFhI.css",
+    "src": "_SubpageIntroduction-ClpGOFhI.css"
+  },
+  "_font-licenses-CpTXldrw.txt": {
+    "file": "assets/font-licenses-CpTXldrw.txt",
+    "src": "_font-licenses-CpTXldrw.txt"
+  },
+  "_gsap-u1zAqBeV.js": {
+    "file": "assets/gsap-u1zAqBeV.js",
+    "name": "gsap",
+    "imports": [
+      "_rolldown-runtime-4tVxZq34.js"
+    ]
+  },
+  "_jsx-runtime-gzR6375A.js": {
+    "file": "assets/jsx-runtime-gzR6375A.js",
+    "name": "jsx-runtime",
+    "imports": [
+      "_rolldown-runtime-4tVxZq34.js"
+    ]
+  },
+  "_rolldown-runtime-4tVxZq34.js": {
+    "file": "assets/rolldown-runtime-4tVxZq34.js",
+    "name": "rolldown-runtime"
+  },
+  "index.html": {
+    "file": "assets/index-Bighb5ic.js",
+    "name": "index",
+    "src": "index.html",
+    "isEntry": true,
+    "imports": [
+      "_rolldown-runtime-4tVxZq34.js",
+      "_Header-AyVwE3x6.js",
+      "_jsx-runtime-gzR6375A.js",
+      "_Footer-BK5xsfBP.js",
+      "_gsap-u1zAqBeV.js"
+    ],
+    "dynamicImports": [
+      "src/pages/ContactPage.tsx",
+      "src/pages/SolutionsPage.tsx",
+      "src/pages/AboutPage.tsx",
+      "src/pages/LegalPage.tsx",
+      "src/pages/NotFoundPage.tsx",
+      "src/motion/AdvantageMotion.tsx",
+      "_gsap-u1zAqBeV.js",
+      "_ScrollTrigger-DMxwdad9.js",
+      "src/motion/solutions/SolutionGraph.tsx"
+    ],
+    "css": [
+      "assets/index-CdQwzVVY.css"
+    ],
+    "assets": [
+      "assets/forward-deployed-diagram-desktop-aligned-BXf3MF8F.svg",
+      "assets/forward-deployed-diagram-mobile-RfGozJ2I.svg",
+      "assets/media-divider-D-gzA04o.webp",
+      "assets/illustration-05-D91sEb1h.svg",
+      "assets/illustration-06-FZPDmj_M.svg",
+      "assets/illustration-07-seLb_ZBw.svg",
+      "assets/hero-review-updated-CKAhOIiF.mp4",
+      "assets/404-video-frame-desktop-B9hk0rDW.webp",
+      "assets/404-video-frame-mobile-CAxmmH5P.webp",
+      "assets/hero-overlay-Bti9vJxa.webp",
+      "assets/hero-overlay-mobile-LrkDLD0Z.webp",
+      "assets/hero-scroll-indicator-CXjfsDrU.svg",
+      "assets/contact-copy-BytqBP5W.svg",
+      "assets/roboto-BNpKyIrM.woff2",
+      "assets/roboto-slab-R0ScodsW.woff2",
+      "assets/RobotoMono-Variable-BYZ8F3Df.woff2",
+      "assets/quote-mark-CsrDWkSu.svg"
+    ]
+  },
+  "src/assets/404-video-frame-desktop.webp": {
+    "file": "assets/404-video-frame-desktop-B9hk0rDW.webp",
+    "src": "src/assets/404-video-frame-desktop.webp"
+  },
+  "src/assets/404-video-frame-mobile.webp": {
+    "file": "assets/404-video-frame-mobile-CAxmmH5P.webp",
+    "src": "src/assets/404-video-frame-mobile.webp"
+  },
+  "src/assets/RobotoMono-Variable.woff2": {
+    "file": "assets/RobotoMono-Variable-BYZ8F3Df.woff2",
+    "src": "src/assets/RobotoMono-Variable.woff2"
+  },
+  "src/assets/arrow-external-desktop.svg": {
+    "file": "assets/arrow-external-desktop-DxZVflH6.svg",
+    "src": "src/assets/arrow-external-desktop.svg"
+  },
+  "src/assets/arrow-external-mobile.svg": {
+    "file": "assets/arrow-external-mobile-3OqIzeXw.svg",
+    "src": "src/assets/arrow-external-mobile.svg"
+  },
+  "src/assets/arrow-right-desktop.svg": {
+    "file": "assets/arrow-right-desktop-3-uXlyWQ.svg",
+    "src": "src/assets/arrow-right-desktop.svg"
+  },
+  "src/assets/arrow-right-mobile.svg": {
+    "file": "assets/arrow-right-mobile-86d8PD0j.svg",
+    "src": "src/assets/arrow-right-mobile.svg"
+  },
+  "src/assets/contact-copy.svg": {
+    "file": "assets/contact-copy-BytqBP5W.svg",
+    "src": "src/assets/contact-copy.svg"
+  },
+  "src/assets/footer-wordmark-static.webp": {
+    "file": "assets/footer-wordmark-static-Cp--nmku.webp",
+    "src": "src/assets/footer-wordmark-static.webp"
+  },
+  "src/assets/forward-deployed-diagram-desktop-aligned.svg": {
+    "file": "assets/forward-deployed-diagram-desktop-aligned-BXf3MF8F.svg",
+    "src": "src/assets/forward-deployed-diagram-desktop-aligned.svg"
+  },
+  "src/assets/forward-deployed-diagram-mobile.svg": {
+    "file": "assets/forward-deployed-diagram-mobile-RfGozJ2I.svg",
+    "src": "src/assets/forward-deployed-diagram-mobile.svg"
+  },
+  "src/assets/hero-about-eight-arms.svg": {
+    "file": "assets/hero-about-eight-arms-BhZvEYd1.svg",
+    "src": "src/assets/hero-about-eight-arms.svg"
+  },
+  "src/assets/hero-overlay-mobile.webp": {
+    "file": "assets/hero-overlay-mobile-LrkDLD0Z.webp",
+    "src": "src/assets/hero-overlay-mobile.webp"
+  },
+  "src/assets/hero-overlay.webp": {
+    "file": "assets/hero-overlay-Bti9vJxa.webp",
+    "src": "src/assets/hero-overlay.webp"
+  },
+  "src/assets/hero-review-updated.mp4": {
+    "file": "assets/hero-review-updated-CKAhOIiF.mp4",
+    "src": "src/assets/hero-review-updated.mp4"
+  },
+  "src/assets/hero-scroll-indicator.svg": {
+    "file": "assets/hero-scroll-indicator-CXjfsDrU.svg",
+    "src": "src/assets/hero-scroll-indicator.svg"
+  },
+  "src/assets/illustration-05.svg": {
+    "file": "assets/illustration-05-D91sEb1h.svg",
+    "src": "src/assets/illustration-05.svg"
+  },
+  "src/assets/illustration-06.svg": {
+    "file": "assets/illustration-06-FZPDmj_M.svg",
+    "src": "src/assets/illustration-06.svg"
+  },
+  "src/assets/illustration-07.svg": {
+    "file": "assets/illustration-07-seLb_ZBw.svg",
+    "src": "src/assets/illustration-07.svg"
+  },
+  "src/assets/media-divider.webp": {
+    "file": "assets/media-divider-D-gzA04o.webp",
+    "src": "src/assets/media-divider.webp"
+  },
+  "src/assets/privacy-options-graphite.svg": {
+    "file": "assets/privacy-options-graphite-Bq0hRtRR.svg",
+    "src": "src/assets/privacy-options-graphite.svg"
+  },
+  "src/assets/privacy-options-muted.svg": {
+    "file": "assets/privacy-options-muted-DkxXu0K4.svg",
+    "src": "src/assets/privacy-options-muted.svg"
+  },
+  "src/assets/quote-mark.svg": {
+    "file": "assets/quote-mark-CsrDWkSu.svg",
+    "src": "src/assets/quote-mark.svg"
+  },
+  "src/assets/roboto-slab.woff2": {
+    "file": "assets/roboto-slab-R0ScodsW.woff2",
+    "src": "src/assets/roboto-slab.woff2"
+  },
+  "src/assets/roboto.woff2": {
+    "file": "assets/roboto-BNpKyIrM.woff2",
+    "src": "src/assets/roboto.woff2"
+  },
+  "src/assets/service-gpu-diagram.svg": {
+    "file": "assets/service-gpu-diagram-Bm12MdKh.svg",
+    "src": "src/assets/service-gpu-diagram.svg"
+  },
+  "src/assets/service-inference-diagram.svg": {
+    "file": "assets/service-inference-diagram-BvQ6IuVv.svg",
+    "src": "src/assets/service-inference-diagram.svg"
+  },
+  "src/assets/service-operations-diagram.svg": {
+    "file": "assets/service-operations-diagram-Eig4rXUy.svg",
+    "src": "src/assets/service-operations-diagram.svg"
+  },
+  "src/motion/AdvantageMotion.tsx": {
+    "file": "assets/AdvantageMotion--USvG2Ff.js",
+    "name": "AdvantageMotion",
+    "src": "src/motion/AdvantageMotion.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_jsx-runtime-gzR6375A.js",
+      "index.html"
+    ],
+    "dynamicImports": [
+      "src/motion/DesktopAdvantage.tsx",
+      "src/motion/MobileAdvantage.tsx"
+    ]
+  },
+  "src/motion/DesktopAdvantage.tsx": {
+    "file": "assets/DesktopAdvantage-CK-20jwg.js",
+    "name": "DesktopAdvantage",
+    "src": "src/motion/DesktopAdvantage.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_AnimatedAdvantageArtwork-DtSjhEZ9.js",
+      "_jsx-runtime-gzR6375A.js"
+    ]
+  },
+  "src/motion/MobileAdvantage.tsx": {
+    "file": "assets/MobileAdvantage-Bmcwb-Hu.js",
+    "name": "MobileAdvantage",
+    "src": "src/motion/MobileAdvantage.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_AnimatedAdvantageArtwork-DtSjhEZ9.js",
+      "_jsx-runtime-gzR6375A.js"
+    ]
+  },
+  "src/motion/services/GpuServiceArtwork.tsx": {
+    "file": "assets/GpuServiceArtwork-8alXOLCn.js",
+    "name": "GpuServiceArtwork",
+    "src": "src/motion/services/GpuServiceArtwork.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_AnimatedServiceArtwork-BRaDfUPE.js",
+      "_jsx-runtime-gzR6375A.js"
+    ]
+  },
+  "src/motion/services/InferenceServiceArtwork.tsx": {
+    "file": "assets/InferenceServiceArtwork-DoteYK1H.js",
+    "name": "InferenceServiceArtwork",
+    "src": "src/motion/services/InferenceServiceArtwork.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_AnimatedServiceArtwork-BRaDfUPE.js",
+      "_jsx-runtime-gzR6375A.js"
+    ]
+  },
+  "src/motion/services/OperationsServiceArtwork.tsx": {
+    "file": "assets/OperationsServiceArtwork-l8iEqndV.js",
+    "name": "OperationsServiceArtwork",
+    "src": "src/motion/services/OperationsServiceArtwork.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_AnimatedServiceArtwork-BRaDfUPE.js",
+      "_jsx-runtime-gzR6375A.js"
+    ]
+  },
+  "src/motion/solutions/SolutionGraph.tsx": {
+    "file": "assets/SolutionGraph-C5ca5szH.js",
+    "name": "SolutionGraph",
+    "src": "src/motion/solutions/SolutionGraph.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_jsx-runtime-gzR6375A.js"
+    ],
+    "css": [
+      "assets/SolutionGraph-BzgIKLlZ.css"
+    ]
+  },
+  "src/pages/AboutPage.tsx": {
+    "file": "assets/AboutPage-BugF9tGe.js",
+    "name": "AboutPage",
+    "src": "src/pages/AboutPage.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_Footer-BK5xsfBP.js",
+      "_SubpageHero-Dq8-Yn5j.js",
+      "_SubpageIntroduction-CAExE6pd.js",
+      "index.html",
+      "_SacredMorphShapes-gCqNc-rM.js",
+      "_jsx-runtime-gzR6375A.js"
+    ],
+    "css": [
+      "assets/AboutPage-mGyqcCfe.css"
+    ],
+    "assets": [
+      "assets/quote-mark-CsrDWkSu.svg"
+    ]
+  },
+  "src/pages/ContactPage.tsx": {
+    "file": "assets/ContactPage-DhWR2HR4.js",
+    "name": "ContactPage",
+    "src": "src/pages/ContactPage.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_jsx-runtime-gzR6375A.js",
+      "_SubpageHero-Dq8-Yn5j.js",
+      "_Footer-BK5xsfBP.js",
+      "index.html",
+      "_Header-AyVwE3x6.js"
+    ],
+    "css": [
+      "assets/ContactPage-VsdKDB6J.css"
+    ],
+    "assets": [
+      "assets/hero-about-eight-arms-BhZvEYd1.svg"
+    ]
+  },
+  "src/pages/LegalPage.tsx": {
+    "file": "assets/LegalPage-CBcASflR.js",
+    "name": "LegalPage",
+    "src": "src/pages/LegalPage.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_Header-AyVwE3x6.js",
+      "_Footer-BK5xsfBP.js",
+      "_jsx-runtime-gzR6375A.js",
+      "_SacredMorphShapes-gCqNc-rM.js"
+    ],
+    "css": [
+      "assets/LegalPage-knowZAAs.css"
+    ]
+  },
+  "src/pages/NotFoundPage.tsx": {
+    "file": "assets/NotFoundPage-CcYlADmf.js",
+    "name": "NotFoundPage",
+    "src": "src/pages/NotFoundPage.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_Header-AyVwE3x6.js",
+      "index.html",
+      "_jsx-runtime-gzR6375A.js"
+    ],
+    "css": [
+      "assets/NotFoundPage-BpRaEcde.css"
+    ]
+  },
+  "src/pages/SolutionsPage.tsx": {
+    "file": "assets/SolutionsPage-Cu80b4e9.js",
+    "name": "SolutionsPage",
+    "src": "src/pages/SolutionsPage.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_jsx-runtime-gzR6375A.js",
+      "_Footer-BK5xsfBP.js",
+      "_SubpageHero-Dq8-Yn5j.js",
+      "_SubpageIntroduction-CAExE6pd.js",
+      "index.html"
+    ],
+    "dynamicImports": [
+      "src/motion/services/GpuServiceArtwork.tsx",
+      "src/motion/services/InferenceServiceArtwork.tsx",
+      "src/motion/services/OperationsServiceArtwork.tsx"
+    ],
+    "css": [
+      "assets/SolutionsPage-Cn0gvF1x.css"
+    ],
+    "assets": [
+      "assets/service-gpu-diagram-Bm12MdKh.svg",
+      "assets/service-inference-diagram-BvQ6IuVv.svg",
+      "assets/service-operations-diagram-Eig4rXUy.svg"
+    ]
+  }
+}

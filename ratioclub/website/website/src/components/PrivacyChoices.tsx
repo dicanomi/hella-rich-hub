@@ -61,7 +61,7 @@ export function PrivacyChoices(){
     <div className="privacy-actions"><button type="button" className="primary-action" onClick={()=>save(true)}>Reject optional</button><button type="button" className="primary-action" onClick={()=>save()}>Save choices</button></div>
     <div className="privacy-notices">
     <p className="privacy-policy-links"><a href={sitePath("/privacy-notice")}>Privacy Notice</a><span aria-hidden="true"> · </span><a href={sitePath("/terms-and-conditions")}>Terms &amp; Conditions</a></p>
-    <p className="privacy-draft-note">Legal notices remain placeholders awaiting approval.</p>
+    <p className="privacy-draft-note">Read our Privacy Notice and Terms & Conditions for details.</p>
     {saved?<p className="privacy-saved">Your preferences are saved. Tracking integrations remain disconnected.</p>:null}
     {storageError?<p role="status">Your browser could not save this preference. Optional tracking remains off.</p>:null}
     </div>
